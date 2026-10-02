@@ -50,6 +50,8 @@ flutter analyze
 flutter test
 ```
 
+Integration test (happy path: buyer posts, seller quotes, buyer accepts, order, chat, contacts) against the local Supabase stack: with `supabase start` running, `eval "$(supabase status -o env)"` and then `SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY COUNTRY=india flutter test test/integration`. It signs in with the test phone numbers (code `123456`) using the anon key only and drives the app's Supabase repositories. `COUNTRY` (`india` or `usa`) must match the seeded country (India by default; see "Per-country seeds" in `supabase/README.md`). Without the two variables the test is skipped, so plain `flutter test` stays offline. CI runs it for both countries in the `database` job.
+
 Strings live in `lib/l10n/app_{en,hi,es}.arb`. After adding an English string with placeholders, run `python3 tool/l10n/arb_meta.py` to add placeholder metadata.
 
 ## Backend setup (Supabase)

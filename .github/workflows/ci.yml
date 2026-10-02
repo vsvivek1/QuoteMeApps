@@ -108,7 +108,7 @@ jobs:
       - run: flutter build web --release --dart-define-from-file=../config/usa.prod.json
 
   database:
-    name: Database (pgTAP) and Edge Functions (deno test)
+    name: Database (pgTAP), Edge Functions (deno test) and app integration test
     needs: detect
     if: needs.detect.outputs.supabase == 'true'
     runs-on: ubuntu-latest
@@ -127,6 +127,37 @@ jobs:
       - name: Edge Function tests
         working-directory: supabase/functions
         run: deno test --allow-env --allow-net --allow-read
+      # Happy path (buyer posts, seller quotes, buyer accepts) through the app's
+      # Supabase repositories against this stack: test/integration/happy_path_test.dart.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Local API URL and anon key
+        run: |
+          # The CLI prints API_URL and ANON_KEY (among others) as KEY="value" lines.
+          eval "$(supabase status -o env)"
+          test -n "${API_URL:-}" && test -n "${ANON_KEY:-}"
+          echo "SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+      - name: Integration test (India seed, the config.toml default)
+        run: flutter test test/integration
+        env:
+          COUNTRY: india
+      - name: Reseed the stack for the USA
+        run: |
+          command -v psql >/dev/null || (sudo apt-get update && sudo apt-get install -y postgresql-client)
+          supabase db reset --no-seed
+          eval "$(supabase status -o env)"
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -q \
+            -f supabase/seed.sql -f supabase/seed/usa.sql \
+            -f supabase/seed/demo_generator.sql -f supabase/seed/usa_demo.sql
+      - name: Integration test (USA seed)
+        run: flutter test test/integration
+        env:
+          COUNTRY: usa
       - if: always()
         run: supabase stop --no-backup
 
