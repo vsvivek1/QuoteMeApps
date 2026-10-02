@@ -12,8 +12,7 @@ part of 'edge_functions.dart';
 @ProviderFor(edgeFunctions)
 final edgeFunctionsProvider = EdgeFunctionsProvider._();
 
-final class EdgeFunctionsProvider
-    extends $FunctionalProvider<EdgeFunctions, EdgeFunctions, EdgeFunctions>
+final class EdgeFunctionsProvider extends $FunctionalProvider<EdgeFunctions, EdgeFunctions, EdgeFunctions>
     with $Provider<EdgeFunctions> {
   EdgeFunctionsProvider._()
     : super(
@@ -31,8 +30,7 @@ final class EdgeFunctionsProvider
 
   @$internal
   @override
-  $ProviderElement<EdgeFunctions> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<EdgeFunctions> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   EdgeFunctions create(Ref ref) {
@@ -41,10 +39,7 @@ final class EdgeFunctionsProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(EdgeFunctions value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<EdgeFunctions>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<EdgeFunctions>(value));
   }
 }
 

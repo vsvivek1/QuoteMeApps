@@ -13,12 +13,7 @@ part of 'request_providers.dart';
 final categoriesProvider = CategoriesProvider._();
 
 final class CategoriesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<Category>>,
-          List<Category>,
-          FutureOr<List<Category>>
-        >
+    extends $FunctionalProvider<AsyncValue<List<Category>>, List<Category>, FutureOr<List<Category>>>
     with $FutureModifier<List<Category>>, $FutureProvider<List<Category>> {
   CategoriesProvider._()
     : super(
@@ -36,9 +31,7 @@ final class CategoriesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<Category>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<List<Category>> $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<Category>> create(Ref ref) {
@@ -52,15 +45,8 @@ String _$categoriesHash() => r'97b0f89516353800c913d75473fdfb7476ee2ea5';
 final categoryMapProvider = CategoryMapProvider._();
 
 final class CategoryMapProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<Map<int, Category>>,
-          Map<int, Category>,
-          FutureOr<Map<int, Category>>
-        >
-    with
-        $FutureModifier<Map<int, Category>>,
-        $FutureProvider<Map<int, Category>> {
+    extends $FunctionalProvider<AsyncValue<Map<int, Category>>, Map<int, Category>, FutureOr<Map<int, Category>>>
+    with $FutureModifier<Map<int, Category>>, $FutureProvider<Map<int, Category>> {
   CategoryMapProvider._()
     : super(
         from: null,
@@ -77,9 +63,8 @@ final class CategoryMapProvider
 
   @$internal
   @override
-  $FutureProviderElement<Map<int, Category>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<Map<int, Category>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
   FutureOr<Map<int, Category>> create(Ref ref) {
@@ -93,15 +78,8 @@ String _$categoryMapHash() => r'0a18f779fd208b5be125f718d4511ae725ed0a05';
 final myRequestsProvider = MyRequestsProvider._();
 
 final class MyRequestsProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<BuyerRequest>>,
-          List<BuyerRequest>,
-          Stream<List<BuyerRequest>>
-        >
-    with
-        $FutureModifier<List<BuyerRequest>>,
-        $StreamProvider<List<BuyerRequest>> {
+    extends $FunctionalProvider<AsyncValue<List<BuyerRequest>>, List<BuyerRequest>, Stream<List<BuyerRequest>>>
+    with $FutureModifier<List<BuyerRequest>>, $StreamProvider<List<BuyerRequest>> {
   MyRequestsProvider._()
     : super(
         from: null,
@@ -118,9 +96,8 @@ final class MyRequestsProvider
 
   @$internal
   @override
-  $StreamProviderElement<List<BuyerRequest>> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<List<BuyerRequest>> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
 
   @override
   Stream<List<BuyerRequest>> create(Ref ref) {
@@ -133,24 +110,16 @@ String _$myRequestsHash() => r'b30594c28787da73463b3a344d8767291f8f753d';
 @ProviderFor(request)
 final requestProvider = RequestFamily._();
 
-final class RequestProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<BuyerRequest?>,
-          BuyerRequest?,
-          Stream<BuyerRequest?>
-        >
+final class RequestProvider extends $FunctionalProvider<AsyncValue<BuyerRequest?>, BuyerRequest?, Stream<BuyerRequest?>>
     with $FutureModifier<BuyerRequest?>, $StreamProvider<BuyerRequest?> {
-  RequestProvider._({
-    required RequestFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'requestProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  RequestProvider._({required RequestFamily super.from, required String super.argument})
+    : super(
+        retry: null,
+        name: r'requestProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$requestHash();
@@ -164,9 +133,7 @@ final class RequestProvider
 
   @$internal
   @override
-  $StreamProviderElement<BuyerRequest?> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<BuyerRequest?> $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
   Stream<BuyerRequest?> create(Ref ref) {
@@ -187,8 +154,7 @@ final class RequestProvider
 
 String _$requestHash() => r'5e2101e82d0ad12db9b07f595509b31862c5ea7c';
 
-final class RequestFamily extends $Family
-    with $FunctionalFamilyOverride<Stream<BuyerRequest?>, String> {
+final class RequestFamily extends $Family with $FunctionalFamilyOverride<Stream<BuyerRequest?>, String> {
   RequestFamily._()
     : super(
         retry: null,
@@ -198,8 +164,7 @@ final class RequestFamily extends $Family
         isAutoDispose: true,
       );
 
-  RequestProvider call(String id) =>
-      RequestProvider._(argument: id, from: this);
+  RequestProvider call(String id) => RequestProvider._(argument: id, from: this);
 
   @override
   String toString() => r'requestProvider';
@@ -208,24 +173,16 @@ final class RequestFamily extends $Family
 @ProviderFor(requestQuotes)
 final requestQuotesProvider = RequestQuotesFamily._();
 
-final class RequestQuotesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<Quote>>,
-          List<Quote>,
-          Stream<List<Quote>>
-        >
+final class RequestQuotesProvider extends $FunctionalProvider<AsyncValue<List<Quote>>, List<Quote>, Stream<List<Quote>>>
     with $FutureModifier<List<Quote>>, $StreamProvider<List<Quote>> {
-  RequestQuotesProvider._({
-    required RequestQuotesFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'requestQuotesProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  RequestQuotesProvider._({required RequestQuotesFamily super.from, required String super.argument})
+    : super(
+        retry: null,
+        name: r'requestQuotesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$requestQuotesHash();
@@ -239,9 +196,7 @@ final class RequestQuotesProvider
 
   @$internal
   @override
-  $StreamProviderElement<List<Quote>> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<List<Quote>> $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
   Stream<List<Quote>> create(Ref ref) {
@@ -262,8 +217,7 @@ final class RequestQuotesProvider
 
 String _$requestQuotesHash() => r'9b4610ac593e2d289694f39a7c2b757d98ef98ff';
 
-final class RequestQuotesFamily extends $Family
-    with $FunctionalFamilyOverride<Stream<List<Quote>>, String> {
+final class RequestQuotesFamily extends $Family with $FunctionalFamilyOverride<Stream<List<Quote>>, String> {
   RequestQuotesFamily._()
     : super(
         retry: null,
@@ -273,8 +227,7 @@ final class RequestQuotesFamily extends $Family
         isAutoDispose: true,
       );
 
-  RequestQuotesProvider call(String requestId) =>
-      RequestQuotesProvider._(argument: requestId, from: this);
+  RequestQuotesProvider call(String requestId) => RequestQuotesProvider._(argument: requestId, from: this);
 
   @override
   String toString() => r'requestQuotesProvider';

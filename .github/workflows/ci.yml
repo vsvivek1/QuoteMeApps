@@ -45,9 +45,10 @@ jobs:
         run: |
           dart run build_runner build --delete-conflicting-outputs
           flutter gen-l10n
+          dart format lib >/dev/null   # normalise generated code to the repo's page width
           git diff --exit-code -- lib
       - name: Format
-        run: dart format --output=none --set-exit-if-changed $(find lib test -name '*.dart' -not -path 'lib/l10n/gen/*' -not -name '*.g.dart' -not -name '*.freezed.dart')
+        run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - name: Tests (both countries are covered by the test suite)
         run: flutter test --coverage

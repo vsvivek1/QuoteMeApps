@@ -19,8 +19,7 @@ final pushRegistrationProvider = PushRegistrationProvider._();
 /// `device_tokens` through the notification repository, and opens the
 /// deep link carried in a tapped push (`data.route`).
 
-final class PushRegistrationProvider
-    extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
+final class PushRegistrationProvider extends $FunctionalProvider<AsyncValue<void>, void, FutureOr<void>>
     with $FutureModifier<void>, $FutureProvider<void> {
   /// FCM: asks for permission (Android 13+ / iOS), stores the token in
   /// `device_tokens` through the notification repository, and opens the
@@ -41,8 +40,7 @@ final class PushRegistrationProvider
 
   @$internal
   @override
-  $FutureProviderElement<void> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<void> $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<void> create(Ref ref) {

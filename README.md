@@ -45,7 +45,7 @@ Flavors are `<country><Env>`: `usaDev`, `usaStaging`, `usaProd`, `indiaDev`, `in
 ```sh
 dart run build_runner build --delete-conflicting-outputs   # freezed, riverpod, drift
 flutter gen-l10n
-dart format $(find lib test -name '*.dart' -not -path 'lib/l10n/gen/*' -not -name '*.g.dart' -not -name '*.freezed.dart')
+dart format lib test
 flutter analyze
 flutter test
 ```

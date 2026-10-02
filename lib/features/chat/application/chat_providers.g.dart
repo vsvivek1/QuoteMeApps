@@ -12,13 +12,7 @@ part of 'chat_providers.dart';
 @ProviderFor(myChats)
 final myChatsProvider = MyChatsProvider._();
 
-final class MyChatsProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<Chat>>,
-          List<Chat>,
-          Stream<List<Chat>>
-        >
+final class MyChatsProvider extends $FunctionalProvider<AsyncValue<List<Chat>>, List<Chat>, Stream<List<Chat>>>
     with $FutureModifier<List<Chat>>, $StreamProvider<List<Chat>> {
   MyChatsProvider._()
     : super(
@@ -36,8 +30,7 @@ final class MyChatsProvider
 
   @$internal
   @override
-  $StreamProviderElement<List<Chat>> $createElement($ProviderPointer pointer) =>
-      $StreamProviderElement(pointer);
+  $StreamProviderElement<List<Chat>> $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
   Stream<List<Chat>> create(Ref ref) {
@@ -50,8 +43,7 @@ String _$myChatsHash() => r'ec96fb6ef49ebfd6bb60a5ebbea76db16d0ad1e1';
 @ProviderFor(unreadChatsCount)
 final unreadChatsCountProvider = UnreadChatsCountProvider._();
 
-final class UnreadChatsCountProvider extends $FunctionalProvider<int, int, int>
-    with $Provider<int> {
+final class UnreadChatsCountProvider extends $FunctionalProvider<int, int, int> with $Provider<int> {
   UnreadChatsCountProvider._()
     : super(
         from: null,
@@ -68,8 +60,7 @@ final class UnreadChatsCountProvider extends $FunctionalProvider<int, int, int>
 
   @$internal
   @override
-  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<int> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   int create(Ref ref) {
@@ -78,10 +69,7 @@ final class UnreadChatsCountProvider extends $FunctionalProvider<int, int, int>
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(int value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<int>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<int>(value));
   }
 }
 
@@ -91,25 +79,16 @@ String _$unreadChatsCountHash() => r'fcaf5e9e95562b8c57aa8a13d74694de3af0380d';
 final chatMessagesProvider = ChatMessagesFamily._();
 
 final class ChatMessagesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<ChatMessage>>,
-          List<ChatMessage>,
-          Stream<List<ChatMessage>>
-        >
-    with
-        $FutureModifier<List<ChatMessage>>,
-        $StreamProvider<List<ChatMessage>> {
-  ChatMessagesProvider._({
-    required ChatMessagesFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'chatMessagesProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+    extends $FunctionalProvider<AsyncValue<List<ChatMessage>>, List<ChatMessage>, Stream<List<ChatMessage>>>
+    with $FutureModifier<List<ChatMessage>>, $StreamProvider<List<ChatMessage>> {
+  ChatMessagesProvider._({required ChatMessagesFamily super.from, required String super.argument})
+    : super(
+        retry: null,
+        name: r'chatMessagesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$chatMessagesHash();
@@ -123,9 +102,7 @@ final class ChatMessagesProvider
 
   @$internal
   @override
-  $StreamProviderElement<List<ChatMessage>> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<List<ChatMessage>> $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
   Stream<List<ChatMessage>> create(Ref ref) {
@@ -146,8 +123,7 @@ final class ChatMessagesProvider
 
 String _$chatMessagesHash() => r'a17a7a708bfa2f7b76c3be9d382eaca09b43b11d';
 
-final class ChatMessagesFamily extends $Family
-    with $FunctionalFamilyOverride<Stream<List<ChatMessage>>, String> {
+final class ChatMessagesFamily extends $Family with $FunctionalFamilyOverride<Stream<List<ChatMessage>>, String> {
   ChatMessagesFamily._()
     : super(
         retry: null,
@@ -157,8 +133,7 @@ final class ChatMessagesFamily extends $Family
         isAutoDispose: true,
       );
 
-  ChatMessagesProvider call(String chatId) =>
-      ChatMessagesProvider._(argument: chatId, from: this);
+  ChatMessagesProvider call(String chatId) => ChatMessagesProvider._(argument: chatId, from: this);
 
   @override
   String toString() => r'chatMessagesProvider';
@@ -167,19 +142,16 @@ final class ChatMessagesFamily extends $Family
 @ProviderFor(chat)
 final chatProvider = ChatFamily._();
 
-final class ChatProvider
-    extends $FunctionalProvider<AsyncValue<Chat?>, Chat?, FutureOr<Chat?>>
+final class ChatProvider extends $FunctionalProvider<AsyncValue<Chat?>, Chat?, FutureOr<Chat?>>
     with $FutureModifier<Chat?>, $FutureProvider<Chat?> {
-  ChatProvider._({
-    required ChatFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'chatProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  ChatProvider._({required ChatFamily super.from, required String super.argument})
+    : super(
+        retry: null,
+        name: r'chatProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$chatHash();
@@ -193,8 +165,7 @@ final class ChatProvider
 
   @$internal
   @override
-  $FutureProviderElement<Chat?> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<Chat?> $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<Chat?> create(Ref ref) {
@@ -215,8 +186,7 @@ final class ChatProvider
 
 String _$chatHash() => r'90ef2a50c8e42e440ec9d0add2b81964d4a172c9';
 
-final class ChatFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<Chat?>, String> {
+final class ChatFamily extends $Family with $FunctionalFamilyOverride<FutureOr<Chat?>, String> {
   ChatFamily._()
     : super(
         retry: null,
@@ -226,8 +196,7 @@ final class ChatFamily extends $Family
         isAutoDispose: true,
       );
 
-  ChatProvider call(String chatId) =>
-      ChatProvider._(argument: chatId, from: this);
+  ChatProvider call(String chatId) => ChatProvider._(argument: chatId, from: this);
 
   @override
   String toString() => r'chatProvider';
@@ -237,15 +206,8 @@ final class ChatFamily extends $Family
 final inboxProvider = InboxProvider._();
 
 final class InboxProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<AppNotification>>,
-          List<AppNotification>,
-          Stream<List<AppNotification>>
-        >
-    with
-        $FutureModifier<List<AppNotification>>,
-        $StreamProvider<List<AppNotification>> {
+    extends $FunctionalProvider<AsyncValue<List<AppNotification>>, List<AppNotification>, Stream<List<AppNotification>>>
+    with $FutureModifier<List<AppNotification>>, $StreamProvider<List<AppNotification>> {
   InboxProvider._()
     : super(
         from: null,
@@ -262,9 +224,8 @@ final class InboxProvider
 
   @$internal
   @override
-  $StreamProviderElement<List<AppNotification>> $createElement(
-    $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  $StreamProviderElement<List<AppNotification>> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
 
   @override
   Stream<List<AppNotification>> create(Ref ref) {
@@ -277,9 +238,7 @@ String _$inboxHash() => r'52656bf07a607a137bdbc669ad8a5c46ebb0a808';
 @ProviderFor(unreadNotificationsCount)
 final unreadNotificationsCountProvider = UnreadNotificationsCountProvider._();
 
-final class UnreadNotificationsCountProvider
-    extends $FunctionalProvider<int, int, int>
-    with $Provider<int> {
+final class UnreadNotificationsCountProvider extends $FunctionalProvider<int, int, int> with $Provider<int> {
   UnreadNotificationsCountProvider._()
     : super(
         from: null,
@@ -296,8 +255,7 @@ final class UnreadNotificationsCountProvider
 
   @$internal
   @override
-  $ProviderElement<int> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<int> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   int create(Ref ref) {
@@ -306,12 +264,8 @@ final class UnreadNotificationsCountProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(int value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<int>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<int>(value));
   }
 }
 
-String _$unreadNotificationsCountHash() =>
-    r'0aba35642468b12b17e6266153d902f347e0365e';
+String _$unreadNotificationsCountHash() => r'0aba35642468b12b17e6266153d902f347e0365e';

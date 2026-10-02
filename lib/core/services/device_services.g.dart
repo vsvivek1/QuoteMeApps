@@ -12,8 +12,7 @@ part of 'device_services.dart';
 @ProviderFor(mediaService)
 final mediaServiceProvider = MediaServiceProvider._();
 
-final class MediaServiceProvider
-    extends $FunctionalProvider<MediaService, MediaService, MediaService>
+final class MediaServiceProvider extends $FunctionalProvider<MediaService, MediaService, MediaService>
     with $Provider<MediaService> {
   MediaServiceProvider._()
     : super(
@@ -31,8 +30,7 @@ final class MediaServiceProvider
 
   @$internal
   @override
-  $ProviderElement<MediaService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<MediaService> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   MediaService create(Ref ref) {
@@ -41,10 +39,7 @@ final class MediaServiceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(MediaService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<MediaService>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<MediaService>(value));
   }
 }
 
@@ -53,9 +48,7 @@ String _$mediaServiceHash() => r'224288451f95360ebac38964777f5dc5e9853007';
 @ProviderFor(locationService)
 final locationServiceProvider = LocationServiceProvider._();
 
-final class LocationServiceProvider
-    extends
-        $FunctionalProvider<LocationService, LocationService, LocationService>
+final class LocationServiceProvider extends $FunctionalProvider<LocationService, LocationService, LocationService>
     with $Provider<LocationService> {
   LocationServiceProvider._()
     : super(
@@ -73,8 +66,7 @@ final class LocationServiceProvider
 
   @$internal
   @override
-  $ProviderElement<LocationService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<LocationService> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   LocationService create(Ref ref) {
@@ -83,10 +75,7 @@ final class LocationServiceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(LocationService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<LocationService>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<LocationService>(value));
   }
 }
 
@@ -95,8 +84,7 @@ String _$locationServiceHash() => r'38ada00c14c0c2521e7d291f9897c53df2e7008a';
 @ProviderFor(speechService)
 final speechServiceProvider = SpeechServiceProvider._();
 
-final class SpeechServiceProvider
-    extends $FunctionalProvider<SpeechService, SpeechService, SpeechService>
+final class SpeechServiceProvider extends $FunctionalProvider<SpeechService, SpeechService, SpeechService>
     with $Provider<SpeechService> {
   SpeechServiceProvider._()
     : super(
@@ -114,8 +102,7 @@ final class SpeechServiceProvider
 
   @$internal
   @override
-  $ProviderElement<SpeechService> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<SpeechService> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   SpeechService create(Ref ref) {
@@ -124,10 +111,7 @@ final class SpeechServiceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(SpeechService value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<SpeechService>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<SpeechService>(value));
   }
 }
 

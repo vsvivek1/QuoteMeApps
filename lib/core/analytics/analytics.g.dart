@@ -12,9 +12,7 @@ part of 'analytics.dart';
 @ProviderFor(analytics)
 final analyticsProvider = AnalyticsProvider._();
 
-final class AnalyticsProvider
-    extends $FunctionalProvider<Analytics, Analytics, Analytics>
-    with $Provider<Analytics> {
+final class AnalyticsProvider extends $FunctionalProvider<Analytics, Analytics, Analytics> with $Provider<Analytics> {
   AnalyticsProvider._()
     : super(
         from: null,
@@ -31,8 +29,7 @@ final class AnalyticsProvider
 
   @$internal
   @override
-  $ProviderElement<Analytics> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<Analytics> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   Analytics create(Ref ref) {
@@ -41,10 +38,7 @@ final class AnalyticsProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(Analytics value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Analytics>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<Analytics>(value));
   }
 }
 

@@ -12,8 +12,7 @@ part of 'post_request_controller.dart';
 @ProviderFor(PostRequestController)
 final postRequestControllerProvider = PostRequestControllerProvider._();
 
-final class PostRequestControllerProvider
-    extends $NotifierProvider<PostRequestController, PostRequestState> {
+final class PostRequestControllerProvider extends $NotifierProvider<PostRequestController, PostRequestState> {
   PostRequestControllerProvider._()
     : super(
         from: null,
@@ -34,15 +33,11 @@ final class PostRequestControllerProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(PostRequestState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<PostRequestState>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<PostRequestState>(value));
   }
 }
 
-String _$postRequestControllerHash() =>
-    r'bb8f2005c7f9bfc30d2524292ff6c4ea7b3eed7e';
+String _$postRequestControllerHash() => r'bb8f2005c7f9bfc30d2524292ff6c4ea7b3eed7e';
 
 abstract class _$PostRequestController extends $Notifier<PostRequestState> {
   PostRequestState build();
