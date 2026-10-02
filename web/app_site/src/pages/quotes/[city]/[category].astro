@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import Base from '../../../layouts/Base.astro';
 import StoreBadges from '../../../components/StoreBadges.astro';
 import { abs, formatDate, money, site } from '../../../lib/site';
-import { loadGuides, loadSeo, monthRange, type SeoPage } from '../../../lib/seo';
+import { loadGuides, loadSeo, monthRange, sellerCities, type SeoPage } from '../../../lib/seo';
 
 // One page per city x category row that passed the "skip" gates in lib/seo.ts.
 // Rows below the data threshold, stale or fixture rows render with noindex and
@@ -33,6 +33,8 @@ const trendText =
 const guides = (await loadGuides())
   .filter((g) => g.status === 'indexable' && g.category.slug === category.slug && (!g.city || g.city.slug === city.slug))
   .slice(0, 5);
+const sellerDir = (await sellerCities()).find((c) => c.slug === city.slug);
+const localSellers = (sellerDir?.sellers ?? []).filter((s) => s.categories.some((c) => c.slug === category.slug)).slice(0, 6);
 const sameCity = all.filter((o) => o.city.slug === city.slug && o !== page && o.status === 'indexable').slice(0, 12);
 const sameCat = all.filter((o) => o.category.slug === category.slug && o !== page && o.status === 'indexable').slice(0, 12);
 
@@ -148,6 +150,13 @@ if (p) {
     <>
       <h2>Buying guides</h2>
       <ul>{guides.map((g) => <li><a href={g.path}>{g.data.title}</a></li>)}</ul>
+    </>
+  )}
+  {sellerDir && (
+    <>
+      <h2>Sellers in {city.name}</h2>
+      {localSellers.length > 0 && <ul class="chips">{localSellers.map((s) => <li><a href={s.path}>{s.data.name}</a></li>)}</ul>}
+      <p><a href={sellerDir.path}>All listed sellers in {city.name}</a></p>
     </>
   )}
   {sameCity.length > 0 && (

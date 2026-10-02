@@ -1309,6 +1309,21 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sellerViewPublic => 'खरीदारों को कैसा दिखता है, देखें';
 
   @override
+  String sellerDirectoryOptIn(String app) {
+    return 'मेरा बिज़नेस $app वेबसाइट पर दिखाएं';
+  }
+
+  @override
+  String get sellerDirectoryOptInBody =>
+      'एक सार्वजनिक पेज पर आपके बिज़नेस का नाम, कैटेगरी, शहर, रेटिंग और जवाब देने का समय दिखता है। आपका फ़ोन नंबर या पता कभी नहीं।';
+
+  @override
+  String get sellerDirectoryOptInOn => 'आप लिस्ट हो गए। आपका पेज अगले रात के अपडेट के बाद वेबसाइट पर दिखेगा।';
+
+  @override
+  String get sellerDirectoryOptInOff => 'छिपा दिया गया। आपका पेज अगले रात के अपडेट में वेबसाइट से हटा दिया जाएगा।';
+
+  @override
   String get sellerShareShop => 'मेरी दुकान शेयर करें';
 
   @override

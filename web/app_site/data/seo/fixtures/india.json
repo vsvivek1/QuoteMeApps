@@ -1,5 +1,5 @@
 {
-  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/india.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes. guides[]: one published guide for a city (live price box), one published city-less guide, one approved-only preview (noindex, unlisted) and one published guide with a stale review (noindex).",
+  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/india.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes. guides[]: one published guide for a city (live price box), one published city-less guide, one approved-only preview (noindex, unlisted) and one published guide with a stale review (noindex). sellers[]: opted-in directory entries: one passing the quality bar with an app link (rating + response time; restricted category dropped; phone in description scrubbed), one passing on response time only without an id (store badges), one merged-town seller with no track record (noindex, listed under the larger area), one without a city (skipped).",
   "fixture": true,
   "country": "india",
   "generated_at": "2026-10-02T00:00:00Z",
@@ -662,6 +662,61 @@
       "body_md": "Old text.",
       "reviewed_at": "2025-12-01T10:00:00Z",
       "published_at": "2025-12-02T10:00:00Z"
+    }
+  ],
+  "sellers": [
+    {
+      "id": "6f1c2a9e-4b7d-4e1a-9c3b-2d5e8f0a1b2c",
+      "slug": "sri-lakshmi-electronics",
+      "name": "Sri Lakshmi Electronics",
+      "description": "Authorised dealer for major refrigerator and AC brands in Jayanagar since 2009. Free installation in Bengaluru. WhatsApp +91 98450 12345 for offers.",
+      "city": "bengaluru",
+      "city_name": "Bengaluru",
+      "categories": [
+        "ac-repair",
+        "property-rent",
+        "refrigerators"
+      ],
+      "verified": true,
+      "years_in_business": 16,
+      "rating": 4.6,
+      "rating_count": 41,
+      "median_response_hours": 1.5
+    },
+    {
+      "slug": "swift-packers-movers",
+      "name": "Swift Packers and Movers",
+      "description": "Home and office shifting within Pune and to other cities. GST invoice provided.",
+      "city": "pune",
+      "city_name": "Pune",
+      "categories": [
+        "packers-movers"
+      ],
+      "verified": false,
+      "years_in_business": 8,
+      "median_response_hours": 0.5
+    },
+    {
+      "id": "0b8e7d6c-5a4f-4321-8fed-cba987654321",
+      "slug": "kengeri-home-appliances",
+      "name": "Kengeri Home Appliances",
+      "description": "Refrigerators and washing machines with home delivery.",
+      "city": "kengeri",
+      "city_name": "Kengeri",
+      "categories": [
+        "refrigerators",
+        "washing-machines"
+      ],
+      "verified": false
+    },
+    {
+      "slug": "all-india-uniforms",
+      "name": "All India Uniforms",
+      "description": "School and corporate uniforms shipped across India.",
+      "city": null,
+      "categories": [
+        "uniforms"
+      ]
     }
   ]
 }

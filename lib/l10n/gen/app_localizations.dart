@@ -2469,6 +2469,30 @@ abstract class AppLocalizations {
   /// **'View as buyers see it'**
   String get sellerViewPublic;
 
+  /// No description provided for @sellerDirectoryOptIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Show my business on the {app} website'**
+  String sellerDirectoryOptIn(String app);
+
+  /// No description provided for @sellerDirectoryOptInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows your business name, categories, city, rating and response time on a public page. Never your phone number or address.'**
+  String get sellerDirectoryOptInBody;
+
+  /// No description provided for @sellerDirectoryOptInOn.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re listed. Your page appears on the website after the next nightly update.'**
+  String get sellerDirectoryOptInOn;
+
+  /// No description provided for @sellerDirectoryOptInOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden. Your page is removed from the website at the next nightly update.'**
+  String get sellerDirectoryOptInOff;
+
   /// No description provided for @sellerShareShop.
   ///
   /// In en, this message translates to:

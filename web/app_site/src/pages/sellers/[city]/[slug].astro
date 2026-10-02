@@ -1,0 +1,107 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import StoreBadges from '../../../components/StoreBadges.astro';
+import { abs, formatDate, site } from '../../../lib/site';
+import { loadSellers, loadSeo, responseTimeText, type SeoSeller } from '../../../lib/seo';
+
+// Seller directory profile (Section 21.9 item 4). Only sellers who opted in are
+// in the export; the quality bar in lib/seo.ts decides indexable vs noindex.
+// No contact details, no quotes, no buyer data: reviews show only as an average.
+export const getStaticPaths = (async () =>
+  (await loadSellers()).map((s) => ({ params: { city: s.citySlug, slug: s.data.slug }, props: { seller: s } }))) satisfies GetStaticPaths;
+
+const { seller } = Astro.props as { seller: SeoSeller };
+const { data: seo, pages } = await loadSeo();
+const d = seller.data;
+const catNames = seller.categories.map((c) => c.name);
+const catText = catNames.length ? catNames.slice(0, 3).join(', ') + (catNames.length > 3 ? ' and more' : '') : 'Local seller';
+const title = `${d.name}: ${catText} in ${seller.cityName}`;
+const description = (seller.description || `${d.name} is a ${seller.cityName} seller on ${site.appName}. Ask them and other local sellers for a quote.`).slice(0, 155);
+const response = responseTimeText(d.median_response_hours);
+const priceLinks = pages.filter(
+  (p) => p.city.slug === seller.citySlug && seller.categories.some((c) => c.slug === p.category.slug) && (p.status === 'indexable' || seo.fixture),
+);
+const region = seller.city?.state;
+const campaign = `seller_dir_${seller.citySlug}`.slice(0, 40);
+
+const business: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': abs(seller.path),
+  name: d.name,
+  url: abs(seller.path),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: seller.cityName,
+    ...(region ? { addressRegion: region } : {}),
+    addressCountry: site.country === 'usa' ? 'US' : 'IN',
+  },
+  areaServed: { '@type': 'City', name: seller.cityName },
+};
+if (seller.description) business.description = seller.description;
+if (d.rating != null && d.rating_count) {
+  business.aggregateRating = { '@type': 'AggregateRating', ratingValue: d.rating, reviewCount: d.rating_count, bestRating: 5, worstRating: 1 };
+}
+if (catNames.length) business.knowsAbout = catNames;
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: `Sellers in ${seller.cityName}`, item: abs(`/sellers/${seller.citySlug}`) },
+    { '@type': 'ListItem', position: 2, name: d.name, item: abs(seller.path) },
+  ],
+};
+---
+<Base title={title} description={description} path={seller.path} noindex={seller.status !== 'indexable'} jsonLd={[business, crumbs]} smartBanner>
+  <p class="breadcrumbs"><a href={`/sellers/${seller.citySlug}`}>Sellers in {seller.cityName}</a> /</p>
+  {seo.fixture && <p class="notice warn">Sample data for testing only. This is not a real business.</p>}
+  <h1>{d.name}</h1>
+  <p class="lead">{catText} in {seller.cityName}{region ? `, ${region}` : ''}</p>
+
+  <div class="stats">
+    {d.rating != null && d.rating_count ? (
+      <div class="stat"><b>{d.rating.toFixed(1)} / 5</b><span>average from {d.rating_count} reviews on {site.appName}</span></div>
+    ) : (
+      <div class="stat"><b>New</b><span>not enough reviews yet to show a rating</span></div>
+    )}
+    {response && <div class="stat"><b>{response}</b><span>typical time to send a quote</span></div>}
+    {d.years_in_business != null && d.years_in_business > 0 && (
+      <div class="stat"><b>{d.years_in_business} {d.years_in_business === 1 ? 'year' : 'years'}</b><span>in business</span></div>
+    )}
+    {d.verified && <div class="stat"><b>Verified</b><span>business documents checked by {site.appName}</span></div>}
+  </div>
+
+  {seller.description && <p>{seller.description}</p>}
+
+  {seller.categories.length > 0 && (
+    <>
+      <h2>What they quote for</h2>
+      <ul class="chips">{seller.categories.map((c) => <li><span>{c.name}</span></li>)}</ul>
+    </>
+  )}
+
+  <h2>Get a quote from this seller</h2>
+  {seller.appLink ? (
+    <>
+      <p>Open {d.name} in the {site.appName} app to see their profile and ask them for a quote. Other local sellers can quote you too, so you can compare.</p>
+      <p><a class="btn" href={seller.appLink}>Get a quote from this seller</a></p>
+      <p class="small muted">Don't have the app yet? It's free:</p>
+    </>
+  ) : (
+    <p>Install {site.appName}, post what you need with your {site.postalLabel}, and {d.name} and other sellers in {seller.cityName} can send you quotes.</p>
+  )}
+  <StoreBadges campaign={campaign} source="seo" medium="seller_page" />
+
+  {priceLinks.length > 0 && (
+    <>
+      <h2>Local prices in {seller.cityName}</h2>
+      <ul class="chips">{priceLinks.map((p) => <li><a href={p.path}>{p.category.name}</a></li>)}</ul>
+    </>
+  )}
+
+  <p class="small muted">
+    {d.name} chose to be listed in the {site.appName} seller directory. Ratings come from buyers who used {site.appName}; individual reviews, quotes and buyers are never shown here.
+    Last updated {formatDate(seo.generated_at)}. <a href="/editorial-policy">Editorial policy</a> · <a href="/contact">Report this listing</a>
+  </p>
+</Base>

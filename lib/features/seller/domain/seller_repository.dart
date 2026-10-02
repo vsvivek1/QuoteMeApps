@@ -7,6 +7,11 @@ abstract interface class SellerRepository {
   Future<Seller?> getSeller(String id);
   Future<SellerStats> stats();
 
+  /// Shows or hides the seller on the public website's seller directory
+  /// (`set_seller_directory_opt_in`). Only business name, categories, city,
+  /// rating and response time are published; never contact details.
+  Future<void> setDirectoryOptIn(bool optIn);
+
   Future<List<SellerDocument>> myDocuments();
   Future<void> submitDocument(String docType, {String? number, String? filePath});
   Future<List<SellerLicence>> myLicences();

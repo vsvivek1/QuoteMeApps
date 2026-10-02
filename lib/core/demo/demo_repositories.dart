@@ -360,6 +360,15 @@ class DemoSellerRepository implements SellerRepository {
   Future<Seller?> getSeller(String id) async => b.sellers[id];
 
   @override
+  Future<void> setDirectoryOptIn(bool optIn) async {
+    final id = _uid(b);
+    final s = b.sellers[id];
+    if (s == null) throw StateError('not_a_seller');
+    b.sellers[id] = s.copyWith(directoryOptIn: optIn);
+    b.notify();
+  }
+
+  @override
   Future<SellerStats> stats() async {
     final id = _uid(b);
     final mine = b.quotes.values.where((q) => b.quoteSellerIds[q.id] == id).toList();

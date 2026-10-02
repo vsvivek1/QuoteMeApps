@@ -1315,6 +1315,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sellerViewPublic => 'Ver como lo ven los compradores';
 
   @override
+  String sellerDirectoryOptIn(String app) {
+    return 'Mostrar mi negocio en el sitio web de $app';
+  }
+
+  @override
+  String get sellerDirectoryOptInBody =>
+      'Muestra el nombre de tu negocio, categorías, ciudad, calificación y tiempo de respuesta en una página pública. Nunca tu teléfono ni tu dirección.';
+
+  @override
+  String get sellerDirectoryOptInOn =>
+      'Ya apareces. Tu página se publica en el sitio web tras la próxima actualización nocturna.';
+
+  @override
+  String get sellerDirectoryOptInOff =>
+      'Oculto. Tu página se quita del sitio web en la próxima actualización nocturna.';
+
+  @override
   String get sellerShareShop => 'Compartir mi tienda';
 
   @override

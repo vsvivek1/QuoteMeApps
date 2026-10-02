@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import StoreBadges from '../../components/StoreBadges.astro';
 import { abs, money, site } from '../../lib/site';
-import { cityHubs, type CityHub } from '../../lib/seo';
+import { cityHubs, sellerCities, type CityHub } from '../../lib/seo';
 
 export const getStaticPaths = (async () =>
   (await cityHubs()).map((hub) => ({ params: { city: hub.city.slug }, props: { hub } }))) satisfies GetStaticPaths;
@@ -12,6 +12,7 @@ const { hub } = Astro.props as { hub: CityHub };
 const { city } = hub;
 const merged = [...new Set(hub.pages.flatMap((p) => p.mergedTowns.map((t) => t.name)))];
 const shown = hub.pages.filter((p) => p.showPrices);
+const sellerDir = (await sellerCities()).find((c) => c.slug === city.slug);
 const crumbs = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -47,4 +48,10 @@ const crumbs = {
   <h2>Get quotes in {city.name}</h2>
   <p>Post what you want in the app and sellers in {city.name} will send you their prices.</p>
   <StoreBadges campaign={`city_${city.slug}`} source="seo" medium="city_page" />
+  {sellerDir && (
+    <>
+      <h2>Local sellers in {city.name}</h2>
+      <p><a href={sellerDir.path}>See {sellerDir.sellers.length} {sellerDir.sellers.length === 1 ? 'business' : 'businesses'} in {city.name} that list themselves on {site.appName}</a></p>
+    </>
+  )}
 </Base>

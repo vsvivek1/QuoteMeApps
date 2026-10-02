@@ -579,8 +579,11 @@ void main() {
         'contacts': {'business_phone': '+911234567890'},
         'rating_avg': 4.5,
         'city': 'Bengaluru',
+        'seo_directory_opt_in': true,
       });
       expect(s.areaType, AreaType.codes);
+      expect(s.directoryOptIn, isTrue);
+      expect(mapSeller({'id': 's2', 'business_name': 'X'}).directoryOptIn, isFalse);
       expect(s.lat, 12.9);
       expect(s.radiusKm, 8);
       expect(s.verificationStatus, VerificationStatus.none);

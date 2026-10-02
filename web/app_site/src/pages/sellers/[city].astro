@@ -1,0 +1,49 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import StoreBadges from '../../components/StoreBadges.astro';
+import { abs, site } from '../../lib/site';
+import { cityHubs, loadSeo, responseTimeText, sellerCities, type SellerCity } from '../../lib/seo';
+
+// Per-city seller directory index (Section 21.9 item 4). Indexable when at
+// least one seller in it passes the quality bar; lists every opted-in seller.
+export const getStaticPaths = (async () =>
+  (await sellerCities()).map((c) => ({ params: { city: c.slug }, props: { dir: c } }))) satisfies GetStaticPaths;
+
+const { dir } = Astro.props as { dir: SellerCity };
+const { data: seo } = await loadSeo();
+const hub = (await cityHubs()).find((h) => h.city.slug === dir.slug);
+const title = `Local sellers in ${dir.name}`;
+const description = `${dir.sellers.length} ${dir.name} ${dir.sellers.length === 1 ? 'business' : 'businesses'} on ${site.appName}: what they sell, ratings and response times. Get quotes from them in the app.`;
+const list = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: dir.sellers.map((s, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(s.path), name: s.data.name })),
+};
+---
+<Base title={title} description={description} path={dir.path} noindex={!dir.indexable} jsonLd={[list]}>
+  {hub && <p class="breadcrumbs"><a href={`/quotes/${dir.slug}`}>Prices in {dir.name}</a> /</p>}
+  {seo.fixture && <p class="notice warn">Sample data for testing only. These are not real businesses.</p>}
+  <h1>{title}</h1>
+  <p class="lead">Businesses in and around {dir.name} that chose to be listed. Post a request on {site.appName} and they can send you quotes.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Business</th><th>Categories</th><th>Rating</th><th>Quotes within</th></tr></thead>
+      <tbody>
+        {dir.sellers.map((s) => (
+          <tr>
+            <td><a href={s.path}>{s.data.name}</a>{s.data.verified && <span class="muted small"> · verified</span>}</td>
+            <td>{s.categories.slice(0, 3).map((c) => c.name).join(', ')}{s.categories.length > 3 ? ' and more' : ''}</td>
+            <td>{s.data.rating != null && s.data.rating_count ? `${s.data.rating.toFixed(1)} (${s.data.rating_count})` : 'New'}</td>
+            <td>{responseTimeText(s.data.median_response_hours) ?? '-'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <h2>Get quotes in {dir.name}</h2>
+  <p>Post what you want in the app and sellers in {dir.name} will send you their prices.</p>
+  <StoreBadges campaign={`seller_dir_${dir.slug}`.slice(0, 40)} source="seo" medium="seller_directory" />
+  {hub && <p><a href={`/quotes/${dir.slug}`}>See local prices in {dir.name}</a></p>}
+  <p class="small muted">Run a business in {dir.name}? <a href="/sellers">Join {site.appName} as a seller</a> and turn on "Show my business on the {site.appName} website" in your account.</p>
+</Base>

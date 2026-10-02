@@ -529,6 +529,7 @@ Seller mapSeller(JsonRow row) {
     earlyPartner: asBool(row['early_partner']),
     freeUntil: parseTimestamp(row['free_until']),
     phone: asString(contacts['business_phone']),
+    directoryOptIn: asBool(row['seo_directory_opt_in']),
   );
 }
 

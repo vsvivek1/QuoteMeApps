@@ -1,5 +1,5 @@
 {
-  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/usa.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes. guides[]: one published guide for a city (live price box), one published city-less guide, one approved-only preview (noindex, unlisted) and one published guide with a stale review (noindex).",
+  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/usa.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes. guides[]: one published guide for a city (live price box), one published city-less guide, one approved-only preview (noindex, unlisted) and one published guide with a stale review (noindex). sellers[]: opted-in directory entries: one passing the quality bar with an app link (rating + response time; restricted category dropped; phone in description scrubbed), one passing on response time only without an id (store badges), one merged-town seller with no track record (noindex, listed under the larger area), one without a city (skipped).",
   "fixture": true,
   "country": "usa",
   "generated_at": "2026-10-02T00:00:00Z",
@@ -661,6 +661,60 @@
       "body_md": "Old text.",
       "reviewed_at": "2025-12-01T10:00:00Z",
       "published_at": "2025-12-02T10:00:00Z"
+    }
+  ],
+  "sellers": [
+    {
+      "id": "6f1c2a9e-4b7d-4e1a-9c3b-2d5e8f0a1b2c",
+      "slug": "cool-breeze-appliances",
+      "name": "Cool Breeze Appliances",
+      "description": "Family-run appliance store and repair shop in Dallas since 2013. Same-week delivery and installation on refrigerators and washers. Call 214-555-0199 or email sales@coolbreeze.example for a price.",
+      "city": "dallas",
+      "city_name": "Dallas",
+      "categories": [
+        "appliance-repair",
+        "hvac",
+        "refrigerators"
+      ],
+      "verified": true,
+      "years_in_business": 12,
+      "rating": 4.7,
+      "rating_count": 23,
+      "median_response_hours": 2.5
+    },
+    {
+      "slug": "empire-moving-co",
+      "name": "Empire Moving Co",
+      "description": "Local and long-distance moves across the five boroughs. Licensed and insured.",
+      "city": "new-york",
+      "city_name": "New York",
+      "categories": [
+        "moving"
+      ],
+      "verified": false,
+      "years_in_business": 6,
+      "median_response_hours": 0.6
+    },
+    {
+      "id": "0b8e7d6c-5a4f-4321-8fed-cba987654321",
+      "slug": "park-cities-tv-audio",
+      "name": "Park Cities TV & Audio",
+      "description": "TVs, sound bars and wall mounting.",
+      "city": "highland-park",
+      "city_name": "Highland Park",
+      "categories": [
+        "televisions"
+      ],
+      "verified": false
+    },
+    {
+      "slug": "nationwide-office-supply",
+      "name": "Nationwide Office Supply",
+      "description": "Ships office supplies anywhere in the country.",
+      "city": null,
+      "categories": [
+        "office-supplies"
+      ]
     }
   ]
 }

@@ -745,6 +745,17 @@
   "planNotAvailable": "Plans aren't available in the app yet.",
   "sellerProfileTitle": "Business profile",
   "sellerViewPublic": "View as buyers see it",
+  "sellerDirectoryOptIn": "Show my business on the {app} website",
+  "@sellerDirectoryOptIn": {
+    "placeholders": {
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerDirectoryOptInBody": "Shows your business name, categories, city, rating and response time on a public page. Never your phone number or address.",
+  "sellerDirectoryOptInOn": "You're listed. Your page appears on the website after the next nightly update.",
+  "sellerDirectoryOptInOff": "Hidden. Your page is removed from the website at the next nightly update.",
   "sellerShareShop": "Share my shop",
   "sellerShareText": "Get quotes from {shop} and other local shops on {app}: {link}",
   "@sellerShareText": {

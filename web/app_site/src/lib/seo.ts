@@ -73,6 +73,8 @@ export interface SeoGuideData {
 
 /** Seller directory entry: only sellers who opted in; never contact details or quotes. */
 export interface SeoSellerData {
+  /** Seller id (uuid) for the app's /s/<id> link. Not exported yet; without it the page links to the app stores. */
+  id?: string;
   slug: string;
   name: string;
   description?: string;
@@ -81,9 +83,13 @@ export interface SeoSellerData {
   categories: string[];
   verified?: boolean;
   years_in_business?: number;
+  /** Present only with at least 3 reviews (export rule). */
   rating?: number;
   rating_count?: number;
+  /** Present only when the seller sent at least 5 quotes (export rule). */
   median_response_hours?: number;
+  /** Optional: orders marked completed (not exported yet; used by the quality bar when present). */
+  completed_orders?: number;
 }
 
 export interface SeoData {
@@ -320,4 +326,133 @@ export function loadGuides(): Promise<SeoGuide[]> {
     return out;
   })();
   return guideCache;
+}
+
+/**
+ * Seller directory (Section 21.9 item 4). Every exported seller (the export
+ * holds only sellers who opted in) with a city gets /sellers/<city>/<slug>.
+ * Quality bar for indexing and the sitemap (default): the seller has a public
+ * track record, meaning a rating (the export only includes it with at least 3
+ * reviews) OR a response time (only with at least 5 quotes sent) OR, when the
+ * export carries it, at least one completed order; plus at least one allowed
+ * category. Everything else is built with noindex. Fixture data is never
+ * indexable.
+ */
+export interface SeoSeller {
+  data: SeoSellerData;
+  citySlug: string;
+  cityName: string;
+  /** The area city record, when the city is in the export. */
+  city: SeoCity | null;
+  categories: SeoCategory[];
+  /** Description with phone numbers, emails and links removed. */
+  description: string;
+  /** In-app profile deep link (/s/<id>), when the export carries the seller id. */
+  appLink: string | null;
+  status: 'indexable' | 'noindex';
+  reasons: string[];
+  path: string;
+}
+
+export interface SellerCity {
+  slug: string;
+  name: string;
+  city: SeoCity | null;
+  sellers: SeoSeller[];
+  indexable: boolean;
+  path: string;
+}
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * Contact details never appear on directory pages, even if a seller typed
+ * them into the free-text description: any sentence with an email, a link or
+ * a phone-like digit run (7+ digits) is dropped.
+ */
+const CONTACT = [/[\w.+-]+@[\w-]+(\.[\w-]+)+/, /\b(?:https?:\/\/|www\.)\S+/i, /\b[\w-]+\.(?:com|in|net|org|co|app|biz|info|us)\b/i];
+const hasPhone = (t: string) => (t.match(/\+?\(?\d[\d\s().-]{5,}\d/g) ?? []).some((m) => m.replace(/\D/g, '').length >= 7);
+export function scrubContact(text: string): string {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .filter((sentence) => !hasPhone(sentence) && !CONTACT.some((re) => re.test(sentence)))
+    .join(' ')
+    .trim();
+}
+
+let sellerCache: Promise<SeoSeller[]> | null = null;
+
+export function loadSellers(): Promise<SeoSeller[]> {
+  sellerCache ??= (async () => {
+    const { data } = await loadSeo();
+    const cats = new Map(data.categories.map((c) => [c.slug, c]));
+    const cities = new Map(data.cities.map((c) => [c.slug, c]));
+    const seen = new Set<string>();
+    const out: SeoSeller[] = [];
+    let skipped = 0;
+    for (const s of data.sellers ?? []) {
+      if (!s.city || !SLUG.test(s.city) || !SLUG.test(s.slug ?? '') || !s.name?.trim()) {
+        skipped++;
+        continue;
+      }
+      // Small towns share the larger area's directory (same merge as price pages).
+      let city = cities.get(s.city) ?? null;
+      if (city?.merge_into) city = cities.get(city.merge_into) ?? city;
+      const citySlug = city?.slug ?? s.city;
+      const key = `${citySlug}/${s.slug}`;
+      if (seen.has(key)) {
+        warnOnce(`duplicate seller directory entry ${key} skipped`);
+        skipped++;
+        continue;
+      }
+      seen.add(key);
+      const categories = (s.categories ?? []).map((c) => cats.get(c)).filter((c): c is SeoCategory => c?.policy === 'allowed');
+      const reasons: string[] = [];
+      const trackRecord = s.rating != null || s.median_response_hours != null || (s.completed_orders ?? 0) > 0;
+      if (!trackRecord) reasons.push('no track record yet (needs 3 reviews, 5 quotes sent or a completed order)');
+      if (!categories.length) reasons.push('no public categories');
+      if (data.fixture) reasons.push('fixture data');
+      out.push({
+        data: s,
+        citySlug,
+        cityName: city?.name ?? s.city_name ?? s.city,
+        city,
+        categories,
+        description: scrubContact(s.description ?? ''),
+        appLink: s.id && UUID.test(s.id) ? `/s/${s.id.toLowerCase()}` : null,
+        status: reasons.length ? 'noindex' : 'indexable',
+        reasons,
+        path: `/sellers/${citySlug}/${s.slug}`,
+      });
+    }
+    const idx = out.filter((s) => s.status === 'indexable').length;
+    const fixturePass = out.filter((s) => s.reasons.length === 1 && s.reasons[0] === 'fixture data').length;
+    console.log(
+      `[app_site:${country}] seller directory: ${idx} indexable, ${out.length - idx} noindex, ${skipped} skipped` +
+        (data.fixture ? ` (FIXTURE, ${fixturePass} would pass the quality bar)` : ''),
+    );
+    return out;
+  })();
+  return sellerCache;
+}
+
+export async function sellerCities(): Promise<SellerCity[]> {
+  const by = new Map<string, SellerCity>();
+  for (const s of await loadSellers()) {
+    const c = by.get(s.citySlug) ?? { slug: s.citySlug, name: s.cityName, city: s.city, sellers: [], indexable: false, path: `/sellers/${s.citySlug}` };
+    c.sellers.push(s);
+    if (s.status === 'indexable') c.indexable = true;
+    by.set(s.citySlug, c);
+  }
+  for (const c of by.values()) c.sellers.sort((a, b) => (b.data.rating_count ?? 0) - (a.data.rating_count ?? 0) || a.data.name.localeCompare(b.data.name));
+  return [...by.values()].sort((a, b) => (b.city?.population ?? 0) - (a.city?.population ?? 0) || a.name.localeCompare(b.name));
+}
+
+/** "Under 1 hour" / "3 hours" / "2 days" from a median in hours. */
+export function responseTimeText(hours: number | null | undefined): string | null {
+  if (hours == null || !Number.isFinite(hours) || hours < 0) return null;
+  if (hours < 1) return 'Under 1 hour';
+  if (hours < 48) return `${Math.round(hours)} ${Math.round(hours) === 1 ? 'hour' : 'hours'}`;
+  return `${Math.round(hours / 24)} days`;
 }

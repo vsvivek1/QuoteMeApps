@@ -96,6 +96,12 @@ class SupabaseSellerRepository implements SellerRepository {
   }
 
   @override
+  Future<void> setDirectoryOptIn(bool optIn) => guardState(() async {
+    await ctx.client.rpc<dynamic>('set_seller_directory_opt_in', params: {'p_opt_in': optIn});
+    ctx.changed(Topics.seller);
+  });
+
+  @override
   Future<SellerStats> stats() async {
     final uid = ctx.uid;
     final quotes = await ctx.client.from('quotes').select('status, created_at').eq('seller_id', uid);

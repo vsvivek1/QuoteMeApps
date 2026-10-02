@@ -9,6 +9,7 @@ import '../../../core/utils/context_x.dart';
 import '../../../shared/widgets/common.dart';
 import '../../auth/domain/app_user.dart';
 import '../../seller/application/seller_providers.dart';
+import '../../seller/presentation/directory_opt_in_tile.dart';
 
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
@@ -97,6 +98,7 @@ class AccountScreen extends ConsumerWidget {
                 title: Text(l10n.sellerProfileTitle),
                 onTap: () => context.push('/seller/onboarding'),
               ),
+              DirectoryOptInTile(seller: seller),
               ListTile(
                 leading: const Icon(Icons.verified_outlined),
                 title: Text(l10n.verificationTitle),

@@ -41,6 +41,10 @@ abstract class Seller with _$Seller {
     @Default(false) bool earlyPartner,
     DateTime? freeUntil,
     String? phone,
+
+    /// `sellers.seo_directory_opt_in`: listed on the public website's seller
+    /// directory (Section 21.9). Off by default.
+    @Default(false) bool directoryOptIn,
   }) = _Seller;
 
   const Seller._();
