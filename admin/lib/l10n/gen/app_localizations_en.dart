@@ -1137,4 +1137,209 @@ class AppLocalizationsEn extends AppLocalizations {
   String paidBy(String name) {
     return 'paid by $name';
   }
+
+  @override
+  String get navSeo => 'SEO pages';
+
+  @override
+  String get seoTabPages => 'Price pages';
+
+  @override
+  String get seoTabGuides => 'Guides';
+
+  @override
+  String get seoRunExport => 'Run export now';
+
+  @override
+  String get seoRunExportTitle => 'Run the SEO export now?';
+
+  @override
+  String get seoRunExportBody =>
+      'Recomputes every city x category page from real quotes, uploads the anonymised data file to the public bucket and triggers the website rebuild when the Vercel Deploy Hook is configured. It also runs every night.';
+
+  @override
+  String seoExportDone(int pages, int priced, int guides, String hook) {
+    return 'Export done: $pages pages, $priced with prices, $guides guides. Deploy hook: $hook.';
+  }
+
+  @override
+  String seoLastRun(
+    String when,
+    String by,
+    int indexable,
+    int noindex,
+    int waiting,
+    String hook,
+  ) {
+    return 'Last export $when by $by: $indexable indexable, $noindex noindex, $waiting waiting for data. Deploy hook: $hook.';
+  }
+
+  @override
+  String seoLastRunFailed(String when, String error) {
+    return 'Last export $when failed: $error';
+  }
+
+  @override
+  String get seoNoRuns => 'No export has run yet.';
+
+  @override
+  String get seoStatusIndexable => 'Indexable';
+
+  @override
+  String get seoStatusNoindex => 'Noindex';
+
+  @override
+  String get seoStatusWaiting => 'Waiting for data';
+
+  @override
+  String get seoThresholds => 'Quality gates';
+
+  @override
+  String seoThresholdsHelp(int quotes, int sellers, int window, int stale) {
+    return 'A city x category page is indexable with at least $quotes quotes from $sellers different sellers in the last $window days and a quote within $stale days. Below that it is noindex and left out of the sitemap. Prices are medians, never single quotes.';
+  }
+
+  @override
+  String get seoMinQuotes => 'Min quotes';
+
+  @override
+  String get seoMinSellers => 'Min sellers';
+
+  @override
+  String get seoWindowDays => 'Window (days)';
+
+  @override
+  String get seoStaleDays => 'Stale after (days)';
+
+  @override
+  String seoRange(int min, int max) {
+    return '$min to $max';
+  }
+
+  @override
+  String get seoThresholdsTakeEffect => 'New gates apply at the next export.';
+
+  @override
+  String get seoColPage => 'Page';
+
+  @override
+  String get seoColStatus => 'Status';
+
+  @override
+  String get seoColQuotes => 'Quotes';
+
+  @override
+  String get seoColSellers => 'Sellers';
+
+  @override
+  String get seoColLocal => 'Local sellers';
+
+  @override
+  String get seoColLastQuote => 'Last quote';
+
+  @override
+  String get seoColUpdated => 'Updated';
+
+  @override
+  String get seoColReasons => 'Why';
+
+  @override
+  String get seoForceNoindex => 'Force noindex';
+
+  @override
+  String get seoNoPages =>
+      'No price pages yet. Pages appear here after the first export once real quotes exist.';
+
+  @override
+  String seoGuidesAiQuota(int used, int cap) {
+    return 'New AI-assisted guides this week: $used of $cap';
+  }
+
+  @override
+  String get seoGuideCap => 'Weekly AI guide cap';
+
+  @override
+  String get seoGuideNew => 'New guide';
+
+  @override
+  String get seoGuideEdit => 'Edit guide';
+
+  @override
+  String get seoGuideSlug => 'Slug (URL)';
+
+  @override
+  String get seoGuideTitle => 'Title';
+
+  @override
+  String get seoGuideDescription => 'Short description';
+
+  @override
+  String get seoGuideCategory => 'Category';
+
+  @override
+  String get seoGuideCity => 'City (optional)';
+
+  @override
+  String get seoGuideNoCity => 'No city';
+
+  @override
+  String get seoGuideBody => 'Body (Markdown)';
+
+  @override
+  String get seoGuideAi => 'AI-assisted draft';
+
+  @override
+  String seoGuideAiHelp(int cap) {
+    return 'AI drafts must be reviewed and approved by a person before they go live. At most $cap new AI-assisted guides per week.';
+  }
+
+  @override
+  String get seoGuideEditResets =>
+      'Saving sends an approved or published guide back to draft: it needs a new review.';
+
+  @override
+  String get seoGuideApprove => 'Approve';
+
+  @override
+  String get seoGuidePublish => 'Publish';
+
+  @override
+  String get seoGuideUnpublish => 'Unpublish';
+
+  @override
+  String get seoGuideReject => 'Back to draft';
+
+  @override
+  String seoGuideReviewed(String date) {
+    return 'Reviewed $date';
+  }
+
+  @override
+  String get seoGuideStatusDraft => 'Draft';
+
+  @override
+  String get seoGuideStatusApproved => 'Approved';
+
+  @override
+  String get seoGuideStatusPublished => 'Published';
+
+  @override
+  String get seoGuideAiBadge => 'AI-assisted';
+
+  @override
+  String get seoGuideReviewOverdue =>
+      'Review overdue: re-review at least twice a year';
+
+  @override
+  String get seoGuidesEmpty => 'No guides yet.';
+
+  @override
+  String seoGuideSite(String visibility) {
+    return 'On the site: $visibility';
+  }
+
+  @override
+  String seoGuideInvalid(String code) {
+    return 'Invalid guide: $code';
+  }
 }

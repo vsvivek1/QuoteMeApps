@@ -3,7 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import Base from '../../../layouts/Base.astro';
 import StoreBadges from '../../../components/StoreBadges.astro';
 import { abs, formatDate, money, site } from '../../../lib/site';
-import { loadSeo, monthRange, type SeoPage } from '../../../lib/seo';
+import { loadGuides, loadSeo, monthRange, type SeoPage } from '../../../lib/seo';
 
 // One page per city x category row that passed the "skip" gates in lib/seo.ts.
 // Rows below the data threshold, stale or fixture rows render with noindex and
@@ -30,6 +30,9 @@ const trend = d.trend_pct_vs_last_month;
 const trendText =
   trend == null ? null : Math.abs(trend) < 1 ? 'about the same as last month' : `${Math.abs(Math.round(trend))}% ${trend > 0 ? 'higher' : 'lower'} than last month`;
 
+const guides = (await loadGuides())
+  .filter((g) => g.status === 'indexable' && g.category.slug === category.slug && (!g.city || g.city.slug === city.slug))
+  .slice(0, 5);
 const sameCity = all.filter((o) => o.city.slug === city.slug && o !== page && o.status === 'indexable').slice(0, 12);
 const sameCat = all.filter((o) => o.category.slug === category.slug && o !== page && o.status === 'indexable').slice(0, 12);
 
@@ -141,6 +144,12 @@ if (p) {
     </>
   )}
 
+  {guides.length > 0 && (
+    <>
+      <h2>Buying guides</h2>
+      <ul>{guides.map((g) => <li><a href={g.path}>{g.data.title}</a></li>)}</ul>
+    </>
+  )}
   {sameCity.length > 0 && (
     <>
       <h2>More prices in {city.name}</h2>

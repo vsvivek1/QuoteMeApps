@@ -1,5 +1,5 @@
 {
-  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/india.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes.",
+  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/india.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes. guides[]: one published guide for a city (live price box), one published city-less guide, one approved-only preview (noindex, unlisted) and one published guide with a stale review (noindex).",
   "fixture": true,
   "country": "india",
   "generated_at": "2026-10-02T00:00:00Z",
@@ -617,6 +617,51 @@
         "to": "2026-10-01"
       },
       "price": null
+    }
+  ],
+  "guides": [
+    {
+      "slug": "fridge-size-family-of-four",
+      "title": "Which refrigerator for a family of four?",
+      "description": "How many litres or cubic feet you need, and what to check in a quote.",
+      "city": "bengaluru",
+      "city_name": "Bengaluru",
+      "category": "refrigerators",
+      "status": "published",
+      "ai_assisted": true,
+      "body_md": "## Start with your household\n\nA family of four usually needs **more space than you think**. Measure the gap first.\n\n- Measure width, depth and height\n- Leave room for the doors to open\n- Check the delivery path\n\n## What to compare in quotes\n\n1. Delivery and installation\n2. Haul-away of the old unit\n3. Warranty length\n\n> Tip: ask sellers to include delivery in the quote.\n\nSee [how it works](/#how-it-works). <script>alert(1)</script>",
+      "reviewed_at": "2026-09-01T10:00:00Z",
+      "published_at": "2026-09-02T10:00:00Z",
+      "updated_at": "2026-09-01T10:00:00Z"
+    },
+    {
+      "slug": "buying-a-laptop-for-college",
+      "title": "Buying a laptop for college: what to check",
+      "category": "laptops",
+      "status": "published",
+      "ai_assisted": false,
+      "body_md": "## Battery and weight\n\nCheck real battery life, not the brochure figure.\n\n## Warranty\n\nCompare *onsite* and carry-in warranty.",
+      "reviewed_at": "2026-08-15T10:00:00Z",
+      "published_at": "2026-08-16T10:00:00Z"
+    },
+    {
+      "slug": "preview-only-guide",
+      "title": "A guide that is approved but not published",
+      "category": "refrigerators",
+      "status": "approved",
+      "ai_assisted": true,
+      "body_md": "Preview text.",
+      "reviewed_at": "2026-09-20T10:00:00Z"
+    },
+    {
+      "slug": "stale-review-guide",
+      "title": "A published guide whose review is overdue",
+      "category": "refrigerators",
+      "status": "published",
+      "ai_assisted": false,
+      "body_md": "Old text.",
+      "reviewed_at": "2025-12-01T10:00:00Z",
+      "published_at": "2025-12-02T10:00:00Z"
     }
   ]
 }

@@ -4,7 +4,9 @@
  * Data comes from ONE JSON file per country, written nightly by a scheduled
  * job from aggregated, anonymised quote data (medians only, never single
  * quotes, never buyer identities). Sources, in order:
- *   1. SEO_DATA_URL  (public JSON produced by the nightly export), else
+ *   1. SEO_DATA_URL  (public JSON produced by the nightly export: the
+ *      Supabase `seo-export` Edge Function uploads it to
+ *      https://<ref>.supabase.co/storage/v1/object/public/public-data/seo/<country>.json), else
  *   2. SEO_DATA_FILE (path relative to web/app_site), else
  *   3. data/seo/<country>.json (committed default; ships with NO page stats).
  *
@@ -52,15 +54,51 @@ export interface SeoPageData {
   manual_noindex?: boolean;
 }
 
+/** Buying guide (Section 21.9): only approved (noindex) or published (indexable) guides are exported. */
+export interface SeoGuideData {
+  slug: string;
+  title: string;
+  description?: string;
+  /** Area city slug (after the small-town merge), if the guide is about one city. */
+  city?: string | null;
+  city_name?: string | null;
+  category: string;
+  status: 'approved' | 'published';
+  ai_assisted?: boolean;
+  body_md: string;
+  reviewed_at: string;
+  published_at?: string | null;
+  updated_at?: string;
+}
+
+/** Seller directory entry: only sellers who opted in; never contact details or quotes. */
+export interface SeoSellerData {
+  slug: string;
+  name: string;
+  description?: string;
+  city?: string | null;
+  city_name?: string | null;
+  categories: string[];
+  verified?: boolean;
+  years_in_business?: number;
+  rating?: number;
+  rating_count?: number;
+  median_response_hours?: number;
+}
+
 export interface SeoData {
   country: string;
   generated_at: string;
+  /** "supabase:seo_export" for the nightly export. */
+  source?: string;
   /** Sample / fixture data: every page is forced to noindex and shows a banner. */
   fixture?: boolean;
   thresholds?: Partial<Thresholds>;
   categories: SeoCategory[];
   cities: SeoCity[];
   pages: SeoPageData[];
+  guides?: SeoGuideData[];
+  sellers?: SeoSellerData[];
 }
 
 export interface Thresholds {
@@ -88,11 +126,25 @@ export interface SeoPage {
 
 let cache: Promise<{ data: SeoData; pages: SeoPage[]; thresholds: Thresholds }> | null = null;
 
+/**
+ * Adds a cache-busting query parameter to plain public URLs (e.g. the Supabase
+ * Storage public object URL, which sits behind a CDN) so a rebuild triggered
+ * right after the nightly upload never reads yesterday's copy. URLs that
+ * already carry a query string (signed URLs) are left alone.
+ */
+export function seoDataFetchUrl(url: string, now = Date.now()): string {
+  return url.includes('?') ? url : `${url}?v=${Math.floor(now / 60_000)}`;
+}
+
 async function loadRaw(): Promise<SeoData> {
   const url = (process.env.SEO_DATA_URL ?? '').trim();
   if (url) {
     try {
-      const res = await fetch(url, { signal: AbortSignal.timeout(20_000) });
+      const res = await fetch(seoDataFetchUrl(url), {
+        signal: AbortSignal.timeout(20_000),
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return (await res.json()) as SeoData;
     } catch (err) {
@@ -109,9 +161,12 @@ function validate(d: SeoData): void {
   for (const key of ['categories', 'cities', 'pages'] as const) {
     if (!Array.isArray(d[key])) throw new Error(`SEO data: "${key}" must be an array`);
   }
+  for (const key of ['guides', 'sellers'] as const) {
+    if (d[key] != null && !Array.isArray(d[key])) throw new Error(`SEO data: "${key}" must be an array when present`);
+  }
   if (Number.isNaN(Date.parse(d.generated_at))) throw new Error('SEO data: generated_at must be an ISO date');
   const slug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-  for (const c of [...d.categories, ...d.cities]) {
+  for (const c of [...d.categories, ...d.cities, ...(d.guides ?? [])]) {
     if (!slug.test(c.slug)) throw new Error(`SEO data: bad slug "${c.slug}"`);
   }
 }
@@ -199,4 +254,70 @@ export function monthRange(from: string, to: string, locale: string): string {
   const a = new Date(from);
   const b = new Date(to);
   return a.getUTCFullYear() === b.getUTCFullYear() ? `${f.format(a)} to ${fy.format(b)}` : `${fy.format(a)} to ${fy.format(b)}`;
+}
+
+/** Guides must be re-reviewed at least twice a year (Section 21.9) to stay indexable. */
+export const GUIDE_REVIEW_MAX_DAYS = 184;
+
+export interface SeoGuide {
+  data: SeoGuideData;
+  category: SeoCategory;
+  /** Area city (after the merge), when the guide is about one city and the city is in the data. */
+  city: SeoCity | null;
+  status: 'indexable' | 'noindex';
+  reasons: string[];
+  /** Price page for the same city x category with prices shown, if any. */
+  pricePage: SeoPage | null;
+  /** Other price pages for the category with prices shown (for city-less guides). */
+  categoryPages: SeoPage[];
+  path: string;
+}
+
+let guideCache: Promise<SeoGuide[]> | null = null;
+
+/**
+ * Guide pages: every exported guide is built; it is indexable only when
+ * published, reviewed within GUIDE_REVIEW_MAX_DAYS and not fixture data.
+ * Approved-but-unpublished guides are built with noindex (preview link for
+ * reviewers) and are not listed anywhere.
+ */
+export function loadGuides(): Promise<SeoGuide[]> {
+  guideCache ??= (async () => {
+    const { data, pages } = await loadSeo();
+    const cats = new Map(data.categories.map((c) => [c.slug, c]));
+    const cities = new Map(data.cities.map((c) => [c.slug, c]));
+    const seen = new Set<string>();
+    const out: SeoGuide[] = [];
+    for (const g of data.guides ?? []) {
+      if (seen.has(g.slug)) throw new Error(`SEO data: duplicate guide ${g.slug}`);
+      seen.add(g.slug);
+      const category = cats.get(g.category);
+      if (!category || category.policy === 'blocked' || (g.status !== 'approved' && g.status !== 'published')) {
+        console.log(`[app_site:${country}] guide ${g.slug} skipped (${!category ? 'unknown category' : `status ${g.status} / policy ${category.policy}`})`);
+        continue;
+      }
+      const reasons: string[] = [];
+      if (g.status !== 'published') reasons.push('not published');
+      const reviewedAge = Date.parse(data.generated_at) - Date.parse(g.reviewed_at);
+      if (Number.isNaN(reviewedAge)) reasons.push('no review date');
+      else if (reviewedAge > GUIDE_REVIEW_MAX_DAYS * DAY) reasons.push(`review older than ${GUIDE_REVIEW_MAX_DAYS} days`);
+      if (data.fixture) reasons.push('fixture data');
+      const city = g.city ? cities.get(g.city) ?? null : null;
+      const priced = pages.filter((p) => p.category.slug === g.category && p.showPrices && (p.status === 'indexable' || data.fixture));
+      out.push({
+        data: g,
+        category,
+        city,
+        status: reasons.length ? 'noindex' : 'indexable',
+        reasons,
+        pricePage: city ? priced.find((p) => p.city.slug === city.slug) ?? null : null,
+        categoryPages: priced.sort((a, b) => b.data.quotes_window - a.data.quotes_window).slice(0, 6),
+        path: `/guides/${g.slug}`,
+      });
+    }
+    const idx = out.filter((g) => g.status === 'indexable').length;
+    console.log(`[app_site:${country}] guides: ${idx} indexable, ${out.length - idx} noindex`);
+    return out;
+  })();
+  return guideCache;
 }

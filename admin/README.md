@@ -61,6 +61,33 @@ A5 one-pagers and 1080x1350 images (rasterised with `printing`) per city x
 category x language, with a QR code to the UTM-tagged signup link and the
 legal entity name. Logos come from `branding/` (`tool/sync_branding.sh`).
 
+## SEO pages (Section 21.9)
+
+`lib/features/seo/` (nav: **SEO pages**):
+
+- **Price pages**: every city x category row of `seo_pages` with its status
+  (indexable / noindex / waiting for data), quotes, distinct sellers, local
+  sellers, last quote, last update and the reasons, filterable by status. A
+  switch forces a page to noindex (`admin_set_seo_page_noindex`, kept across
+  exports).
+- **Quality gates**: edits `app_settings.seo_thresholds` through
+  `admin_set_setting` (min quotes, min sellers, window, stale days; the server
+  refuses fewer than 3 quotes or 2 sellers, the dialog too). New gates apply at
+  the next export.
+- **Run export now**: calls the `seo-export` Edge Function with the admin's
+  JWT (upload to the public bucket + Vercel Deploy Hook) and shows the last
+  run from `seo_export_runs`.
+- **Guides**: review queue for buying guides (`seo_guides`). Create or edit
+  (Markdown, category, optional city, AI-assisted flag), then Approve (records
+  the reviewer and date), Publish, Unpublish or Back to draft. Any edit sends
+  the guide back to draft. New AI-assisted guides are capped per rolling week
+  (`seo_ai_guides_weekly_cap`, default 10, editable here). Only approved
+  (noindex preview) and published guides are exported; published guides need
+  a new review every six months to stay indexable.
+
+The generic Flags screen hides the `seo_*` keys (they are objects edited here).
+Search Console traffic and conversions per page are not in the panel yet.
+
 ## Checks
 
 ```

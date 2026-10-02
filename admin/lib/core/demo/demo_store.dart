@@ -167,6 +167,9 @@ class DemoStore {
     s('outreach_business_address', '100 Demo Street, Demo City (demo data, not a real address)',
         'Physical postal address in every outreach email');
     s('places_monthly_budget_usd', 150, 'Hard cap for Google Places spend per month');
+    s('seo_thresholds', {'min_quotes': 10, 'min_sellers': 3, 'window_days': 90, 'stale_days': 90},
+        'SEO price-page gates (Section 21.9)');
+    s('seo_ai_guides_weekly_cap', 10, 'Max new AI-assisted buying guides per rolling 7 days');
   }
 
   void _seedUsers() {

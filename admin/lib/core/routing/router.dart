@@ -13,6 +13,7 @@ import '../../features/outreach/presentation/lead_detail_screen.dart';
 import '../../features/outreach/presentation/outreach_screen.dart';
 import '../../features/sellers/presentation/seller_detail_screen.dart';
 import '../../features/sellers/presentation/sellers_screen.dart';
+import '../../features/seo/presentation/seo_screen.dart';
 import '../../features/verification/presentation/verification_screen.dart';
 import '../providers.dart';
 import 'shell.dart';
@@ -32,6 +33,7 @@ abstract final class Routes {
   static const outreachImport = '/outreach/import';
   static String lead(String id) => '/outreach/lead/$id';
   static const brochures = '/brochures';
+  static const seo = '/seo';
 }
 
 /// Re-runs the redirect when the admin session changes.
@@ -84,6 +86,7 @@ GoRouter router(Ref ref) {
             ],
           ),
           GoRoute(path: Routes.brochures, builder: (_, _) => const BrochureScreen()),
+          GoRoute(path: Routes.seo, builder: (_, _) => const SeoScreen()),
         ],
       ),
     ],

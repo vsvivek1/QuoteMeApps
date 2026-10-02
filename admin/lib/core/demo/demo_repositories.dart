@@ -12,6 +12,7 @@ import '../../features/outreach/domain/composer.dart';
 import '../../features/outreach/domain/outreach_models.dart';
 import '../../features/outreach/domain/outreach_repository.dart';
 import '../../features/outreach/domain/stage_machine.dart';
+import '../../features/seo/domain/seo_models.dart';
 import '../../features/sellers/domain/manual_payment.dart';
 import '../../features/sellers/domain/seller_models.dart';
 import '../../features/verification/domain/verification_models.dart';
@@ -324,6 +325,10 @@ class DemoSettingsRepository implements SettingsRepository {
     if (cur == null) throw ArgumentError('unknown_setting');
     if (cur.value is bool && value is! bool) throw ArgumentError('invalid_setting_value');
     if (cur.value is num && (value is! num || value < 0)) throw ArgumentError('invalid_setting_value');
+    if (key == SeoThresholds.settingKey &&
+        (value is! Map || value.length != 4 || !SeoThresholds.fromJson(value).isValid)) {
+      throw ArgumentError('invalid_setting_value');
+    }
     final wasOn = s.settings['monetization_enabled']?.value == true;
     s.settings[key] = cur.withValue(value);
     if (key == 'monetization_enabled' && value == true && !wasOn) {

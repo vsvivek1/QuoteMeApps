@@ -2088,6 +2088,361 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'paid by {name}'**
   String paidBy(String name);
+
+  /// No description provided for @navSeo.
+  ///
+  /// In en, this message translates to:
+  /// **'SEO pages'**
+  String get navSeo;
+
+  /// No description provided for @seoTabPages.
+  ///
+  /// In en, this message translates to:
+  /// **'Price pages'**
+  String get seoTabPages;
+
+  /// No description provided for @seoTabGuides.
+  ///
+  /// In en, this message translates to:
+  /// **'Guides'**
+  String get seoTabGuides;
+
+  /// No description provided for @seoRunExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Run export now'**
+  String get seoRunExport;
+
+  /// No description provided for @seoRunExportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Run the SEO export now?'**
+  String get seoRunExportTitle;
+
+  /// No description provided for @seoRunExportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Recomputes every city x category page from real quotes, uploads the anonymised data file to the public bucket and triggers the website rebuild when the Vercel Deploy Hook is configured. It also runs every night.'**
+  String get seoRunExportBody;
+
+  /// No description provided for @seoExportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Export done: {pages} pages, {priced} with prices, {guides} guides. Deploy hook: {hook}.'**
+  String seoExportDone(int pages, int priced, int guides, String hook);
+
+  /// No description provided for @seoLastRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Last export {when} by {by}: {indexable} indexable, {noindex} noindex, {waiting} waiting for data. Deploy hook: {hook}.'**
+  String seoLastRun(
+    String when,
+    String by,
+    int indexable,
+    int noindex,
+    int waiting,
+    String hook,
+  );
+
+  /// No description provided for @seoLastRunFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last export {when} failed: {error}'**
+  String seoLastRunFailed(String when, String error);
+
+  /// No description provided for @seoNoRuns.
+  ///
+  /// In en, this message translates to:
+  /// **'No export has run yet.'**
+  String get seoNoRuns;
+
+  /// No description provided for @seoStatusIndexable.
+  ///
+  /// In en, this message translates to:
+  /// **'Indexable'**
+  String get seoStatusIndexable;
+
+  /// No description provided for @seoStatusNoindex.
+  ///
+  /// In en, this message translates to:
+  /// **'Noindex'**
+  String get seoStatusNoindex;
+
+  /// No description provided for @seoStatusWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for data'**
+  String get seoStatusWaiting;
+
+  /// No description provided for @seoThresholds.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality gates'**
+  String get seoThresholds;
+
+  /// No description provided for @seoThresholdsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A city x category page is indexable with at least {quotes} quotes from {sellers} different sellers in the last {window} days and a quote within {stale} days. Below that it is noindex and left out of the sitemap. Prices are medians, never single quotes.'**
+  String seoThresholdsHelp(int quotes, int sellers, int window, int stale);
+
+  /// No description provided for @seoMinQuotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Min quotes'**
+  String get seoMinQuotes;
+
+  /// No description provided for @seoMinSellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Min sellers'**
+  String get seoMinSellers;
+
+  /// No description provided for @seoWindowDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Window (days)'**
+  String get seoWindowDays;
+
+  /// No description provided for @seoStaleDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Stale after (days)'**
+  String get seoStaleDays;
+
+  /// No description provided for @seoRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} to {max}'**
+  String seoRange(int min, int max);
+
+  /// No description provided for @seoThresholdsTakeEffect.
+  ///
+  /// In en, this message translates to:
+  /// **'New gates apply at the next export.'**
+  String get seoThresholdsTakeEffect;
+
+  /// No description provided for @seoColPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page'**
+  String get seoColPage;
+
+  /// No description provided for @seoColStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get seoColStatus;
+
+  /// No description provided for @seoColQuotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Quotes'**
+  String get seoColQuotes;
+
+  /// No description provided for @seoColSellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sellers'**
+  String get seoColSellers;
+
+  /// No description provided for @seoColLocal.
+  ///
+  /// In en, this message translates to:
+  /// **'Local sellers'**
+  String get seoColLocal;
+
+  /// No description provided for @seoColLastQuote.
+  ///
+  /// In en, this message translates to:
+  /// **'Last quote'**
+  String get seoColLastQuote;
+
+  /// No description provided for @seoColUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get seoColUpdated;
+
+  /// No description provided for @seoColReasons.
+  ///
+  /// In en, this message translates to:
+  /// **'Why'**
+  String get seoColReasons;
+
+  /// No description provided for @seoForceNoindex.
+  ///
+  /// In en, this message translates to:
+  /// **'Force noindex'**
+  String get seoForceNoindex;
+
+  /// No description provided for @seoNoPages.
+  ///
+  /// In en, this message translates to:
+  /// **'No price pages yet. Pages appear here after the first export once real quotes exist.'**
+  String get seoNoPages;
+
+  /// No description provided for @seoGuidesAiQuota.
+  ///
+  /// In en, this message translates to:
+  /// **'New AI-assisted guides this week: {used} of {cap}'**
+  String seoGuidesAiQuota(int used, int cap);
+
+  /// No description provided for @seoGuideCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly AI guide cap'**
+  String get seoGuideCap;
+
+  /// No description provided for @seoGuideNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New guide'**
+  String get seoGuideNew;
+
+  /// No description provided for @seoGuideEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit guide'**
+  String get seoGuideEdit;
+
+  /// No description provided for @seoGuideSlug.
+  ///
+  /// In en, this message translates to:
+  /// **'Slug (URL)'**
+  String get seoGuideSlug;
+
+  /// No description provided for @seoGuideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get seoGuideTitle;
+
+  /// No description provided for @seoGuideDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Short description'**
+  String get seoGuideDescription;
+
+  /// No description provided for @seoGuideCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get seoGuideCategory;
+
+  /// No description provided for @seoGuideCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City (optional)'**
+  String get seoGuideCity;
+
+  /// No description provided for @seoGuideNoCity.
+  ///
+  /// In en, this message translates to:
+  /// **'No city'**
+  String get seoGuideNoCity;
+
+  /// No description provided for @seoGuideBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Body (Markdown)'**
+  String get seoGuideBody;
+
+  /// No description provided for @seoGuideAi.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-assisted draft'**
+  String get seoGuideAi;
+
+  /// No description provided for @seoGuideAiHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'AI drafts must be reviewed and approved by a person before they go live. At most {cap} new AI-assisted guides per week.'**
+  String seoGuideAiHelp(int cap);
+
+  /// No description provided for @seoGuideEditResets.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving sends an approved or published guide back to draft: it needs a new review.'**
+  String get seoGuideEditResets;
+
+  /// No description provided for @seoGuideApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get seoGuideApprove;
+
+  /// No description provided for @seoGuidePublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get seoGuidePublish;
+
+  /// No description provided for @seoGuideUnpublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpublish'**
+  String get seoGuideUnpublish;
+
+  /// No description provided for @seoGuideReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to draft'**
+  String get seoGuideReject;
+
+  /// No description provided for @seoGuideReviewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed {date}'**
+  String seoGuideReviewed(String date);
+
+  /// No description provided for @seoGuideStatusDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get seoGuideStatusDraft;
+
+  /// No description provided for @seoGuideStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get seoGuideStatusApproved;
+
+  /// No description provided for @seoGuideStatusPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get seoGuideStatusPublished;
+
+  /// No description provided for @seoGuideAiBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-assisted'**
+  String get seoGuideAiBadge;
+
+  /// No description provided for @seoGuideReviewOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Review overdue: re-review at least twice a year'**
+  String get seoGuideReviewOverdue;
+
+  /// No description provided for @seoGuidesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No guides yet.'**
+  String get seoGuidesEmpty;
+
+  /// No description provided for @seoGuideSite.
+  ///
+  /// In en, this message translates to:
+  /// **'On the site: {visibility}'**
+  String seoGuideSite(String visibility);
+
+  /// No description provided for @seoGuideInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid guide: {code}'**
+  String seoGuideInvalid(String code);
 }
 
 class _AppLocalizationsDelegate

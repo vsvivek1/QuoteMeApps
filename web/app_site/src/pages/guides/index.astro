@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../lib/site';
+import { loadGuides, loadSeo } from '../../lib/seo';
+
+// Lists published, indexable guides only (approved previews stay unlinked).
+const { data } = await loadSeo();
+const guides = await loadGuides();
+const listed = guides.filter((g) => g.status === 'indexable' || (data.fixture && g.data.status === 'published'));
+const groups = new Map<string, typeof listed>();
+for (const g of listed) groups.set(g.category.name, [...(groups.get(g.category.name) ?? []), g]);
+---
+<Base title="Buying guides" description={`Practical buying guides from ${site.appName}, reviewed by people and enriched with local prices from real quotes.`} path="/guides" noindex={listed.length === 0 || Boolean(data.fixture)}>
+  <h1>Buying guides</h1>
+  <p>Practical guides written or reviewed by our editorial team, with live local prices from real quotes. <a href="/editorial-policy">How we write them</a>.</p>
+  {data.fixture && <p class="notice warn">Sample data: these guides use fixture data for testing and are hidden from search engines.</p>}
+  {listed.length === 0 && <p class="notice">Our first guides are being reviewed. In the meantime, see <a href="/quotes">local prices from real quotes</a>.</p>}
+  {[...groups].map(([name, gs]) => (
+    <section>
+      <h2>{name}</h2>
+      <ul>{gs.map((g) => <li><a href={g.path}>{g.data.title}</a>{g.data.description && <span class="muted"> {g.data.description}</span>}</li>)}</ul>
+    </section>
+  ))}
+</Base>

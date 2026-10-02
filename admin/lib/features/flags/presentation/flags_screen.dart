@@ -35,6 +35,8 @@ class FlagsScreen extends ConsumerWidget {
           final byKey = {for (final s in settings) s.key: s};
           final others = settings
               .where((s) => !const {'monetization_enabled', 'early_partner_free_until', 'outreach_enabled'}.contains(s.key))
+              // seo_* settings (objects) are edited on the SEO pages screen.
+              .where((s) => !s.key.startsWith('seo_'))
               .toList();
           return ListView(padding: const EdgeInsets.all(16), children: [
             _MonetizationCard(

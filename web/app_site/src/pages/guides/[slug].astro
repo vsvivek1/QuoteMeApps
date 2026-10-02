@@ -1,0 +1,96 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import StoreBadges from '../../components/StoreBadges.astro';
+import { abs, formatDate, money, site } from '../../lib/site';
+import { loadGuides, loadSeo, type SeoGuide } from '../../lib/seo';
+import { renderMarkdown, wordCount } from '../../lib/markdown';
+
+// Buying guides (Section 21.9): written or AI-drafted, always reviewed by a
+// person in the admin panel. Only published guides reviewed within the last
+// six months are indexable; approved-but-unpublished guides render with
+// noindex and are not linked from anywhere.
+export const getStaticPaths = (async () => {
+  const guides = await loadGuides();
+  return guides.map((guide) => ({ params: { slug: guide.data.slug }, props: { guide, all: guides } }));
+}) satisfies GetStaticPaths;
+
+const { guide, all } = Astro.props as { guide: SeoGuide; all: SeoGuide[] };
+const { data: seo } = await loadSeo();
+const g = guide.data;
+const description = g.description || `${g.title}: a buying guide from ${site.appName} with local prices from real quotes.`;
+const html = renderMarkdown(g.body_md);
+const reviewed = formatDate(g.reviewed_at);
+const modified = g.updated_at ?? g.reviewed_at;
+const pp = guide.pricePage;
+const related = all.filter((o) => o !== guide && o.status === 'indexable' && o.category.slug === guide.category.slug).slice(0, 6);
+const unit = guide.category.unit ? ` ${guide.category.unit}` : '';
+
+const jsonLd: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: g.title.slice(0, 110),
+    description,
+    mainEntityOfPage: abs(guide.path),
+    datePublished: g.published_at ?? g.reviewed_at,
+    dateModified: modified,
+    wordCount: wordCount(g.body_md),
+    author: { '@type': 'Organization', name: `${site.appName} editorial team`, url: abs('/editorial-policy') },
+    publisher: { '@type': 'Organization', name: site.company, url: abs('/about'), logo: { '@type': 'ImageObject', url: abs('/brand/logo_mark.svg') } },
+    image: abs('/brand/og_image_1200x630.png'),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Buying guides', item: abs('/guides') },
+      { '@type': 'ListItem', position: 2, name: g.title, item: abs(guide.path) },
+    ],
+  },
+];
+---
+<Base title={g.title} description={description} path={guide.path} noindex={guide.status !== 'indexable'} ogType="article" jsonLd={jsonLd}>
+  <p class="breadcrumbs"><a href="/guides">Buying guides</a> /</p>
+  {seo.fixture && <p class="notice warn">Sample data for testing only.</p>}
+  {g.status !== 'published' && <p class="notice warn">Preview: approved but not published yet. Hidden from search engines.</p>}
+  <article>
+    <h1>{g.title}</h1>
+    <p class="muted small">
+      Reviewed by the {site.appName} editorial team on {reviewed}.
+      {g.ai_assisted && <> Drafted with AI assistance, then checked and edited by a person.</>}
+      {' '}<a href="/editorial-policy">Editorial policy</a>
+    </p>
+
+    {pp && pp.data.price && (
+      <aside class="notice">
+        <strong>Live prices in {pp.city.name}:</strong> the median quote for {guide.category.name.toLowerCase()} was
+        {' '}{money(pp.data.price.median)}{unit}, typical range {money(pp.data.price.p25)} to {money(pp.data.price.p75)},
+        based on {pp.data.quotes_window} quotes from {pp.data.sellers_window} sellers.
+        {' '}<a href={pp.path}>See {guide.category.name.toLowerCase()} prices in {pp.city.name}</a>.
+      </aside>
+    )}
+    {!pp && guide.categoryPages.length > 0 && (
+      <aside class="notice">
+        <strong>Live prices for {guide.category.name.toLowerCase()}</strong> (median quote on {site.appName}):
+        <ul>
+          {guide.categoryPages.map((p) => <li><a href={p.path}>{p.city.name}</a>: {money(p.data.price!.median)}{unit}</li>)}
+        </ul>
+      </aside>
+    )}
+
+    <div class="prose" set:html={html} />
+  </article>
+
+  <h2>Get quotes{guide.city ? ` in ${guide.city.name}` : ''}</h2>
+  <p>Post what you need on {site.appName} and local sellers send you quotes. Compare price, delivery and warranty side by side.</p>
+  <StoreBadges campaign={`guide_${g.slug}`.slice(0, 40)} source="seo" medium="guide" />
+
+  {related.length > 0 && (
+    <>
+      <h2>More {guide.category.name.toLowerCase()} guides</h2>
+      <ul>{related.map((o) => <li><a href={o.path}>{o.data.title}</a></li>)}</ul>
+    </>
+  )}
+  <p class="small muted">Prices are medians of real quotes sent on {site.appName}; individual quotes and buyers are never shown. <a href="/contact">Report an error</a></p>
+</Base>

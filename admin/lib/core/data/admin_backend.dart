@@ -9,6 +9,9 @@ import '../../features/flags/domain/settings_models.dart';
 import '../../features/moderation/domain/moderation_models.dart';
 import '../../features/outreach/domain/outreach_repository.dart';
 import '../../features/sellers/domain/seller_models.dart';
+import '../../features/seo/data/demo_seo_repository.dart';
+import '../../features/seo/data/supabase_seo_repository.dart';
+import '../../features/seo/domain/seo_models.dart';
 import '../../features/verification/domain/verification_models.dart';
 import '../config/admin_country.dart';
 import '../demo/demo_repositories.dart';
@@ -28,6 +31,7 @@ class AdminBackend {
     required this.outreach,
     required this.brochures,
     required this.sellers,
+    required this.seo,
     this.demo,
   });
 
@@ -44,6 +48,7 @@ class AdminBackend {
       outreach: DemoOutreachRepository(s),
       brochures: DemoBrochureRepository(s),
       sellers: DemoSellerRepository(s),
+      seo: DemoSeoRepository(s),
       demo: s,
     );
   }
@@ -62,6 +67,7 @@ class AdminBackend {
       outreach: SupabaseOutreachRepository(c),
       brochures: SupabaseBrochureRepository(c, config),
       sellers: SupabaseSellerRepository(c),
+      seo: SupabaseSeoRepository(c),
     );
   }
 
@@ -75,6 +81,7 @@ class AdminBackend {
   final OutreachRepository outreach;
   final BrochureRepository brochures;
   final SellerRepository sellers;
+  final SeoRepository seo;
 
   /// Non-null in demo mode.
   final DemoStore? demo;

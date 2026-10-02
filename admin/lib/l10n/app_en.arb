@@ -707,5 +707,175 @@
         "type": "String"
       }
     }
+  },
+  "navSeo": "SEO pages",
+  "seoTabPages": "Price pages",
+  "seoTabGuides": "Guides",
+  "seoRunExport": "Run export now",
+  "seoRunExportTitle": "Run the SEO export now?",
+  "seoRunExportBody": "Recomputes every city x category page from real quotes, uploads the anonymised data file to the public bucket and triggers the website rebuild when the Vercel Deploy Hook is configured. It also runs every night.",
+  "seoExportDone": "Export done: {pages} pages, {priced} with prices, {guides} guides. Deploy hook: {hook}.",
+  "@seoExportDone": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      },
+      "priced": {
+        "type": "int"
+      },
+      "guides": {
+        "type": "int"
+      },
+      "hook": {
+        "type": "String"
+      }
+    }
+  },
+  "seoLastRun": "Last export {when} by {by}: {indexable} indexable, {noindex} noindex, {waiting} waiting for data. Deploy hook: {hook}.",
+  "@seoLastRun": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      },
+      "by": {
+        "type": "String"
+      },
+      "indexable": {
+        "type": "int"
+      },
+      "noindex": {
+        "type": "int"
+      },
+      "waiting": {
+        "type": "int"
+      },
+      "hook": {
+        "type": "String"
+      }
+    }
+  },
+  "seoLastRunFailed": "Last export {when} failed: {error}",
+  "@seoLastRunFailed": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "seoNoRuns": "No export has run yet.",
+  "seoStatusIndexable": "Indexable",
+  "seoStatusNoindex": "Noindex",
+  "seoStatusWaiting": "Waiting for data",
+  "seoThresholds": "Quality gates",
+  "seoThresholdsHelp": "A city x category page is indexable with at least {quotes} quotes from {sellers} different sellers in the last {window} days and a quote within {stale} days. Below that it is noindex and left out of the sitemap. Prices are medians, never single quotes.",
+  "@seoThresholdsHelp": {
+    "placeholders": {
+      "quotes": {
+        "type": "int"
+      },
+      "sellers": {
+        "type": "int"
+      },
+      "window": {
+        "type": "int"
+      },
+      "stale": {
+        "type": "int"
+      }
+    }
+  },
+  "seoMinQuotes": "Min quotes",
+  "seoMinSellers": "Min sellers",
+  "seoWindowDays": "Window (days)",
+  "seoStaleDays": "Stale after (days)",
+  "seoRange": "{min} to {max}",
+  "@seoRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "seoThresholdsTakeEffect": "New gates apply at the next export.",
+  "seoColPage": "Page",
+  "seoColStatus": "Status",
+  "seoColQuotes": "Quotes",
+  "seoColSellers": "Sellers",
+  "seoColLocal": "Local sellers",
+  "seoColLastQuote": "Last quote",
+  "seoColUpdated": "Updated",
+  "seoColReasons": "Why",
+  "seoForceNoindex": "Force noindex",
+  "seoNoPages": "No price pages yet. Pages appear here after the first export once real quotes exist.",
+  "seoGuidesAiQuota": "New AI-assisted guides this week: {used} of {cap}",
+  "@seoGuidesAiQuota": {
+    "placeholders": {
+      "used": {
+        "type": "int"
+      },
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "seoGuideCap": "Weekly AI guide cap",
+  "seoGuideNew": "New guide",
+  "seoGuideEdit": "Edit guide",
+  "seoGuideSlug": "Slug (URL)",
+  "seoGuideTitle": "Title",
+  "seoGuideDescription": "Short description",
+  "seoGuideCategory": "Category",
+  "seoGuideCity": "City (optional)",
+  "seoGuideNoCity": "No city",
+  "seoGuideBody": "Body (Markdown)",
+  "seoGuideAi": "AI-assisted draft",
+  "seoGuideAiHelp": "AI drafts must be reviewed and approved by a person before they go live. At most {cap} new AI-assisted guides per week.",
+  "@seoGuideAiHelp": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "seoGuideEditResets": "Saving sends an approved or published guide back to draft: it needs a new review.",
+  "seoGuideApprove": "Approve",
+  "seoGuidePublish": "Publish",
+  "seoGuideUnpublish": "Unpublish",
+  "seoGuideReject": "Back to draft",
+  "seoGuideReviewed": "Reviewed {date}",
+  "@seoGuideReviewed": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "seoGuideStatusDraft": "Draft",
+  "seoGuideStatusApproved": "Approved",
+  "seoGuideStatusPublished": "Published",
+  "seoGuideAiBadge": "AI-assisted",
+  "seoGuideReviewOverdue": "Review overdue: re-review at least twice a year",
+  "seoGuidesEmpty": "No guides yet.",
+  "seoGuideSite": "On the site: {visibility}",
+  "@seoGuideSite": {
+    "placeholders": {
+      "visibility": {
+        "type": "String"
+      }
+    }
+  },
+  "seoGuideInvalid": "Invalid guide: {code}",
+  "@seoGuideInvalid": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
   }
 }
