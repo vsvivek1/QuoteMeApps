@@ -1,0 +1,7 @@
+{
+  "COUNTRY": "india",
+  "ENV": "prod",
+  "SUPABASE_URL": "",
+  "SUPABASE_ANON_KEY": "",
+  "DEMO_MODE": false
+}

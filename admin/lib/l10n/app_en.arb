@@ -1,0 +1,598 @@
+{
+  "@@locale": "en",
+  "adminTitle": "{app} Admin",
+  "@adminTitle": {
+    "placeholders": {
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "loadFailed": "Could not load",
+  "retry": "Retry",
+  "refresh": "Refresh",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "save": "Save",
+  "saved": "Saved",
+  "edit": "Edit",
+  "add": "Add",
+  "all": "All",
+  "any": "Any",
+  "ok": "OK",
+  "required": "Required",
+  "warning": "Warning",
+  "demoMode": "DEMO DATA",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "email": "Email",
+  "password": "Password",
+  "emailInvalid": "Enter a valid email",
+  "loginSubtitle": "Administrators only. Sign in with your admin email and password.",
+  "loginNotAdmin": "This account does not have the admin role. Access refused.",
+  "loginInvalid": "Wrong email or password.",
+  "loginFailed": "Sign-in failed: {error}",
+  "@loginFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "demoLoginHint": "Demo mode: sign in with {email} / {password}. Nothing is sent anywhere.",
+  "@demoLoginHint": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      },
+      "password": {
+        "type": "String"
+      }
+    }
+  },
+  "navDashboard": "Dashboard",
+  "navVerification": "Verification",
+  "navModeration": "Moderation",
+  "navCategories": "Categories",
+  "navFlags": "Flags",
+  "navOutreach": "Outreach CRM",
+  "navBrochures": "Brochures",
+  "dashQueues": "Queues",
+  "dashMarketplace": "Marketplace (Section 13)",
+  "dashRetention": "Retention",
+  "dashOutreach": "Seller acquisition",
+  "kpiPendingVerifications": "Pending verifications",
+  "kpiPendingLicences": "Pending licences",
+  "kpiOpenReports": "Open reports",
+  "kpiTimeToFirstQuote": "Time to first quote (median)",
+  "kpiTimeToFirstQuoteHint": "Target: under 2 h in metros",
+  "kpiRequests3Quotes": "Requests with 3+ quotes",
+  "kpiRequestToAcceptance": "Request to acceptance",
+  "kpiSellerResponseRate": "Seller response rate",
+  "kpiFreeToPaid": "Seller free-to-paid",
+  "kpiRevenuePerSeller": "Revenue per seller",
+  "kpiRefunds": "Refunds (30 days)",
+  "kpiOpenRequests": "Open requests",
+  "kpiRequests7d": "Requests (7 days)",
+  "kpiQuotes7d": "Quotes (7 days)",
+  "kpiOrders7d": "Orders (7 days)",
+  "kpiUsers": "Users",
+  "kpiSellers": "Sellers",
+  "verified": "verified",
+  "kpiReplyRate": "Reply rate",
+  "kpiSignupRate": "Signup rate",
+  "kpiSentToday": "Sent today / daily cap",
+  "kpiQueue": "Queue (sourced, enrolled)",
+  "kpiQueueDays": "about {days} days at current cap",
+  "@kpiQueueDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "verificationEmpty": "No documents waiting for review.",
+  "docNotAvailableDemo": "Documents are not available in demo mode.",
+  "rejectTitle": "Reject: reason",
+  "rejectHint": "Tell the seller what to fix (they will see this).",
+  "approveTitle": "Approve",
+  "approveBody": "Approve this document for {business}? The seller gets the verified badge.",
+  "@approveBody": {
+    "placeholders": {
+      "business": {
+        "type": "String"
+      }
+    }
+  },
+  "approved": "Approved",
+  "rejected": "Rejected",
+  "licence": "Licence",
+  "document": "Document",
+  "issuer": "Issuer",
+  "expires": "Expires",
+  "categories": "Categories",
+  "submitted": "submitted",
+  "sellerStatus": "Seller status",
+  "noFile": "No file",
+  "viewDocument": "View document",
+  "approve": "Approve",
+  "reject": "Reject",
+  "tabReports": "Reports",
+  "tabUsers": "Users",
+  "tabAuditLog": "Audit log",
+  "reportsEmpty": "No open reports.",
+  "resolveTitle": "Resolve report",
+  "resolveNoteHint": "Optional note for the audit log",
+  "reportsResolved": "{count} report(s) resolved",
+  "@reportsResolved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "banTitle": "Ban user: reason",
+  "banHint": "Reason (kept in the audit log)",
+  "userBanned": "User banned",
+  "reportCount": "{count} report(s)",
+  "@reportCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reporterSays": "Reporter says",
+  "hideContent": "Hide content",
+  "dismiss": "Dismiss",
+  "restore": "Restore",
+  "banUser": "Ban user",
+  "suspendTitle": "Suspend for 7 days: reason",
+  "userStatusSet": "User status set to {status}",
+  "@userStatusSet": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "searchUsersHint": "Search name, email or phone, then press Enter",
+  "noResults": "No results",
+  "reason": "Reason",
+  "reactivate": "Reactivate",
+  "suspend7d": "Suspend 7 days",
+  "auditEmpty": "No admin actions logged yet.",
+  "categoriesIntro": "Category policy for {app}. Restricted categories need a licence type; anything uncertain stays blocked until legal sign-off.",
+  "@categoriesIntro": {
+    "placeholders": {
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "policyAllowed": "Allowed",
+  "policyRestricted": "Restricted",
+  "policyBlocked": "Blocked",
+  "licenceType": "Required licence type",
+  "licenceTypeHelp": "e.g. state_contractor_licence, rera, nmc_registration",
+  "inactive": "inactive",
+  "policyReasonEn": "Reason shown to users (English)",
+  "disclaimerEn": "Regulatory disclaimer (English)",
+  "names": "Names",
+  "activeLabel": "Active",
+  "unblockWarning": "Make sure a lawyer has confirmed this category may be quoted in this country.",
+  "outreachFlag": "Seller outreach engine (Section 21)",
+  "outreachFlagHelp": "Off stops every outreach send. Sending is always manual.",
+  "remoteFlags": "Remote flags and limits",
+  "remoteFlagsHelp": "Stored in app_settings for this country project. Public flags are read by the apps and mirrored to Remote Config by the backend.",
+  "publicFlag": "public",
+  "invalidNumber": "Enter a number",
+  "monetizationTitle": "Monetization switch",
+  "monetizationOn": "On: paid plans and paywalls are live.",
+  "monetizationOff": "Off: everything is free for sellers and no paywall is shown.",
+  "monetizationOnTitle": "Turn monetization on?",
+  "monetizationOnBody": "Paywalls go live for new sellers. Early partners stay free until {date} (6 months from today if not set).",
+  "@monetizationOnBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "monetizationOffTitle": "Turn monetization off?",
+  "monetizationOffBody": "All seller features become free again and paywalls are hidden.",
+  "earlyPartnerUntil": "Early partners free until",
+  "notSetYet": "not set yet",
+  "changeDate": "Change date",
+  "earlyPartnerHelp": "Outreach and brochures always state this end date. Never promise free for life.",
+  "importCsv": "Import CSV",
+  "tabBoard": "Board",
+  "tabSuppression": "Suppression",
+  "tabCampaigns": "Campaigns",
+  "tabCoverage": "Coverage",
+  "enrolTitle": "Enrol {count} lead(s) in a campaign",
+  "@enrolTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "enrolled": "Enrolled. Each send still needs a person.",
+  "moveSelected": "Move {count} lead(s) to",
+  "@moveSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "movedCount": "{count} lead(s) moved",
+  "@movedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectedCount": "{count} selected",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "enrolInCampaign": "Enrol in campaign",
+  "moveStage": "Move stage",
+  "exportCsv": "Export CSV",
+  "exportAllCsv": "Export all (CSV)",
+  "clearSelection": "Clear",
+  "leadCount": "{count} leads",
+  "@leadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchLeads": "Search leads",
+  "state": "State",
+  "city": "City",
+  "category": "Category",
+  "source": "Source",
+  "clearFilters": "Clear filters",
+  "noMatchedCategory": "No matched category (not contactable)",
+  "touches": "{count}/3 touches",
+  "@touches": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "due": "due",
+  "addSuppression": "Add to suppression list",
+  "domain": "Domain",
+  "phone": "Phone",
+  "value": "Value",
+  "note": "Note",
+  "suppressionPermanent": "Suppression is shared across all inboxes and channels and is permanent.",
+  "suppressionIntro": "Every send checks this list. Unsubscribes, hard bounces, complaints and negative replies land here automatically.",
+  "suppressionEmpty": "Nothing suppressed yet.",
+  "sendCapacity": "Sent today: {sent} of {cap} (global daily ceiling)",
+  "@sendCapacity": {
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "sendCapacityHelp": "Per recipient domain: {domain}/day. Brakes pause a campaign above {bounce}% bounces, {complaint}% complaints or {negative}% negative replies.",
+  "@sendCapacityHelp": {
+    "placeholders": {
+      "domain": {
+        "type": "int"
+      },
+      "bounce": {
+        "type": "String"
+      },
+      "complaint": {
+        "type": "String"
+      },
+      "negative": {
+        "type": "String"
+      }
+    }
+  },
+  "status": "Status",
+  "dailyCap": "Daily cap",
+  "pausedReason": "Paused because",
+  "campaignHealth": "30 days: {sent} sent, bounces {bounce}, complaints {complaint}, negative {negative}",
+  "@campaignHealth": {
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "bounce": {
+        "type": "String"
+      },
+      "complaint": {
+        "type": "String"
+      },
+      "negative": {
+        "type": "String"
+      }
+    }
+  },
+  "pause": "Pause",
+  "resume": "Resume",
+  "resumeTitle": "Resume campaign?",
+  "resumeBody": "Sending stays manual and every cap still applies.",
+  "resumeBrakeBody": "This campaign was paused by an automatic brake. Fix the cause (list quality, content) before resuming.",
+  "coverageIntro": "Sellers per city and category. Areas with fewer than 5 sellers need outreach first.",
+  "sellers": "Sellers",
+  "liquidity": "Liquidity",
+  "needsSellers": "Needs sellers",
+  "stageSourced": "Sourced",
+  "stageContacted": "Contacted",
+  "stageReplied": "Replied",
+  "stageOnboarding": "Onboarding",
+  "stageLiveSeller": "Live seller",
+  "stageActive": "Active (first quote)",
+  "stageNotInterested": "Not interested",
+  "stageDoNotContact": "Do not contact",
+  "trNoChange": "The lead is already in that stage.",
+  "trNotAllowed": "That move is not allowed: the pipeline only moves forward, so a finished conversation is never restarted.",
+  "trTerminal": "Do not contact is permanent.",
+  "trNeedsSellerLink": "Link the lead to a seller account first (it happens when they sign up).",
+  "trNeedsLoggedContact": "Log the call, visit or 1:1 message first.",
+  "rule0": "A person confirms every send",
+  "rule1": "Relevance only",
+  "rule2": "One conversation per business, max 3 touches",
+  "rule3": "Verified, business-published address",
+  "rule4": "Short, plain, personal, honest",
+  "rule5": "Easy, respected opt-out",
+  "rule6": "Volume caps and business hours",
+  "rule7": "Automatic brakes",
+  "rule8": "Honest identity",
+  "rule9": "WhatsApp/SMS only after opt-in",
+  "rule10": "Businesses only, never consumers",
+  "rule11": "Audit trail",
+  "logContactFirst": "Moving to Contacted by hand needs a logged contact.",
+  "logContactTitle": "Log contact",
+  "dncTitle": "Do not contact {business}?",
+  "@dncTitle": {
+    "placeholders": {
+      "business": {
+        "type": "String"
+      }
+    }
+  },
+  "dncBody": "The business is added to the shared suppression list and will never be contacted again on any channel.",
+  "moveTo": "Move to {stage}",
+  "@moveTo": {
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "movedTo": "Moved to {stage}",
+  "@movedTo": {
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "optionalNote": "Optional note",
+  "contactCall": "Call",
+  "contactVisit": "Visit",
+  "contactWhatsApp": "WhatsApp 1:1",
+  "contactNote": "Note",
+  "whatHappened": "What happened?",
+  "lead": "Lead",
+  "whatsAppPitch": "Hello {business}, I am from {app}. Buyers in {city} post {category} requests and local businesses send quotes. Founding partners join free. Can I set up your shop? {link} (Reply STOP and I won't message again.)",
+  "@whatsAppPitch": {
+    "placeholders": {
+      "business": {
+        "type": "String"
+      },
+      "app": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "city": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "whatsAppManualTitle": "Message on WhatsApp",
+  "whatsAppManualBody": "This opens WhatsApp with a pre-filled message for you to send personally, at a human pace. It is logged in the CRM.",
+  "whatsAppManual": "Message on WhatsApp",
+  "recordOptIn": "Record WhatsApp opt-in",
+  "optInProofHint": "How did they opt in? (replied, QR scan, signup form, in person)",
+  "prepareSend": "Prepare step {step}",
+  "@prepareSend": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "contact": "Contact",
+  "website": "Website",
+  "address": "Address",
+  "rating": "Rating",
+  "sourceCategories": "Source tags",
+  "compliance": "Compliance",
+  "lawfulBasis": "Lawful basis",
+  "addressSource": "Address published at",
+  "reasonChosen": "Why chosen",
+  "optIn": "Opt-in",
+  "sequence": "Sequence",
+  "campaign": "Campaign",
+  "sellerAccount": "Seller account",
+  "notesAndNextAction": "Notes and next action",
+  "notes": "Notes",
+  "nextAction": "Next action",
+  "dueDate": "Due date",
+  "history": "Message history",
+  "noHistory": "No messages yet.",
+  "stepN": "step {step}",
+  "@stepN": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "sendTitle": "Send to {business} (step {step})",
+  "@sendTitle": {
+    "placeholders": {
+      "business": {
+        "type": "String"
+      },
+      "step": {
+        "type": "int"
+      }
+    }
+  },
+  "neverAutomatic": "Nothing is sent automatically. Review the message; the checks below run here, again in the Edge Function and again in the database.",
+  "inbox": "Inbox",
+  "approvedTemplate": "Approved WhatsApp template name",
+  "subject": "Subject",
+  "body": "Message",
+  "wordCount": "{words} / {max} words",
+  "@wordCount": {
+    "placeholders": {
+      "words": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "footerPreview": "Footer added to every email",
+  "confirmPersonalSend": "I reviewed this message and I am sending it to this business now.",
+  "sendNow": "Send",
+  "sent": "Sent",
+  "antiSpamChecks": "Anti-spam checks (Section 21.8)",
+  "serverRefused": "Refused by the server: {reason}",
+  "@serverRefused": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "fileTooLarge": "File too large (max 5 MB)",
+  "importRulesTitle": "Compliant sources only",
+  "importRules": "Allowed sources: osm, places (Google Places API), registry (public licence lists), website (the business's own contact page), inbound, referral, manual, field. Never scraped Google Maps, Yelp, YellowPages, Justdial or IndiaMART pages, bought lists, or consumer data. Rows that break these rules are rejected. Emails need the page where the business published them (address_source).",
+  "importColumns": "Columns: {columns}",
+  "@importColumns": {
+    "placeholders": {
+      "columns": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseCsv": "Choose CSV",
+  "downloadTemplate": "Download template",
+  "importReady": "{count} ready",
+  "@importReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importRejected": "{count} rejected",
+  "@importRejected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importDuplicates": "{count} duplicates in file",
+  "@importDuplicates": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importNoCategory": "{count} without a matched category",
+  "@importNoCategory": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rejectedRows": "Rejected rows",
+  "rowReason": "Row {line}: {reason}",
+  "@rowReason": {
+    "placeholders": {
+      "line": {
+        "type": "int"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "businessName": "Business",
+  "importAttestation": "I confirm these are businesses from the compliant sources above, with no consumer data.",
+  "importNow": "Import {count} leads",
+  "@importNow": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importDone": "Imported {inserted}; {duplicates} already known (deduplicated).",
+  "@importDone": {
+    "placeholders": {
+      "inserted": {
+        "type": "int"
+      },
+      "duplicates": {
+        "type": "int"
+      }
+    }
+  },
+  "anyCityHelp": "Any city or town: outreach is nationwide.",
+  "formatA4": "A4 PDF",
+  "formatA5": "A5 one-pager",
+  "formatImage": "1080x1350 image",
+  "foundingUntil": "Founding partner offer ends",
+  "foundingUntilRequired": "Pick a date: the offer always states its end date.",
+  "fromSettings": "from settings",
+  "download": "Download",
+  "print": "Print",
+  "saveToStorage": "Save to Storage",
+  "brochureSaved": "Saved: {path}",
+  "@brochureSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "savedBrochures": "Saved brochures",
+  "noBrochures": "None yet.",
+  "brochureIncomplete": "Choose a city, category and offer end date."
+}

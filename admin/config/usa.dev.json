@@ -1,0 +1,7 @@
+{
+  "COUNTRY": "usa",
+  "ENV": "dev",
+  "SUPABASE_URL": "",
+  "SUPABASE_ANON_KEY": "",
+  "DEMO_MODE": false
+}
