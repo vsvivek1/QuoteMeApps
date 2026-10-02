@@ -1,0 +1,50 @@
+{
+  "_doc": "Shared money rounding cases for SQL (02_money.test.sql), Edge Functions (functions/tests/money_test.ts) and the Flutter app. Amounts are integer minor units; rates are integer basis points; round_half_up(n, d) = (2n + d) div (2d). GST intra: cgst = sgst = rhu(base*bp, 20000); inter: igst = rhu(base*bp, 10000). US sales tax = rhu(subtotal*bp, 10000) on the subtotal only.",
+  "round_half_up": [
+    { "n": 5, "d": 10, "expected": 1 },
+    { "n": 4, "d": 10, "expected": 0 },
+    { "n": 15, "d": 10, "expected": 2 },
+    { "n": 25, "d": 10, "expected": 3 },
+    { "n": 0, "d": 10000, "expected": 0 }
+  ],
+  "gst_line": [
+    { "qty": 1, "unit_price_minor": 99999, "rate_bp": 1800, "intra": true, "cgst": 9000, "sgst": 9000, "igst": 0, "tax": 18000 },
+    { "qty": 1, "unit_price_minor": 99999, "rate_bp": 1800, "intra": false, "cgst": 0, "sgst": 0, "igst": 18000, "tax": 18000 },
+    { "qty": 1, "unit_price_minor": 333, "rate_bp": 500, "intra": true, "cgst": 8, "sgst": 8, "igst": 0, "tax": 16 },
+    { "qty": 1, "unit_price_minor": 333, "rate_bp": 500, "intra": false, "cgst": 0, "sgst": 0, "igst": 17, "tax": 17 },
+    { "qty": 1, "unit_price_minor": 1010, "rate_bp": 500, "intra": true, "cgst": 25, "sgst": 25, "igst": 0, "tax": 50 },
+    { "qty": 1, "unit_price_minor": 1010, "rate_bp": 500, "intra": false, "cgst": 0, "sgst": 0, "igst": 51, "tax": 51 },
+    { "qty": 1, "unit_price_minor": 4125, "rate_bp": 1200, "intra": true, "cgst": 248, "sgst": 248, "igst": 0, "tax": 496 },
+    { "qty": 3, "unit_price_minor": 129900, "rate_bp": 2800, "intra": true, "cgst": 54558, "sgst": 54558, "igst": 0, "tax": 109116 },
+    { "qty": 1, "unit_price_minor": 1, "rate_bp": 1800, "intra": false, "cgst": 0, "sgst": 0, "igst": 0, "tax": 0 },
+    { "qty": 1, "unit_price_minor": 0, "rate_bp": 1800, "intra": true, "cgst": 0, "sgst": 0, "igst": 0, "tax": 0 },
+    { "qty": "2.5", "unit_price_minor": 333, "rate_bp": 500, "intra": true, "base": 833, "cgst": 21, "sgst": 21, "igst": 0, "tax": 42 }
+  ],
+  "us_sales_tax": [
+    { "subtotal_minor": 1999, "rate_bp": 825, "expected": 165 },
+    { "subtotal_minor": 10, "rate_bp": 500, "expected": 1 },
+    { "subtotal_minor": 0, "rate_bp": 825, "expected": 0 },
+    { "subtotal_minor": 1000, "rate_bp": 0, "expected": 0 },
+    { "subtotal_minor": 200, "rate_bp": 1025, "expected": 21 }
+  ],
+  "quotes": [
+    {
+      "country": "IN", "intra": true, "delivery_minor": 5000, "sales_tax_rate_bp": 0,
+      "lines": [ { "qty": 1, "unit_price_minor": 99999, "tax_rate_bp": 1800 }, { "qty": 1, "unit_price_minor": 333, "tax_rate_bp": 500 } ],
+      "subtotal_minor": 100332, "tax_minor": 18016, "total_minor": 123348,
+      "tax_breakdown": { "kind": "gst", "mode": "intra", "rate_bp": 1800, "cgst": 9008, "sgst": 9008, "igst": 0 }
+    },
+    {
+      "country": "IN", "intra": false, "delivery_minor": 5000, "sales_tax_rate_bp": 0,
+      "lines": [ { "qty": 1, "unit_price_minor": 99999, "tax_rate_bp": 1800 } ],
+      "subtotal_minor": 99999, "tax_minor": 18000, "total_minor": 122999,
+      "tax_breakdown": { "kind": "gst", "mode": "inter", "rate_bp": 1800, "cgst": 0, "sgst": 0, "igst": 18000 }
+    },
+    {
+      "country": "US", "intra": true, "delivery_minor": 500, "sales_tax_rate_bp": 825,
+      "lines": [ { "qty": 1, "unit_price_minor": 1999 } ],
+      "subtotal_minor": 1999, "tax_minor": 165, "total_minor": 2664,
+      "tax_breakdown": { "kind": "sales_tax", "rate_bp": 825, "amount": 165 }
+    }
+  ]
+}

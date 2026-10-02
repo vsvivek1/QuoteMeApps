@@ -1,0 +1,156 @@
+-- Shared pgTAP helpers, included by every *.test.sql with \ir. Each test
+-- runs in its own transaction and rolls back, so these objects never persist.
+-- Fixtures are self-contained (own categories, postal codes, users) so the
+-- suite passes on top of either country seed and demo data.
+create extension if not exists pgtap with schema extensions;
+create schema if not exists tests;
+grant usage on schema tests to anon, authenticated, service_role;
+
+-- deterministic test user
+create or replace function tests.create_user(p_key text, p_name text default null, p_roles text[] default '{buyer}')
+returns uuid
+language plpgsql
+security definer
+as $$
+declare v_id uuid := md5('pgtap:' || p_key)::uuid;
+begin
+  insert into auth.users (instance_id, id, aud, role, email, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
+  values ('00000000-0000-0000-0000-000000000000', v_id, 'authenticated', 'authenticated', p_key || '@pgtap.invalid',
+          '{"provider":"email"}', jsonb_build_object('full_name', coalesce(p_name, p_key)), now(), now())
+  on conflict (id) do nothing;
+  update public.profiles set roles = p_roles, phone = '+0000' || abs(hashtext(p_key)) where id = v_id;
+  return v_id;
+end $$;
+
+create or replace function tests.roles_of(p_uid uuid) returns json
+language sql stable security definer as $$ select to_json(roles) from public.profiles where id = p_uid $$;
+
+-- switch to the authenticated role with this user's claims (roles claim as
+-- the custom access token hook would issue it)
+create or replace function tests.authenticate_as(p_uid uuid)
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('request.jwt.claims', json_build_object(
+    'sub', p_uid, 'role', 'authenticated', 'aud', 'authenticated',
+    'roles', tests.roles_of(p_uid))::text, true);
+  perform set_config('role', 'authenticated', true);
+end $$;
+
+create or replace function tests.authenticate_anon()
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('request.jwt.claims', '{"role":"anon"}', true);
+  perform set_config('role', 'anon', true);
+end $$;
+
+create or replace function tests.authenticate_service()
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('request.jwt.claims', '{"role":"service_role"}', true);
+  perform set_config('role', 'service_role', true);
+end $$;
+
+-- back to the superuser test session (run as plain SQL: `select tests.clear_auth(); reset role;`)
+create or replace function tests.clear_auth()
+returns void
+language plpgsql
+as $$
+begin
+  perform set_config('request.jwt.claims', '', true);
+end $$;
+
+grant execute on all functions in schema tests to anon, authenticated, service_role;
+
+-- country-neutral fixture data (IN format codes; tests force country = IN
+-- unless they test USA behaviour explicitly)
+update public.app_settings set value = '"IN"' where key = 'country';
+update public.app_settings set value = '"INR"' where key = 'currency';
+update public.app_settings set value = 'false' where key = 'monetization_enabled';
+update public.app_settings set value = '10' where key = 'quote_cap';
+update public.app_settings set value = '15' where key = 'priority_window_minutes';
+
+insert into public.categories (slug, names, policy, required_licence_type, field_schema)
+values ('t-root', '{"en":"Test root"}', 'allowed', null, null),
+       ('t-restricted-root', '{"en":"Test restricted"}', 'restricted', 't_licence', null),
+       ('t-blocked-root', '{"en":"Test blocked"}', 'blocked', null, null);
+insert into public.categories (slug, parent_id, names, policy, required_licence_type, field_schema, keywords)
+values ('t-fridge', (select id from public.categories where slug = 't-root'), '{"en":"Test fridge"}', 'allowed', null,
+        '{"fields":[{"key":"door_type","type":"select","required":true,"scope":"both","options":[{"value":"single"},{"value":"double"}]},
+                    {"key":"bis","type":"boolean","required":true,"scope":"quote"}]}', '{testfridgeword}'),
+       ('t-repair', (select id from public.categories where slug = 't-root'), '{"en":"Test repair"}', 'allowed', null, null, '{}'),
+       ('t-licensed', (select id from public.categories where slug = 't-restricted-root'), '{"en":"Test licensed"}', 'restricted', 't_licence', null, '{}'),
+       ('t-forbidden', (select id from public.categories where slug = 't-blocked-root'), '{"en":"Test forbidden"}', 'blocked', null, null, '{}');
+insert into public.category_keywords (keyword, lang, action, category_id)
+values ('zzforbiddenthing', 'en', 'block', (select id from public.categories where slug = 't-blocked-root'));
+
+-- postal codes: A (centre), B (~5.5 km north of A), C (~111 km north of A)
+insert into public.postal_codes (code, centroid, city, district, state) values
+  ('990001', st_setsrid(st_makepoint(77.0000, 12.0000), 4326)::geography, 'Testpur', 'Centre', 'Teststate'),
+  ('990002', st_setsrid(st_makepoint(77.0000, 12.0500), 4326)::geography, 'Testpur', 'North', 'Teststate'),
+  ('990003', st_setsrid(st_makepoint(77.0000, 13.0000), 4326)::geography, 'Farpur', 'Far', 'Otherstate');
+
+create or replace function tests.cat(p_slug text) returns bigint language sql stable
+as $$ select id from public.categories where slug = p_slug $$;
+grant execute on function tests.cat(text) to anon, authenticated, service_role;
+
+-- a seller (as postgres) with categories and a service area
+create or replace function tests.make_seller(
+  p_key text, p_area text default 'radius', p_lat float8 default 12.0, p_lng float8 default 77.0,
+  p_radius numeric default 10, p_codes text[] default '{}', p_cats text[] default '{t-fridge,t-repair}',
+  p_verified boolean default false, p_state text default 'Teststate')
+returns uuid
+language plpgsql
+security definer
+as $$
+declare v_id uuid := tests.create_user(p_key, p_key, '{buyer,seller}');
+begin
+  insert into public.sellers (id, business_name, area_type, center, radius_km, service_codes, verification_status, state)
+  values (v_id, 'Shop ' || p_key, p_area,
+          st_setsrid(st_makepoint(p_lng, p_lat), 4326)::geography,
+          case when p_area = 'radius' then p_radius end, p_codes,
+          case when p_verified then 'verified' else 'unverified' end, p_state);
+  insert into public.seller_categories (seller_id, category_id)
+  select v_id, tests.cat(c) from unnest(p_cats) c;
+  return v_id;
+end $$;
+
+-- a request (as postgres, bypassing create_request) at postal code A
+create or replace function tests.make_request(
+  p_buyer uuid, p_cat text default 't-fridge', p_code text default '990001',
+  p_audience text default 'both', p_priority_over boolean default true, p_title text default 'Test request')
+returns uuid
+language plpgsql
+security definer
+as $$
+declare v_id uuid;
+begin
+  insert into public.requests (buyer_id, category_id, title, fields, currency, location, location_code, state, audience,
+                               max_quotes, priority_until, quote_window_ends_at)
+  select p_buyer, tests.cat(p_cat), p_title, '{"door_type":"double"}', 'INR', pc.centroid, pc.code, pc.state, p_audience,
+         10, case when p_priority_over then now() - interval '1 minute' else now() + interval '15 minutes' end,
+         now() + interval '2 days'
+    from public.postal_codes pc where pc.code = p_code
+  returning id into v_id;
+  insert into public.request_private (request_id, full_address, buyer_phone)
+  values (v_id, '1 Secret Lane', '+910000099999');
+  return v_id;
+end $$;
+
+create or replace function tests.line(p_unit bigint default 100000, p_qty numeric default 1, p_rate int default 1800)
+returns jsonb language sql immutable
+as $$ select jsonb_build_array(jsonb_build_object('description', 'Item', 'qty', p_qty, 'unit_price_minor', p_unit, 'tax_rate_bp', p_rate)) $$;
+grant execute on all functions in schema tests to anon, authenticated, service_role;
+
+-- submit a quote as the current (authenticated) user; t-fridge needs the quote-only "bis" field
+create or replace function tests.quote(p_request uuid, p_unit bigint default 100000)
+returns public.quotes
+language sql
+as $$ select public.submit_quote(p_request_id => p_request, p_line_items => tests.line(p_unit),
+                                 p_fields => '{"bis": true}'::jsonb) $$;
+grant execute on function tests.quote(uuid, bigint) to authenticated;

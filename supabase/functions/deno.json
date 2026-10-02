@@ -1,0 +1,26 @@
+{
+  "//": "Shared import map for every Edge Function (Section 23.1: URL / jsr: / npm: specifiers only, never a package.json).",
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.117.2",
+    "@upstash/ratelimit": "npm:@upstash/ratelimit@^2.2.0",
+    "@upstash/redis": "npm:@upstash/redis@^1.39.0",
+    "jose": "npm:jose@^6.2.0",
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "@std/encoding": "jsr:@std/encoding@^1.0.11"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["deno.window", "deno.unstable"]
+  },
+  "lint": {
+    "rules": { "exclude": ["no-explicit-any"] }
+  },
+  "fmt": {
+    "lineWidth": 110,
+    "singleQuote": false
+  },
+  "tasks": {
+    "check": "deno check **/index.ts _shared/*.ts",
+    "test": "deno test --allow-env --allow-read=../tests/fixtures tests/"
+  }
+}
