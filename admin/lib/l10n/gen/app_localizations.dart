@@ -2443,6 +2443,1411 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid guide: {code}'**
   String seoGuideInvalid(String code);
+
+  /// No description provided for @navTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Trends'**
+  String get navTrends;
+
+  /// No description provided for @trendsCountryUsa.
+  ///
+  /// In en, this message translates to:
+  /// **'USA'**
+  String get trendsCountryUsa;
+
+  /// No description provided for @trendsCountryIndia.
+  ///
+  /// In en, this message translates to:
+  /// **'India'**
+  String get trendsCountryIndia;
+
+  /// No description provided for @trendsTabBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Live board'**
+  String get trendsTabBoard;
+
+  /// No description provided for @trendsTabTopics.
+  ///
+  /// In en, this message translates to:
+  /// **'Fired topics'**
+  String get trendsTabTopics;
+
+  /// No description provided for @trendsTabDrafts.
+  ///
+  /// In en, this message translates to:
+  /// **'Drafts'**
+  String get trendsTabDrafts;
+
+  /// No description provided for @trendsTabReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review queue'**
+  String get trendsTabReview;
+
+  /// No description provided for @trendsTabControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Controls'**
+  String get trendsTabControls;
+
+  /// No description provided for @trendsTopicWatching.
+  ///
+  /// In en, this message translates to:
+  /// **'Watching'**
+  String get trendsTopicWatching;
+
+  /// No description provided for @trendsTopicFired.
+  ///
+  /// In en, this message translates to:
+  /// **'Fired'**
+  String get trendsTopicFired;
+
+  /// No description provided for @trendsTopicReview.
+  ///
+  /// In en, this message translates to:
+  /// **'In review'**
+  String get trendsTopicReview;
+
+  /// No description provided for @trendsTopicDrafted.
+  ///
+  /// In en, this message translates to:
+  /// **'Drafted'**
+  String get trendsTopicDrafted;
+
+  /// No description provided for @trendsTopicPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get trendsTopicPublished;
+
+  /// No description provided for @trendsTopicWaitingSources.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for sources'**
+  String get trendsTopicWaitingSources;
+
+  /// No description provided for @trendsTopicDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropped'**
+  String get trendsTopicDropped;
+
+  /// No description provided for @trendsTopicEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get trendsTopicEnded;
+
+  /// No description provided for @trendsDraftQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued'**
+  String get trendsDraftQueued;
+
+  /// No description provided for @trendsDraftReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get trendsDraftReview;
+
+  /// No description provided for @trendsDraftRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get trendsDraftRejected;
+
+  /// No description provided for @trendsDraftPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get trendsDraftPublished;
+
+  /// No description provided for @trendsDraftNoindex.
+  ///
+  /// In en, this message translates to:
+  /// **'Noindex'**
+  String get trendsDraftNoindex;
+
+  /// No description provided for @trendsQueuedCaps.
+  ///
+  /// In en, this message translates to:
+  /// **'waiting for the caps'**
+  String get trendsQueuedCaps;
+
+  /// No description provided for @trendsQueuedDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'waiting for the draft'**
+  String get trendsQueuedDraft;
+
+  /// No description provided for @trendsStageTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'topic stage'**
+  String get trendsStageTopic;
+
+  /// No description provided for @trendsStageContent.
+  ///
+  /// In en, this message translates to:
+  /// **'final text stage'**
+  String get trendsStageContent;
+
+  /// No description provided for @trendsActionReject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get trendsActionReject;
+
+  /// No description provided for @trendsActionNoindex.
+  ///
+  /// In en, this message translates to:
+  /// **'Set noindex'**
+  String get trendsActionNoindex;
+
+  /// No description provided for @trendsActionIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'Make indexable again'**
+  String get trendsActionIndex;
+
+  /// No description provided for @trendsActionUnpublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpublish'**
+  String get trendsActionUnpublish;
+
+  /// No description provided for @trendsActionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{action}: {headline}'**
+  String trendsActionTitle(String action, String headline);
+
+  /// No description provided for @trendsActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get trendsActions;
+
+  /// No description provided for @trendsOpenDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get trendsOpenDraft;
+
+  /// No description provided for @trendsGateSources.
+  ///
+  /// In en, this message translates to:
+  /// **'2+ sources'**
+  String get trendsGateSources;
+
+  /// No description provided for @trendsGateSensitive.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitive'**
+  String get trendsGateSensitive;
+
+  /// No description provided for @trendsGateOriginality.
+  ///
+  /// In en, this message translates to:
+  /// **'Originality'**
+  String get trendsGateOriginality;
+
+  /// No description provided for @trendsGateFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Facts'**
+  String get trendsGateFacts;
+
+  /// No description provided for @trendsGateValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get trendsGateValue;
+
+  /// No description provided for @trendsGateBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get trendsGateBalance;
+
+  /// No description provided for @trendsGateCaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Caps'**
+  String get trendsGateCaps;
+
+  /// No description provided for @trendsGates.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality gates'**
+  String get trendsGates;
+
+  /// No description provided for @trendsNoGates.
+  ///
+  /// In en, this message translates to:
+  /// **'No gate has run yet.'**
+  String get trendsNoGates;
+
+  /// No description provided for @trendsRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Run now is limited to {limit} runs per hour for each function. Try again in {minutes} min.'**
+  String trendsRateLimited(int limit, int minutes);
+
+  /// No description provided for @trendsErrNotInReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else already decided this one. The queue has been refreshed.'**
+  String get trendsErrNotInReview;
+
+  /// No description provided for @trendsErrAdminOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This needs the admin role.'**
+  String get trendsErrAdminOnly;
+
+  /// No description provided for @trendsAddCorrection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add correction'**
+  String get trendsAddCorrection;
+
+  /// No description provided for @trendsCorrectionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What was wrong and what is correct (at least 10 characters)'**
+  String get trendsCorrectionHint;
+
+  /// No description provided for @trendsCorrectionTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'A correction needs at least 10 characters.'**
+  String get trendsCorrectionTooShort;
+
+  /// No description provided for @trendsCorrectionAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Correction added. The article is re-published within 5 minutes.'**
+  String get trendsCorrectionAdded;
+
+  /// No description provided for @trendsRecordTraffic.
+  ///
+  /// In en, this message translates to:
+  /// **'Record traffic'**
+  String get trendsRecordTraffic;
+
+  /// No description provided for @trendsRecordTrafficTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visits to /{slug} in the 14 days after the trend ended'**
+  String trendsRecordTrafficTitle(String slug);
+
+  /// No description provided for @trendsVisitsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Visits in the 14 days after the trend ended'**
+  String get trendsVisitsHint;
+
+  /// No description provided for @trendsInvalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number.'**
+  String get trendsInvalidNumber;
+
+  /// No description provided for @trendsSupersede.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark superseded'**
+  String get trendsSupersede;
+
+  /// No description provided for @trendsSupersedeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Supersede /{slug}'**
+  String trendsSupersedeTitle(String slug);
+
+  /// No description provided for @trendsSupersedeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Slug of the newer article (it gets the canonical)'**
+  String get trendsSupersedeHint;
+
+  /// No description provided for @trendsPausedBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing and drafting are paused (by {who}: {reason}, since {at}). Polling continues.'**
+  String trendsPausedBanner(String who, String reason, String at);
+
+  /// No description provided for @trendsPausedByAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'automatic pause'**
+  String get trendsPausedByAuto;
+
+  /// No description provided for @trendsLastHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String trendsLastHours(int hours);
+
+  /// No description provided for @trendsPlaceFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter places'**
+  String get trendsPlaceFilter;
+
+  /// No description provided for @trendsGeneratedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {at}. Refreshes every minute.'**
+  String trendsGeneratedAt(String at);
+
+  /// No description provided for @trendsNoTopics.
+  ///
+  /// In en, this message translates to:
+  /// **'No topics in this period.'**
+  String get trendsNoTopics;
+
+  /// No description provided for @trendsFailingSources.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} feed(s) failing: blind spots on the board'**
+  String trendsFailingSources(int count);
+
+  /// No description provided for @trendsSignalsDomains.
+  ///
+  /// In en, this message translates to:
+  /// **'{signals} signals, {domains} publishers'**
+  String trendsSignalsDomains(int signals, int domains);
+
+  /// No description provided for @trendsFiredAt.
+  ///
+  /// In en, this message translates to:
+  /// **'fired {at}'**
+  String trendsFiredAt(String at);
+
+  /// No description provided for @trendsSources.
+  ///
+  /// In en, this message translates to:
+  /// **'Polled sources'**
+  String get trendsSources;
+
+  /// No description provided for @trendsAddSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Add source'**
+  String get trendsAddSource;
+
+  /// No description provided for @trendsColKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Kind'**
+  String get trendsColKind;
+
+  /// No description provided for @trendsColCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get trendsColCountry;
+
+  /// No description provided for @trendsColGeo.
+  ///
+  /// In en, this message translates to:
+  /// **'Geo'**
+  String get trendsColGeo;
+
+  /// No description provided for @trendsColPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Place'**
+  String get trendsColPlace;
+
+  /// No description provided for @trendsColQuery.
+  ///
+  /// In en, this message translates to:
+  /// **'Query / subreddit'**
+  String get trendsColQuery;
+
+  /// No description provided for @trendsColStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get trendsColStatus;
+
+  /// No description provided for @trendsColItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Items'**
+  String get trendsColItems;
+
+  /// No description provided for @trendsColPolled.
+  ///
+  /// In en, this message translates to:
+  /// **'Last polled'**
+  String get trendsColPolled;
+
+  /// No description provided for @trendsColEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get trendsColEnabled;
+
+  /// No description provided for @trendsColTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get trendsColTopic;
+
+  /// No description provided for @trendsColVelocity.
+  ///
+  /// In en, this message translates to:
+  /// **'Velocity'**
+  String get trendsColVelocity;
+
+  /// No description provided for @trendsColSignals.
+  ///
+  /// In en, this message translates to:
+  /// **'Signals'**
+  String get trendsColSignals;
+
+  /// No description provided for @trendsColDomains.
+  ///
+  /// In en, this message translates to:
+  /// **'Publishers'**
+  String get trendsColDomains;
+
+  /// No description provided for @trendsColFired.
+  ///
+  /// In en, this message translates to:
+  /// **'Fired'**
+  String get trendsColFired;
+
+  /// No description provided for @trendsColReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get trendsColReason;
+
+  /// No description provided for @trendsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled'**
+  String get trendsDisabled;
+
+  /// No description provided for @trendsLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get trendsLevel;
+
+  /// No description provided for @trendsPlaceSlug.
+  ///
+  /// In en, this message translates to:
+  /// **'Place slug'**
+  String get trendsPlaceSlug;
+
+  /// No description provided for @trendsPlaceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Place name'**
+  String get trendsPlaceName;
+
+  /// No description provided for @trendsState.
+  ///
+  /// In en, this message translates to:
+  /// **'State (optional)'**
+  String get trendsState;
+
+  /// No description provided for @trendsQueryHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Google News search or subreddit name (not used for Google Trends)'**
+  String get trendsQueryHelp;
+
+  /// No description provided for @trendsFiredHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Fired topics are waiting for the drafting run (gates 1 and 2 run before any model call).'**
+  String get trendsFiredHelp;
+
+  /// No description provided for @trendsNoDrafts.
+  ///
+  /// In en, this message translates to:
+  /// **'No drafts with this status.'**
+  String get trendsNoDrafts;
+
+  /// No description provided for @trendsVelocity.
+  ///
+  /// In en, this message translates to:
+  /// **'velocity {value}'**
+  String trendsVelocity(int value);
+
+  /// No description provided for @trendsPublishedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'published {at}'**
+  String trendsPublishedAt(String at);
+
+  /// No description provided for @trendsCreatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'created {at}'**
+  String trendsCreatedAt(String at);
+
+  /// No description provided for @trendsVisits.
+  ///
+  /// In en, this message translates to:
+  /// **'{visits} visits after the trend'**
+  String trendsVisits(int visits);
+
+  /// No description provided for @trendsSensitive.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitive'**
+  String get trendsSensitive;
+
+  /// No description provided for @trendsDirty.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-upload pending'**
+  String get trendsDirty;
+
+  /// No description provided for @trendsFailedGate.
+  ///
+  /// In en, this message translates to:
+  /// **'failed gate {gate}'**
+  String trendsFailedGate(String gate);
+
+  /// No description provided for @trendsNoindexReason.
+  ///
+  /// In en, this message translates to:
+  /// **'noindex: {reason}'**
+  String trendsNoindexReason(String reason);
+
+  /// No description provided for @trendsTopicReviewedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic approved by {who} on {at}'**
+  String trendsTopicReviewedBy(String who, String at);
+
+  /// No description provided for @trendsReviewedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Final text reviewed by {who} on {at}'**
+  String trendsReviewedBy(String who, String at);
+
+  /// No description provided for @trendsReviewHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitive topics never publish without a person. Topic stage: nothing has been drafted yet; approving lets the pipeline draft it. Final text stage: the finished article passed gates 3 to 5; approving queues it for publishing (caps still apply). Your name and the date are stored.'**
+  String get trendsReviewHelp;
+
+  /// No description provided for @trendsReviewEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing waiting for review.'**
+  String get trendsReviewEmpty;
+
+  /// No description provided for @trendsApproveTopicTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve this topic for drafting?'**
+  String get trendsApproveTopicTitle;
+
+  /// No description provided for @trendsApproveContentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve the final text for publishing?'**
+  String get trendsApproveContentTitle;
+
+  /// No description provided for @trendsRejectTopicTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this topic'**
+  String get trendsRejectTopicTitle;
+
+  /// No description provided for @trendsRejectContentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this article'**
+  String get trendsRejectContentTitle;
+
+  /// No description provided for @trendsReviewNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (required to reject)'**
+  String get trendsReviewNoteHint;
+
+  /// No description provided for @trendsApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved. Reviewer and date recorded.'**
+  String get trendsApproved;
+
+  /// No description provided for @trendsRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected.'**
+  String get trendsRejected;
+
+  /// No description provided for @trendsWaitingSince.
+  ///
+  /// In en, this message translates to:
+  /// **'waiting since {at}'**
+  String trendsWaitingSince(String at);
+
+  /// No description provided for @trendsSensitiveReasons.
+  ///
+  /// In en, this message translates to:
+  /// **'Why it is sensitive: {reasons}'**
+  String trendsSensitiveReasons(String reasons);
+
+  /// No description provided for @trendsTopicStageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing has been drafted yet: sensitive topics never reach the model before a person approves them. Check the topic and its headlines.'**
+  String get trendsTopicStageHelp;
+
+  /// No description provided for @trendsContentStageHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The finished article passed originality, fact and value checks. Read it in full before approving.'**
+  String get trendsContentStageHelp;
+
+  /// No description provided for @trendsShowHeadlines.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic and headlines'**
+  String get trendsShowHeadlines;
+
+  /// No description provided for @trendsReadArticle.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the article'**
+  String get trendsReadArticle;
+
+  /// No description provided for @trendsApproveTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve topic'**
+  String get trendsApproveTopic;
+
+  /// No description provided for @trendsApproveContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve final text'**
+  String get trendsApproveContent;
+
+  /// No description provided for @trendsOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get trendsOptional;
+
+  /// No description provided for @trendsKillSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Kill switch'**
+  String get trendsKillSwitch;
+
+  /// No description provided for @trendsResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get trendsResume;
+
+  /// No description provided for @trendsPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause now'**
+  String get trendsPause;
+
+  /// No description provided for @trendsPausedNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused: no drafting, no publishing'**
+  String get trendsPausedNow;
+
+  /// No description provided for @trendsRunningNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Running: drafting and publishing are allowed'**
+  String get trendsRunningNow;
+
+  /// No description provided for @trendsPausedDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused by {who}: {reason} (since {at})'**
+  String trendsPausedDetail(String who, String reason, String at);
+
+  /// No description provided for @trendsResumedDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Last resumed by {who}: {reason}'**
+  String trendsResumedDetail(String who, String reason);
+
+  /// No description provided for @trendsKillSwitchHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pausing stops model spend and publishing at once; polling continues so the board stays live. The site build also refuses articles published after the pause.'**
+  String get trendsKillSwitchHelp;
+
+  /// No description provided for @trendsPauseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause drafting and publishing?'**
+  String get trendsPauseTitle;
+
+  /// No description provided for @trendsPauseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is drafted or published until someone resumes. Say why (shown to other admins).'**
+  String get trendsPauseBody;
+
+  /// No description provided for @trendsResumeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume drafting and publishing?'**
+  String get trendsResumeTitle;
+
+  /// No description provided for @trendsResumeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Drafting (Claude spend) and publishing start again on the next run, within the caps. Make sure the reason for the pause is resolved.'**
+  String get trendsResumeBody;
+
+  /// No description provided for @trendsPausedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused.'**
+  String get trendsPausedToast;
+
+  /// No description provided for @trendsResumedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Resumed.'**
+  String get trendsResumedToast;
+
+  /// No description provided for @trendsPipeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Pipeline (cron jobs)'**
+  String get trendsPipeline;
+
+  /// No description provided for @trendsPipelineEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'On: poll, draft and publish run every 5 minutes'**
+  String get trendsPipelineEnabled;
+
+  /// No description provided for @trendsPipelineDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: no scheduled runs'**
+  String get trendsPipelineDisabled;
+
+  /// No description provided for @trendsPipelineHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Run the pipeline in ONE project only: it covers both countries.'**
+  String get trendsPipelineHelp;
+
+  /// No description provided for @trendsPipelineOnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn the pipeline on?'**
+  String get trendsPipelineOnTitle;
+
+  /// No description provided for @trendsPipelineOffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn the pipeline off?'**
+  String get trendsPipelineOffTitle;
+
+  /// No description provided for @trendsPipelineOnBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts the poll, draft and publish cron jobs in this project. Only do this in the one project that runs the trends site.'**
+  String get trendsPipelineOnBody;
+
+  /// No description provided for @trendsPipelineOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Stops all scheduled polling, drafting and publishing. The board stops updating.'**
+  String get trendsPipelineOffBody;
+
+  /// No description provided for @trendsPipelineOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get trendsPipelineOn;
+
+  /// No description provided for @trendsPipelineOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off'**
+  String get trendsPipelineOff;
+
+  /// No description provided for @trendsRunNowSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Run now'**
+  String get trendsRunNowSection;
+
+  /// No description provided for @trendsRunNowHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs one step immediately with your admin session. Limited to 6 runs per hour per function so repeated clicks cannot run up model spend.'**
+  String get trendsRunNowHelp;
+
+  /// No description provided for @trendsRunPollHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Polls Google Trends, Google News and Reddit feeds and updates the board.'**
+  String get trendsRunPollHelp;
+
+  /// No description provided for @trendsRunDraftHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Drafts fired topics with Claude and runs the quality gates (uses model spend).'**
+  String get trendsRunDraftHelp;
+
+  /// No description provided for @trendsRunPublishHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies the caps and ramp, uploads articles and the index, and triggers the site rebuild.'**
+  String get trendsRunPublishHelp;
+
+  /// No description provided for @trendsRunNowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {fn} now?'**
+  String trendsRunNowTitle(String fn);
+
+  /// No description provided for @trendsRunNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Run now'**
+  String get trendsRunNow;
+
+  /// No description provided for @trendsRunDryRun.
+  ///
+  /// In en, this message translates to:
+  /// **'{fn}: dry run ({reason}). {stats}'**
+  String trendsRunDryRun(String fn, String reason, String stats);
+
+  /// No description provided for @trendsRunDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{fn} done: {stats}'**
+  String trendsRunDone(String fn, String stats);
+
+  /// No description provided for @trendsNoRunYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No run yet.'**
+  String get trendsNoRunYet;
+
+  /// No description provided for @trendsLastRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Last run {at} ({trigger}): {result}. {stats}'**
+  String trendsLastRun(String at, String trigger, String result, String stats);
+
+  /// No description provided for @trendsRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'running'**
+  String get trendsRunning;
+
+  /// No description provided for @trendsDryRun.
+  ///
+  /// In en, this message translates to:
+  /// **'dry run'**
+  String get trendsDryRun;
+
+  /// No description provided for @trendsRunNowLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{left} of {limit} admin runs left this hour'**
+  String trendsRunNowLeft(int left, int limit);
+
+  /// No description provided for @trendsRunNowExhausted.
+  ///
+  /// In en, this message translates to:
+  /// **'{limit} admin runs used this hour; next in {minutes} min'**
+  String trendsRunNowExhausted(int limit, int minutes);
+
+  /// No description provided for @trendsRamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ramp and daily caps'**
+  String get trendsRamp;
+
+  /// No description provided for @trendsRampHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Per country per day: {levels}. Step up one level at a time, at least {days} days apart, only with a healthy snapshot from the last week. The pipeline steps down by itself when health drops.'**
+  String trendsRampHelp(String levels, int days);
+
+  /// No description provided for @trendsPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{perDay} per day'**
+  String trendsPerDay(int perDay);
+
+  /// No description provided for @trendsRampLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'level {level} of {total}'**
+  String trendsRampLevel(int level, int total);
+
+  /// No description provided for @trendsPublished24h.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} published in 24 h'**
+  String trendsPublished24h(int count);
+
+  /// No description provided for @trendsRampChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'last change {at}'**
+  String trendsRampChanged(String at);
+
+  /// No description provided for @trendsRampTop.
+  ///
+  /// In en, this message translates to:
+  /// **'already at the top level'**
+  String get trendsRampTop;
+
+  /// No description provided for @trendsRampTooSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'less than {days} days since the last step'**
+  String trendsRampTooSoon(int days);
+
+  /// No description provided for @trendsRampUnhealthy.
+  ///
+  /// In en, this message translates to:
+  /// **'not healthy: {problem}'**
+  String trendsRampUnhealthy(String problem);
+
+  /// No description provided for @trendsRampUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {country} up one level?'**
+  String trendsRampUpTitle(String country);
+
+  /// No description provided for @trendsRampDownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {country} down one level?'**
+  String trendsRampDownTitle(String country);
+
+  /// No description provided for @trendsRampBody.
+  ///
+  /// In en, this message translates to:
+  /// **'From {from} to {to} articles per day. Remember: the site config caps are a ceiling, raise them in the repo when ramping up.'**
+  String trendsRampBody(int from, int to);
+
+  /// No description provided for @trendsRampUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Step up'**
+  String get trendsRampUp;
+
+  /// No description provided for @trendsRampDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Step down'**
+  String get trendsRampDown;
+
+  /// No description provided for @trendsSiteCeiling.
+  ///
+  /// In en, this message translates to:
+  /// **'The site build never publishes more than the lower of these caps and web/trends_site/data/config.json.'**
+  String get trendsSiteCeiling;
+
+  /// No description provided for @trendsHealthy.
+  ///
+  /// In en, this message translates to:
+  /// **'healthy'**
+  String get trendsHealthy;
+
+  /// No description provided for @trendsProblemNoRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'no snapshot in the last week'**
+  String get trendsProblemNoRecent;
+
+  /// No description provided for @trendsProblemManualAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Console manual action'**
+  String get trendsProblemManualAction;
+
+  /// No description provided for @trendsProblemErrorReports.
+  ///
+  /// In en, this message translates to:
+  /// **'error reports spike'**
+  String get trendsProblemErrorReports;
+
+  /// No description provided for @trendsProblemScWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Console warnings'**
+  String get trendsProblemScWarnings;
+
+  /// No description provided for @trendsProblemLowIndexed.
+  ///
+  /// In en, this message translates to:
+  /// **'low indexed share'**
+  String get trendsProblemLowIndexed;
+
+  /// No description provided for @trendsProblemTrafficDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'traffic drop'**
+  String get trendsProblemTrafficDrop;
+
+  /// No description provided for @trendsHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health inputs (Search Console and analytics)'**
+  String get trendsHealth;
+
+  /// No description provided for @trendsHealthHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the figures weekly until an integration exists. A manual action or an error-report spike pauses publishing immediately.'**
+  String get trendsHealthHelp;
+
+  /// No description provided for @trendsHealthLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'{at}: indexed {share}, clicks {clicks} (prev. {prev}), {warnings} warnings, {errors} error reports'**
+  String trendsHealthLatest(
+    String at,
+    String share,
+    String clicks,
+    String prev,
+    int warnings,
+    int errors,
+  );
+
+  /// No description provided for @trendsManualAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual action'**
+  String get trendsManualAction;
+
+  /// No description provided for @trendsManualActionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pauses publishing immediately'**
+  String get trendsManualActionHelp;
+
+  /// No description provided for @trendsRecordHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Record health snapshot'**
+  String get trendsRecordHealth;
+
+  /// No description provided for @trendsHealthAutoPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshot recorded. Publishing was paused automatically ({reason}).'**
+  String trendsHealthAutoPaused(String reason);
+
+  /// No description provided for @trendsHealthRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshot recorded. Health: {problem}.'**
+  String trendsHealthRecorded(String problem);
+
+  /// No description provided for @trendsIndexedShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Indexed share (%)'**
+  String get trendsIndexedShare;
+
+  /// No description provided for @trendsIndexedShareHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Indexed pages / submitted pages in Search Console, 0 to 100'**
+  String get trendsIndexedShareHelp;
+
+  /// No description provided for @trendsClicks7d.
+  ///
+  /// In en, this message translates to:
+  /// **'Clicks, last 7 days'**
+  String get trendsClicks7d;
+
+  /// No description provided for @trendsClicksPrev7d.
+  ///
+  /// In en, this message translates to:
+  /// **'Clicks, previous 7 days'**
+  String get trendsClicksPrev7d;
+
+  /// No description provided for @trendsScWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Console warnings'**
+  String get trendsScWarnings;
+
+  /// No description provided for @trendsErrorReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Error reports, last 24 h'**
+  String get trendsErrorReports;
+
+  /// No description provided for @trendsHealthIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in every number.'**
+  String get trendsHealthIncomplete;
+
+  /// No description provided for @trendsSlug.
+  ///
+  /// In en, this message translates to:
+  /// **'Article slug'**
+  String get trendsSlug;
+
+  /// No description provided for @trendsSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Caps, thresholds and lists'**
+  String get trendsSettings;
+
+  /// No description provided for @trendsSettingsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refuses values below the brief\'s floors: at least 2 sources, at least 250 words, similarity at most 0.5, at most 1 rewrite, at most 3 per hour, at most 20 per day, at least 30 days between ramp steps.'**
+  String get trendsSettingsHelp;
+
+  /// No description provided for @trendsEditSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit {key}'**
+  String trendsEditSetting(String key);
+
+  /// No description provided for @trendsJsonHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON array'**
+  String get trendsJsonHelp;
+
+  /// No description provided for @trendsListHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'One entry per line'**
+  String get trendsListHelp;
+
+  /// No description provided for @trendsCommaHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Comma separated'**
+  String get trendsCommaHelp;
+
+  /// No description provided for @trendsFloor.
+  ///
+  /// In en, this message translates to:
+  /// **'Not allowed: {problem}'**
+  String trendsFloor(String problem);
+
+  /// No description provided for @trendsServerRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The server refused the change: {error}'**
+  String trendsServerRefused(String error);
+
+  /// No description provided for @trendsDecisionLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Decision log'**
+  String get trendsDecisionLog;
+
+  /// No description provided for @trendsNoLog.
+  ///
+  /// In en, this message translates to:
+  /// **'No decisions yet.'**
+  String get trendsNoLog;
+
+  /// No description provided for @trendsPipelineActor.
+  ///
+  /// In en, this message translates to:
+  /// **'pipeline'**
+  String get trendsPipelineActor;
+
+  /// No description provided for @trendsDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get trendsDraft;
+
+  /// No description provided for @trendsSensitiveReasonsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensitive because'**
+  String get trendsSensitiveReasonsLabel;
+
+  /// No description provided for @trendsFailedGateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed gate'**
+  String get trendsFailedGateLabel;
+
+  /// No description provided for @trendsTopicReviewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic review'**
+  String get trendsTopicReviewLabel;
+
+  /// No description provided for @trendsContentReviewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Final text review'**
+  String get trendsContentReviewLabel;
+
+  /// No description provided for @trendsModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get trendsModel;
+
+  /// No description provided for @trendsRewrites.
+  ///
+  /// In en, this message translates to:
+  /// **'{rewrites} rewrite(s)'**
+  String trendsRewrites(int rewrites);
+
+  /// No description provided for @trendsPublishedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get trendsPublishedLabel;
+
+  /// No description provided for @trendsLastUpdateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last update'**
+  String get trendsLastUpdateLabel;
+
+  /// No description provided for @trendsNoindexLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Noindex reason'**
+  String get trendsNoindexLabel;
+
+  /// No description provided for @trendsSupersededLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Superseded by'**
+  String get trendsSupersededLabel;
+
+  /// No description provided for @trendsVisitsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Visits after the trend'**
+  String get trendsVisitsLabel;
+
+  /// No description provided for @trendsStorageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bucket path'**
+  String get trendsStorageLabel;
+
+  /// No description provided for @trendsNoArticle.
+  ///
+  /// In en, this message translates to:
+  /// **'No article text yet.'**
+  String get trendsNoArticle;
+
+  /// No description provided for @trendsArticle.
+  ///
+  /// In en, this message translates to:
+  /// **'Article (as on the site)'**
+  String get trendsArticle;
+
+  /// No description provided for @trendsFraming.
+  ///
+  /// In en, this message translates to:
+  /// **'Framing'**
+  String get trendsFraming;
+
+  /// No description provided for @trendsWhereAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'Where they agree'**
+  String get trendsWhereAgree;
+
+  /// No description provided for @trendsLocalAngle.
+  ///
+  /// In en, this message translates to:
+  /// **'What it means locally'**
+  String get trendsLocalAngle;
+
+  /// No description provided for @trendsContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Context'**
+  String get trendsContext;
+
+  /// No description provided for @trendsWatchNext.
+  ///
+  /// In en, this message translates to:
+  /// **'What to watch'**
+  String get trendsWatchNext;
+
+  /// No description provided for @trendsUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates'**
+  String get trendsUpdates;
+
+  /// No description provided for @trendsCorrections.
+  ///
+  /// In en, this message translates to:
+  /// **'Corrections'**
+  String get trendsCorrections;
+
+  /// No description provided for @trendsSourcesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Sources'**
+  String get trendsSourcesSection;
+
+  /// No description provided for @trendsAppLink.
+  ///
+  /// In en, this message translates to:
+  /// **'App link'**
+  String get trendsAppLink;
+
+  /// No description provided for @trendsReviewStamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Review stamp'**
+  String get trendsReviewStamp;
+
+  /// No description provided for @trendsSignals.
+  ///
+  /// In en, this message translates to:
+  /// **'Headlines behind it ({count})'**
+  String trendsSignals(int count);
+
+  /// No description provided for @trendsNoSignals.
+  ///
+  /// In en, this message translates to:
+  /// **'No signals.'**
+  String get trendsNoSignals;
+
+  /// No description provided for @trendsNotCitable.
+  ///
+  /// In en, this message translates to:
+  /// **'not citable'**
+  String get trendsNotCitable;
 }
 
 class _AppLocalizationsDelegate

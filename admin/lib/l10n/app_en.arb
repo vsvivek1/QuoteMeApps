@@ -877,5 +877,638 @@
         "type": "String"
       }
     }
-  }
+  },
+  "navTrends": "Trends",
+  "trendsCountryUsa": "USA",
+  "trendsCountryIndia": "India",
+  "trendsTabBoard": "Live board",
+  "trendsTabTopics": "Fired topics",
+  "trendsTabDrafts": "Drafts",
+  "trendsTabReview": "Review queue",
+  "trendsTabControls": "Controls",
+  "trendsTopicWatching": "Watching",
+  "trendsTopicFired": "Fired",
+  "trendsTopicReview": "In review",
+  "trendsTopicDrafted": "Drafted",
+  "trendsTopicPublished": "Published",
+  "trendsTopicWaitingSources": "Waiting for sources",
+  "trendsTopicDropped": "Dropped",
+  "trendsTopicEnded": "Ended",
+  "trendsDraftQueued": "Queued",
+  "trendsDraftReview": "Review",
+  "trendsDraftRejected": "Rejected",
+  "trendsDraftPublished": "Published",
+  "trendsDraftNoindex": "Noindex",
+  "trendsQueuedCaps": "waiting for the caps",
+  "trendsQueuedDraft": "waiting for the draft",
+  "trendsStageTopic": "topic stage",
+  "trendsStageContent": "final text stage",
+  "trendsActionReject": "Reject",
+  "trendsActionNoindex": "Set noindex",
+  "trendsActionIndex": "Make indexable again",
+  "trendsActionUnpublish": "Unpublish",
+  "trendsActionTitle": "{action}: {headline}",
+  "@trendsActionTitle": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      },
+      "headline": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsActions": "Actions",
+  "trendsOpenDraft": "Open",
+  "trendsGateSources": "2+ sources",
+  "trendsGateSensitive": "Sensitive",
+  "trendsGateOriginality": "Originality",
+  "trendsGateFacts": "Facts",
+  "trendsGateValue": "Value",
+  "trendsGateBalance": "Balance",
+  "trendsGateCaps": "Caps",
+  "trendsGates": "Quality gates",
+  "trendsNoGates": "No gate has run yet.",
+  "trendsRateLimited": "Run now is limited to {limit} runs per hour for each function. Try again in {minutes} min.",
+  "@trendsRateLimited": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsErrNotInReview": "Someone else already decided this one. The queue has been refreshed.",
+  "trendsErrAdminOnly": "This needs the admin role.",
+  "trendsAddCorrection": "Add correction",
+  "trendsCorrectionHint": "What was wrong and what is correct (at least 10 characters)",
+  "trendsCorrectionTooShort": "A correction needs at least 10 characters.",
+  "trendsCorrectionAdded": "Correction added. The article is re-published within 5 minutes.",
+  "trendsRecordTraffic": "Record traffic",
+  "trendsRecordTrafficTitle": "Visits to /{slug} in the 14 days after the trend ended",
+  "@trendsRecordTrafficTitle": {
+    "placeholders": {
+      "slug": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsVisitsHint": "Visits in the 14 days after the trend ended",
+  "trendsInvalidNumber": "Enter a valid number.",
+  "trendsSupersede": "Mark superseded",
+  "trendsSupersedeTitle": "Supersede /{slug}",
+  "@trendsSupersedeTitle": {
+    "placeholders": {
+      "slug": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsSupersedeHint": "Slug of the newer article (it gets the canonical)",
+  "trendsPausedBanner": "Publishing and drafting are paused (by {who}: {reason}, since {at}). Polling continues.",
+  "@trendsPausedBanner": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      },
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsPausedByAuto": "automatic pause",
+  "trendsLastHours": "{hours} h",
+  "@trendsLastHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsPlaceFilter": "Filter places",
+  "trendsGeneratedAt": "Updated {at}. Refreshes every minute.",
+  "@trendsGeneratedAt": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsNoTopics": "No topics in this period.",
+  "trendsFailingSources": "{count} feed(s) failing: blind spots on the board",
+  "@trendsFailingSources": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsSignalsDomains": "{signals} signals, {domains} publishers",
+  "@trendsSignalsDomains": {
+    "placeholders": {
+      "signals": {
+        "type": "int"
+      },
+      "domains": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsFiredAt": "fired {at}",
+  "@trendsFiredAt": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsSources": "Polled sources",
+  "trendsAddSource": "Add source",
+  "trendsColKind": "Kind",
+  "trendsColCountry": "Country",
+  "trendsColGeo": "Geo",
+  "trendsColPlace": "Place",
+  "trendsColQuery": "Query / subreddit",
+  "trendsColStatus": "Status",
+  "trendsColItems": "Items",
+  "trendsColPolled": "Last polled",
+  "trendsColEnabled": "Enabled",
+  "trendsColTopic": "Topic",
+  "trendsColVelocity": "Velocity",
+  "trendsColSignals": "Signals",
+  "trendsColDomains": "Publishers",
+  "trendsColFired": "Fired",
+  "trendsColReason": "Reason",
+  "trendsDisabled": "disabled",
+  "trendsLevel": "Level",
+  "trendsPlaceSlug": "Place slug",
+  "trendsPlaceName": "Place name",
+  "trendsState": "State (optional)",
+  "trendsQueryHelp": "Google News search or subreddit name (not used for Google Trends)",
+  "trendsFiredHelp": "Fired topics are waiting for the drafting run (gates 1 and 2 run before any model call).",
+  "trendsNoDrafts": "No drafts with this status.",
+  "trendsVelocity": "velocity {value}",
+  "@trendsVelocity": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsPublishedAt": "published {at}",
+  "@trendsPublishedAt": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsCreatedAt": "created {at}",
+  "@trendsCreatedAt": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsVisits": "{visits} visits after the trend",
+  "@trendsVisits": {
+    "placeholders": {
+      "visits": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsSensitive": "Sensitive",
+  "trendsDirty": "Re-upload pending",
+  "trendsFailedGate": "failed gate {gate}",
+  "@trendsFailedGate": {
+    "placeholders": {
+      "gate": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsNoindexReason": "noindex: {reason}",
+  "@trendsNoindexReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsTopicReviewedBy": "Topic approved by {who} on {at}",
+  "@trendsTopicReviewedBy": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsReviewedBy": "Final text reviewed by {who} on {at}",
+  "@trendsReviewedBy": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsReviewHelp": "Sensitive topics never publish without a person. Topic stage: nothing has been drafted yet; approving lets the pipeline draft it. Final text stage: the finished article passed gates 3 to 5; approving queues it for publishing (caps still apply). Your name and the date are stored.",
+  "trendsReviewEmpty": "Nothing waiting for review.",
+  "trendsApproveTopicTitle": "Approve this topic for drafting?",
+  "trendsApproveContentTitle": "Approve the final text for publishing?",
+  "trendsRejectTopicTitle": "Reject this topic",
+  "trendsRejectContentTitle": "Reject this article",
+  "trendsReviewNoteHint": "Note (required to reject)",
+  "trendsApproved": "Approved. Reviewer and date recorded.",
+  "trendsRejected": "Rejected.",
+  "trendsWaitingSince": "waiting since {at}",
+  "@trendsWaitingSince": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsSensitiveReasons": "Why it is sensitive: {reasons}",
+  "@trendsSensitiveReasons": {
+    "placeholders": {
+      "reasons": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsTopicStageHelp": "Nothing has been drafted yet: sensitive topics never reach the model before a person approves them. Check the topic and its headlines.",
+  "trendsContentStageHelp": "The finished article passed originality, fact and value checks. Read it in full before approving.",
+  "trendsShowHeadlines": "Topic and headlines",
+  "trendsReadArticle": "Read the article",
+  "trendsApproveTopic": "Approve topic",
+  "trendsApproveContent": "Approve final text",
+  "trendsOptional": "Optional",
+  "trendsKillSwitch": "Kill switch",
+  "trendsResume": "Resume",
+  "trendsPause": "Pause now",
+  "trendsPausedNow": "Paused: no drafting, no publishing",
+  "trendsRunningNow": "Running: drafting and publishing are allowed",
+  "trendsPausedDetail": "Paused by {who}: {reason} (since {at})",
+  "@trendsPausedDetail": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      },
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsResumedDetail": "Last resumed by {who}: {reason}",
+  "@trendsResumedDetail": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsKillSwitchHelp": "Pausing stops model spend and publishing at once; polling continues so the board stays live. The site build also refuses articles published after the pause.",
+  "trendsPauseTitle": "Pause drafting and publishing?",
+  "trendsPauseBody": "Nothing is drafted or published until someone resumes. Say why (shown to other admins).",
+  "trendsResumeTitle": "Resume drafting and publishing?",
+  "trendsResumeBody": "Drafting (Claude spend) and publishing start again on the next run, within the caps. Make sure the reason for the pause is resolved.",
+  "trendsPausedToast": "Paused.",
+  "trendsResumedToast": "Resumed.",
+  "trendsPipeline": "Pipeline (cron jobs)",
+  "trendsPipelineEnabled": "On: poll, draft and publish run every 5 minutes",
+  "trendsPipelineDisabled": "Off: no scheduled runs",
+  "trendsPipelineHelp": "Run the pipeline in ONE project only: it covers both countries.",
+  "trendsPipelineOnTitle": "Turn the pipeline on?",
+  "trendsPipelineOffTitle": "Turn the pipeline off?",
+  "trendsPipelineOnBody": "Starts the poll, draft and publish cron jobs in this project. Only do this in the one project that runs the trends site.",
+  "trendsPipelineOffBody": "Stops all scheduled polling, drafting and publishing. The board stops updating.",
+  "trendsPipelineOn": "Turn on",
+  "trendsPipelineOff": "Turn off",
+  "trendsRunNowSection": "Run now",
+  "trendsRunNowHelp": "Runs one step immediately with your admin session. Limited to 6 runs per hour per function so repeated clicks cannot run up model spend.",
+  "trendsRunPollHelp": "Polls Google Trends, Google News and Reddit feeds and updates the board.",
+  "trendsRunDraftHelp": "Drafts fired topics with Claude and runs the quality gates (uses model spend).",
+  "trendsRunPublishHelp": "Applies the caps and ramp, uploads articles and the index, and triggers the site rebuild.",
+  "trendsRunNowTitle": "Run {fn} now?",
+  "@trendsRunNowTitle": {
+    "placeholders": {
+      "fn": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRunNow": "Run now",
+  "trendsRunDryRun": "{fn}: dry run ({reason}). {stats}",
+  "@trendsRunDryRun": {
+    "placeholders": {
+      "fn": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      },
+      "stats": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRunDone": "{fn} done: {stats}",
+  "@trendsRunDone": {
+    "placeholders": {
+      "fn": {
+        "type": "String"
+      },
+      "stats": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsNoRunYet": "No run yet.",
+  "trendsLastRun": "Last run {at} ({trigger}): {result}. {stats}",
+  "@trendsLastRun": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      },
+      "trigger": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      },
+      "stats": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRunning": "running",
+  "trendsDryRun": "dry run",
+  "trendsRunNowLeft": "{left} of {limit} admin runs left this hour",
+  "@trendsRunNowLeft": {
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsRunNowExhausted": "{limit} admin runs used this hour; next in {minutes} min",
+  "@trendsRunNowExhausted": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsRamp": "Ramp and daily caps",
+  "trendsRampHelp": "Per country per day: {levels}. Step up one level at a time, at least {days} days apart, only with a healthy snapshot from the last week. The pipeline steps down by itself when health drops.",
+  "@trendsRampHelp": {
+    "placeholders": {
+      "levels": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsPerDay": "{perDay} per day",
+  "@trendsPerDay": {
+    "placeholders": {
+      "perDay": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsRampLevel": "level {level} of {total}",
+  "@trendsRampLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsPublished24h": "{count} published in 24 h",
+  "@trendsPublished24h": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsRampChanged": "last change {at}",
+  "@trendsRampChanged": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRampTop": "already at the top level",
+  "trendsRampTooSoon": "less than {days} days since the last step",
+  "@trendsRampTooSoon": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsRampUnhealthy": "not healthy: {problem}",
+  "@trendsRampUnhealthy": {
+    "placeholders": {
+      "problem": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRampUpTitle": "Step {country} up one level?",
+  "@trendsRampUpTitle": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRampDownTitle": "Step {country} down one level?",
+  "@trendsRampDownTitle": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsRampBody": "From {from} to {to} articles per day. Remember: the site config caps are a ceiling, raise them in the repo when ramping up.",
+  "@trendsRampBody": {
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsRampUp": "Step up",
+  "trendsRampDown": "Step down",
+  "trendsSiteCeiling": "The site build never publishes more than the lower of these caps and web/trends_site/data/config.json.",
+  "trendsHealthy": "healthy",
+  "trendsProblemNoRecent": "no snapshot in the last week",
+  "trendsProblemManualAction": "Search Console manual action",
+  "trendsProblemErrorReports": "error reports spike",
+  "trendsProblemScWarnings": "Search Console warnings",
+  "trendsProblemLowIndexed": "low indexed share",
+  "trendsProblemTrafficDrop": "traffic drop",
+  "trendsHealth": "Health inputs (Search Console and analytics)",
+  "trendsHealthHelp": "Enter the figures weekly until an integration exists. A manual action or an error-report spike pauses publishing immediately.",
+  "trendsHealthLatest": "{at}: indexed {share}, clicks {clicks} (prev. {prev}), {warnings} warnings, {errors} error reports",
+  "@trendsHealthLatest": {
+    "placeholders": {
+      "at": {
+        "type": "String"
+      },
+      "share": {
+        "type": "String"
+      },
+      "clicks": {
+        "type": "String"
+      },
+      "prev": {
+        "type": "String"
+      },
+      "warnings": {
+        "type": "int"
+      },
+      "errors": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsManualAction": "Manual action",
+  "trendsManualActionHelp": "Pauses publishing immediately",
+  "trendsRecordHealth": "Record health snapshot",
+  "trendsHealthAutoPaused": "Snapshot recorded. Publishing was paused automatically ({reason}).",
+  "@trendsHealthAutoPaused": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsHealthRecorded": "Snapshot recorded. Health: {problem}.",
+  "@trendsHealthRecorded": {
+    "placeholders": {
+      "problem": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsIndexedShare": "Indexed share (%)",
+  "trendsIndexedShareHelp": "Indexed pages / submitted pages in Search Console, 0 to 100",
+  "trendsClicks7d": "Clicks, last 7 days",
+  "trendsClicksPrev7d": "Clicks, previous 7 days",
+  "trendsScWarnings": "Search Console warnings",
+  "trendsErrorReports": "Error reports, last 24 h",
+  "trendsHealthIncomplete": "Fill in every number.",
+  "trendsSlug": "Article slug",
+  "trendsSettings": "Caps, thresholds and lists",
+  "trendsSettingsHelp": "The server refuses values below the brief's floors: at least 2 sources, at least 250 words, similarity at most 0.5, at most 1 rewrite, at most 3 per hour, at most 20 per day, at least 30 days between ramp steps.",
+  "trendsEditSetting": "Edit {key}",
+  "@trendsEditSetting": {
+    "placeholders": {
+      "key": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsJsonHelp": "JSON array",
+  "trendsListHelp": "One entry per line",
+  "trendsCommaHelp": "Comma separated",
+  "trendsFloor": "Not allowed: {problem}",
+  "@trendsFloor": {
+    "placeholders": {
+      "problem": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsServerRefused": "The server refused the change: {error}",
+  "@trendsServerRefused": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "trendsDecisionLog": "Decision log",
+  "trendsNoLog": "No decisions yet.",
+  "trendsPipelineActor": "pipeline",
+  "trendsDraft": "Draft",
+  "trendsSensitiveReasonsLabel": "Sensitive because",
+  "trendsFailedGateLabel": "Failed gate",
+  "trendsTopicReviewLabel": "Topic review",
+  "trendsContentReviewLabel": "Final text review",
+  "trendsModel": "Model",
+  "trendsRewrites": "{rewrites} rewrite(s)",
+  "@trendsRewrites": {
+    "placeholders": {
+      "rewrites": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsPublishedLabel": "Published",
+  "trendsLastUpdateLabel": "Last update",
+  "trendsNoindexLabel": "Noindex reason",
+  "trendsSupersededLabel": "Superseded by",
+  "trendsVisitsLabel": "Visits after the trend",
+  "trendsStorageLabel": "Bucket path",
+  "trendsNoArticle": "No article text yet.",
+  "trendsArticle": "Article (as on the site)",
+  "trendsFraming": "Framing",
+  "trendsWhereAgree": "Where they agree",
+  "trendsLocalAngle": "What it means locally",
+  "trendsContext": "Context",
+  "trendsWatchNext": "What to watch",
+  "trendsUpdates": "Updates",
+  "trendsCorrections": "Corrections",
+  "trendsSourcesSection": "Sources",
+  "trendsAppLink": "App link",
+  "trendsReviewStamp": "Review stamp",
+  "trendsSignals": "Headlines behind it ({count})",
+  "@trendsSignals": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trendsNoSignals": "No signals.",
+  "trendsNotCitable": "not citable"
 }

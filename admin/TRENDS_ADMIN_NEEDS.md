@@ -1,9 +1,37 @@
 # Trends admin: backend contract (Section 21.10)
 
 The trend board for the separate trends news site. The backend is done (migrations
-`20261002001200`-`1220`, Edge Functions `trends-poll`, `trends-draft`, `trends-publish`); the
-panel screens in `admin/lib` are still to be built against the RPCs below. Contract summary:
-`supabase/API.md` section 13.
+`20261002001200`-`1220` and `1300`, Edge Functions `trends-poll`, `trends-draft`,
+`trends-publish`) and so is the panel: **Trends** in the navigation rail (`/trends`). Contract
+summary: `supabase/API.md` section 13.
+
+## What the panel has (built)
+
+Code: `lib/features/trends/` (domain models and validation, `SupabaseTrendsRepository` over the
+RPCs below, `DemoTrendsRepository` with sample data for both countries, Riverpod providers, five
+tabs and a draft screen). Tests: `test/trends_test.dart`. Without `SUPABASE_URL` the demo
+repository runs the same rules as the RPCs (review stages, draft actions, setting floors, ramp,
+kill switch, health auto-pause, 6 runs per function per hour), so every screen works offline.
+
+| Tab / screen | Shows | Actions (RPC) |
+|---|---|---|
+| Country filter (app bar) | All / USA / India for every tab (the pipeline covers both countries) | |
+| Live board | places by hottest topic, topics with status, velocity bar, signals / publishers, fired time; failing feeds in a red card on top; window 6 / 24 / 72 h; place filter; refreshes every minute | sources table: enable / disable, add source with client-side checks (`admin_trends_upsert_source`) |
+| Fired topics | topics by status (default `fired`), publishers, reason | |
+| Drafts | published / queued / review / rejected / noindex lists, a pass / fail / waiting chip per gate (tooltip: the gate's useful fields), failed gate and reason, reviewer and dates | reject, noindex, index, unpublish (reason), add correction, record traffic, supersede (`admin_trends_set_draft_status`, `_add_correction`, `_record_traffic`, `_supersede`) |
+| Draft screen (`/trends/draft/:id`) | header (review record, model, noindex, bucket path), every gate with its details, the article rendered in the site's sections (incl. updates, corrections, sources, review stamp), headlines behind it, decision log | same actions |
+| Review queue | oldest first, stage `topic` or `final text`, why it is sensitive, gate chips, summary | approve (note optional) / reject (note required) via `admin_trends_review`; `409 draft_not_in_review` shows a message and refreshes |
+| Controls | kill switch (who / why / since, auto-pause), pipeline switch, Run now with last run and the hourly allowance, ramp per country (per-day cap, published in 24 h, step up blocked with the reason: too soon, unhealthy, top level), health snapshots and problems, settings editor, decision log | `admin_trends_set_kill_switch` (confirm dialog both ways, reason required to pause), `admin_trends_set_setting('pipeline')` (confirm), Edge Functions with the admin JWT (confirm), `admin_trends_set_ramp` (confirm), `admin_trends_record_health` (form: indexed share %, clicks 7 d / previous 7 d, Search Console warnings, manual action, error reports, note), `admin_trends_record_traffic`, `admin_trends_set_setting` |
+
+The settings editor edits every key except `publishing`: object settings field by field (one
+level of nesting, e.g. `ramp.health`, `caps.timezones`; only changed keys are sent, a nested
+object whole), word lists one per line, `app_links` as JSON. The brief's floors are checked
+live with the server's wording (Save disabled), and a server refusal (`invalid_setting_value`
+with its detail, `invalid_setting_type`, ...) is shown inside the dialog. Ramp levels of
+`usa` / `india` change only through the ramp buttons.
+
+Not built: traffic / revenue / conversion stats (see "Not covered yet").
+
 
 The trends data lives in the Postgres schema `trends`, which is **not** exposed through
 PostgREST, so the panel cannot query its tables. Everything goes through `supabase.rpc(...)`:
@@ -192,6 +220,14 @@ and a confirmation dialog for resuming.
 `supabase.functions.invoke('trends-poll' | 'trends-draft' | 'trends-publish', body: {action: 'run'})`
 with the admin JWT → `{ok, dry_run, reason?, stats}`. `dry_run` with `reason` means a secret is
 missing (no Claude key: nothing drafted; no bucket credentials: nothing uploaded).
+
+Admin runs are limited to **6 per function per rolling hour per project** (migration 1300; cron
+runs do not count): past that the function answers `429 rate_limited` with `Retry-After` and
+`details: {fn, limit, window_seconds, used, retry_after_seconds}`, and nothing runs.
+`admin_trends_settings().run_now` gives the current allowance per function
+(`{used, limit, remaining, window_seconds, retry_after_seconds}`), and `runs.<fn>.trigger` says
+whether the last run was `cron` or `admin`. The panel disables the button when the allowance is
+used up and shows the wait.
 
 ## Not covered yet
 

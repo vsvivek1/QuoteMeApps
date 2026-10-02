@@ -15,10 +15,23 @@ export interface TopicStats {
   signal_count: number;
 }
 
+/** trends.start_admin_run() result (migration 1300). */
+export interface RunNowGrant {
+  allowed: boolean;
+  run_id?: number;
+  used: number;
+  limit: number;
+  remaining: number;
+  window_seconds: number;
+  retry_after_seconds: number;
+}
+
 export interface Store {
   settings(): Promise<Settings>;
   saveSetting(key: string, value: unknown): Promise<void>;
   startRun(fn: string, dryRun: boolean): Promise<number>;
+  /** Admin "Run now": checks the per-function window and records the run (trends.start_admin_run). */
+  startAdminRun(fn: string, dryRun: boolean, actorId: string): Promise<RunNowGrant>;
   finishRun(id: number, ok: boolean, stats: unknown, error?: string | null): Promise<void>;
   log(
     decision: string,
@@ -137,6 +150,13 @@ export function pgStore(url: string): Store {
         { id: number }[]
       >`insert into trends.trend_runs (fn, dry_run) values (${fn}, ${dryRun}) returning id`;
       return Number(r.id);
+    },
+    async startAdminRun(fn, dryRun, actorId) {
+      const [r] = await sql<
+        { j: RunNowGrant }[]
+      >`select trends.start_admin_run(${fn}, ${actorId}::uuid, ${dryRun}) as j`;
+      const g = r.j;
+      return { ...g, run_id: g.run_id === undefined ? undefined : Number(g.run_id) };
     },
     async finishRun(id, ok, stats, error = null) {
       // deno-lint-ignore no-explicit-any

@@ -94,6 +94,16 @@ Deno.test({
       assert(logs.some((l) => l.decision === "published"));
       const runs = await sql`select count(*)::int as n from trends.trend_runs`;
       assertEquals(runs[0].n, 0); // runs are recorded by handleRun, not by the run functions
+
+      // admin "Run now" window (migration 1300): 6 per function per hour, then refused
+      const [admin] = await sql`select id from public.profiles limit 1`;
+      const grants = [];
+      for (let i = 0; i < 7; i++) grants.push(await store.startAdminRun("trends-poll", true, admin.id));
+      assertEquals(grants.map((g) => g.allowed), [true, true, true, true, true, true, false]);
+      assert(grants[0].run_id! > 0 && grants[6].retry_after_seconds > 0);
+      const [adminRuns] = await sql`select count(*)::int as n from trends.trend_runs where trigger = 'admin'`;
+      assertEquals(adminRuns.n, 6);
+      await sql`delete from trends.trend_runs`;
       await store.close();
     } finally {
       await sql`update trends.trend_sources set enabled = true where place_slug <> 'testville'`;

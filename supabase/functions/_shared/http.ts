@@ -19,6 +19,8 @@ export class HttpError extends Error {
     public code: string,
     public details?: unknown,
     public hint?: string,
+    /** Extra response headers, e.g. Retry-After on a 429. */
+    public headers?: Record<string, string>,
   ) {
     super(code);
   }
@@ -31,8 +33,14 @@ export function json(data: unknown, status = 200, extraHeaders: Record<string, s
   });
 }
 
-export function errorResponse(status: number, code: string, details?: unknown, hint?: string): Response {
-  return json({ code, message: code, details: details ?? null, hint: hint ?? null }, status);
+export function errorResponse(
+  status: number,
+  code: string,
+  details?: unknown,
+  hint?: string,
+  headers: Record<string, string> = {},
+): Response {
+  return json({ code, message: code, details: details ?? null, hint: hint ?? null }, status, headers);
 }
 
 /** Maps a PostgREST / RPC error (SQLSTATE PTnnn -> HTTP nnn, message = code) to an HttpError. */
@@ -49,7 +57,7 @@ export function serve(handler: (req: Request) => Promise<Response>) {
     try {
       return await handler(req);
     } catch (e) {
-      if (e instanceof HttpError) return errorResponse(e.status, e.code, e.details, e.hint);
+      if (e instanceof HttpError) return errorResponse(e.status, e.code, e.details, e.hint, e.headers);
       console.error("unhandled", e);
       return errorResponse(500, "internal_error");
     }

@@ -14,6 +14,8 @@ import '../../features/outreach/presentation/outreach_screen.dart';
 import '../../features/sellers/presentation/seller_detail_screen.dart';
 import '../../features/sellers/presentation/sellers_screen.dart';
 import '../../features/seo/presentation/seo_screen.dart';
+import '../../features/trends/presentation/draft_detail_screen.dart';
+import '../../features/trends/presentation/trends_screen.dart';
 import '../../features/verification/presentation/verification_screen.dart';
 import '../providers.dart';
 import 'shell.dart';
@@ -34,6 +36,8 @@ abstract final class Routes {
   static String lead(String id) => '/outreach/lead/$id';
   static const brochures = '/brochures';
   static const seo = '/seo';
+  static const trends = '/trends';
+  static String trendDraft(String id) => '/trends/draft/$id';
 }
 
 /// Re-runs the redirect when the admin session changes.
@@ -87,6 +91,13 @@ GoRouter router(Ref ref) {
           ),
           GoRoute(path: Routes.brochures, builder: (_, _) => const BrochureScreen()),
           GoRoute(path: Routes.seo, builder: (_, _) => const SeoScreen()),
+          GoRoute(
+            path: Routes.trends,
+            builder: (_, _) => const TrendsScreen(),
+            routes: [
+              GoRoute(path: 'draft/:id', builder: (_, s) => TrendDraftScreen(draftId: s.pathParameters['id']!)),
+            ],
+          ),
         ],
       ),
     ],

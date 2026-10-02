@@ -23,6 +23,7 @@ final _dests = <_Dest>[
   _Dest(Routes.outreach, Icons.view_kanban_outlined, (c) => c.l10n.navOutreach),
   _Dest(Routes.brochures, Icons.picture_as_pdf_outlined, (c) => c.l10n.navBrochures),
   _Dest(Routes.seo, Icons.travel_explore_outlined, (c) => c.l10n.navSeo),
+  _Dest(Routes.trends, Icons.trending_up, (c) => c.l10n.navTrends),
 ];
 
 /// Navigation rail + top bar with country, environment and demo badges.

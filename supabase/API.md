@@ -561,7 +561,7 @@ for local and staging only.
 - The `seller:{id}` broadcast is a public channel carrying ids only. Moving it to private
   channels with `realtime.messages` RLS is a later hardening step.
 
-## 12. SEO data export and guide review (Section 21.9; migrations 1100, 1110)
+## 12. SEO data export and guide review (Section 21.9; migrations 1100, 1110, 1310)
 
 Nightly pipeline: `pg_cron` job `iwant-seo-export` (02:40 UTC) → Edge Function `seo-export` →
 `public.seo_export()` → upload `seo/<country>.json` to the public bucket `public-data` → POST the
@@ -603,7 +603,7 @@ details or individual quotes are ever exported. `manual_noindex: true` when an a
 | `admin_set_seo_page_noindex(p_city_id, p_category_id, p_noindex) → seo_pages` | admin | kept across exports; audited |
 | `admin_upsert_seo_guide(p_id uuid?, p_slug, p_title, p_category_id, p_body_md, p_city_id?, p_description?, p_ai_assisted = false) → seo_guides` | admin | `p_id` null = create. Any edit sends the guide back to `draft` (new review needed). Errors: `invalid_slug`, `invalid_category` (blocked), `invalid_city` (400), `guide_not_found` (404), `ai_flag_cannot_be_added` (400), `ai_guide_weekly_cap` (429, details "n of cap this week"); duplicate slug → `23505` |
 | `admin_review_seo_guide(p_id, p_action) → seo_guides` | admin | `approve` (draft → approved; stores `reviewer_id` + `reviewed_at`), `publish` (approved → published; else `409 guide_not_approved`), `unpublish` (published → approved), `reject` (→ draft, clears the review); other moves `409 invalid_transition`, unknown action `400 invalid_action` |
-| `set_seller_directory_opt_in(p_opt_in bool) → sellers` | seller | `sellers.seo_directory_opt_in` (default **false**) + `seo_directory_opt_in_at`. Only opted-in sellers appear in `sellers[]` (name, description, area city, allowed categories, verified, years, rating when at least 3 reviews, response time when at least 5 quotes; never contact details). Also returned by `get_my_seller_profile()`. Non-sellers: `403 not_a_seller` |
+| `set_seller_directory_opt_in(p_opt_in bool) → sellers` | seller | `sellers.seo_directory_opt_in` (default **false**) + `seo_directory_opt_in_at`. Only opted-in sellers appear in `sellers[]` (`id`, `slug`, name, description, area city, allowed categories, verified, years, `completed_orders` (orders with status `completed`), `review_count` (visible buyer reviews), rating when at least 3 reviews, response time when at least 5 quotes; never contact details). `slug` is unique per city in the export: on a collision the later seller gets `-` + the first 6 characters of its id (the full id if that still clashes) (migration 1310). Also returned by `get_my_seller_profile()`. Non-sellers: `403 not_a_seller` |
 
 **Storage:** bucket `public-data` (public read, 50 MB, `application/json`, no client write
 policies: only the service role writes). Put nothing but aggregated, anonymised data there.
@@ -618,7 +618,7 @@ check uploads nothing and returns `422 export_check_failed` (details: problems),
 `502 upload_failed`. Secrets: `VERCEL_DEPLOY_HOOK_APP_SITE` (never logged), optional
 `SEO_PUBLIC_BUCKET` (default `public-data`).
 
-## 13. Trends pipeline (Section 21.10; migrations 1200-1220)
+## 13. Trends pipeline (Section 21.10; migrations 1200-1220, 1300)
 
 Backend of the separate trends news site (`web/trends_site`). It lives in its own Postgres schema
 `trends`, which is **not exposed through PostgREST** and has no grants for `anon` or
@@ -659,7 +659,17 @@ All three: `POST {action?: "run"}` with `x-webhook-secret` (= `EDGE_WEBHOOK_SECR
 service-role key as bearer, or an admin JWT ("run now"); `verify_jwt = false`. Response
 `{ok, dry_run, reason?, stats}`. Dry runs: no `SUPABASE_DB_URL` (nothing done), no
 `ANTHROPIC_API_KEY` (no drafting), no `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` (nothing
-uploaded). Each run is recorded in `trends.trend_runs`.
+uploaded). Each run is recorded in `trends.trend_runs` (`trigger` `cron | admin`, `actor_id`).
+
+**Run now limit** (migration 1300): an admin JWT may start each of the three functions at most
+**6 times per rolling hour per project** (all admins together; cron and service-role calls are not
+counted), so repeated clicks cannot run up Claude spend. The function asks
+`trends.start_admin_run(fn, admin_id, dry_run)` first (advisory lock per function; records the
+`admin` run and an `admin_trends_run_now` audit row) and otherwise answers
+`429 rate_limited` with a `Retry-After` header (seconds until the oldest run in the window leaves
+it) and `details: {fn, limit, window_seconds, used, retry_after_seconds}`; nothing runs. The limit
+is fixed in SQL (`trends.run_now_limit()`), not a setting. Without `SUPABASE_DB_URL` the call is
+a dry run and is not limited.
 
 **Bucket `trends-public`** (public read, JSON only, 1 MB per object, written only by the service
 role): `index.json` = `{version: 1, generated_at, settings: {paused, paused_at, per_day: {usa,
@@ -679,7 +689,7 @@ of its gates; the index can only tighten the kill switch and caps of the site's 
 | `admin_trends_draft(p_draft_id) → jsonb` | one draft: article, gates, topic, signals, decision log (`404 draft_not_found`) |
 | `admin_trends_review_queue(p_country?) → jsonb[]` | sensitive-topic review queue |
 | `admin_trends_review(p_draft_id, p_approve, p_note?) → jsonb` | approve / reject; stage `topic` approval lets the pipeline draft it, stage `content` approval queues it for publishing and stamps `article.review`; stores reviewer and date (`409 draft_not_in_review`) |
-| `admin_trends_settings() → jsonb` | all settings, effective daily caps, latest health and problems, last runs, published in 24 h |
+| `admin_trends_settings() → jsonb` | all settings, effective daily caps, latest health and problems, last runs, published in 24 h, `run_now` (per function `{used, limit, remaining, window_seconds, retry_after_seconds}`) |
 | `admin_trends_set_setting(p_key, p_value jsonb) → jsonb` | edit caps, ramp schedule, gates, detection, keyword lists, app links, pipeline switch. Floors: ≥ 2 sources, ≥ 250 words, ≤ 3 per hour, ≤ 20 per day, ≥ 30 days between steps (`400 invalid_setting_value`); `publishing` only via the kill switch |
 | `admin_trends_set_kill_switch(p_paused, p_reason?) → jsonb` | pause / resume drafting and publishing |
 | `admin_trends_set_ramp(p_country, p_level, p_reason?) → jsonb` | down any time; up one level (`409 ramp_one_level_at_a_time`), 30+ days after the last step (`409 ramp_step_too_soon`), only with a recent healthy snapshot (`409 ramp_unhealthy`, detail = problem) |

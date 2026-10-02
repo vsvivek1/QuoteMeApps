@@ -163,7 +163,7 @@ supabase/tests/local/run_local.sh usa        # one country
 KEEP_CLUSTER=1 PGPORT=55433 supabase/tests/local/run_local.sh india   # leave it running for psql
 ```
 
-Current result: India 13 files / 437 tests PASS, USA 13 files / 437 tests PASS.
+Current result: India 14 files / 467 tests PASS, USA 14 files / 467 tests PASS.
 
 ### Edge Functions (Deno)
 

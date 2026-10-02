@@ -1342,4 +1342,828 @@ class AppLocalizationsEn extends AppLocalizations {
   String seoGuideInvalid(String code) {
     return 'Invalid guide: $code';
   }
+
+  @override
+  String get navTrends => 'Trends';
+
+  @override
+  String get trendsCountryUsa => 'USA';
+
+  @override
+  String get trendsCountryIndia => 'India';
+
+  @override
+  String get trendsTabBoard => 'Live board';
+
+  @override
+  String get trendsTabTopics => 'Fired topics';
+
+  @override
+  String get trendsTabDrafts => 'Drafts';
+
+  @override
+  String get trendsTabReview => 'Review queue';
+
+  @override
+  String get trendsTabControls => 'Controls';
+
+  @override
+  String get trendsTopicWatching => 'Watching';
+
+  @override
+  String get trendsTopicFired => 'Fired';
+
+  @override
+  String get trendsTopicReview => 'In review';
+
+  @override
+  String get trendsTopicDrafted => 'Drafted';
+
+  @override
+  String get trendsTopicPublished => 'Published';
+
+  @override
+  String get trendsTopicWaitingSources => 'Waiting for sources';
+
+  @override
+  String get trendsTopicDropped => 'Dropped';
+
+  @override
+  String get trendsTopicEnded => 'Ended';
+
+  @override
+  String get trendsDraftQueued => 'Queued';
+
+  @override
+  String get trendsDraftReview => 'Review';
+
+  @override
+  String get trendsDraftRejected => 'Rejected';
+
+  @override
+  String get trendsDraftPublished => 'Published';
+
+  @override
+  String get trendsDraftNoindex => 'Noindex';
+
+  @override
+  String get trendsQueuedCaps => 'waiting for the caps';
+
+  @override
+  String get trendsQueuedDraft => 'waiting for the draft';
+
+  @override
+  String get trendsStageTopic => 'topic stage';
+
+  @override
+  String get trendsStageContent => 'final text stage';
+
+  @override
+  String get trendsActionReject => 'Reject';
+
+  @override
+  String get trendsActionNoindex => 'Set noindex';
+
+  @override
+  String get trendsActionIndex => 'Make indexable again';
+
+  @override
+  String get trendsActionUnpublish => 'Unpublish';
+
+  @override
+  String trendsActionTitle(String action, String headline) {
+    return '$action: $headline';
+  }
+
+  @override
+  String get trendsActions => 'Actions';
+
+  @override
+  String get trendsOpenDraft => 'Open';
+
+  @override
+  String get trendsGateSources => '2+ sources';
+
+  @override
+  String get trendsGateSensitive => 'Sensitive';
+
+  @override
+  String get trendsGateOriginality => 'Originality';
+
+  @override
+  String get trendsGateFacts => 'Facts';
+
+  @override
+  String get trendsGateValue => 'Value';
+
+  @override
+  String get trendsGateBalance => 'Balance';
+
+  @override
+  String get trendsGateCaps => 'Caps';
+
+  @override
+  String get trendsGates => 'Quality gates';
+
+  @override
+  String get trendsNoGates => 'No gate has run yet.';
+
+  @override
+  String trendsRateLimited(int limit, int minutes) {
+    return 'Run now is limited to $limit runs per hour for each function. Try again in $minutes min.';
+  }
+
+  @override
+  String get trendsErrNotInReview =>
+      'Someone else already decided this one. The queue has been refreshed.';
+
+  @override
+  String get trendsErrAdminOnly => 'This needs the admin role.';
+
+  @override
+  String get trendsAddCorrection => 'Add correction';
+
+  @override
+  String get trendsCorrectionHint =>
+      'What was wrong and what is correct (at least 10 characters)';
+
+  @override
+  String get trendsCorrectionTooShort =>
+      'A correction needs at least 10 characters.';
+
+  @override
+  String get trendsCorrectionAdded =>
+      'Correction added. The article is re-published within 5 minutes.';
+
+  @override
+  String get trendsRecordTraffic => 'Record traffic';
+
+  @override
+  String trendsRecordTrafficTitle(String slug) {
+    return 'Visits to /$slug in the 14 days after the trend ended';
+  }
+
+  @override
+  String get trendsVisitsHint => 'Visits in the 14 days after the trend ended';
+
+  @override
+  String get trendsInvalidNumber => 'Enter a valid number.';
+
+  @override
+  String get trendsSupersede => 'Mark superseded';
+
+  @override
+  String trendsSupersedeTitle(String slug) {
+    return 'Supersede /$slug';
+  }
+
+  @override
+  String get trendsSupersedeHint =>
+      'Slug of the newer article (it gets the canonical)';
+
+  @override
+  String trendsPausedBanner(String who, String reason, String at) {
+    return 'Publishing and drafting are paused (by $who: $reason, since $at). Polling continues.';
+  }
+
+  @override
+  String get trendsPausedByAuto => 'automatic pause';
+
+  @override
+  String trendsLastHours(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String get trendsPlaceFilter => 'Filter places';
+
+  @override
+  String trendsGeneratedAt(String at) {
+    return 'Updated $at. Refreshes every minute.';
+  }
+
+  @override
+  String get trendsNoTopics => 'No topics in this period.';
+
+  @override
+  String trendsFailingSources(int count) {
+    return '$count feed(s) failing: blind spots on the board';
+  }
+
+  @override
+  String trendsSignalsDomains(int signals, int domains) {
+    return '$signals signals, $domains publishers';
+  }
+
+  @override
+  String trendsFiredAt(String at) {
+    return 'fired $at';
+  }
+
+  @override
+  String get trendsSources => 'Polled sources';
+
+  @override
+  String get trendsAddSource => 'Add source';
+
+  @override
+  String get trendsColKind => 'Kind';
+
+  @override
+  String get trendsColCountry => 'Country';
+
+  @override
+  String get trendsColGeo => 'Geo';
+
+  @override
+  String get trendsColPlace => 'Place';
+
+  @override
+  String get trendsColQuery => 'Query / subreddit';
+
+  @override
+  String get trendsColStatus => 'Status';
+
+  @override
+  String get trendsColItems => 'Items';
+
+  @override
+  String get trendsColPolled => 'Last polled';
+
+  @override
+  String get trendsColEnabled => 'Enabled';
+
+  @override
+  String get trendsColTopic => 'Topic';
+
+  @override
+  String get trendsColVelocity => 'Velocity';
+
+  @override
+  String get trendsColSignals => 'Signals';
+
+  @override
+  String get trendsColDomains => 'Publishers';
+
+  @override
+  String get trendsColFired => 'Fired';
+
+  @override
+  String get trendsColReason => 'Reason';
+
+  @override
+  String get trendsDisabled => 'disabled';
+
+  @override
+  String get trendsLevel => 'Level';
+
+  @override
+  String get trendsPlaceSlug => 'Place slug';
+
+  @override
+  String get trendsPlaceName => 'Place name';
+
+  @override
+  String get trendsState => 'State (optional)';
+
+  @override
+  String get trendsQueryHelp =>
+      'Google News search or subreddit name (not used for Google Trends)';
+
+  @override
+  String get trendsFiredHelp =>
+      'Fired topics are waiting for the drafting run (gates 1 and 2 run before any model call).';
+
+  @override
+  String get trendsNoDrafts => 'No drafts with this status.';
+
+  @override
+  String trendsVelocity(int value) {
+    return 'velocity $value';
+  }
+
+  @override
+  String trendsPublishedAt(String at) {
+    return 'published $at';
+  }
+
+  @override
+  String trendsCreatedAt(String at) {
+    return 'created $at';
+  }
+
+  @override
+  String trendsVisits(int visits) {
+    return '$visits visits after the trend';
+  }
+
+  @override
+  String get trendsSensitive => 'Sensitive';
+
+  @override
+  String get trendsDirty => 'Re-upload pending';
+
+  @override
+  String trendsFailedGate(String gate) {
+    return 'failed gate $gate';
+  }
+
+  @override
+  String trendsNoindexReason(String reason) {
+    return 'noindex: $reason';
+  }
+
+  @override
+  String trendsTopicReviewedBy(String who, String at) {
+    return 'Topic approved by $who on $at';
+  }
+
+  @override
+  String trendsReviewedBy(String who, String at) {
+    return 'Final text reviewed by $who on $at';
+  }
+
+  @override
+  String get trendsReviewHelp =>
+      'Sensitive topics never publish without a person. Topic stage: nothing has been drafted yet; approving lets the pipeline draft it. Final text stage: the finished article passed gates 3 to 5; approving queues it for publishing (caps still apply). Your name and the date are stored.';
+
+  @override
+  String get trendsReviewEmpty => 'Nothing waiting for review.';
+
+  @override
+  String get trendsApproveTopicTitle => 'Approve this topic for drafting?';
+
+  @override
+  String get trendsApproveContentTitle =>
+      'Approve the final text for publishing?';
+
+  @override
+  String get trendsRejectTopicTitle => 'Reject this topic';
+
+  @override
+  String get trendsRejectContentTitle => 'Reject this article';
+
+  @override
+  String get trendsReviewNoteHint => 'Note (required to reject)';
+
+  @override
+  String get trendsApproved => 'Approved. Reviewer and date recorded.';
+
+  @override
+  String get trendsRejected => 'Rejected.';
+
+  @override
+  String trendsWaitingSince(String at) {
+    return 'waiting since $at';
+  }
+
+  @override
+  String trendsSensitiveReasons(String reasons) {
+    return 'Why it is sensitive: $reasons';
+  }
+
+  @override
+  String get trendsTopicStageHelp =>
+      'Nothing has been drafted yet: sensitive topics never reach the model before a person approves them. Check the topic and its headlines.';
+
+  @override
+  String get trendsContentStageHelp =>
+      'The finished article passed originality, fact and value checks. Read it in full before approving.';
+
+  @override
+  String get trendsShowHeadlines => 'Topic and headlines';
+
+  @override
+  String get trendsReadArticle => 'Read the article';
+
+  @override
+  String get trendsApproveTopic => 'Approve topic';
+
+  @override
+  String get trendsApproveContent => 'Approve final text';
+
+  @override
+  String get trendsOptional => 'Optional';
+
+  @override
+  String get trendsKillSwitch => 'Kill switch';
+
+  @override
+  String get trendsResume => 'Resume';
+
+  @override
+  String get trendsPause => 'Pause now';
+
+  @override
+  String get trendsPausedNow => 'Paused: no drafting, no publishing';
+
+  @override
+  String get trendsRunningNow => 'Running: drafting and publishing are allowed';
+
+  @override
+  String trendsPausedDetail(String who, String reason, String at) {
+    return 'Paused by $who: $reason (since $at)';
+  }
+
+  @override
+  String trendsResumedDetail(String who, String reason) {
+    return 'Last resumed by $who: $reason';
+  }
+
+  @override
+  String get trendsKillSwitchHelp =>
+      'Pausing stops model spend and publishing at once; polling continues so the board stays live. The site build also refuses articles published after the pause.';
+
+  @override
+  String get trendsPauseTitle => 'Pause drafting and publishing?';
+
+  @override
+  String get trendsPauseBody =>
+      'Nothing is drafted or published until someone resumes. Say why (shown to other admins).';
+
+  @override
+  String get trendsResumeTitle => 'Resume drafting and publishing?';
+
+  @override
+  String get trendsResumeBody =>
+      'Drafting (Claude spend) and publishing start again on the next run, within the caps. Make sure the reason for the pause is resolved.';
+
+  @override
+  String get trendsPausedToast => 'Paused.';
+
+  @override
+  String get trendsResumedToast => 'Resumed.';
+
+  @override
+  String get trendsPipeline => 'Pipeline (cron jobs)';
+
+  @override
+  String get trendsPipelineEnabled =>
+      'On: poll, draft and publish run every 5 minutes';
+
+  @override
+  String get trendsPipelineDisabled => 'Off: no scheduled runs';
+
+  @override
+  String get trendsPipelineHelp =>
+      'Run the pipeline in ONE project only: it covers both countries.';
+
+  @override
+  String get trendsPipelineOnTitle => 'Turn the pipeline on?';
+
+  @override
+  String get trendsPipelineOffTitle => 'Turn the pipeline off?';
+
+  @override
+  String get trendsPipelineOnBody =>
+      'Starts the poll, draft and publish cron jobs in this project. Only do this in the one project that runs the trends site.';
+
+  @override
+  String get trendsPipelineOffBody =>
+      'Stops all scheduled polling, drafting and publishing. The board stops updating.';
+
+  @override
+  String get trendsPipelineOn => 'Turn on';
+
+  @override
+  String get trendsPipelineOff => 'Turn off';
+
+  @override
+  String get trendsRunNowSection => 'Run now';
+
+  @override
+  String get trendsRunNowHelp =>
+      'Runs one step immediately with your admin session. Limited to 6 runs per hour per function so repeated clicks cannot run up model spend.';
+
+  @override
+  String get trendsRunPollHelp =>
+      'Polls Google Trends, Google News and Reddit feeds and updates the board.';
+
+  @override
+  String get trendsRunDraftHelp =>
+      'Drafts fired topics with Claude and runs the quality gates (uses model spend).';
+
+  @override
+  String get trendsRunPublishHelp =>
+      'Applies the caps and ramp, uploads articles and the index, and triggers the site rebuild.';
+
+  @override
+  String trendsRunNowTitle(String fn) {
+    return 'Run $fn now?';
+  }
+
+  @override
+  String get trendsRunNow => 'Run now';
+
+  @override
+  String trendsRunDryRun(String fn, String reason, String stats) {
+    return '$fn: dry run ($reason). $stats';
+  }
+
+  @override
+  String trendsRunDone(String fn, String stats) {
+    return '$fn done: $stats';
+  }
+
+  @override
+  String get trendsNoRunYet => 'No run yet.';
+
+  @override
+  String trendsLastRun(String at, String trigger, String result, String stats) {
+    return 'Last run $at ($trigger): $result. $stats';
+  }
+
+  @override
+  String get trendsRunning => 'running';
+
+  @override
+  String get trendsDryRun => 'dry run';
+
+  @override
+  String trendsRunNowLeft(int left, int limit) {
+    return '$left of $limit admin runs left this hour';
+  }
+
+  @override
+  String trendsRunNowExhausted(int limit, int minutes) {
+    return '$limit admin runs used this hour; next in $minutes min';
+  }
+
+  @override
+  String get trendsRamp => 'Ramp and daily caps';
+
+  @override
+  String trendsRampHelp(String levels, int days) {
+    return 'Per country per day: $levels. Step up one level at a time, at least $days days apart, only with a healthy snapshot from the last week. The pipeline steps down by itself when health drops.';
+  }
+
+  @override
+  String trendsPerDay(int perDay) {
+    return '$perDay per day';
+  }
+
+  @override
+  String trendsRampLevel(int level, int total) {
+    return 'level $level of $total';
+  }
+
+  @override
+  String trendsPublished24h(int count) {
+    return '$count published in 24 h';
+  }
+
+  @override
+  String trendsRampChanged(String at) {
+    return 'last change $at';
+  }
+
+  @override
+  String get trendsRampTop => 'already at the top level';
+
+  @override
+  String trendsRampTooSoon(int days) {
+    return 'less than $days days since the last step';
+  }
+
+  @override
+  String trendsRampUnhealthy(String problem) {
+    return 'not healthy: $problem';
+  }
+
+  @override
+  String trendsRampUpTitle(String country) {
+    return 'Step $country up one level?';
+  }
+
+  @override
+  String trendsRampDownTitle(String country) {
+    return 'Step $country down one level?';
+  }
+
+  @override
+  String trendsRampBody(int from, int to) {
+    return 'From $from to $to articles per day. Remember: the site config caps are a ceiling, raise them in the repo when ramping up.';
+  }
+
+  @override
+  String get trendsRampUp => 'Step up';
+
+  @override
+  String get trendsRampDown => 'Step down';
+
+  @override
+  String get trendsSiteCeiling =>
+      'The site build never publishes more than the lower of these caps and web/trends_site/data/config.json.';
+
+  @override
+  String get trendsHealthy => 'healthy';
+
+  @override
+  String get trendsProblemNoRecent => 'no snapshot in the last week';
+
+  @override
+  String get trendsProblemManualAction => 'Search Console manual action';
+
+  @override
+  String get trendsProblemErrorReports => 'error reports spike';
+
+  @override
+  String get trendsProblemScWarnings => 'Search Console warnings';
+
+  @override
+  String get trendsProblemLowIndexed => 'low indexed share';
+
+  @override
+  String get trendsProblemTrafficDrop => 'traffic drop';
+
+  @override
+  String get trendsHealth => 'Health inputs (Search Console and analytics)';
+
+  @override
+  String get trendsHealthHelp =>
+      'Enter the figures weekly until an integration exists. A manual action or an error-report spike pauses publishing immediately.';
+
+  @override
+  String trendsHealthLatest(
+    String at,
+    String share,
+    String clicks,
+    String prev,
+    int warnings,
+    int errors,
+  ) {
+    return '$at: indexed $share, clicks $clicks (prev. $prev), $warnings warnings, $errors error reports';
+  }
+
+  @override
+  String get trendsManualAction => 'Manual action';
+
+  @override
+  String get trendsManualActionHelp => 'Pauses publishing immediately';
+
+  @override
+  String get trendsRecordHealth => 'Record health snapshot';
+
+  @override
+  String trendsHealthAutoPaused(String reason) {
+    return 'Snapshot recorded. Publishing was paused automatically ($reason).';
+  }
+
+  @override
+  String trendsHealthRecorded(String problem) {
+    return 'Snapshot recorded. Health: $problem.';
+  }
+
+  @override
+  String get trendsIndexedShare => 'Indexed share (%)';
+
+  @override
+  String get trendsIndexedShareHelp =>
+      'Indexed pages / submitted pages in Search Console, 0 to 100';
+
+  @override
+  String get trendsClicks7d => 'Clicks, last 7 days';
+
+  @override
+  String get trendsClicksPrev7d => 'Clicks, previous 7 days';
+
+  @override
+  String get trendsScWarnings => 'Search Console warnings';
+
+  @override
+  String get trendsErrorReports => 'Error reports, last 24 h';
+
+  @override
+  String get trendsHealthIncomplete => 'Fill in every number.';
+
+  @override
+  String get trendsSlug => 'Article slug';
+
+  @override
+  String get trendsSettings => 'Caps, thresholds and lists';
+
+  @override
+  String get trendsSettingsHelp =>
+      'The server refuses values below the brief\'s floors: at least 2 sources, at least 250 words, similarity at most 0.5, at most 1 rewrite, at most 3 per hour, at most 20 per day, at least 30 days between ramp steps.';
+
+  @override
+  String trendsEditSetting(String key) {
+    return 'Edit $key';
+  }
+
+  @override
+  String get trendsJsonHelp => 'JSON array';
+
+  @override
+  String get trendsListHelp => 'One entry per line';
+
+  @override
+  String get trendsCommaHelp => 'Comma separated';
+
+  @override
+  String trendsFloor(String problem) {
+    return 'Not allowed: $problem';
+  }
+
+  @override
+  String trendsServerRefused(String error) {
+    return 'The server refused the change: $error';
+  }
+
+  @override
+  String get trendsDecisionLog => 'Decision log';
+
+  @override
+  String get trendsNoLog => 'No decisions yet.';
+
+  @override
+  String get trendsPipelineActor => 'pipeline';
+
+  @override
+  String get trendsDraft => 'Draft';
+
+  @override
+  String get trendsSensitiveReasonsLabel => 'Sensitive because';
+
+  @override
+  String get trendsFailedGateLabel => 'Failed gate';
+
+  @override
+  String get trendsTopicReviewLabel => 'Topic review';
+
+  @override
+  String get trendsContentReviewLabel => 'Final text review';
+
+  @override
+  String get trendsModel => 'Model';
+
+  @override
+  String trendsRewrites(int rewrites) {
+    return '$rewrites rewrite(s)';
+  }
+
+  @override
+  String get trendsPublishedLabel => 'Published';
+
+  @override
+  String get trendsLastUpdateLabel => 'Last update';
+
+  @override
+  String get trendsNoindexLabel => 'Noindex reason';
+
+  @override
+  String get trendsSupersededLabel => 'Superseded by';
+
+  @override
+  String get trendsVisitsLabel => 'Visits after the trend';
+
+  @override
+  String get trendsStorageLabel => 'Bucket path';
+
+  @override
+  String get trendsNoArticle => 'No article text yet.';
+
+  @override
+  String get trendsArticle => 'Article (as on the site)';
+
+  @override
+  String get trendsFraming => 'Framing';
+
+  @override
+  String get trendsWhereAgree => 'Where they agree';
+
+  @override
+  String get trendsLocalAngle => 'What it means locally';
+
+  @override
+  String get trendsContext => 'Context';
+
+  @override
+  String get trendsWatchNext => 'What to watch';
+
+  @override
+  String get trendsUpdates => 'Updates';
+
+  @override
+  String get trendsCorrections => 'Corrections';
+
+  @override
+  String get trendsSourcesSection => 'Sources';
+
+  @override
+  String get trendsAppLink => 'App link';
+
+  @override
+  String get trendsReviewStamp => 'Review stamp';
+
+  @override
+  String trendsSignals(int count) {
+    return 'Headlines behind it ($count)';
+  }
+
+  @override
+  String get trendsNoSignals => 'No signals.';
+
+  @override
+  String get trendsNotCitable => 'not citable';
 }

@@ -3,7 +3,7 @@
 -- opt-in, seo_pages status, guide review queue and access rules.
 begin;
 \ir _helpers.psql
-select plan(50);
+select plan(56);
 
 select tests.create_user('seo-admin', 'SEO Admin', '{buyer,admin}') as admin \gset
 select tests.create_user('seo-user', 'Plain User') as usr \gset
@@ -223,6 +223,41 @@ select is((select string_agg((x ->> 'slug') || ':' || (x ->> 'status') || ':' ||
 select tests.authenticate_as(:'usr');
 select throws_ok(format($$ select public.admin_review_seo_guide(%L, 'publish') $$, (select id from g)),
   'PT403', 'admin_only', 'only admins review guides');
+
+reset role;
+select tests.clear_auth();
+
+-- seller directory entries (migration 1310): id, completed orders, review count, unique slugs per city
+update public.sellers set seo_directory_opt_in = true, slug = 'seo-dup', created_at = now() - interval '1 day' where id = :'s1';
+update public.sellers set seo_directory_opt_in = true, slug = 'Seo Dup' where id = :'s2';
+update public.sellers set seo_directory_opt_in = true, slug = 'seo-dup-' || left(:'s2'::text, 6) where id = :'s3';
+create temp table o5 as
+  select q.id as quote_id, q.request_id, r.buyer_id, q.seller_id, q.total_minor, q.currency,
+         row_number() over (order by q.created_at, q.id) as n
+    from public.quotes q join public.requests r on r.id = q.request_id
+   where q.seller_id = :'s1' and q.status <> 'withdrawn' and not q.hidden;
+insert into public.orders (request_id, quote_id, buyer_id, seller_id, status, total_minor, currency, completed_at)
+select request_id, quote_id, buyer_id, seller_id, case when n <= 2 then 'completed' else 'accepted' end,
+       total_minor, currency, case when n <= 2 then now() end
+  from o5 where n <= 3;
+insert into public.reviews (order_id, from_id, to_id, role, stars, hidden)
+select o.id, o.buyer_id, o.seller_id, 'buyer_to_seller', 5, row_number() over (order by o.id) = 2
+  from public.orders o where o.seller_id = :'s1' and o.status = 'completed';
+create temp table d5 as select public.seo_export('pgtap', true) -> 'data' as d;
+create temp table sd5 as select s from d5, jsonb_array_elements(d -> 'sellers') s where s ->> 'name' like 'Shop seo-%';
+
+select is((select s ->> 'id' from sd5 where s ->> 'name' = 'Shop seo-s1'), :'s1'::text, 'directory entry carries the seller id');
+select is((select (s ->> 'completed_orders')::int || '/' || (s ->> 'review_count')::int from sd5 where s ->> 'name' = 'Shop seo-s1'),
+  '2/1', 'completed orders only; visible buyer reviews only');
+select is((select (s ->> 'completed_orders')::int || '/' || (s ->> 'review_count')::int from sd5 where s ->> 'name' = 'Shop seo-s2'),
+  '0/0', 'zero counts are exported');
+select is((select count(distinct (s ->> 'city') || '/' || (s ->> 'slug'))::int from sd5), (select count(*)::int from sd5),
+  'directory slugs are unique per city');
+select is((select string_agg(s ->> 'slug', ',' order by s ->> 'name') from sd5),
+  'seo-dup,seo-dup-' || replace(:'s2'::text, '-', '') || ',seo-dup-' || left(:'s2'::text, 6),
+  'collision: the oldest seller keeps the slug, the next gets an id suffix; when that suffix is another seller''s own slug, the full id');
+select ok(not exists (select 1 from sd5 where s ? 'phone' or s ? 'email' or s ? 'business_phone'),
+  'still no contact details in the directory');
 
 reset role;
 select tests.clear_auth();
