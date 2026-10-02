@@ -215,6 +215,97 @@ class SalesTaxRule extends TaxRule {
   }
 }
 
+/// Server-shaped line for [computeQuoteTotalsMinor]: `qty` may be
+/// fractional (up to 3 decimals, e.g. "2.5" kg) and India carries a GST rate
+/// per line, exactly like `compute_quote_totals` in SQL.
+class TaxLineInput {
+  const TaxLineInput({required this.qty, required this.unitPriceMinor, this.taxRateBp = 0});
+
+  /// Decimal string or number, e.g. 1, "2.5", "0.125".
+  final Object qty;
+  final int unitPriceMinor;
+  final int taxRateBp;
+}
+
+/// Parses a non-negative decimal quantity into numerator / 10^scale without
+/// floating point.
+(BigInt, BigInt) _decimal(Object qty) {
+  final s = qty.toString().trim();
+  final m = RegExp(r'^(\d+)(?:\.(\d+))?$').firstMatch(s);
+  if (m == null) throw ArgumentError.value(qty, 'qty', 'Not a non-negative decimal');
+  final frac = m.group(2) ?? '';
+  return (BigInt.parse('${m.group(1)}$frac'), BigInt.from(10).pow(frac.length));
+}
+
+/// `gst_line_tax` (SQL): base = round_half_up(qty * unit_price, 1); intra:
+/// CGST = SGST = round_half_up(base * bp, 20000); inter: IGST =
+/// round_half_up(base * bp, 10000).
+({BigInt base, BigInt cgst, BigInt sgst, BigInt igst, BigInt tax}) gstLineTax({
+  required Object qty,
+  required int unitPriceMinor,
+  required int rateBp,
+  required bool intraState,
+}) {
+  final (n, d) = _decimal(qty);
+  final base = roundHalfUp(n * BigInt.from(unitPriceMinor), d);
+  final rate = BigInt.from(rateBp);
+  if (intraState) {
+    final half = roundHalfUp(base * rate, _twentyK);
+    return (base: base, cgst: half, sgst: half, igst: BigInt.zero, tax: half + half);
+  }
+  final igst = roundHalfUp(base * rate, _tenK);
+  return (base: base, cgst: BigInt.zero, sgst: BigInt.zero, igst: igst, tax: igst);
+}
+
+/// `us_sales_tax` (SQL): round_half_up(subtotal * bp, 10000).
+BigInt usSalesTax(BigInt subtotalMinor, int rateBp) => roundHalfUp(subtotalMinor * BigInt.from(rateBp), _tenK);
+
+/// Mirror of `compute_quote_totals` (SQL) in minor units, for previews and
+/// for the shared fixtures. `tax_breakdown.rate_bp` is the highest line rate
+/// for India.
+({BigInt subtotal, BigInt tax, BigInt delivery, BigInt total, Map<String, Object?> breakdown}) computeQuoteTotalsMinor({
+  required bool india,
+  required List<TaxLineInput> lines,
+  int deliveryMinor = 0,
+  int salesTaxRateBp = 0,
+  bool intraState = true,
+}) {
+  var sub = BigInt.zero, tax = BigInt.zero, cgst = BigInt.zero, sgst = BigInt.zero, igst = BigInt.zero;
+  var maxRate = 0;
+  for (final l in lines) {
+    final r = gstLineTax(
+      qty: l.qty,
+      unitPriceMinor: l.unitPriceMinor,
+      rateBp: india ? l.taxRateBp : 0,
+      intraState: intraState,
+    );
+    sub += r.base;
+    if (india) {
+      cgst += r.cgst;
+      sgst += r.sgst;
+      igst += r.igst;
+      tax += r.tax;
+      if (l.taxRateBp > maxRate) maxRate = l.taxRateBp;
+    }
+  }
+  final Map<String, Object?> breakdown;
+  if (india) {
+    breakdown = {
+      'kind': 'gst',
+      'mode': intraState ? 'intra' : 'inter',
+      'rate_bp': maxRate,
+      'cgst': cgst.toInt(),
+      'sgst': sgst.toInt(),
+      'igst': igst.toInt(),
+    };
+  } else {
+    tax = usSalesTax(sub, salesTaxRateBp);
+    breakdown = {'kind': 'sales_tax', 'rate_bp': salesTaxRateBp, 'amount': tax.toInt()};
+  }
+  final delivery = BigInt.from(deliveryMinor);
+  return (subtotal: sub, tax: tax, delivery: delivery, total: sub + tax + delivery, breakdown: breakdown);
+}
+
 /// Formats basis points as a percentage string without floating point:
 /// 1800 -> "18", 825 -> "8.25", 50 -> "0.5".
 String bpToPercent(int bp) {

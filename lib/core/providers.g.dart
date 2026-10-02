@@ -122,7 +122,7 @@ final class BackendProvider extends $FunctionalProvider<Backend, Backend, Backen
   }
 }
 
-String _$backendHash() => r'548829cfba2b4c100332a183aaac7bf6faabe4cd';
+String _$backendHash() => r'36abcd59991ddc38daad4dd9b54ac21f4116551d';
 
 @ProviderFor(authRepository)
 final authRepositoryProvider = AuthRepositoryProvider._();

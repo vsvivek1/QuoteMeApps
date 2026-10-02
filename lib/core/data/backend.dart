@@ -8,9 +8,13 @@ import '../../features/reviews/domain/review_repository.dart';
 import '../../features/safety/domain/safety_repository.dart';
 import '../../features/seller/domain/seller_repository.dart';
 import '../../features/settings/domain/app_settings.dart';
+import '../cache/app_cache.dart';
+import '../cache/outbox.dart';
 import '../config/country_config.dart';
 import '../demo/demo_backend.dart';
 import '../demo/demo_repositories.dart';
+import '../services/device_services.dart';
+import 'supabase/edge_functions.dart';
 import 'supabase/supabase_backend.dart';
 
 /// All repositories for one backend. Features only see the interfaces, so the
@@ -52,7 +56,13 @@ class Backend {
     onDispose: b.dispose,
   );
 
-  factory Backend.supabase(CountryConfig config) => createSupabaseBackend(config);
+  factory Backend.supabase(
+    CountryConfig config, {
+    AppCache? cache,
+    Outbox? outbox,
+    MediaService? media,
+    EdgeFunctions? functions,
+  }) => createSupabaseBackend(config, cache: cache, outbox: outbox, media: media, functions: functions);
 
   final AuthRepository auth;
   final ProfileRepository profiles;

@@ -10,10 +10,13 @@ import '../features/reviews/domain/review_repository.dart';
 import '../features/safety/domain/safety_repository.dart';
 import '../features/seller/domain/seller_repository.dart';
 import '../features/settings/domain/app_settings.dart';
+import 'cache/cache_providers.dart';
 import 'config/app_env.dart';
 import 'config/country_config.dart';
 import 'data/backend.dart';
+import 'data/supabase/edge_functions.dart';
 import 'demo/demo_backend.dart';
+import 'services/device_services.dart';
 
 part 'providers.g.dart';
 
@@ -29,7 +32,15 @@ AppEnv appEnv(Ref ref) => AppEnv.fromEnvironment();
 Backend backend(Ref ref) {
   final env = ref.watch(appEnvProvider);
   final config = ref.watch(countryConfigProvider);
-  final b = env.isDemo ? Backend.demo(DemoBackend(config)) : Backend.supabase(config);
+  final b = env.isDemo
+      ? Backend.demo(DemoBackend(config))
+      : Backend.supabase(
+          config,
+          cache: ref.watch(appCacheProvider),
+          outbox: ref.watch(outboxProvider),
+          media: ref.watch(mediaServiceProvider),
+          functions: ref.watch(edgeFunctionsProvider),
+        );
   ref.onDispose(b.dispose);
   return b;
 }

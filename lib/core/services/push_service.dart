@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../data/supabase/mappers.dart' show normalizeServerRoute;
 import '../providers.dart';
 import '../routing/router.dart';
 import '../state/app_state.dart';
@@ -40,6 +41,7 @@ Future<void> pushRegistration(Ref ref) async {
 }
 
 void _open(Ref ref, RemoteMessage m) {
-  final route = m.data['route'] as String?;
+  // Server routes (API.md section 7) mapped onto this app's routes.
+  final route = normalizeServerRoute(m.data['route'] as String?);
   if (route != null && route.startsWith('/')) ref.read(routerProvider).push(route);
 }
