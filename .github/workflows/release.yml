@@ -1,0 +1,183 @@
+# Nightly and v* tag store uploads via fastlane (brief Sections 14 and 19):
+#   Android -> Play internal testing, iOS -> TestFlight, for both apps.
+# Production store releases stay manual (fastlane `production` / `release` lanes).
+name: Store builds
+
+on:
+  schedule:
+    - cron: "30 20 * * *" # 02:00 IST / 16:30 US Eastern
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: "android, ios or both"
+        default: both
+        type: choice
+        options: [both, android, ios]
+
+concurrency:
+  group: store-builds
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: "3.47.6"
+
+jobs:
+  changes:
+    # Nightly runs only when main moved in the last day.
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+      build_number: ${{ steps.check.outputs.build_number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+      - id: check
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ] || [ -n "$(git log --since='25 hours ago' --oneline)" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+          # Monotonic build number shared by Play and App Store Connect (minutes since epoch).
+          echo "build_number=$(( $(date +%s) / 60 ))" >> "$GITHUB_OUTPUT"
+
+  android:
+    needs: changes
+    if: needs.changes.outputs.run == 'true' && (inputs.platforms == '' || inputs.platforms != 'ios')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        country: [usa, india]
+    environment: store-${{ matrix.country }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Check store secrets
+        id: gate
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$PLAY_JSON" ] || [ -z "$KEYSTORE" ]; then
+            echo "::warning::Play credentials for ${{ matrix.country }} are not set yet; skipping upload."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write credentials and config (never committed)
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          C: ${{ matrix.country }}
+          PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+          APP_CONFIG: ${{ secrets.APP_CONFIG_PROD_JSON }}
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES_JSON_PROD }}
+        run: |
+          mkdir -p secrets
+          echo "$PLAY_JSON" > "secrets/play-service-account-$C.json"
+          echo "$KEYSTORE" | base64 -d > "secrets/upload-$C.jks"
+          [ -n "$APP_CONFIG" ] && echo "$APP_CONFIG" > "config/$C.prod.json"
+          if [ -n "$GOOGLE_SERVICES" ]; then
+            mkdir -p "android/app/src/${C}Prod"
+            echo "$GOOGLE_SERVICES" > "android/app/src/${C}Prod/google-services.json"
+          fi
+          sed -i -E "s/^(version: [0-9.]+)\+[0-9]+/\1+${{ needs.changes.outputs.build_number }}/" pubspec.yaml
+      - name: fastlane android internal
+        if: steps.gate.outputs.skip != 'true'
+        working-directory: android
+        env:
+          COUNTRY: ${{ matrix.country }}
+          PLAY_JSON_KEY_PATH_USA: secrets/play-service-account-usa.json
+          PLAY_JSON_KEY_PATH_INDIA: secrets/play-service-account-india.json
+          ANDROID_KEYSTORE_PATH_USA: secrets/upload-usa.jks
+          ANDROID_KEYSTORE_PATH_INDIA: secrets/upload-india.jks
+          ANDROID_KEYSTORE_PASSWORD_USA: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEYSTORE_PASSWORD_INDIA: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS_USA: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_ALIAS_INDIA: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD_USA: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_PASSWORD_INDIA: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          MAPS_API_KEY_ANDROID_USA: ${{ secrets.MAPS_API_KEY_ANDROID }}
+          MAPS_API_KEY_ANDROID_INDIA: ${{ secrets.MAPS_API_KEY_ANDROID }}
+        run: bundle exec fastlane android internal country:$COUNTRY skip_version_check:true
+      - if: always()
+        run: rm -rf secrets android/app/src/*/google-services.json
+
+  ios:
+    needs: changes
+    if: needs.changes.outputs.run == 'true' && (inputs.platforms == '' || inputs.platforms != 'android')
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        country: [usa, india]
+    environment: store-${{ matrix.country }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check store secrets
+        id: gate
+        env:
+          ASC_KEY: ${{ secrets.ASC_KEY_CONTENT }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: |
+          if [ -z "$ASC_KEY" ] || [ -z "$MATCH_PASSWORD" ]; then
+            echo "::warning::App Store Connect credentials for ${{ matrix.country }} are not set yet; skipping upload."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.gate.outputs.skip != 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - if: steps.gate.outputs.skip != 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Write config (never committed)
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          C: ${{ matrix.country }}
+          APP_CONFIG: ${{ secrets.APP_CONFIG_PROD_JSON }}
+          GOOGLE_SERVICE_INFO: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_PROD }}
+          IOS_XCCONFIG: ${{ secrets.IOS_FLAVOR_XCCONFIG_PROD }}
+        run: |
+          [ -n "$APP_CONFIG" ] && echo "$APP_CONFIG" > "config/$C.prod.json"
+          mkdir -p "ios/config/${C}Prod" ios/Flutter/secrets
+          [ -n "$GOOGLE_SERVICE_INFO" ] && echo "$GOOGLE_SERVICE_INFO" > "ios/config/${C}Prod/GoogleService-Info.plist"
+          [ -n "$IOS_XCCONFIG" ] && echo "$IOS_XCCONFIG" > "ios/Flutter/secrets/${C}Prod.xcconfig"
+          sed -i '' -E "s/^(version: [0-9.]+)\+[0-9]+/\1+${{ needs.changes.outputs.build_number }}/" pubspec.yaml
+      - name: fastlane ios beta
+        if: steps.gate.outputs.skip != 'true'
+        working-directory: ios
+        env:
+          COUNTRY: ${{ matrix.country }}
+          ASC_KEY_ID_USA: ${{ secrets.ASC_KEY_ID }}
+          ASC_KEY_ID_INDIA: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID_USA: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_ISSUER_ID_INDIA: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_CONTENT_USA: ${{ secrets.ASC_KEY_CONTENT }}
+          ASC_KEY_CONTENT_INDIA: ${{ secrets.ASC_KEY_CONTENT }}
+          APPLE_TEAM_ID_USA: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_TEAM_ID_INDIA: ${{ secrets.APPLE_TEAM_ID }}
+          MATCH_GIT_URL_USA: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_GIT_URL_INDIA: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_READONLY: "true"
+        run: bundle exec fastlane ios beta country:$COUNTRY

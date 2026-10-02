@@ -1,0 +1,134 @@
+# Analyze, test and build both country apps on every push and pull request (brief Section 14).
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    tags-ignore: ["v*"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.47.6"
+
+jobs:
+  flutter:
+    name: Analyze and test (app)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Generated code is up to date
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          flutter gen-l10n
+          git diff --exit-code -- lib
+      - name: Format
+        run: dart format --output=none --set-exit-if-changed $(find lib test -name '*.dart' -not -path 'lib/l10n/gen/*' -not -name '*.g.dart' -not -name '*.freezed.dart')
+      - run: flutter analyze
+      - name: Tests (both countries are covered by the test suite)
+        run: flutter test --coverage
+
+  android:
+    name: Android AAB (${{ matrix.flavor }})
+    needs: flutter
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { flavor: usaProd, country: usa }
+          - { flavor: indiaProd, country: india }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      # No keystore on PRs: the build falls back to debug signing. Store uploads happen in release.yml.
+      - name: Build release AAB
+        run: >
+          flutter build appbundle --release
+          --flavor ${{ matrix.flavor }} -t lib/main_${{ matrix.country }}.dart
+          --dart-define-from-file=config/${{ matrix.country }}.prod.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aab-${{ matrix.flavor }}
+          path: build/app/outputs/bundle/${{ matrix.flavor }}Release/*.aab
+          retention-days: 7
+
+  admin:
+    name: Admin panel
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('admin/pubspec.yaml') != '' }}
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build web --release --dart-define-from-file=../config/usa.prod.json
+
+  database:
+    name: Database (pgTAP) and Edge Functions (deno test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Start local Supabase (migrations + seed)
+        run: supabase start -x studio,imgproxy,inbucket,edge-runtime,logflare,vector,supavisor
+      - name: pgTAP
+        run: supabase test db
+      - name: Edge Function tests
+        working-directory: supabase/functions
+        run: deno test --allow-env --allow-net --allow-read
+      - if: always()
+        run: supabase stop --no-backup
+
+  websites:
+    name: Website builds (${{ matrix.site }}, ${{ matrix.country }})
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('web/**/package.json') != '' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [app_site, trends_site]
+        country: [usa, india]
+    defaults:
+      run:
+        working-directory: web/${{ matrix.site }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci || npm install
+      - run: npm run build
+        env:
+          SITE_COUNTRY: ${{ matrix.country }}
