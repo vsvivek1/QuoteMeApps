@@ -1,0 +1,9 @@
+{
+  "SUPABASE_URL": "",
+  "SUPABASE_ANON_KEY": "",
+  "GOOGLE_WEB_CLIENT_ID": "",
+  "GOOGLE_IOS_CLIENT_ID": "",
+  "TURNSTILE_SITE_KEY": "",
+  "FIREBASE_ENABLED": false,
+  "DEMO_MODE": false
+}

@@ -1,0 +1,871 @@
+{
+  "appTagline": "Tell shops what you want. Get quotes. Pick the best.",
+  "continueLabel": "Continue",
+  "next": "Next",
+  "back": "Back",
+  "cancel": "Cancel",
+  "save": "Save",
+  "done": "Done",
+  "edit": "Edit",
+  "delete": "Delete",
+  "retry": "Retry",
+  "close": "Close",
+  "send": "Send",
+  "skip": "Skip",
+  "yes": "Yes",
+  "no": "No",
+  "optional": "Optional",
+  "required": "Required",
+  "loading": "Loading…",
+  "somethingWentWrong": "Something went wrong. Please try again.",
+  "offlineBanner": "You're offline. Showing saved data.",
+  "demoModeBanner": "Demo mode: sample data, OTP 123456",
+  "seeAll": "See all",
+  "share": "Share",
+  "report": "Report",
+  "block": "Block",
+  "unblock": "Unblock",
+  "call": "Call",
+  "chat": "Chat",
+  "languageTitle": "Choose your language",
+  "languageSubtitle": "You can change this later in Settings.",
+  "welcomeTitle": "Get quotes from local shops",
+  "welcomeBody1": "Post what you need in seconds.",
+  "welcomeBody2": "Shops and service pros send you prices.",
+  "welcomeBody3": "Compare, chat and pick the best deal.",
+  "signInPhone": "Continue with phone",
+  "signInGoogle": "Continue with Google",
+  "signInApple": "Sign in with Apple",
+  "signInLegal": "By continuing you agree to our {terms} and {privacy}.",
+  "@signInLegal": {
+    "placeholders": {
+      "terms": {
+        "type": "String"
+      },
+      "privacy": {
+        "type": "String"
+      }
+    }
+  },
+  "termsLink": "Terms of Service",
+  "privacyLink": "Privacy Policy",
+  "phoneTitle": "Your mobile number",
+  "phoneSubtitle": "We'll send a one-time code by SMS.",
+  "phoneLabel": "Mobile number",
+  "phoneInvalid": "Enter a valid mobile number",
+  "sendCode": "Send code",
+  "otpTitle": "Enter the code",
+  "otpSubtitle": "Sent to {phone}",
+  "@otpSubtitle": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "otpLabel": "6-digit code",
+  "otpInvalid": "That code didn't work. Check it and try again.",
+  "verify": "Verify",
+  "resendCode": "Resend code",
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "authFailed": "Sign-in failed. Please try again.",
+  "authCancelled": "Sign-in was cancelled.",
+  "otpRateLimited": "Too many attempts. Please wait a few minutes.",
+  "consentTitle": "Before you start",
+  "consentAccept": "I agree to the {terms} and {privacy}",
+  "@consentAccept": {
+    "placeholders": {
+      "terms": {
+        "type": "String"
+      },
+      "privacy": {
+        "type": "String"
+      }
+    }
+  },
+  "consentMarketing": "Send me offers and tips (optional)",
+  "consentAnalytics": "Help improve the app with anonymous usage data (optional)",
+  "consentAge": "I am {age} or older",
+  "@consentAge": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "profileSetupTitle": "What should we call you?",
+  "nameLabel": "Your name",
+  "nameRequired": "Please enter your name",
+  "addPhoneTitle": "Add your mobile number",
+  "addPhoneBody": "Sellers need a verified phone number. Buyers can add one to get SMS updates.",
+  "modeBuyer": "Buying",
+  "modeSeller": "Selling",
+  "switchToSelling": "Switch to selling",
+  "switchToBuying": "Switch to buying",
+  "becomeSeller": "I'm a business",
+  "becomeSellerBody": "Get leads from buyers near you and send quotes. Free for founding partners.",
+  "tabHome": "Home",
+  "tabRequests": "My requests",
+  "tabChats": "Chats",
+  "tabAccount": "Account",
+  "tabLeads": "Leads",
+  "tabMyQuotes": "My quotes",
+  "tabDashboard": "Dashboard",
+  "homeGreeting": "Hi {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeGreetingAnon": "Hi there",
+  "whatDoYouNeed": "What do you need?",
+  "whatDoYouNeedHint": "e.g. Double-door fridge, delivered by Friday",
+  "activeRequests": "Your active requests",
+  "browseCategories": "Popular categories",
+  "howItWorks": "How it works",
+  "noActiveRequests": "Nothing posted yet. Tell local shops what you want and get quotes.",
+  "postTitle": "New request",
+  "postStepWhat": "What",
+  "postStepDetails": "Details",
+  "postStepWhere": "When and where",
+  "postDescribeHint": "Describe what you want. Brand, size, quantity…",
+  "postSpeak": "Speak",
+  "postListening": "Listening…",
+  "postSuggestedCategory": "Suggested category",
+  "postPickCategory": "Pick a category",
+  "postChangeCategory": "Change",
+  "postAddPhotos": "Add photos",
+  "postPhotosCount": "{count}/6 photos",
+  "@postPhotosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postReferenceLink": "Reference link (product page)",
+  "postBudget": "Budget",
+  "postBudgetMin": "From",
+  "postBudgetMax": "To",
+  "postBudgetHidden": "Hide my budget from sellers",
+  "postNeededBy": "Needed by",
+  "postPickDate": "Pick a date",
+  "postLocation": "Delivery or service location",
+  "postUseGps": "Use my location",
+  "postPostalCode": "{codeLabel}",
+  "@postPostalCode": {
+    "placeholders": {
+      "codeLabel": {
+        "type": "String"
+      }
+    }
+  },
+  "postLocality": "Area / locality",
+  "postFullAddress": "Full address (shared only with the seller you accept)",
+  "postQuoteWindow": "Accept quotes for",
+  "quoteWindow24h": "24 hours",
+  "quoteWindow48h": "48 hours",
+  "quoteWindow7d": "7 days",
+  "postWhoCanQuote": "Who can quote",
+  "audienceLocal": "Local shops",
+  "audienceOnline": "Online sellers",
+  "audienceBoth": "Both",
+  "postReview": "Review and post",
+  "postSubmit": "Post request",
+  "postSuccessTitle": "Request posted",
+  "postSuccessBody": "{count, plural, =0{We'll notify sellers as they join your area.} =1{We've notified 1 seller near you.} other{We've notified {count} sellers near you.}}",
+  "@postSuccessBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "postBlockedCategory": "We can't take requests for {category} in this app. {reason}",
+  "@postBlockedCategory": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "postBlockedReason": "This category is regulated and isn't allowed here.",
+  "postRestrictedNotice": "Only licensed sellers can quote in this category.",
+  "postRateLimited": "You've reached today's limit for new requests. Try again tomorrow.",
+  "postDuplicate": "You already posted this request in the last 24 hours.",
+  "postDescribeRequired": "Tell sellers what you need",
+  "postCategoryRequired": "Pick a category",
+  "postLocationRequired": "Add a location",
+  "postCodeInvalid": "Enter a valid {codeLabel}",
+  "@postCodeInvalid": {
+    "placeholders": {
+      "codeLabel": {
+        "type": "String"
+      }
+    }
+  },
+  "postalCodeLabelIndia": "PIN code",
+  "postalCodeLabelUsa": "ZIP code",
+  "requestsOpen": "Open",
+  "requestsAwarded": "Awarded",
+  "requestsPast": "Past",
+  "requestsEmptyOpen": "No open requests. Post one and get quotes from local shops.",
+  "requestsEmptyAwarded": "Requests where you accepted a quote show up here.",
+  "requestsEmptyPast": "Expired and cancelled requests show up here.",
+  "quotesCount": "{count, plural, =0{No quotes yet} =1{1 quote} other{{count} quotes}}",
+  "@quotesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quotesOfMax": "{count} of {max} quotes",
+  "@quotesOfMax": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "closesIn": "Closes in {time}",
+  "@closesIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "closed": "Closed",
+  "statusOpen": "Open",
+  "statusAwarded": "Awarded",
+  "statusClosed": "Closed",
+  "statusExpired": "Expired",
+  "statusCancelled": "Cancelled",
+  "noQuotesYet": "No quotes yet. Sellers usually respond within 2 hours.",
+  "cancelRequest": "Cancel request",
+  "cancelRequestConfirm": "Cancel this request? Sellers won't be able to quote any more.",
+  "shareRequest": "Share request",
+  "shareRequestWhatsapp": "Ask friends on WhatsApp",
+  "shareRequestText": "Which one should I pick? {link}",
+  "@shareRequestText": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "compare": "Compare",
+  "compareSelect": "Select up to 3 quotes to compare",
+  "sortBy": "Sort by",
+  "sortPrice": "Price",
+  "sortRating": "Rating",
+  "sortDelivery": "Delivery date",
+  "sortDistance": "Distance",
+  "quoteTotal": "Total",
+  "quoteSubtotal": "Subtotal",
+  "quoteTax": "Tax",
+  "quoteDelivery": "Delivery / installation",
+  "quoteFreeDelivery": "Free",
+  "quoteOffered": "Offered",
+  "quoteDeliveryDate": "Delivery date",
+  "quoteWarranty": "Warranty",
+  "quoteValidUntil": "Valid until {date}",
+  "@quoteValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "quoteNotes": "Notes",
+  "quoteResponseTime": "Replied in {time}",
+  "@quoteResponseTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "quoteVerified": "Verified",
+  "quoteFoundingPartner": "Founding partner",
+  "quoteNew": "New",
+  "gstIntra": "CGST {rate}% + SGST {rate}%",
+  "@gstIntra": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "gstInter": "IGST {rate}%",
+  "@gstInter": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "salesTax": "Sales tax {rate}%",
+  "@salesTax": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "taxIncludedNote": "Prices include GST",
+  "salesTaxNote": "Sales tax may apply",
+  "accept": "Accept",
+  "decline": "Decline",
+  "shortlist": "Shortlist",
+  "shortlisted": "Shortlisted",
+  "counterOffer": "Ask for a better price",
+  "counterOfferTitle": "Request a revised quote",
+  "counterOfferTarget": "Your target price",
+  "counterOfferNote": "Message to the seller",
+  "counterOfferSent": "Sent. The seller can revise the quote.",
+  "counterOfferFrom": "Buyer asked for {price}",
+  "@counterOfferFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptConfirmTitle": "Accept this quote?",
+  "acceptConfirmBody": "{seller} will get your contact details and address. Other sellers will be told politely that you chose another offer.",
+  "@acceptConfirmBody": {
+    "placeholders": {
+      "seller": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptedTitle": "Quote accepted",
+  "acceptedBody": "{seller} has been notified. You can call or chat with them now.",
+  "@acceptedBody": {
+    "placeholders": {
+      "seller": {
+        "type": "String"
+      }
+    }
+  },
+  "declineTitle": "Decline quote",
+  "declineReason": "Reason (optional, shared with the seller)",
+  "declineReasonPrice": "Price too high",
+  "declineReasonDelivery": "Delivery too late",
+  "declineReasonOther": "Chose another offer",
+  "quoteStatusSent": "Sent",
+  "quoteStatusRevised": "Revised",
+  "quoteStatusShortlisted": "Shortlisted",
+  "quoteStatusDeclined": "Declined",
+  "quoteStatusAccepted": "Accepted",
+  "quoteStatusWithdrawn": "Withdrawn",
+  "quoteStatusExpired": "Expired",
+  "orderTitle": "Order",
+  "ordersTitle": "Orders",
+  "orderTimeline": "Progress",
+  "orderStatusAccepted": "Accepted",
+  "orderStatusScheduled": "Scheduled",
+  "orderStatusDispatched": "Dispatched",
+  "orderStatusDelivered": "Delivered",
+  "orderStatusCompleted": "Completed",
+  "orderStatusCancelled": "Cancelled",
+  "orderMarkAs": "Mark as {status}",
+  "@orderMarkAs": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "orderContact": "Contact",
+  "orderAddress": "Address",
+  "orderPayment": "Payment",
+  "orderPaymentOffPlatform": "Pay the seller directly. Record it here for your records.",
+  "orderRecordPayment": "Record payment",
+  "orderPaymentRecorded": "{amount} paid by {method}",
+  "@orderPaymentRecorded": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentMethodUpi": "UPI",
+  "paymentMethodCash": "Cash",
+  "paymentMethodCard": "Card",
+  "paymentMethodBankTransfer": "Bank transfer",
+  "paymentMethodSellerLink": "Seller's payment link",
+  "paymentMethodZelle": "Zelle",
+  "paymentMethodCheck": "Check",
+  "rateSeller": "Rate the seller",
+  "rateBuyer": "Rate the buyer",
+  "reviewTitle": "How did it go?",
+  "reviewTextHint": "Tell others about your experience",
+  "reviewSubmit": "Submit review",
+  "reviewThanks": "Thanks for your review!",
+  "reviewTagOnTime": "On time",
+  "reviewTagGoodPrice": "Good price",
+  "reviewTagProfessional": "Professional",
+  "reviewTagQuality": "Great quality",
+  "reviewTagResponsive": "Responsive",
+  "reviewReply": "Reply publicly",
+  "reviewSellerReply": "Response from the seller",
+  "reviewsTitle": "Reviews",
+  "reviewsEmpty": "No reviews yet.",
+  "chatsTitle": "Chats",
+  "chatsEmpty": "Chats with sellers about your requests show up here.",
+  "chatHint": "Message",
+  "chatContactWarning": "For your safety, keep contact details in the app until you accept a quote.",
+  "chatAboutRequest": "About: {title}",
+  "@chatAboutRequest": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "chatRead": "Read",
+  "chatTyping": "typing…",
+  "chatFailed": "Not sent. Tap to retry.",
+  "chatPhoto": "Photo",
+  "notificationsTitle": "Notifications",
+  "notificationsEmpty": "You're all caught up.",
+  "markAllRead": "Mark all read",
+  "notifNewQuote": "New quote from {seller}",
+  "@notifNewQuote": {
+    "placeholders": {
+      "seller": {
+        "type": "String"
+      }
+    }
+  },
+  "notifQuoteRevised": "A seller revised their quote",
+  "notifMessage": "New message",
+  "notifNewRequest": "New request: {title}",
+  "@notifNewRequest": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifQuoteAccepted": "Your quote was accepted!",
+  "notifQuoteDeclined": "A buyer chose another offer",
+  "notifQuoteShortlisted": "A buyer shortlisted your quote",
+  "notifCounterOffer": "A buyer asked for a better price",
+  "notifOrderStatus": "Order update",
+  "notifGeneric": "Update",
+  "sellerOnboardingTitle": "Set up your business",
+  "sellerStepBusiness": "Business",
+  "sellerStepCategories": "What you sell",
+  "sellerStepArea": "Service area",
+  "sellerStepNotify": "Alerts",
+  "businessName": "Business name",
+  "businessDescription": "About your business",
+  "yearsInBusiness": "Years in business",
+  "brandsCarried": "Brands you carry (comma separated)",
+  "addLogo": "Add logo",
+  "addShopPhotos": "Add shop photos",
+  "selectCategories": "Select the categories you can quote for",
+  "categoriesRequired": "Select at least one category",
+  "areaRadius": "Radius around my shop",
+  "areaCodes": "List of {codeLabel}s",
+  "@areaCodes": {
+    "placeholders": {
+      "codeLabel": {
+        "type": "String"
+      }
+    }
+  },
+  "areaNationwide": "Ship nationwide",
+  "radiusValue": "{value} km",
+  "@radiusValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "radiusValueMiles": "{value} mi",
+  "@radiusValueMiles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "shopLocation": "Shop location",
+  "serviceCodesHint": "Comma separated, e.g. {example}",
+  "@serviceCodesHint": {
+    "placeholders": {
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerState": "State",
+  "notifyInstant": "Instant alerts",
+  "notifyHourly": "Hourly digest",
+  "notifyQuiet": "Quiet hours",
+  "quietHoursRange": "Quiet from {start} to {end}",
+  "@quietHoursRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerProfileSaved": "Your business is live. New leads will show up in your feed.",
+  "foundingPartnerBadge": "Founding partner: free until {date}",
+  "@foundingPartnerBadge": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationTitle": "Get verified",
+  "verificationBody": "Verified sellers get a badge and see new requests first.",
+  "verificationStatusNone": "Not verified",
+  "verificationStatusPending": "Under review",
+  "verificationStatusVerified": "Verified",
+  "verificationStatusRejected": "Rejected: {reason}",
+  "@verificationStatusRejected": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "docGstin": "GSTIN",
+  "docUdyam": "Udyam registration number",
+  "docShopPhoto": "Shop photo",
+  "docEin": "EIN",
+  "docStateLicence": "State business licence number",
+  "docBusinessAddress": "Business address",
+  "docWebsite": "Website",
+  "docInvalid": "This number doesn't look right. Check it and try again.",
+  "uploadFile": "Upload",
+  "submitForReview": "Submit for review",
+  "submittedForReview": "Submitted. We'll review it shortly.",
+  "licencesTitle": "Licences",
+  "licencesBody": "Required to quote in restricted categories.",
+  "addLicence": "Add licence",
+  "licenceType": "Licence type",
+  "licenceNumber": "Licence number",
+  "licenceIssuer": "Issuing body",
+  "licenceExpiry": "Expiry date",
+  "leadsTitle": "Leads",
+  "leadsEmpty": "No matching requests right now. We'll alert you when buyers near you post.",
+  "leadsNoSellerProfile": "Set up your business profile to start getting leads.",
+  "leadFilters": "Filters",
+  "leadFilterCategory": "Category",
+  "leadFilterDistance": "Within",
+  "leadFilterAny": "Any",
+  "leadAway": "{distance} away",
+  "@leadAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "leadQuotesSent": "{count} of {max} quotes sent",
+  "@leadQuotesSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "leadFull": "Quote limit reached",
+  "leadNeededBy": "Needed by {date}",
+  "@leadNeededBy": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "leadBudget": "Budget {range}",
+  "@leadBudget": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "leadBudgetHidden": "Budget not shared",
+  "leadDismiss": "Not interested",
+  "leadSendQuote": "Send quote",
+  "leadAlreadyQuoted": "You've quoted",
+  "leadPriorityNote": "Verified sellers see new requests first.",
+  "leadLocalityOnly": "Exact address is shared after the buyer accepts your quote.",
+  "quoteFormTitle": "Your quote",
+  "quoteItem": "Item / service",
+  "quoteQty": "Qty",
+  "quoteUnitPrice": "Unit price",
+  "quoteAddLine": "Add line",
+  "quoteTaxRate": "GST rate",
+  "quoteSalesTaxRate": "Sales tax rate (%)",
+  "quoteBrandModel": "Brand / model offered",
+  "quoteValidity": "Quote valid for",
+  "quoteValidityDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@quoteValidityDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "quoteAttachments": "Attachments",
+  "quoteSaveTemplate": "Save as template",
+  "quoteUseTemplate": "Use template",
+  "quoteTemplateName": "Template name",
+  "quoteSubmit": "Send quote",
+  "quoteRevise": "Send revised quote",
+  "quoteWithdraw": "Withdraw quote",
+  "quoteSent": "Quote sent",
+  "quotePriceRequired": "Enter a price",
+  "quoteCapReached": "This request already has the maximum number of quotes.",
+  "quoteRequestClosed": "This request is no longer open.",
+  "quoteNotAllowed": "You can't quote on this request.",
+  "quoteLicenceRequired": "A valid licence is required for this category.",
+  "quoteNoCredits": "You're out of free quotes this month. See plans.",
+  "quotePriorityWindow": "Verified sellers get the first 15 minutes on new requests.",
+  "quoteAlreadySent": "You've already quoted on this request.",
+  "templatesTitle": "Quote templates",
+  "templatesEmpty": "Save a quote as a template to reuse it.",
+  "myQuotesActive": "Active",
+  "myQuotesWon": "Won",
+  "myQuotesLost": "Lost",
+  "myQuotesEmpty": "No quotes here yet.",
+  "dashboardTitle": "Dashboard",
+  "dashActive": "Active quotes",
+  "dashWon": "Won",
+  "dashWinRate": "Win rate",
+  "dashResponse": "Avg. response",
+  "dashRevenue": "Revenue logged",
+  "dashRating": "Rating",
+  "dashQuotesThisMonth": "Quotes this month",
+  "minutesShort": "{count} min",
+  "@minutesShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursShort": "{count} h",
+  "@hoursShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planTitle": "Plan and billing",
+  "planFreeLaunch": "Everything is free during launch.",
+  "planFoundingPartner": "As a founding partner you keep free access until {date}.",
+  "@planFoundingPartner": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planCurrent": "Current plan: {tier}",
+  "@planCurrent": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "planFreeTier": "Free: {count} quotes a month",
+  "@planFreeTier": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planMonthly": "Monthly",
+  "planAnnual": "Annual",
+  "planSubscribe": "Subscribe",
+  "planCredits": "Quote credits",
+  "planCreditsBalance": "{count} credits left",
+  "@planCreditsBalance": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planBuyCredits": "Buy credits",
+  "planRestore": "Restore purchases",
+  "planManage": "Manage subscription",
+  "planFixPayment": "There's a problem with your payment. Update it to keep your plan.",
+  "planRenewal": "Renews automatically. Cancel anytime in {store}.",
+  "@planRenewal": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "planBuyOnWeb": "Buy on our website",
+  "planNotAvailable": "Plans aren't available in the app yet.",
+  "sellerProfileTitle": "Business profile",
+  "sellerViewPublic": "View as buyers see it",
+  "sellerShareShop": "Share my shop",
+  "sellerShareText": "Get quotes from {shop} and other local shops on {app}: {link}",
+  "@sellerShareText": {
+    "placeholders": {
+      "shop": {
+        "type": "String"
+      },
+      "app": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "sellerYears": "{count, plural, =1{1 year in business} other{{count} years in business}}",
+  "@sellerYears": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellerRating": "{rating} ({count})",
+  "@sellerRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sellerResponds": "Usually replies in {time}",
+  "@sellerResponds": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "accountTitle": "Account",
+  "settingsTitle": "Settings",
+  "settingsLanguage": "Language",
+  "settingsNotifications": "Notifications",
+  "settingsPrivacy": "Privacy",
+  "settingsHelp": "Help and FAQ",
+  "settingsLegal": "Legal",
+  "settingsLicenses": "Open-source licences",
+  "settingsSignOut": "Sign out",
+  "settingsDeleteAccount": "Delete account",
+  "settingsBlocked": "Blocked users",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "notifPrefNewQuotes": "New quotes",
+  "notifPrefMessages": "Messages",
+  "notifPrefLeads": "New leads",
+  "notifPrefMarketing": "Offers and tips",
+  "privacyAnalytics": "Share anonymous usage data",
+  "privacyDoNotSell": "Do Not Sell or Share My Personal Information",
+  "privacyDownload": "Request a copy of my data",
+  "deleteTitle": "Delete your account",
+  "deleteBody": "This permanently deletes your profile, requests, quotes, chats and photos. Some records, such as completed orders and tax invoices, are kept as required by law and then deleted.",
+  "deleteConfirmLabel": "Type DELETE to confirm",
+  "deleteConfirmWord": "DELETE",
+  "deleteButton": "Delete my account",
+  "deleteReauth": "For your security, sign in again before deleting.",
+  "deleteDone": "Your account has been deleted.",
+  "helpTitle": "Help and FAQ",
+  "faqQ1": "Is it free for buyers?",
+  "faqA1": "Yes. Posting requests and receiving quotes is always free.",
+  "faqQ2": "How do I pay the seller?",
+  "faqA2": "You pay the seller directly, by the methods they accept. Record the payment in the order for your records.",
+  "faqQ3": "When does the seller see my phone and address?",
+  "faqA3": "Only after you accept their quote. Before that, you can chat in the app.",
+  "faqQ4": "How do sellers get verified?",
+  "faqA4": "They submit business documents that our team reviews.",
+  "faqQ5": "How do I report a problem?",
+  "faqA5": "Use Report on any chat, quote or profile, or contact support.",
+  "contactSupport": "Contact support",
+  "legalTitle": "Legal",
+  "reportTitle": "Report",
+  "reportReasonSpam": "Spam or scam",
+  "reportReasonAbuse": "Abusive or offensive",
+  "reportReasonFake": "Fake business or request",
+  "reportReasonProhibited": "Prohibited item",
+  "reportReasonOther": "Something else",
+  "reportDetails": "Details (optional)",
+  "reportSent": "Thanks. Our team will review it.",
+  "blockConfirm": "Block {name}? You won't see their quotes or messages.",
+  "@blockConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "blocked": "Blocked",
+  "inAppReviewAsk": "Enjoying {app}?",
+  "@inAppReviewAsk": {
+    "placeholders": {
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "updateRequired": "Please update the app to continue.",
+  "permissionLocationRationale": "We use your location to find sellers near you. It is only shared as your area until you accept a quote.",
+  "permissionNotificationsRationale": "Turn on notifications to hear about new quotes and messages right away.",
+  "permissionMicRationale": "Allow the microphone to describe your request by voice.",
+  "allow": "Allow",
+  "notNow": "Not now"
+}
