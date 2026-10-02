@@ -26,3 +26,5 @@ Defaults picked while building, per brief Section 22. Newest last. Change any of
 | 2026-10-02 | India brochures are English only for now. | The Dart `pdf` package can't shape Devanagari; Hindi brochures need an Edge Function renderer or pre-made templates. |
 | 2026-10-02 | US sales tax is stored in whole basis points, so 8.875 % (NYC) is entered as 888 for now. | A finer unit must change SQL, TypeScript, Dart and fixtures together; scheduled as a follow-up. |
 | 2026-10-02 | Admin panel UI is English only. | Internal tool; brochures themselves are per language. |
+| 2026-10-02 | India web payments stay behind the monetization switch: the India project keeps `monetization_enabled=false` (free for every seller) until a gateway is approved. Admins can record a UPI or bank transfer against a seller plan by hand (`admin_grant_entitlement`, audit-logged). | Razorpay KYC is blocked and BillDesk was rejected (owner update). |
+| 2026-10-02 | Android in-app seller subscriptions and credit packs use Google Play Billing; iOS uses StoreKit; Stripe web checkout is for the USA web only. | Store rules for digital goods; Stripe US is approved. |
