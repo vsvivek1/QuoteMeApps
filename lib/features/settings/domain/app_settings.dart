@@ -12,7 +12,9 @@ abstract class AppFlags with _$AppFlags {
     DateTime? earlyPartnerFreeUntil,
     @Default(10) int maxRequestsPerDay,
     @Default(false) bool webPurchaseLinksAllowed,
-    @Default('monthly') String paywallDefaultPeriod,
+
+    /// `monthly` or `annual` (server default `annual`).
+    @Default('annual') String paywallDefaultPeriod,
     @Default(false) bool whatsappNotifications,
     @Default('1.0') String termsVersion,
     @Default('1.0') String privacyVersion,

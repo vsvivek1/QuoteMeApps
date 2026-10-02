@@ -25,11 +25,12 @@ class SupabaseChatRepository implements ChatRepository {
   static const _chatKind = 'chat';
   static const _msgKind = 'message';
 
+  /// `chats.request_title` is kept in sync by the server, so sellers (who
+  /// can't read `requests`) get the title without a join.
+  static const _chatSelect = '*, seller:sellers(business_name, logo_url)';
+
   /// Messages not yet confirmed by the server, per chat (optimistic UI).
   final _pending = <String, List<ChatMessage>>{};
-
-  /// Request titles a seller can't read from `requests` (RLS: buyer only).
-  final _titles = <String, String>{};
 
   // ------------------------------------------------------------------ chats
 
@@ -37,7 +38,7 @@ class SupabaseChatRepository implements ChatRepository {
     final uid = ctx.uid;
     final rows = await ctx.client
         .from('chats')
-        .select('*, request:requests(title), seller:sellers(business_name, logo_url)')
+        .select(_chatSelect)
         .or('buyer_id.eq.$uid,seller_id.eq.$uid')
         .order('last_message_at', ascending: false, nullsFirst: false)
         .limit(100);
@@ -48,26 +49,6 @@ class SupabaseChatRepository implements ChatRepository {
     final uid = ctx.uidOrNull;
     if (uid == null || rows.isEmpty) return const [];
     final ids = [for (final r in rows) r['id'].toString()];
-
-    // Titles for chats where I'm the seller come from get_my_quotes.
-    final missing = [
-      for (final r in rows)
-        if (asMap(r['request'])['title'] == null && !_titles.containsKey(r['request_id'])) r['request_id'],
-    ];
-    if (missing.isNotEmpty) {
-      try {
-        for (final q in await ctx.rpcList('get_my_quotes', {'p_limit': 50})) {
-          final req = asMap(q['request']);
-          if (req['id'] != null) _titles[req['id'].toString()] = req['title']?.toString() ?? '';
-        }
-        // Don't ask again on every refresh for requests outside that page.
-        for (final id in missing) {
-          _titles.putIfAbsent(id.toString(), () => '');
-        }
-      } catch (e) {
-        debugPrint('chat titles: $e');
-      }
-    }
 
     // Buyer display names for chats where I'm the seller.
     final buyerIds = [
@@ -106,10 +87,8 @@ class SupabaseChatRepository implements ChatRepository {
           final iAmBuyer = r['buyer_id'] == uid;
           final seller = asMap(r['seller']);
           final buyer = profiles[r['buyer_id']];
-          final title = asMap(r['request'])['title']?.toString() ?? _titles[r['request_id']] ?? '';
           return mapChat(
             r,
-            requestTitle: title,
             counterpartName: iAmBuyer
                 ? seller['business_name']?.toString() ?? ''
                 : buyer?['display_name']?.toString() ?? '',
@@ -136,11 +115,7 @@ class SupabaseChatRepository implements ChatRepository {
 
   @override
   Future<Chat?> getChat(String chatId) async {
-    final row = await ctx.client
-        .from('chats')
-        .select('*, request:requests(title), seller:sellers(business_name, logo_url)')
-        .eq('id', chatId)
-        .maybeSingle();
+    final row = await ctx.client.from('chats').select(_chatSelect).eq('id', chatId).maybeSingle();
     if (row == null) return null;
     final list = await _decorate([row]);
     return list.firstOrNull;
@@ -199,21 +174,13 @@ class SupabaseChatRepository implements ChatRepository {
     var last = const <ChatMessage>[];
     void emit() {
       if (out.isClosed) return;
-      // A sent message stays as its optimistic copy until the server row
-      // shows up, so it never blinks out between insert and refetch.
+      // An optimistic copy stays until the server row with the same
+      // client_id shows up, so it never blinks out between insert and
+      // refetch, and a retried message that already arrived never shows twice.
       final pending = _pending[chatId];
-      pending?.removeWhere(
-        (p) =>
-            p.sendState == SendState.sent &&
-            last.any(
-              (m) =>
-                  m.senderId == p.senderId &&
-                  m.body == p.body &&
-                  !m.createdAt.isBefore(p.createdAt.subtract(const Duration(minutes: 5))),
-            ),
-      );
+      pending?.removeWhere((p) => isConfirmedByServer(p, last));
       if (pending != null && pending.isEmpty) _pending.remove(chatId);
-      out.add([...last, ...?_pending[chatId]]);
+      out.add(mergePendingMessages(last, _pending[chatId] ?? const []));
     }
 
     out = StreamController<List<ChatMessage>>(
@@ -258,18 +225,17 @@ class SupabaseChatRepository implements ChatRepository {
     if (m != null) _setPending(chatId, clientId, m.copyWith(sendState: SendState.sent));
   }
 
-  Future<void> _insertText(Map<String, dynamic> p) => ctx.client.from('messages').insert({
-    'chat_id': p['chat_id'],
-    'sender_id': p['sender_id'],
-    'type': 'text',
-    'body': p['body'],
-  });
+  /// Idempotent insert: `INSERT ... ON CONFLICT (chat_id, client_id) DO
+  /// NOTHING`, so a retry of a message that already arrived (lost response,
+  /// outbox replay after a restart) creates nothing.
+  Future<void> _insertText(Map<String, dynamic> p) =>
+      ctx.client.from('messages').upsert(textMessageRow(p), onConflict: 'chat_id,client_id', ignoreDuplicates: true);
 
   /// Outbox handler: replays a queued text message.
   Future<void> _sendQueued(String payload) async {
     final p = Map<String, dynamic>.from(jsonDecode(payload) as Map);
     final chatId = p['chat_id'].toString();
-    final clientId = p['client_id'].toString();
+    final clientId = p['client_id']?.toString() ?? '';
     try {
       await _insertText(p);
       _markSent(chatId, clientId);
@@ -286,6 +252,8 @@ class SupabaseChatRepository implements ChatRepository {
     final body = text.trim();
     if (body.isEmpty) return;
     final uid = ctx.uid;
+    // One client_id per message, generated once and kept in the outbox
+    // payload, so every retry carries the same id.
     final clientId = ctx.newId();
     final optimistic = ChatMessage(
       id: clientId,
@@ -342,3 +310,30 @@ class SupabaseChatRepository implements ChatRepository {
   @override
   void setTyping(String chatId, bool typing) {}
 }
+
+/// The `messages` row for a queued text message (outbox payload). The
+/// `client_id` makes retries idempotent; payloads without one (none are
+/// written any more) still insert.
+Map<String, Object?> textMessageRow(Map<String, dynamic> payload) => {
+  'chat_id': payload['chat_id'],
+  'sender_id': payload['sender_id'],
+  'type': 'text',
+  'body': payload['body'],
+  if (payload['client_id'] != null) 'client_id': payload['client_id'],
+};
+
+/// Whether the server list already holds the row for this optimistic
+/// message (same `client_id`).
+bool isConfirmedByServer(ChatMessage pending, List<ChatMessage> server) {
+  final id = pending.clientId;
+  if (id == null) return false;
+  return server.any((m) => m.clientId == id && m.chatId == pending.chatId);
+}
+
+/// Server messages followed by the optimistic ones the server hasn't
+/// returned yet (deduplicated by `client_id`).
+List<ChatMessage> mergePendingMessages(List<ChatMessage> server, List<ChatMessage> pending) => [
+  ...server,
+  for (final p in pending)
+    if (!isConfirmedByServer(p, server)) p,
+];

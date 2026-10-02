@@ -163,11 +163,12 @@ void main() {
         requestId: r.id,
         lines: [QuoteLine(description: 'TV', qty: 1, unitPrice: usaConfig.money(89999))],
         delivery: usaConfig.money(4900),
-        taxRateBp: 825,
+        salesTaxRatePpm: 88750,
         validDays: 7,
       ),
     );
-    expect(q.tax.minorInt, 7425); // 89999 x 8.25% = 7424.9175 cents
-    expect(q.total.minorInt, 89999 + 7425 + 4900);
+    expect(q.tax.minorInt, 7987); // 89999 x 8.875% = 7987.41125 cents
+    expect(q.total.minorInt, 89999 + 7987 + 4900);
+    expect((q.taxBreakdown as SalesTaxBreakdown).ratePpm, 88750);
   });
 }

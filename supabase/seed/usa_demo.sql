@@ -3,8 +3,8 @@
 -- Requires seed.sql, seed/usa.sql and seed/demo_generator.sql.
 -- Test phones use the fictional 555-01xx range and must match
 -- [auth.sms.test_otp] in supabase/config.toml.
--- Sales tax (basis points): Dallas 8.25 % = 825. NYC is 8.875 %, which is not
--- an integer number of basis points (see API.md "Money"); the demo uses 888.
+-- Sales tax in parts per million (see API.md "Money"): NYC 8.875 % = 88750,
+-- Dallas 8.25 % = 82500.
 
 truncate seed_tools.demo_templates;
 insert into seed_tools.demo_templates (slug, title, description, fields, budget_min, budget_max, unit_min, unit_max, tax_rate_bp, brands) values
@@ -43,9 +43,9 @@ insert into seed_tools.demo_templates (slug, title, description, fields, budget_
    270000, 450000, 89900, 149900, 0, array['Dell Latitude 5450','Lenovo ThinkPad E14','HP ProBook 450']);
 
 select seed_tools.generate_city('nyc', 'New York', 'New York', null, 40.7128, -74.0060,
-  array['10001','10011','10016','10025','11201','11215','11101'], 'New Jersey', 888,
+  array['10001','10011','10016','10025','11201','11215','11101'], 'New Jersey', 88750,
   '{"buyer":"15555550100","seller":"15555550101","verified_seller":"15555550102"}');
 select seed_tools.generate_city('dfw', 'Dallas', 'Texas', null, 32.7767, -96.7970,
-  array['75201','75204','75205','75206','75214','75219','75230'], 'Oklahoma', 825);
+  array['75201','75204','75205','75206','75214','75219','75230'], 'Oklahoma', 82500);
 select seed_tools.create_test_admin('15555550103');
-select seed_tools.generate_review_data('15555550104', '15555550105', 32.7876, -96.7994, '75201', 825);
+select seed_tools.generate_review_data('15555550104', '15555550105', 32.7876, -96.7994, '75201', 82500);

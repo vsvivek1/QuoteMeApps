@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:iwant/core/data/supabase/mappers.dart';
+import 'package:iwant/core/data/supabase/supabase_chat_repository.dart';
+import 'package:iwant/core/data/supabase/supabase_misc_repositories.dart';
 import 'package:iwant/core/money/money.dart';
 import 'package:iwant/core/money/tax.dart';
 import 'package:iwant/features/auth/domain/app_user.dart';
@@ -245,11 +247,11 @@ void main() {
         subtotal: 1999,
         tax: 165,
         delivery: 500,
-        breakdown: {'kind': 'sales_tax', 'rate_bp': 825, 'amount': 165},
+        breakdown: {'kind': 'sales_tax', 'rate_ppm': 82500, 'rate_bp': 825, 'amount': 165},
       )..addAll({'counter_target_minor': 1800, 'counter_note': 'Can you do 18?', 'status': 'revised'});
       final q = mapQuote(row, fallbackCurrency: 'INR');
       final b = q.taxBreakdown as SalesTaxBreakdown;
-      expect(b.rateBp, 825);
+      expect(b.ratePpm, 82500);
       expect(b.amount.minorInt, 165);
       expect(b.amount.isoCode, 'USD');
       expect(q.total.minorInt, 2664);
@@ -427,6 +429,87 @@ void main() {
       expect(c.unread, 2);
       expect(c.quoteAccepted, isTrue);
     });
+
+    test('chat title comes from request_title (sellers cannot read requests)', () {
+      final row = {
+        'id': 'c1',
+        'request_id': 'r1',
+        'buyer_id': 'b1',
+        'seller_id': 's1',
+        'request_title': '65 inch OLED TV',
+      };
+      expect(mapChat(row, counterpartName: 'Priya').requestTitle, '65 inch OLED TV');
+      expect(mapChat({...row}..remove('request_title'), counterpartName: 'x').requestTitle, '');
+    });
+
+    test('message client_id is mapped', () {
+      final m = mapChatMessage({
+        'id': 'm1',
+        'chat_id': 'c1',
+        'sender_id': 'u1',
+        'type': 'text',
+        'body': 'Hi',
+        'client_id': 'cid-1',
+        'created_at': '2026-10-02T05:59:00Z',
+      });
+      expect(m.clientId, 'cid-1');
+      expect(mapChatMessage({'id': 'm2', 'chat_id': 'c1', 'type': 'text'}).clientId, isNull);
+    });
+
+    test('queued text row carries the client_id for idempotent upserts', () {
+      final payload = {'chat_id': 'c1', 'sender_id': 'u1', 'body': 'Hi', 'client_id': 'cid-1'};
+      expect(textMessageRow(payload), {
+        'chat_id': 'c1',
+        'sender_id': 'u1',
+        'type': 'text',
+        'body': 'Hi',
+        'client_id': 'cid-1',
+      });
+      expect(textMessageRow({...payload}..remove('client_id')).containsKey('client_id'), isFalse);
+    });
+
+    group('optimistic messages', () {
+      final t0 = DateTime(2026, 10, 2, 10);
+      ChatMessage msg(String id, {String? clientId, SendState state = SendState.sent, String body = 'Hi'}) =>
+          ChatMessage(
+            id: id,
+            chatId: 'c1',
+            senderId: 'u1',
+            body: body,
+            createdAt: t0,
+            sendState: state,
+            clientId: clientId,
+          );
+
+      test('a pending message is dropped once the server row with its client_id arrives', () {
+        final pending = [msg('cid-1', clientId: 'cid-1', state: SendState.sending)];
+        final server = [msg('server-1', clientId: 'cid-1')];
+        expect(isConfirmedByServer(pending.single, server), isTrue);
+        expect(mergePendingMessages(server, pending).map((m) => m.id), ['server-1']);
+      });
+
+      test('a retried message that already arrived shows once', () {
+        // Lost response: the insert reached the server, the outbox retries.
+        final pending = [msg('cid-1', clientId: 'cid-1', state: SendState.sending)];
+        final server = [msg('server-0', clientId: 'cid-0'), msg('server-1', clientId: 'cid-1')];
+        expect(mergePendingMessages(server, pending).map((m) => m.id), ['server-0', 'server-1']);
+      });
+
+      test('same text with another client_id is a different message', () {
+        final pending = [msg('cid-2', clientId: 'cid-2', state: SendState.sending)];
+        final server = [msg('server-1', clientId: 'cid-1')];
+        expect(isConfirmedByServer(pending.single, server), isFalse);
+        expect(mergePendingMessages(server, pending).map((m) => m.id), ['server-1', 'cid-2']);
+      });
+
+      test('failed and unsent messages stay visible', () {
+        final pending = [
+          msg('cid-3', clientId: 'cid-3', state: SendState.failed),
+          msg('cid-4', clientId: 'cid-4', state: SendState.sending),
+        ];
+        expect(mergePendingMessages(const [], pending).map((m) => m.sendState), [SendState.failed, SendState.sending]);
+      });
+    });
   });
 
   group('notification', () {
@@ -532,7 +615,7 @@ void main() {
             {'role': 'buyer_to_seller'},
           ],
           'seller': {'business_name': 'Sharma Electronics'},
-          'request': {'title': 'Fridge'},
+          'request_title': 'Fridge',
         },
         fallbackCurrency: 'INR',
         contacts: {
@@ -568,6 +651,52 @@ void main() {
       expect(f.termsVersion, '2.0');
       expect(f.privacyVersion, '2.1');
       expect(mapFlags(const {}).quoteCap, 10);
+    });
+
+    test('app settings: purchase links, paywall period, WhatsApp', () {
+      final f = mapFlags({
+        'web_purchase_links_allowed': true,
+        'paywall_default_period': 'monthly',
+        'whatsapp_notifications': true,
+      });
+      expect(f.webPurchaseLinksAllowed, isTrue);
+      expect(f.paywallDefaultPeriod, 'monthly');
+      expect(f.whatsappNotifications, isTrue);
+      final d = mapFlags(const {});
+      expect(d.webPurchaseLinksAllowed, isFalse);
+      expect(d.paywallDefaultPeriod, 'annual'); // server default
+      expect(d.whatsappNotifications, isFalse);
+      expect(mapFlags({'paywall_default_period': 'weekly'}).paywallDefaultPeriod, 'annual');
+      expect(mapFlags({'web_purchase_links_allowed': 'yes'}).webPurchaseLinksAllowed, isFalse);
+    });
+
+    test('order title from request_title; legacy request embed still read', () {
+      final base = {
+        'id': 'o1',
+        'request_id': 'r1',
+        'quote_id': 'q1',
+        'buyer_id': 'b1',
+        'seller_id': 's1',
+        'status': 'accepted',
+        'total_minor': 100,
+        'currency': 'USD',
+        'created_at': '2026-10-02T06:00:00Z',
+      };
+      expect(mapOrder({...base, 'request_title': 'TV mount'}, fallbackCurrency: 'USD').title, 'TV mount');
+      expect(
+        mapOrder({
+          ...base,
+          'request': {'title': 'Old'},
+        }, fallbackCurrency: 'USD').title,
+        'Old',
+      );
+      expect(mapOrder(base, fallbackCurrency: 'USD').title, '');
+    });
+
+    test('payment methods: check is recorded as check', () {
+      expect(SupabaseOrderRepository.serverPaymentMethod('check'), 'check');
+      expect(SupabaseOrderRepository.serverPaymentMethod('zelle'), 'zelle');
+      expect(SupabaseOrderRepository.serverPaymentMethod('venmo'), 'other');
     });
 
     test('category field schema in both documented shapes', () {

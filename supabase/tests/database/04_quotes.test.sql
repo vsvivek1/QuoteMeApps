@@ -2,7 +2,7 @@
 -- the effects of accept_quote / withdraw / revise / counter / decline.
 begin;
 \ir _helpers.psql
-select plan(39);
+select plan(43);
 
 select tests.create_user('q-buyer') as buyer \gset
 select tests.make_request(:'buyer') as req \gset
@@ -133,6 +133,19 @@ select tests.authenticate_as(:'verified');
 select is((public.revise_quote(:'rq', tests.line(80000))).total_minor, 94400::bigint, 'seller revises the price');
 reset role;
 select is((select count(*)::int from public.quote_revisions where quote_id = :'rq'), 1, 'revision snapshot stored');
+
+-- US sales tax in ppm (migration 1050): 8.875 % is exact; older apps still send basis points
+update public.app_settings set value = '"US"' where key = 'country';
+select tests.authenticate_as(:'verified');
+select is((public.revise_quote(:'rq', tests.line(80000), p_sales_tax_rate_ppm => 88750)).total_minor, 87100::bigint,
+  'US revise at 8.875 % (88750 ppm): 80000 + 7100');
+select is((select tax_breakdown from public.quotes where id = :'rq'),
+  '{"kind":"sales_tax","rate_ppm":88750,"rate_bp":888,"amount":7100}'::jsonb, 'breakdown stores rate_ppm');
+select is((public.revise_quote(:'rq', tests.line(80000), p_sales_tax_rate_bp => 825)).total_minor, 86600::bigint,
+  'older app: p_sales_tax_rate_bp 825 still works');
+select is((select (tax_breakdown->>'rate_ppm')::int from public.quotes where id = :'rq'), 82500, 'bp is stored as ppm (bp * 100)');
+reset role;
+update public.app_settings set value = '"IN"' where key = 'country';
 select tests.authenticate_as(:'buyer');
 select is((public.decline_quote(:'rq', 'Too far')).status, 'declined', 'buyer declines with a reason');
 

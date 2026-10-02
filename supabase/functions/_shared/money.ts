@@ -1,6 +1,8 @@
-// Money helpers mirroring the SQL in migrations/20261002000200_helpers_settings_money.sql.
-// Integer minor units (paise / cents) only; rates are integer basis points
-// (1800 = 18 %). round_half_up(n, d) = (2n + d) div (2d).
+// Money helpers mirroring the SQL in migrations/20261002000200_helpers_settings_money.sql and
+// migrations/20261002001050_sales_tax_ppm.sql.
+// Integer minor units (paise / cents) only. India GST rates are integer basis points
+// (1800 = 18 %); US sales tax rates are integer parts per million (88750 = 8.875 %).
+// round_half_up(n, d) = (2n + d) div (2d).
 // Shared fixtures: supabase/tests/fixtures/money_rounding_cases.json.
 
 export function roundHalfUp(numerator: bigint, denominator: bigint): bigint {
@@ -43,11 +45,38 @@ export function gstLineTax(qty: number | string, unitPriceMinor: bigint | number
   return { base_minor: base, cgst_minor: 0n, sgst_minor: 0n, igst_minor: igst, tax_minor: igst };
 }
 
-export function usSalesTax(subtotalMinor: bigint | number, rateBp: number): bigint {
+/** Parts per million in 100 %. */
+export const PPM_PER_UNIT = 1_000_000;
+
+function assertRatePpm(ppm: number) {
+  if (!Number.isInteger(ppm) || ppm < 0 || ppm > PPM_PER_UNIT) throw new Error("invalid_sales_tax_input");
+}
+
+/** Basis points sent by older apps -> ppm (exact: bp * 100). */
+export function bpToPpm(bp: number): number {
+  if (!Number.isInteger(bp) || bp < 0 || bp > 10000) throw new Error("invalid_sales_tax_input");
+  return bp * 100;
+}
+
+/** ppm -> basis points rounded half up; only for the legacy `rate_bp` field (display). */
+export function ppmToLegacyBp(ppm: number): number {
+  assertRatePpm(ppm);
+  return Number(roundHalfUp(BigInt(ppm), 100n));
+}
+
+/** `us_sales_tax`: round_half_up(subtotal * rate_ppm, 1000000). */
+export function usSalesTax(subtotalMinor: bigint | number, ratePpm: number): bigint {
   const sub = BigInt(subtotalMinor);
   if (sub < 0n) throw new Error("invalid_sales_tax_input");
-  assertRate(rateBp);
-  return roundHalfUp(sub * BigInt(rateBp), 10000n);
+  assertRatePpm(ratePpm);
+  return roundHalfUp(sub * BigInt(ratePpm), BigInt(PPM_PER_UNIT));
+}
+
+/** The sales tax rate of a stored breakdown: `rate_ppm`, or a legacy row's `rate_bp` * 100. */
+export function salesTaxRatePpm(breakdown: { rate_ppm?: number; rate_bp?: number }): number {
+  if (typeof breakdown.rate_ppm === "number") return breakdown.rate_ppm;
+  if (typeof breakdown.rate_bp === "number") return breakdown.rate_bp * 100;
+  return 0;
 }
 
 export interface QuoteLineInput {
@@ -60,7 +89,8 @@ export interface QuoteLineInput {
 
 export type TaxBreakdown =
   | { kind: "gst"; mode: "intra" | "inter"; rate_bp: number; cgst: number; sgst: number; igst: number }
-  | { kind: "sales_tax"; rate_bp: number; amount: number };
+  /** rate_bp is rate_ppm rounded half up to basis points, kept for older apps (display only). */
+  | { kind: "sales_tax"; rate_ppm: number; rate_bp: number; amount: number };
 
 export interface QuoteTotals {
   subtotal_minor: number;
@@ -75,7 +105,7 @@ export function computeQuoteTotals(
   country: "IN" | "US",
   lines: QuoteLineInput[],
   deliveryMinor = 0,
-  salesTaxRateBp = 0,
+  salesTaxRatePpm = 0,
   intraState = true,
 ): QuoteTotals {
   if (!lines.length) throw new Error("line_items_required");
@@ -106,8 +136,13 @@ export function computeQuoteTotals(
       igst: Number(igst),
     };
   } else {
-    tax = usSalesTax(sub, salesTaxRateBp);
-    breakdown = { kind: "sales_tax", rate_bp: salesTaxRateBp, amount: Number(tax) };
+    tax = usSalesTax(sub, salesTaxRatePpm);
+    breakdown = {
+      kind: "sales_tax",
+      rate_ppm: salesTaxRatePpm,
+      rate_bp: ppmToLegacyBp(salesTaxRatePpm),
+      amount: Number(tax),
+    };
   }
   const delivery = BigInt(deliveryMinor);
   return {

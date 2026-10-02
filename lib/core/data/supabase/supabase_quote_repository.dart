@@ -94,7 +94,7 @@ class SupabaseQuoteRepository implements QuoteRepository {
   Map<String, dynamic> _params(QuoteDraft d, List<String> attachments) => {
     'p_line_items': quoteLineItemsJson(d, gst: _gst),
     'p_delivery_minor': d.delivery.minorInt,
-    'p_sales_tax_rate_bp': _gst ? 0 : d.taxRateBp,
+    'p_sales_tax_rate_ppm': _gst ? 0 : d.salesTaxRatePpm,
     'p_offered_brand_model': d.offeredBrandModel,
     'p_delivery_date': d.deliveryDate == null ? null : formatDate(d.deliveryDate!),
     'p_warranty': d.warranty,

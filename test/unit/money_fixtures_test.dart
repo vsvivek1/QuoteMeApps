@@ -68,20 +68,48 @@ void main() {
     }
   });
 
-  group('us_sales_tax', () {
+  group('us_sales_tax (ppm)', () {
     for (final c in cases('us_sales_tax')) {
-      final label = '${c['subtotal_minor']} @ ${c['rate_bp']}bp -> ${c['expected']}';
+      final label = '${c['subtotal_minor']} @ ${c['rate_ppm']}ppm -> ${c['expected']}';
       test('usSalesTax: $label', () {
-        expect(usSalesTax(BigInt.from(c['subtotal_minor'] as int), c['rate_bp'] as int).toInt(), c['expected']);
+        expect(usSalesTax(BigInt.from(c['subtotal_minor'] as int), c['rate_ppm'] as int).toInt(), c['expected']);
       });
       test('SalesTaxRule: $label', () {
         final t = const SalesTaxRule().compute(
           lines: [QuoteLine(description: 'x', qty: 1, unitPrice: moneyFromMinor(c['subtotal_minor'] as int, 'USD'))],
           delivery: zeroMoney('USD'),
-          rateBp: c['rate_bp'] as int,
+          ratePpm: c['rate_ppm'] as int,
         );
         expect(t.tax.minorInt, c['expected']);
-        expect((t.breakdown as SalesTaxBreakdown).amount.minorInt, c['expected']);
+        final b = t.breakdown as SalesTaxBreakdown;
+        expect(b.amount.minorInt, c['expected']);
+        expect(b.ratePpm, c['rate_ppm']);
+      });
+    }
+  });
+
+  group('us_sales_tax_legacy_bp', () {
+    for (final c in cases('us_sales_tax_legacy_bp')) {
+      final label = '${c['subtotal_minor']} @ ${c['rate_bp']}bp -> ${c['expected']}';
+      test('bp converts exactly to ppm: $label', () {
+        expect(bpToPpm(c['rate_bp'] as int), c['rate_ppm']);
+        expect(
+          usSalesTax(BigInt.from(c['subtotal_minor'] as int), bpToPpm(c['rate_bp'] as int)).toInt(),
+          c['expected'],
+        );
+      });
+      test('legacy breakdown row reads as ppm: $label', () {
+        final b = TaxBreakdown.fromJson({'kind': 'sales_tax', 'rate_bp': c['rate_bp'], 'amount': c['expected']}, 'USD');
+        expect((b as SalesTaxBreakdown).ratePpm, c['rate_ppm']);
+      });
+    }
+  });
+
+  group('rate_percent', () {
+    for (final c in cases('rate_percent')) {
+      test('"${c['percent']}" -> ${c['rate_ppm']}', () {
+        expect(percentToPpm(c['percent'] as String), c['rate_ppm']);
+        if (c['rate_ppm'] != null) expect(ppmToPercent(c['rate_ppm'] as int), c['display']);
       });
     }
   });
@@ -105,7 +133,7 @@ void main() {
               ),
           ],
           deliveryMinor: c['delivery_minor'] as int,
-          salesTaxRateBp: c['sales_tax_rate_bp'] as int,
+          salesTaxRatePpm: c['sales_tax_rate_ppm'] as int,
           intraState: c['intra'] as bool,
         );
         expect(t.subtotal.toInt(), c['subtotal_minor']);
@@ -122,7 +150,8 @@ void main() {
       // The app's TaxRule uses one rate for every line; check the fixtures
       // that have a single rate through it too.
       final rates = {for (final l in lines) l['tax_rate_bp'] ?? 0};
-      if (!india || rates.length == 1) {
+      final wholeQty = lines.every((l) => l['qty'] is int);
+      if (wholeQty && (!india || rates.length == 1)) {
         test('CountryConfig TaxRule: $label', () {
           final rule = india ? const GstTaxRule() : const SalesTaxRule() as TaxRule;
           final t = rule.compute(
@@ -135,7 +164,8 @@ void main() {
                 ),
             ],
             delivery: moneyFromMinor(c['delivery_minor'] as int, iso),
-            rateBp: india ? rates.single as int : c['sales_tax_rate_bp'] as int,
+            rateBp: india ? rates.single as int : 0,
+            ratePpm: c['sales_tax_rate_ppm'] as int,
             sellerState: 'A',
             buyerState: c['intra'] == true ? 'A' : 'B',
           );

@@ -66,7 +66,12 @@ abstract class QuoteDraft with _$QuoteDraft {
     required String requestId,
     required List<QuoteLine> lines,
     required Money delivery,
-    required int taxRateBp,
+
+    /// India: GST rate in basis points (sent per line).
+    @Default(0) int taxRateBp,
+
+    /// USA: sales tax rate in parts per million (8.875% = 88750).
+    @Default(0) int salesTaxRatePpm,
     String? offeredBrandModel,
     DateTime? deliveryDate,
     String? warranty,

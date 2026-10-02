@@ -79,15 +79,35 @@ void main() {
     const rule = SalesTaxRule();
     final zero = zeroMoney('USD');
     test('1999 @8.25% -> 165', () {
-      final t = rule.compute(lines: [line(1, 1999, 'USD')], delivery: zero, rateBp: 825);
+      final t = rule.compute(lines: [line(1, 1999, 'USD')], delivery: zero, ratePpm: 82500);
       expect(t.tax.minorInt, 165);
       expect(t.total.minorInt, 2164);
     });
     test('10 @5% -> 1 (0.5 rounds up)', () {
-      expect(rule.compute(lines: [line(1, 10, 'USD')], delivery: zero, rateBp: 500).tax.minorInt, 1);
+      expect(rule.compute(lines: [line(1, 10, 'USD')], delivery: zero, ratePpm: 50000).tax.minorInt, 1);
     });
     test('0 -> 0', () {
-      expect(rule.compute(lines: [line(1, 0, 'USD')], delivery: zero, rateBp: 825).tax.minorInt, 0);
+      expect(rule.compute(lines: [line(1, 0, 'USD')], delivery: zero, ratePpm: 82500).tax.minorInt, 0);
+    });
+    test('NYC 8.875% is exact: 10000 -> 888 (887.5 half up)', () {
+      final t = rule.compute(lines: [line(1, 10000, 'USD')], delivery: zero, ratePpm: 88750);
+      expect(t.tax.minorInt, 888);
+      final b = t.breakdown as SalesTaxBreakdown;
+      expect(b.ratePpm, 88750);
+      expect(b.toJson(), {'kind': 'sales_tax', 'rate_ppm': 88750, 'rate_bp': 888, 'amount': 888});
+    });
+    test('the GST rate is ignored', () {
+      expect(rule.compute(lines: [line(1, 1000, 'USD')], delivery: zero, rateBp: 1800).tax.minorInt, 0);
+    });
+    test('breakdown JSON: rate_ppm wins, legacy rate_bp is read as bp * 100', () {
+      final now = TaxBreakdown.fromJson({'kind': 'sales_tax', 'rate_ppm': 88750, 'rate_bp': 888, 'amount': 888}, 'USD');
+      expect((now as SalesTaxBreakdown).ratePpm, 88750);
+      final old = TaxBreakdown.fromJson({'kind': 'sales_tax', 'rate_bp': 825, 'amount': 165}, 'USD');
+      expect((old as SalesTaxBreakdown).ratePpm, 82500);
+    });
+    test('rate out of range is rejected', () {
+      expect(() => usSalesTax(BigInt.one, 1000001), throwsArgumentError);
+      expect(() => usSalesTax(BigInt.one, -1), throwsArgumentError);
     });
   });
 
@@ -104,6 +124,28 @@ void main() {
       expect(percentToBp('7.5'), 750);
       expect(percentToBp('abc'), isNull);
       expect(percentToBp('101'), isNull);
+    });
+    test('ppmToPercent', () {
+      expect(ppmToPercent(88750), '8.875');
+      expect(ppmToPercent(82500), '8.25');
+      expect(ppmToPercent(70000), '7');
+      expect(ppmToPercent(10), '0.001');
+      expect(ppmToPercent(1), '0.0001');
+      expect(ppmToPercent(1000000), '100');
+    });
+    test('percentToPpm accepts up to 3 decimals', () {
+      expect(percentToPpm('8.875'), 88750);
+      expect(percentToPpm(' 8.25 '), 82500);
+      expect(percentToPpm('8.'), isNull);
+      expect(percentToPpm('8.8751'), isNull);
+      expect(percentToPpm('100'), 1000000);
+      expect(percentToPpm('100.001'), isNull);
+      expect(percentToPpm('abc'), isNull);
+    });
+    test('bp <-> ppm', () {
+      expect(bpToPpm(825), 82500);
+      expect(ppmToLegacyBp(88750), 888);
+      expect(ppmToLegacyBp(82500), 825);
     });
   });
 

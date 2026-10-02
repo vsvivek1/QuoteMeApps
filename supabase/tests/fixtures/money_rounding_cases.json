@@ -1,5 +1,5 @@
 {
-  "_doc": "Shared money rounding cases for SQL (02_money.test.sql), Edge Functions (functions/tests/money_test.ts) and the Flutter app. Amounts are integer minor units; rates are integer basis points; round_half_up(n, d) = (2n + d) div (2d). GST intra: cgst = sgst = rhu(base*bp, 20000); inter: igst = rhu(base*bp, 10000). US sales tax = rhu(subtotal*bp, 10000) on the subtotal only.",
+  "_doc": "Shared money rounding cases for SQL (02_money.test.sql), Edge Functions (functions/tests/money_test.ts) and the Flutter app (test/unit/money_fixtures_test.dart). Amounts are integer minor units; round_half_up(n, d) = (2n + d) div (2d). India GST rates are integer basis points (1800 = 18 %): intra cgst = sgst = rhu(base*bp, 20000); inter igst = rhu(base*bp, 10000). US sales tax rates are integer parts per million (88750 = 8.875 %): sales tax = rhu(subtotal*ppm, 1000000) on the subtotal only. us_sales_tax_legacy_bp: older apps send basis points, converted exactly as ppm = bp * 100. Sales tax breakdowns carry rate_ppm plus rate_bp = rhu(rate_ppm, 100) for older apps. rate_percent: the quote form input (up to 3 decimals) <-> ppm.",
   "round_half_up": [
     { "n": 5, "d": 10, "expected": 1 },
     { "n": 4, "d": 10, "expected": 0 },
@@ -21,30 +21,71 @@
     { "qty": "2.5", "unit_price_minor": 333, "rate_bp": 500, "intra": true, "base": 833, "cgst": 21, "sgst": 21, "igst": 0, "tax": 42 }
   ],
   "us_sales_tax": [
-    { "subtotal_minor": 1999, "rate_bp": 825, "expected": 165 },
-    { "subtotal_minor": 10, "rate_bp": 500, "expected": 1 },
-    { "subtotal_minor": 0, "rate_bp": 825, "expected": 0 },
-    { "subtotal_minor": 1000, "rate_bp": 0, "expected": 0 },
-    { "subtotal_minor": 200, "rate_bp": 1025, "expected": 21 }
+    { "subtotal_minor": 1999, "rate_ppm": 82500, "expected": 165 },
+    { "subtotal_minor": 10, "rate_ppm": 50000, "expected": 1 },
+    { "subtotal_minor": 0, "rate_ppm": 82500, "expected": 0 },
+    { "subtotal_minor": 1000, "rate_ppm": 0, "expected": 0 },
+    { "subtotal_minor": 200, "rate_ppm": 102500, "expected": 21 },
+    { "subtotal_minor": 10000, "rate_ppm": 88750, "expected": 888 },
+    { "subtotal_minor": 1999, "rate_ppm": 88750, "expected": 177 },
+    { "subtotal_minor": 249900, "rate_ppm": 88750, "expected": 22179 },
+    { "subtotal_minor": 12345, "rate_ppm": 88750, "expected": 1096 },
+    { "subtotal_minor": 8, "rate_ppm": 62500, "expected": 1 },
+    { "subtotal_minor": 100, "rate_ppm": 1, "expected": 0 },
+    { "subtotal_minor": 500000, "rate_ppm": 1, "expected": 1 },
+    { "subtotal_minor": 999, "rate_ppm": 1000000, "expected": 999 }
+  ],
+  "us_sales_tax_legacy_bp": [
+    { "subtotal_minor": 1999, "rate_bp": 825, "rate_ppm": 82500, "expected": 165 },
+    { "subtotal_minor": 10, "rate_bp": 500, "rate_ppm": 50000, "expected": 1 },
+    { "subtotal_minor": 0, "rate_bp": 825, "rate_ppm": 82500, "expected": 0 },
+    { "subtotal_minor": 1000, "rate_bp": 0, "rate_ppm": 0, "expected": 0 },
+    { "subtotal_minor": 200, "rate_bp": 1025, "rate_ppm": 102500, "expected": 21 }
+  ],
+  "rate_percent": [
+    { "percent": "8.875", "rate_ppm": 88750, "display": "8.875" },
+    { "percent": "8.25", "rate_ppm": 82500, "display": "8.25" },
+    { "percent": "8.250", "rate_ppm": 82500, "display": "8.25" },
+    { "percent": "7", "rate_ppm": 70000, "display": "7" },
+    { "percent": "0.5", "rate_ppm": 5000, "display": "0.5" },
+    { "percent": "0.001", "rate_ppm": 10, "display": "0.001" },
+    { "percent": "0", "rate_ppm": 0, "display": "0" },
+    { "percent": "100", "rate_ppm": 1000000, "display": "100" },
+    { "percent": "8.8751", "rate_ppm": null },
+    { "percent": "100.001", "rate_ppm": null },
+    { "percent": "-1", "rate_ppm": null },
+    { "percent": "abc", "rate_ppm": null }
   ],
   "quotes": [
     {
-      "country": "IN", "intra": true, "delivery_minor": 5000, "sales_tax_rate_bp": 0,
+      "country": "IN", "intra": true, "delivery_minor": 5000, "sales_tax_rate_ppm": 0,
       "lines": [ { "qty": 1, "unit_price_minor": 99999, "tax_rate_bp": 1800 }, { "qty": 1, "unit_price_minor": 333, "tax_rate_bp": 500 } ],
       "subtotal_minor": 100332, "tax_minor": 18016, "total_minor": 123348,
       "tax_breakdown": { "kind": "gst", "mode": "intra", "rate_bp": 1800, "cgst": 9008, "sgst": 9008, "igst": 0 }
     },
     {
-      "country": "IN", "intra": false, "delivery_minor": 5000, "sales_tax_rate_bp": 0,
+      "country": "IN", "intra": false, "delivery_minor": 5000, "sales_tax_rate_ppm": 0,
       "lines": [ { "qty": 1, "unit_price_minor": 99999, "tax_rate_bp": 1800 } ],
       "subtotal_minor": 99999, "tax_minor": 18000, "total_minor": 122999,
       "tax_breakdown": { "kind": "gst", "mode": "inter", "rate_bp": 1800, "cgst": 0, "sgst": 0, "igst": 18000 }
     },
     {
-      "country": "US", "intra": true, "delivery_minor": 500, "sales_tax_rate_bp": 825,
+      "country": "US", "intra": true, "delivery_minor": 500, "sales_tax_rate_ppm": 82500,
       "lines": [ { "qty": 1, "unit_price_minor": 1999 } ],
       "subtotal_minor": 1999, "tax_minor": 165, "total_minor": 2664,
-      "tax_breakdown": { "kind": "sales_tax", "rate_bp": 825, "amount": 165 }
+      "tax_breakdown": { "kind": "sales_tax", "rate_ppm": 82500, "rate_bp": 825, "amount": 165 }
+    },
+    {
+      "country": "US", "intra": true, "delivery_minor": 2500, "sales_tax_rate_ppm": 88750,
+      "lines": [ { "qty": 1, "unit_price_minor": 249900 } ],
+      "subtotal_minor": 249900, "tax_minor": 22179, "total_minor": 274579,
+      "tax_breakdown": { "kind": "sales_tax", "rate_ppm": 88750, "rate_bp": 888, "amount": 22179 }
+    },
+    {
+      "country": "US", "intra": true, "delivery_minor": 0, "sales_tax_rate_ppm": 88750,
+      "lines": [ { "qty": 2, "unit_price_minor": 4999 }, { "qty": "1.5", "unit_price_minor": 333 } ],
+      "subtotal_minor": 10498, "tax_minor": 932, "total_minor": 11430,
+      "tax_breakdown": { "kind": "sales_tax", "rate_ppm": 88750, "rate_bp": 888, "amount": 932 }
     }
   ]
 }

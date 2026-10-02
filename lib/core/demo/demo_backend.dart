@@ -247,7 +247,9 @@ class DemoBackend {
               requestId: r.id,
               lines: [QuoteLine(description: r.title, qty: 1, unitPrice: m(price))],
               delivery: m(i.isEven ? 0 : (config.country == Country.india ? 50000 : 4900)),
-              taxRateBp: config.taxRule.defaultRateBp == 0 ? 825 : config.taxRule.defaultRateBp,
+              taxRateBp: config.taxRule.defaultRateBp,
+              // NYC 8.875%, Dallas 8.25% (ppm)
+              salesTaxRatePpm: config.country == Country.india ? 0 : (r.state == 'Texas' ? 82500 : 88750),
               offeredBrandModel: r.fields['brand']?.toString(),
               deliveryDate: DateTime.now().add(Duration(days: 1 + i)),
               warranty: '${1 + i % 2} year',
@@ -278,6 +280,7 @@ class DemoBackend {
       lines: d.lines,
       delivery: d.delivery,
       rateBp: d.taxRateBp,
+      ratePpm: d.salesTaxRatePpm,
       sellerState: seller.state,
       buyerState: r.state,
     );

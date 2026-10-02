@@ -217,7 +217,10 @@ AppFlags mapFlags(Map<String, dynamic> s) {
     earlyPartnerFreeUntil: parseTimestamp(s['early_partner_free_until']),
     maxRequestsPerDay: asInt(s['max_requests_per_buyer_per_day']) ?? d.maxRequestsPerDay,
     webPurchaseLinksAllowed: asBool(s['web_purchase_links_allowed'], d.webPurchaseLinksAllowed),
-    paywallDefaultPeriod: asString(s['paywall_default_period']) ?? d.paywallDefaultPeriod,
+    paywallDefaultPeriod: switch (s['paywall_default_period']) {
+      final String p when p == 'monthly' || p == 'annual' => p,
+      _ => d.paywallDefaultPeriod,
+    },
     whatsappNotifications: asBool(s['whatsapp_notifications'], d.whatsappNotifications),
     termsVersion: asString(legal['terms']) ?? d.termsVersion,
     privacyVersion: asString(legal['privacy']) ?? d.privacyVersion,
@@ -378,7 +381,7 @@ Quote mapQuote(JsonRow row, {required String fallbackCurrency, SellerSummary? se
 
 /// [QuoteDraft] -> `p_line_items` for `submit_quote` / `revise_quote`.
 /// India sends the GST rate per line; the US rate goes in
-/// `p_sales_tax_rate_bp` instead.
+/// `p_sales_tax_rate_ppm` instead.
 List<Map<String, Object?>> quoteLineItemsJson(QuoteDraft d, {required bool gst}) => [
   for (final l in d.lines)
     {
@@ -571,14 +574,16 @@ ChatMessage mapChatMessage(JsonRow row, {String? attachmentUrl}) => ChatMessage(
   attachmentUrl: attachmentUrl,
   createdAt: parseTimestamp(row['created_at']) ?? DateTime.now(),
   readAt: parseTimestamp(row['read_at']),
+  clientId: asString(row['client_id']),
 );
 
 /// A `chats` row decorated for the signed-in user. [counterpartName] is the
 /// seller's business name for the buyer, the buyer's public display name for
-/// the seller.
+/// the seller. The title defaults to the row's `request_title` (kept in sync
+/// by the server; sellers can't read `requests`).
 Chat mapChat(
   JsonRow row, {
-  required String requestTitle,
+  String? requestTitle,
   required String counterpartName,
   String? counterpartPhotoUrl,
   int unread = 0,
@@ -588,7 +593,7 @@ Chat mapChat(
   requestId: row['request_id'].toString(),
   buyerId: row['buyer_id'].toString(),
   sellerId: row['seller_id'].toString(),
-  requestTitle: requestTitle,
+  requestTitle: requestTitle ?? asString(row['request_title']) ?? asString(asMap(row['request'])['title']) ?? '',
   counterpartName: counterpartName,
   counterpartPhotoUrl: counterpartPhotoUrl,
   lastMessage: asString(row['last_message_preview']),
@@ -631,8 +636,9 @@ AppNotification mapNotification(JsonRow row) {
 
 // ------------------------------------------------------------------- orders
 
-/// An `orders` row with optional `order_events(*)`, `reviews(role)`,
-/// `seller:sellers(business_name)` and `request:requests(title)` embeds.
+/// An `orders` row with optional `order_events(*)`, `reviews(role)` and
+/// `seller:sellers(business_name)` embeds. The title is the row's
+/// `request_title` (a legacy `request:requests(title)` embed still works).
 /// [contacts] is the `get_order_contacts` JSON (parties only).
 Order mapOrder(JsonRow row, {required String fallbackCurrency, String? title, Map<String, Object?>? contacts}) {
   final cur = currencyOf(row, fallbackCurrency);
@@ -659,7 +665,7 @@ Order mapOrder(JsonRow row, {required String fallbackCurrency, String? title, Ma
     quoteId: row['quote_id'].toString(),
     buyerId: row['buyer_id'].toString(),
     sellerId: row['seller_id'].toString(),
-    title: title ?? asString(request['title']) ?? '',
+    title: title ?? asString(row['request_title']) ?? asString(request['title']) ?? '',
     sellerName: asString(sellerC['business_name']) ?? asString(seller['business_name']) ?? '',
     buyerName: asString(buyerC['name']),
     sellerPhone: asString(sellerC['phone']),

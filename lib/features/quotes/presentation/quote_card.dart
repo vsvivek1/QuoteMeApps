@@ -164,7 +164,7 @@ String taxLabel(BuildContext context, TaxBreakdown b) {
   return switch (b) {
     GstBreakdown(intraState: true, :final rateBp) => l10n.gstIntra(bpToPercent(rateBp ~/ 2)),
     GstBreakdown(:final rateBp) => l10n.gstInter(bpToPercent(rateBp)),
-    SalesTaxBreakdown(:final rateBp) => l10n.salesTax(bpToPercent(rateBp)),
+    SalesTaxBreakdown(:final ratePpm) => l10n.salesTax(ppmToPercent(ratePpm)),
     NoTaxBreakdown() => l10n.quoteTax,
   };
 }

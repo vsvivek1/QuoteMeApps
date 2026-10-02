@@ -33,20 +33,26 @@ or grant violation is `42501` (HTTP 403). Edge Functions return the same shape w
 status: `{ "code": "...", "message": "...", "details": ..., "hint": ... }`.
 
 **Money.** Integer minor units (paise / cents) as `int` / `bigint`. Never use doubles for money.
-Tax rates are integer basis points (`1800` = 18 %). `round_half_up(n, d) = (2n + d) ~/ (2d)`.
+India GST rates are integer basis points (`1800` = 18 %). US sales tax rates are integer parts per
+million (ppm: `88750` = 8.875 %, `82500` = 8.25 %, `1000000` = 100 %).
+`round_half_up(n, d) = (2n + d) ~/ (2d)`.
 
 - India GST per line: `base = round_half_up(qty × unit_price_minor, 1)` (qty has up to 3 decimals).
   Intra-state: `cgst = sgst = round_half_up(base × bp, 20000)`. Inter-state:
   `igst = round_half_up(base × bp, 10000)`. Intra means seller state = request state (or
   either is unknown).
-- USA: `sales_tax = round_half_up(subtotal × bp, 10000)` on the subtotal only.
+- USA: `sales_tax = round_half_up(subtotal × rate_ppm, 1000000)` on the subtotal only. The seller
+  enters the rate in percent with up to 3 decimals (`8.875` → `88750`). Send it as
+  `p_sales_tax_rate_ppm`. `p_sales_tax_rate_bp` (older app versions) still works and is converted
+  exactly (`ppm = bp × 100`); sending both with different values is `400 invalid_sales_tax_input`.
 - `total = subtotal + tax + delivery` (delivery is untaxed).
 - `tax_breakdown`: `{"kind":"gst","mode":"intra"|"inter","rate_bp","cgst","sgst","igst"}` or
-  `{"kind":"sales_tax","rate_bp","amount"}`.
+  `{"kind":"sales_tax","rate_ppm","rate_bp","amount"}`. For sales tax, `rate_ppm` is the rate;
+  `rate_bp = round_half_up(rate_ppm, 100)` is only there for older app versions (display, e.g. 888).
+  Read `rate_ppm`, and for a row without it use `rate_bp × 100`.
 - Shared fixtures: `supabase/tests/fixtures/money_rounding_cases.json`. Use them for the Dart
   `lib/core/money` tests too. Preview totals with `compute_quote_totals`; the server always
   recomputes.
-- Limitation: integer bp cannot express 8.875 % (NYC). See section 11.
 
 **Pagination.** Keyset cursors, never offsets: pass the last row's `{ "created_at", "id" }` as
 `p_cursor`. Results are newest first.
@@ -158,9 +164,9 @@ Arguments are named. `=x` is the default. `→` is the result: `table` means a r
 | `classify_request_text(p_text, p_limit=5)` | `table(category_id, slug, names, parent_id, policy, score real, blocked bool, reason jsonb)` | category suggestions while typing; `blocked=true` means show `reason` and stop |
 | `normalize_postal_code(p_code)` | `text` | |
 | `is_valid_gstin(p_gstin)` / `is_valid_ein(p_ein)` | `bool` | client-side hints; the server validates again |
-| `compute_quote_totals(p_country 'IN'|'US', p_lines jsonb, p_delivery_minor=0, p_sales_tax_rate_bp=0, p_intra_state=true)` | `jsonb {lines, subtotal_minor, tax_minor, tax_breakdown, delivery_minor, total_minor}` | anon OK |
+| `compute_quote_totals(p_country 'IN'|'US', p_lines jsonb, p_delivery_minor=0, p_sales_tax_rate_bp=null, p_intra_state=true, p_sales_tax_rate_ppm=null)` | `jsonb {lines, subtotal_minor, tax_minor, tax_breakdown, delivery_minor, total_minor}` | anon OK. US: pass `p_sales_tax_rate_ppm` (`p_sales_tax_rate_bp` is for older apps; no rate = 0 %) |
 | `gst_line_tax(p_qty, p_unit_price_minor, p_rate_bp, p_intra_state)` | `{base_minor, cgst_minor, sgst_minor, igst_minor, tax_minor}` | |
-| `us_sales_tax(p_subtotal_minor, p_rate_bp)` / `money_round_half_up(n, d)` | `bigint` | |
+| `us_sales_tax(p_subtotal_minor, p_rate_ppm=null, p_rate_bp=null)` / `money_round_half_up(n, d)` | `bigint` | the second positional argument is ppm; `p_rate_bp` by name only (older apps) |
 
 ### Seller onboarding and plan
 | RPC | → | notes |
@@ -193,7 +199,7 @@ Buyers read their requests and quotes directly:
 ### Quotes
 | RPC | → | notes |
 |---|---|---|
-| `submit_quote(p_request_id, p_line_items jsonb, p_delivery_minor=0, p_sales_tax_rate_bp=0, p_offered_brand_model=null, p_delivery_date=null, p_warranty=null, p_valid_days=null, p_notes=null, p_attachments text[]='{}', p_fields jsonb='{}')` | `quotes` | line item: `{description, qty, unit_price_minor, tax_rate_bp (India), hsn_sac}`. Totals are computed on the server. Checks: cap (10), priority window, coverage, category, licence, block, entitlement (`402 quota_exhausted`). Attachments go under `request-media/{request_id}/quotes/{seller_id}/` |
+| `submit_quote(p_request_id, p_line_items jsonb, p_delivery_minor=0, p_sales_tax_rate_bp=null, p_offered_brand_model=null, p_delivery_date=null, p_warranty=null, p_valid_days=null, p_notes=null, p_attachments text[]='{}', p_fields jsonb='{}', p_sales_tax_rate_ppm=null)` | `quotes` | line item: `{description, qty, unit_price_minor, tax_rate_bp (India), hsn_sac}`. USA: the rate goes in `p_sales_tax_rate_ppm` (`p_sales_tax_rate_bp` only for older apps). Totals are computed on the server. Checks: cap (10), priority window, coverage, category, licence, block, entitlement (`402 quota_exhausted`). Attachments go under `request-media/{request_id}/quotes/{seller_id}/` |
 | `revise_quote(p_quote_id, p_line_items, …same as submit…)` | `quotes` | stores a `quote_revisions` snapshot; max `max_quote_revisions` |
 | `withdraw_quote(p_quote_id)` | `quotes` | frees a slot under the cap |
 | `shortlist(p_quote_id, p_on=true)` | `quotes` | buyer |
@@ -549,9 +555,6 @@ for local and staging only.
 
 ## 11. Known gaps
 
-- **Sales tax precision:** integer basis points cannot represent 8.875 % (New York City). The
-  demo uses 888. Fixing it needs a finer unit (for example hundredths of a basis point) changed
-  in SQL, TypeScript, Dart and the fixtures together.
 - **App Store JWS:** `appstore-notifications` verifies the signature with the leaf certificate
   but not yet the x5c chain to Apple Root CA G3. Production refuses notifications until that is
   added (`APPSTORE_ALLOW_UNVERIFIED_CHAIN=true` only on staging).

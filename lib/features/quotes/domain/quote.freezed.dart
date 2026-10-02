@@ -651,7 +651,9 @@ $SellerSummaryCopyWith<$Res> get seller {
 /// @nodoc
 mixin _$QuoteDraft {
 
- String get requestId; List<QuoteLine> get lines; Money get delivery; int get taxRateBp; String? get offeredBrandModel; DateTime? get deliveryDate; String? get warranty; int get validDays; String? get notes; List<String> get attachmentPaths;
+ String get requestId; List<QuoteLine> get lines; Money get delivery;/// India: GST rate in basis points (sent per line).
+ int get taxRateBp;/// USA: sales tax rate in parts per million (8.875% = 88750).
+ int get salesTaxRatePpm; String? get offeredBrandModel; DateTime? get deliveryDate; String? get warranty; int get validDays; String? get notes; List<String> get attachmentPaths;
 /// Create a copy of QuoteDraft
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -663,20 +665,20 @@ $QuoteDraftCopyWith<QuoteDraft> get copyWith => _$QuoteDraftCopyWithImpl<QuoteDr
 @override
 bool operator ==(Object other) {
   final _this = this as QuoteDraft;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QuoteDraft&&(identical(other.requestId, _this.requestId) || other.requestId == _this.requestId)&&const DeepCollectionEquality().equals(other.lines, _this.lines)&&(identical(other.delivery, _this.delivery) || other.delivery == _this.delivery)&&(identical(other.taxRateBp, _this.taxRateBp) || other.taxRateBp == _this.taxRateBp)&&(identical(other.offeredBrandModel, _this.offeredBrandModel) || other.offeredBrandModel == _this.offeredBrandModel)&&(identical(other.deliveryDate, _this.deliveryDate) || other.deliveryDate == _this.deliveryDate)&&(identical(other.warranty, _this.warranty) || other.warranty == _this.warranty)&&(identical(other.validDays, _this.validDays) || other.validDays == _this.validDays)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&const DeepCollectionEquality().equals(other.attachmentPaths, _this.attachmentPaths));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QuoteDraft&&(identical(other.requestId, _this.requestId) || other.requestId == _this.requestId)&&const DeepCollectionEquality().equals(other.lines, _this.lines)&&(identical(other.delivery, _this.delivery) || other.delivery == _this.delivery)&&(identical(other.taxRateBp, _this.taxRateBp) || other.taxRateBp == _this.taxRateBp)&&(identical(other.salesTaxRatePpm, _this.salesTaxRatePpm) || other.salesTaxRatePpm == _this.salesTaxRatePpm)&&(identical(other.offeredBrandModel, _this.offeredBrandModel) || other.offeredBrandModel == _this.offeredBrandModel)&&(identical(other.deliveryDate, _this.deliveryDate) || other.deliveryDate == _this.deliveryDate)&&(identical(other.warranty, _this.warranty) || other.warranty == _this.warranty)&&(identical(other.validDays, _this.validDays) || other.validDays == _this.validDays)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&const DeepCollectionEquality().equals(other.attachmentPaths, _this.attachmentPaths));
 }
 
 
 @override
 int get hashCode {
   final _this = this as QuoteDraft;
-  return Object.hash(runtimeType,_this.requestId,const DeepCollectionEquality().hash(_this.lines),_this.delivery,_this.taxRateBp,_this.offeredBrandModel,_this.deliveryDate,_this.warranty,_this.validDays,_this.notes,const DeepCollectionEquality().hash(_this.attachmentPaths));
+  return Object.hash(runtimeType,_this.requestId,const DeepCollectionEquality().hash(_this.lines),_this.delivery,_this.taxRateBp,_this.salesTaxRatePpm,_this.offeredBrandModel,_this.deliveryDate,_this.warranty,_this.validDays,_this.notes,const DeepCollectionEquality().hash(_this.attachmentPaths));
 }
 
 @override
 String toString() {
   final _this = this as QuoteDraft;
-  return 'QuoteDraft(requestId: ${_this.requestId}, lines: ${_this.lines}, delivery: ${_this.delivery}, taxRateBp: ${_this.taxRateBp}, offeredBrandModel: ${_this.offeredBrandModel}, deliveryDate: ${_this.deliveryDate}, warranty: ${_this.warranty}, validDays: ${_this.validDays}, notes: ${_this.notes}, attachmentPaths: ${_this.attachmentPaths})';
+  return 'QuoteDraft(requestId: ${_this.requestId}, lines: ${_this.lines}, delivery: ${_this.delivery}, taxRateBp: ${_this.taxRateBp}, salesTaxRatePpm: ${_this.salesTaxRatePpm}, offeredBrandModel: ${_this.offeredBrandModel}, deliveryDate: ${_this.deliveryDate}, warranty: ${_this.warranty}, validDays: ${_this.validDays}, notes: ${_this.notes}, attachmentPaths: ${_this.attachmentPaths})';
 }
 
 
@@ -687,7 +689,7 @@ abstract mixin class $QuoteDraftCopyWith<$Res>  {
   factory $QuoteDraftCopyWith(QuoteDraft value, $Res Function(QuoteDraft) _then) = _$QuoteDraftCopyWithImpl;
 @useResult
 $Res call({
- String requestId, List<QuoteLine> lines, Money delivery, int taxRateBp, String? offeredBrandModel, DateTime? deliveryDate, String? warranty, int validDays, String? notes, List<String> attachmentPaths
+ String requestId, List<QuoteLine> lines, Money delivery, int taxRateBp, int salesTaxRatePpm, String? offeredBrandModel, DateTime? deliveryDate, String? warranty, int validDays, String? notes, List<String> attachmentPaths
 });
 
 
@@ -704,12 +706,13 @@ class _$QuoteDraftCopyWithImpl<$Res>
 
 /// Create a copy of QuoteDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? lines = null,Object? delivery = null,Object? taxRateBp = null,Object? offeredBrandModel = freezed,Object? deliveryDate = freezed,Object? warranty = freezed,Object? validDays = null,Object? notes = freezed,Object? attachmentPaths = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? lines = null,Object? delivery = null,Object? taxRateBp = null,Object? salesTaxRatePpm = null,Object? offeredBrandModel = freezed,Object? deliveryDate = freezed,Object? warranty = freezed,Object? validDays = null,Object? notes = freezed,Object? attachmentPaths = null,}) {
   return _then(QuoteDraft(
 requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
 as String,lines: null == lines ? _self.lines : lines // ignore: cast_nullable_to_non_nullable
 as List<QuoteLine>,delivery: null == delivery ? _self.delivery : delivery // ignore: cast_nullable_to_non_nullable
 as Money,taxRateBp: null == taxRateBp ? _self.taxRateBp : taxRateBp // ignore: cast_nullable_to_non_nullable
+as int,salesTaxRatePpm: null == salesTaxRatePpm ? _self.salesTaxRatePpm : salesTaxRatePpm // ignore: cast_nullable_to_non_nullable
 as int,offeredBrandModel: freezed == offeredBrandModel ? _self.offeredBrandModel : offeredBrandModel // ignore: cast_nullable_to_non_nullable
 as String?,deliveryDate: freezed == deliveryDate ? _self.deliveryDate : deliveryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,warranty: freezed == warranty ? _self.warranty : warranty // ignore: cast_nullable_to_non_nullable
@@ -801,10 +804,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  List<QuoteLine> lines,  Money delivery,  int taxRateBp,  String? offeredBrandModel,  DateTime? deliveryDate,  String? warranty,  int validDays,  String? notes,  List<String> attachmentPaths)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  List<QuoteLine> lines,  Money delivery,  int taxRateBp,  int salesTaxRatePpm,  String? offeredBrandModel,  DateTime? deliveryDate,  String? warranty,  int validDays,  String? notes,  List<String> attachmentPaths)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _QuoteDraft() when $default != null:
-return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that.offeredBrandModel,_that.deliveryDate,_that.warranty,_that.validDays,_that.notes,_that.attachmentPaths);case _:
+return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that.salesTaxRatePpm,_that.offeredBrandModel,_that.deliveryDate,_that.warranty,_that.validDays,_that.notes,_that.attachmentPaths);case _:
   return orElse();
 
 }
@@ -822,10 +825,10 @@ return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  List<QuoteLine> lines,  Money delivery,  int taxRateBp,  String? offeredBrandModel,  DateTime? deliveryDate,  String? warranty,  int validDays,  String? notes,  List<String> attachmentPaths)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  List<QuoteLine> lines,  Money delivery,  int taxRateBp,  int salesTaxRatePpm,  String? offeredBrandModel,  DateTime? deliveryDate,  String? warranty,  int validDays,  String? notes,  List<String> attachmentPaths)  $default,) {final _that = this;
 switch (_that) {
 case _QuoteDraft():
-return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that.offeredBrandModel,_that.deliveryDate,_that.warranty,_that.validDays,_that.notes,_that.attachmentPaths);case _:
+return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that.salesTaxRatePpm,_that.offeredBrandModel,_that.deliveryDate,_that.warranty,_that.validDays,_that.notes,_that.attachmentPaths);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -842,10 +845,10 @@ return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  List<QuoteLine> lines,  Money delivery,  int taxRateBp,  String? offeredBrandModel,  DateTime? deliveryDate,  String? warranty,  int validDays,  String? notes,  List<String> attachmentPaths)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  List<QuoteLine> lines,  Money delivery,  int taxRateBp,  int salesTaxRatePpm,  String? offeredBrandModel,  DateTime? deliveryDate,  String? warranty,  int validDays,  String? notes,  List<String> attachmentPaths)?  $default,) {final _that = this;
 switch (_that) {
 case _QuoteDraft() when $default != null:
-return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that.offeredBrandModel,_that.deliveryDate,_that.warranty,_that.validDays,_that.notes,_that.attachmentPaths);case _:
+return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that.salesTaxRatePpm,_that.offeredBrandModel,_that.deliveryDate,_that.warranty,_that.validDays,_that.notes,_that.attachmentPaths);case _:
   return null;
 
 }
@@ -857,7 +860,7 @@ return $default(_that.requestId,_that.lines,_that.delivery,_that.taxRateBp,_that
 
 
 class _QuoteDraft implements QuoteDraft {
-  const _QuoteDraft({required this.requestId, required  List<QuoteLine> lines, required this.delivery, required this.taxRateBp, this.offeredBrandModel, this.deliveryDate, this.warranty, required this.validDays, this.notes,  List<String> attachmentPaths = const []}): _lines = lines,_attachmentPaths = attachmentPaths;
+  const _QuoteDraft({required this.requestId, required  List<QuoteLine> lines, required this.delivery, this.taxRateBp = 0, this.salesTaxRatePpm = 0, this.offeredBrandModel, this.deliveryDate, this.warranty, required this.validDays, this.notes,  List<String> attachmentPaths = const []}): _lines = lines,_attachmentPaths = attachmentPaths;
   
 
 @override final  String requestId;
@@ -869,7 +872,10 @@ class _QuoteDraft implements QuoteDraft {
 }
 
 @override final  Money delivery;
-@override final  int taxRateBp;
+/// India: GST rate in basis points (sent per line).
+@override@JsonKey() final  int taxRateBp;
+/// USA: sales tax rate in parts per million (8.875% = 88750).
+@override@JsonKey() final  int salesTaxRatePpm;
 @override final  String? offeredBrandModel;
 @override final  DateTime? deliveryDate;
 @override final  String? warranty;
@@ -893,18 +899,18 @@ _$QuoteDraftCopyWith<_QuoteDraft> get copyWith => __$QuoteDraftCopyWithImpl<_Quo
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QuoteDraft&&(identical(other.requestId, requestId) || other.requestId == requestId)&&const DeepCollectionEquality().equals(other.lines, _lines)&&(identical(other.delivery, delivery) || other.delivery == delivery)&&(identical(other.taxRateBp, taxRateBp) || other.taxRateBp == taxRateBp)&&(identical(other.offeredBrandModel, offeredBrandModel) || other.offeredBrandModel == offeredBrandModel)&&(identical(other.deliveryDate, deliveryDate) || other.deliveryDate == deliveryDate)&&(identical(other.warranty, warranty) || other.warranty == warranty)&&(identical(other.validDays, validDays) || other.validDays == validDays)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.attachmentPaths, _attachmentPaths));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QuoteDraft&&(identical(other.requestId, requestId) || other.requestId == requestId)&&const DeepCollectionEquality().equals(other.lines, _lines)&&(identical(other.delivery, delivery) || other.delivery == delivery)&&(identical(other.taxRateBp, taxRateBp) || other.taxRateBp == taxRateBp)&&(identical(other.salesTaxRatePpm, salesTaxRatePpm) || other.salesTaxRatePpm == salesTaxRatePpm)&&(identical(other.offeredBrandModel, offeredBrandModel) || other.offeredBrandModel == offeredBrandModel)&&(identical(other.deliveryDate, deliveryDate) || other.deliveryDate == deliveryDate)&&(identical(other.warranty, warranty) || other.warranty == warranty)&&(identical(other.validDays, validDays) || other.validDays == validDays)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.attachmentPaths, _attachmentPaths));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,requestId,const DeepCollectionEquality().hash(_lines),delivery,taxRateBp,offeredBrandModel,deliveryDate,warranty,validDays,notes,const DeepCollectionEquality().hash(_attachmentPaths));
+    return Object.hash(runtimeType,requestId,const DeepCollectionEquality().hash(_lines),delivery,taxRateBp,salesTaxRatePpm,offeredBrandModel,deliveryDate,warranty,validDays,notes,const DeepCollectionEquality().hash(_attachmentPaths));
 }
 
 @override
 String toString() {
-    return 'QuoteDraft(requestId: $requestId, lines: $lines, delivery: $delivery, taxRateBp: $taxRateBp, offeredBrandModel: $offeredBrandModel, deliveryDate: $deliveryDate, warranty: $warranty, validDays: $validDays, notes: $notes, attachmentPaths: $attachmentPaths)';
+    return 'QuoteDraft(requestId: $requestId, lines: $lines, delivery: $delivery, taxRateBp: $taxRateBp, salesTaxRatePpm: $salesTaxRatePpm, offeredBrandModel: $offeredBrandModel, deliveryDate: $deliveryDate, warranty: $warranty, validDays: $validDays, notes: $notes, attachmentPaths: $attachmentPaths)';
 }
 
 
@@ -915,7 +921,7 @@ abstract mixin class _$QuoteDraftCopyWith<$Res> implements $QuoteDraftCopyWith<$
   factory _$QuoteDraftCopyWith(_QuoteDraft value, $Res Function(_QuoteDraft) _then) = __$QuoteDraftCopyWithImpl;
 @override @useResult
 $Res call({
- String requestId, List<QuoteLine> lines, Money delivery, int taxRateBp, String? offeredBrandModel, DateTime? deliveryDate, String? warranty, int validDays, String? notes, List<String> attachmentPaths
+ String requestId, List<QuoteLine> lines, Money delivery, int taxRateBp, int salesTaxRatePpm, String? offeredBrandModel, DateTime? deliveryDate, String? warranty, int validDays, String? notes, List<String> attachmentPaths
 });
 
 
@@ -932,12 +938,13 @@ class __$QuoteDraftCopyWithImpl<$Res>
 
 /// Create a copy of QuoteDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? lines = null,Object? delivery = null,Object? taxRateBp = null,Object? offeredBrandModel = freezed,Object? deliveryDate = freezed,Object? warranty = freezed,Object? validDays = null,Object? notes = freezed,Object? attachmentPaths = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? lines = null,Object? delivery = null,Object? taxRateBp = null,Object? salesTaxRatePpm = null,Object? offeredBrandModel = freezed,Object? deliveryDate = freezed,Object? warranty = freezed,Object? validDays = null,Object? notes = freezed,Object? attachmentPaths = null,}) {
   return _then(_QuoteDraft(
 requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
 as String,lines: null == lines ? _self._lines : lines // ignore: cast_nullable_to_non_nullable
 as List<QuoteLine>,delivery: null == delivery ? _self.delivery : delivery // ignore: cast_nullable_to_non_nullable
 as Money,taxRateBp: null == taxRateBp ? _self.taxRateBp : taxRateBp // ignore: cast_nullable_to_non_nullable
+as int,salesTaxRatePpm: null == salesTaxRatePpm ? _self.salesTaxRatePpm : salesTaxRatePpm // ignore: cast_nullable_to_non_nullable
 as int,offeredBrandModel: freezed == offeredBrandModel ? _self.offeredBrandModel : offeredBrandModel // ignore: cast_nullable_to_non_nullable
 as String?,deliveryDate: freezed == deliveryDate ? _self.deliveryDate : deliveryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,warranty: freezed == warranty ? _self.warranty : warranty // ignore: cast_nullable_to_non_nullable

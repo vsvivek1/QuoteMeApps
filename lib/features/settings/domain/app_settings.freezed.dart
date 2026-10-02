@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppFlags {
 
- bool get monetizationEnabled; int get quoteCap; int get priorityWindowMinutes; DateTime? get earlyPartnerFreeUntil; int get maxRequestsPerDay; bool get webPurchaseLinksAllowed; String get paywallDefaultPeriod; bool get whatsappNotifications; String get termsVersion; String get privacyVersion;
+ bool get monetizationEnabled; int get quoteCap; int get priorityWindowMinutes; DateTime? get earlyPartnerFreeUntil; int get maxRequestsPerDay; bool get webPurchaseLinksAllowed;/// `monthly` or `annual` (server default `annual`).
+ String get paywallDefaultPeriod; bool get whatsappNotifications; String get termsVersion; String get privacyVersion;
 /// Create a copy of AppFlags
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -221,7 +222,7 @@ return $default(_that.monetizationEnabled,_that.quoteCap,_that.priorityWindowMin
 
 
 class _AppFlags implements AppFlags {
-  const _AppFlags({this.monetizationEnabled = false, this.quoteCap = 10, this.priorityWindowMinutes = 15, this.earlyPartnerFreeUntil, this.maxRequestsPerDay = 10, this.webPurchaseLinksAllowed = false, this.paywallDefaultPeriod = 'monthly', this.whatsappNotifications = false, this.termsVersion = '1.0', this.privacyVersion = '1.0'});
+  const _AppFlags({this.monetizationEnabled = false, this.quoteCap = 10, this.priorityWindowMinutes = 15, this.earlyPartnerFreeUntil, this.maxRequestsPerDay = 10, this.webPurchaseLinksAllowed = false, this.paywallDefaultPeriod = 'annual', this.whatsappNotifications = false, this.termsVersion = '1.0', this.privacyVersion = '1.0'});
   
 
 @override@JsonKey() final  bool monetizationEnabled;
@@ -230,6 +231,7 @@ class _AppFlags implements AppFlags {
 @override final  DateTime? earlyPartnerFreeUntil;
 @override@JsonKey() final  int maxRequestsPerDay;
 @override@JsonKey() final  bool webPurchaseLinksAllowed;
+/// `monthly` or `annual` (server default `annual`).
 @override@JsonKey() final  String paywallDefaultPeriod;
 @override@JsonKey() final  bool whatsappNotifications;
 @override@JsonKey() final  String termsVersion;

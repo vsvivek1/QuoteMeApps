@@ -63,7 +63,7 @@ select is(
 
 select ok(not has_function_privilege('authenticated', 'public.match_sellers_for_request(uuid,int)', 'execute'),
   'service-only RPCs are not executable by authenticated');
-select ok(has_function_privilege('authenticated', 'public.submit_quote(uuid,jsonb,bigint,int,text,date,text,int,text,text[],jsonb)', 'execute'),
+select ok(has_function_privilege('authenticated', 'public.submit_quote(uuid,jsonb,bigint,int,text,date,text,int,text,text[],jsonb,int)', 'execute'),
   'authenticated can execute submit_quote');
 
 select * from finish();

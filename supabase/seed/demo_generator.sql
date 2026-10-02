@@ -16,6 +16,11 @@
 
 create schema if not exists seed_tools;
 
+-- The sales tax argument became ppm (migration 1050); drop the bp versions so a re-run on an
+-- existing project can recreate them.
+drop function if exists seed_tools.generate_city(text, text, text, text, float8, float8, text[], text, int, jsonb);
+drop function if exists seed_tools.generate_review_data(text, text, float8, float8, text, int);
+
 create table if not exists seed_tools.demo_templates (
   slug text not null,
   title text not null,
@@ -134,7 +139,7 @@ end $$;
 -- {"buyer":..,"seller":..,"verified_seller":..,"admin":..} (first city only).
 create or replace function seed_tools.generate_city(
   p_key text, p_city text, p_state text, p_state_num text, p_lat float8, p_lng float8,
-  p_codes text[], p_other_state text, p_sales_tax_bp int, p_test_accounts jsonb default null)
+  p_codes text[], p_other_state text, p_sales_tax_ppm int, p_test_accounts jsonb default null)
 returns jsonb
 language plpgsql
 as $$
@@ -290,7 +295,7 @@ begin
               'description', v_tpl.title, 'qty', v_qty, 'unit_price_minor', greatest(v_unit, 100),
               'tax_rate_bp', v_tpl.tax_rate_bp)),
           p_delivery_minor => case when k % 3 = 0 then 0 else (case when v_country = 'US' then 2500 else 30000 end) end,
-          p_sales_tax_rate_bp => case when v_country = 'US' then p_sales_tax_bp else 0 end,
+          p_sales_tax_rate_ppm => case when v_country = 'US' then p_sales_tax_ppm else 0 end,
           p_offered_brand_model => case when cardinality(v_tpl.brands) > 0
                                         then v_tpl.brands[1 + k % cardinality(v_tpl.brands)] || ' (as requested)' end,
           p_delivery_date => current_date + 2 + k,
@@ -350,7 +355,7 @@ as $$ select seed_tools.create_user('test:admin', 'Test Admin', p_phone, null, a
 
 -- Review accounts with a little demo data of their own.
 create or replace function seed_tools.generate_review_data(p_buyer_phone text, p_seller_phone text,
-  p_lat float8, p_lng float8, p_code text, p_sales_tax_bp int)
+  p_lat float8, p_lng float8, p_code text, p_sales_tax_ppm int)
 returns void
 language plpgsql
 as $$
@@ -376,8 +381,8 @@ begin
       perform public.submit_quote(v_req.request_id,
         jsonb_build_array(jsonb_build_object('description', v_tpl.title, 'qty', 1,
                                              'unit_price_minor', v_tpl.unit_min, 'tax_rate_bp', v_tpl.tax_rate_bp)),
-        0, p_sales_tax_bp, null, current_date + 3, '1 year', 7, 'Review demo quote', '{}',
-        seed_tools.demo_quote_fields(v_tpl.slug));
+        0, null, null, current_date + 3, '1 year', 7, 'Review demo quote', '{}',
+        seed_tools.demo_quote_fields(v_tpl.slug), p_sales_tax_ppm);
     end if;
   end loop;
   perform set_config('request.jwt.claims', '', true);

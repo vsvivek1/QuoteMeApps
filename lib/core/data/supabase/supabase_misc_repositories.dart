@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show RealtimeChannel;
 
 import '../../../features/notifications/domain/app_notification.dart';
 import '../../../features/notifications/domain/notification_repository.dart';
@@ -17,31 +18,24 @@ import 'supabase_context.dart';
 
 // ------------------------------------------------------------------- orders
 
-/// Orders (RLS: parties). `orders` has no Realtime publication, so lists
-/// refresh on `order_status` notifications and on local changes.
+/// Orders (RLS: parties). Realtime on `orders` (RLS-filtered: only my
+/// orders) plus my `notifications` (new reviews and anything else that
+/// doesn't touch the order row), and local changes.
 class SupabaseOrderRepository implements OrderRepository {
   SupabaseOrderRepository(this.ctx);
   final SupabaseContext ctx;
 
-  static const select =
-      '*, order_events(status, at, note, created_at), reviews(role), '
-      'seller:sellers(business_name), request:requests(title)';
+  /// `orders.request_title` is kept in sync by the server, so sellers (who
+  /// can't read `requests`) get the title without a join.
+  static const select = '*, order_events(status, at, note, created_at), reviews(role), seller:sellers(business_name)';
 
-  /// Request titles for orders where I'm the seller (`requests` is
-  /// buyer-only under RLS; `get_my_quotes` carries a safe summary).
-  Future<Map<String, String>> _sellerTitles(List<JsonRow> rows) async {
-    final uid = ctx.uidOrNull;
-    if (!rows.any((r) => r['seller_id'] == uid && asMap(r['request'])['title'] == null)) return const {};
-    try {
-      final quotes = await ctx.rpcList('get_my_quotes', {'p_tab': 'won', 'p_limit': 50});
-      return {
-        for (final q in quotes)
-          if (q['order_id'] != null) q['order_id'].toString(): asMap(q['request'])['title']?.toString() ?? '',
-      };
-    } catch (e) {
-      debugPrint('order titles: $e');
-      return const {};
-    }
+  void Function(RealtimeChannel, void Function()) _bind(String uid, {String? orderId}) {
+    final orders = orderId == null ? ctx.onTable('orders') : ctx.onTable('orders', column: 'id', equals: orderId);
+    final inbox = ctx.onTable('notifications', column: 'user_id', equals: uid);
+    return (ch, refresh) {
+      orders(ch, refresh);
+      inbox(ch, refresh);
+    };
   }
 
   @override
@@ -55,16 +49,10 @@ class SupabaseOrderRepository implements OrderRepository {
           .or('buyer_id.eq.$uid,seller_id.eq.$uid')
           .order('created_at', ascending: false)
           .limit(100);
-      final titles = await _sellerTitles(rows);
-      return [for (final r in rows) mapOrder(r, fallbackCurrency: ctx.currency, title: titles[r['id']])];
+      return [for (final r in rows) mapOrder(r, fallbackCurrency: ctx.currency)];
     }
 
-    return ctx.liveQuery(
-      name: 'orders:$uid',
-      fetch: fetch,
-      bind: ctx.onTable('notifications', column: 'user_id', equals: uid),
-      topics: {Topics.orders},
-    );
+    return ctx.liveQuery(name: 'orders:$uid', fetch: fetch, bind: _bind(uid), topics: {Topics.orders});
   }
 
   @override
@@ -83,14 +71,13 @@ class SupabaseOrderRepository implements OrderRepository {
           debugPrint('order contacts: $e');
         }
       }
-      final titles = await _sellerTitles([row]);
-      return mapOrder(row, fallbackCurrency: ctx.currency, title: titles[id], contacts: contacts);
+      return mapOrder(row, fallbackCurrency: ctx.currency, contacts: contacts);
     }
 
     return ctx.liveQuery(
       name: 'order:$id',
       fetch: fetch,
-      bind: ctx.onTable('notifications', column: 'user_id', equals: uid),
+      bind: _bind(uid, orderId: id),
       topics: {Topics.orders},
     );
   }
@@ -104,19 +91,26 @@ class SupabaseOrderRepository implements OrderRepository {
     ctx.changed(Topics.orders);
   });
 
-  /// Payment methods the server accepts; anything else is recorded as
-  /// `other` (e.g. the USA app's `check`).
-  static const serverPaymentMethods = {'cash', 'upi', 'card', 'bank_transfer', 'zelle', 'seller_link', 'other'};
+  /// Payment methods `record_payment` accepts; anything else is recorded as
+  /// `other`.
+  static const serverPaymentMethods = {
+    'cash',
+    'upi',
+    'card',
+    'bank_transfer',
+    'zelle',
+    'check',
+    'seller_link',
+    'other',
+  };
+
+  static String serverPaymentMethod(String method) => serverPaymentMethods.contains(method) ? method : 'other';
 
   @override
   Future<void> recordPayment(String orderId, String method, Money amount) => guardState(() async {
     await ctx.client.rpc<dynamic>(
       'record_payment',
-      params: {
-        'p_order_id': orderId,
-        'p_method': serverPaymentMethods.contains(method) ? method : 'other',
-        'p_amount_minor': amount.minorInt,
-      },
+      params: {'p_order_id': orderId, 'p_method': serverPaymentMethod(method), 'p_amount_minor': amount.minorInt},
     );
     ctx.changed(Topics.orders);
   });

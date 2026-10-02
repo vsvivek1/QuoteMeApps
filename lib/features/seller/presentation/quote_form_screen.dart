@@ -49,7 +49,8 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
   final _warranty = TextEditingController();
   final _notes = TextEditingController();
   final _salesTax = TextEditingController();
-  int _rateBp = 0;
+  int _rateBp = 0; // India GST
+  int _ratePpm = 0; // US sales tax
   int _validDays = 7;
   DateTime? _deliveryDate;
   bool _initialised = false;
@@ -79,9 +80,9 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
       switch (q.taxBreakdown) {
         case GstBreakdown(:final rateBp):
           _rateBp = rateBp;
-        case SalesTaxBreakdown(:final rateBp):
-          _rateBp = rateBp;
-          _salesTax.text = bpToPercent(rateBp);
+        case SalesTaxBreakdown(:final ratePpm):
+          _ratePpm = ratePpm;
+          _salesTax.text = ppmToPercent(ratePpm);
         case NoTaxBreakdown():
       }
     });
@@ -119,6 +120,7 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
     lines: _quoteLines(iso),
     delivery: parseUserAmount(_delivery.text, iso) ?? zeroMoney(iso),
     rateBp: _rateBp,
+    ratePpm: _ratePpm,
     sellerState: seller?.state,
     buyerState: buyerState,
   );
@@ -128,6 +130,7 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
     lines: _quoteLines(iso),
     delivery: parseUserAmount(_delivery.text, iso) ?? zeroMoney(iso),
     taxRateBp: _rateBp,
+    salesTaxRatePpm: _ratePpm,
     offeredBrandModel: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
     deliveryDate: _deliveryDate,
     warranty: _warranty.text.trim().isEmpty ? null : _warranty.text.trim(),
@@ -172,8 +175,11 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
       _brand.text = '${p['brand'] ?? ''}';
       _warranty.text = '${p['warranty'] ?? ''}';
       _notes.text = '${p['notes'] ?? ''}';
-      _rateBp = (p['rate_bp'] as num?)?.toInt() ?? _rateBp;
-      if (_salesTax.text.isEmpty && _rateBp > 0) _salesTax.text = bpToPercent(_rateBp);
+      final bp = (p['rate_bp'] as num?)?.toInt();
+      _rateBp = bp ?? _rateBp;
+      // Templates saved before ppm hold the sales tax rate as rate_bp.
+      _ratePpm = (p['rate_ppm'] as num?)?.toInt() ?? (bp == null ? _ratePpm : bpToPpm(bp));
+      if (_salesTax.text.isEmpty && _ratePpm > 0) _salesTax.text = ppmToPercent(_ratePpm);
       _validDays = (p['valid_days'] as num?)?.toInt() ?? _validDays;
     });
   }
@@ -212,6 +218,7 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
               'warranty': _warranty.text,
               'notes': _notes.text,
               'rate_bp': _rateBp,
+              'rate_ppm': _ratePpm,
               'valid_days': _validDays,
             },
           ),
@@ -338,9 +345,11 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
                 TextFormField(
                   controller: _salesTax,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(labelText: l10n.quoteSalesTaxRate, suffixText: '%'),
-                  validator: (v) => (v ?? '').trim().isEmpty || percentToBp(v!) != null ? null : l10n.required,
-                  onChanged: (v) => setState(() => _rateBp = percentToBp(v) ?? 0),
+                  // Up to 3 decimals, e.g. 8.875 (NYC).
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d{0,3}(\.\d{0,3})?'))],
+                  decoration: InputDecoration(labelText: l10n.quoteSalesTaxRate, hintText: '8.875', suffixText: '%'),
+                  validator: (v) => (v ?? '').trim().isEmpty || percentToPpm(v!) != null ? null : l10n.required,
+                  onChanged: (v) => setState(() => _ratePpm = percentToPpm(v) ?? 0),
                 ),
               const SizedBox(height: 12),
               TextFormField(
@@ -442,7 +451,7 @@ class _TotalsCard extends StatelessWidget {
             ] else if (b is GstBreakdown)
               row('IGST ${bpToPercent(b.rateBp)}%', b.igst.display)
             else if (b is SalesTaxBreakdown)
-              row(l10n.salesTax(bpToPercent(b.rateBp)), b.amount.display),
+              row(l10n.salesTax(ppmToPercent(b.ratePpm)), b.amount.display),
             row(l10n.quoteDelivery, totals.delivery.display),
             const Divider(),
             row(l10n.quoteTotal, totals.total.display, bold: true),

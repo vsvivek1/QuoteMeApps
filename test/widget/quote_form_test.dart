@@ -63,4 +63,25 @@ void main() {
     expect(find.text(r'$1,082.50'), findsOneWidget);
     await tester.pump(const Duration(seconds: 30));
   });
+
+  testWidgets('USA quote form takes NYC 8.875% (3 decimals, ppm)', (tester) async {
+    tester.view.physicalSize = const Size(1080, 3200);
+    tester.view.devicePixelRatio = 2.6;
+    addTearDown(tester.view.reset);
+    final c = await demoContainer(usaConfig);
+    final demo = c.read(backendProvider).demo!;
+    final id = await seedRequest(demo, 'New York');
+    demo.signInAs('demo-seller-0');
+    await pumpScreen(tester, c, QuoteFormScreen(requestId: id));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.widgetWithText(TextFormField, 'Unit price'), '1000');
+    // A 4th decimal is not accepted.
+    await tester.enterText(find.widgetWithText(TextFormField, 'Sales tax rate (%)'), '8.8755');
+    await tester.pumpAndSettle();
+    expect(find.text('Sales tax 8.875%'), findsOneWidget);
+    expect(find.text(r'$88.75'), findsOneWidget);
+    expect(find.text(r'$1,088.75'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 30));
+  });
 }

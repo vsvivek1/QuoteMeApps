@@ -249,6 +249,7 @@ class DemoQuoteRepository implements QuoteRepository {
       lines: draft.lines,
       delivery: draft.delivery,
       rateBp: draft.taxRateBp,
+      ratePpm: draft.salesTaxRatePpm,
       sellerState: seller.state,
       buyerState: r.state,
     );

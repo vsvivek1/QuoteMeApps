@@ -16,12 +16,12 @@ Indian personal data stays in `ap-south-1`. Create each project in its region fr
 ```
 supabase/
   config.toml            local stack: auth (phone + test OTPs, Google, Apple, captcha), token hook, functions
-  migrations/            schema, RLS, RPCs, storage, realtime, outreach CRM, web forms, cron, admin audit log, KPIs, outreach safety, app sync (22 files)
+  migrations/            schema, RLS, RPCs, storage, realtime, outreach CRM, web forms, cron, admin audit log, KPIs, outreach safety, app sync, sales tax ppm (23 files)
   seed.sql               shared seed (legal versions, languages, seed_tools helpers)
   seed/<country>.sql     categories (policies, labels, field schemas), keywords, postal codes, metros
   seed/demo_generator.sql + seed/<country>_demo.sql   demo data (local + staging only)
   functions/             Edge Functions (Deno, deno.json import map, _shared/, tests/)
-  tests/database/        pgTAP suites (11 files, 298 tests)
+  tests/database/        pgTAP suites (11 files, 321 tests)
   tests/local/           Docker-free harness: Postgres + PostGIS + pgTAP + Supabase shims
   tests/fixtures/        money rounding cases shared by SQL, Deno and Dart
 tool/data/geo_import.py  postal code + city import (India Post, GeoNames, US Census ZCTA)
@@ -163,7 +163,7 @@ supabase/tests/local/run_local.sh usa        # one country
 KEEP_CLUSTER=1 PGPORT=55433 supabase/tests/local/run_local.sh india   # leave it running for psql
 ```
 
-Current result: India 11 files / 298 tests PASS, USA 11 files / 298 tests PASS.
+Current result: India 11 files / 321 tests PASS, USA 11 files / 321 tests PASS.
 
 ### Edge Functions (Deno)
 
@@ -182,13 +182,11 @@ and the brochure format aliases.
 
 ## Conventions
 
-- Money: integer minor units; tax rates are integer basis points. `round_half_up(n, d) = (2n + d) div (2d)`.
+- Money: integer minor units; GST rates are integer basis points, US sales tax rates integer parts
+  per million (8.875 % = 88750). `round_half_up(n, d) = (2n + d) div (2d)`.
   The same code exists in SQL (`public.money_round_half_up`, `gst_line_tax`, `us_sales_tax`,
   `compute_quote_totals`), TypeScript (`functions/_shared/money.ts`) and Dart. Fixtures:
   `tests/fixtures/money_rounding_cases.json`.
-  **Known limitation:** integer basis points cannot represent rates such as NYC's 8.875 %
-  (the demo uses 888). A finer unit (for example 1/100 bp, 887500) needs a coordinated change
-  in all three implementations and in the fixtures.
 - Errors: RPCs raise `SQLSTATE PTnnn` (HTTP `nnn` via PostgREST) with a stable snake_case code as
   the message. Edge Functions return the same `{code, message, details, hint}` shape.
 - Every client write goes through RPCs or column-limited grants. RLS is on for every table.
