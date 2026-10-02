@@ -102,6 +102,10 @@ h2 {
 .site-header nav a:hover {
   color: var(--primary);
 }
+.site-header nav .lang-switch {
+  font-weight: 600;
+  color: var(--primary);
+}
 .site-footer {
   margin-top: 64px;
   padding: 32px 0 48px;
@@ -241,6 +245,11 @@ h2 {
 }
 .notice.warn {
   border-left-color: var(--error);
+}
+/* Links on the tinted notice background: the accent colour is below 4.5:1 there (India saffron), so use the text colour. */
+.notice a {
+  color: inherit;
+  font-weight: 600;
 }
 .chips {
   display: flex;

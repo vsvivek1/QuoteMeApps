@@ -1,5 +1,6 @@
 ---
 import { formsEnabled, site, warnOnce } from '../lib/site';
+import { LOCALES, richText, translator, type Locale } from '../lib/i18n';
 
 interface Props {
   /** Sent as "form" to the Edge Function, which routes on it. */
@@ -8,16 +9,28 @@ interface Props {
   successMessage: string;
   /** Comma-separated field names of which at least one must be filled. */
   requireOne?: string;
+  /** Language of the notices and status messages (default English). */
+  locale?: Locale;
 }
-const { kind, submitLabel, successMessage, requireOne } = Astro.props;
+const { kind, submitLabel, successMessage, requireOne, locale = LOCALES[0] } = Astro.props;
+const { t } = translator(locale);
+// Status messages for scripts/forms.ts (no inline script, so the CSP stays strict).
+const msgs = {
+  'data-msg-require-one': t('form.requireOne'),
+  'data-msg-spam': t('form.spamCheck'),
+  'data-msg-sending': t('form.sending'),
+  'data-msg-too-many': t('form.tooMany'),
+  'data-msg-failed': t('form.failed'),
+  'data-msg-network': t('form.network'),
+};
 if (!formsEnabled) {
   warnOnce('PUBLIC_TURNSTILE_SITE_KEY or FORMS_ENDPOINT unset: forms render disabled.');
 }
 ---
 {!formsEnabled && (
   <p class="notice warn">
-    This form is not switched on yet.
-    {site.supportEmail ? <>Please email <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> instead.</> : 'Please use the contact details on our Contact / Support page.'}
+    {t('form.off')}{' '}
+    {site.supportEmail ? <Fragment set:html={richText(t('form.offEmail', { email: site.supportEmail }))} /> : t('form.offContact')}
   </p>
 )}
 <form
@@ -27,14 +40,15 @@ if (!formsEnabled) {
   data-country={site.country}
   data-success={successMessage}
   data-require-one={requireOne}
+  {...msgs}
   novalidate
 >
   <slot />
   <div class="hp" aria-hidden="true">
-    <label>Leave this empty<input type="text" name="website_url_confirm" tabindex="-1" autocomplete="off" /></label>
+    <label>{t('form.honeypot')}<input type="text" name="website_url_confirm" tabindex="-1" autocomplete="off" /></label>
   </div>
   {formsEnabled && <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey} data-action={kind}></div>}
-  <noscript><p class="notice warn">This form needs JavaScript (for spam protection).</p></noscript>
+  <noscript><p class="notice warn">{t('form.noscript')}</p></noscript>
   <div><button class="btn" type="submit" disabled={!formsEnabled}>{submitLabel}</button></div>
   <p class="form-status" role="status" aria-live="polite"></p>
 </form>

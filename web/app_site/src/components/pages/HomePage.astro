@@ -1,0 +1,91 @@
+---
+// Home page body for every locale (pages/index.astro and pages/[lang]/index.astro).
+import Base from '../../layouts/Base.astro';
+import StoreBadges from '../StoreBadges.astro';
+import { abs, site } from '../../lib/site';
+import { cityHubs, loadSeo } from '../../lib/seo';
+import { localePath, translator, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { t, raw, rich, fact } = translator(locale);
+const href = (p: string) => localePath(locale, p);
+
+const { data } = await loadSeo();
+const hubs = (await cityHubs()).filter((h) => h.indexable).slice(0, 12);
+const groups = [...new Set(data.categories.filter((c) => c.policy === 'allowed').map((c) => c.group))];
+const examples = fact<string[]>('exampleRequests');
+const [h1a, h1b] = raw<string[]>('home.h1');
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: site.company,
+    url: site.url,
+    logo: abs('/brand/pwa_512.png'),
+    brand: site.appName,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'MobileApplication',
+    name: site.appName,
+    operatingSystem: 'Android, iOS',
+    applicationCategory: 'ShoppingApplication',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: site.currency },
+    publisher: { '@type': 'Organization', name: site.company },
+    inLanguage: locale.hreflang,
+  },
+];
+const campaign = locale.segment ? `home_hero_${locale.segment}` : 'home_hero';
+---
+<Base title={t('home.title')} description={t('home.description')} path={href('/')} jsonLd={jsonLd} smartBanner>
+  <section class="hero">
+    <h1>{h1a}<br />{h1b}</h1>
+    <p class="lead">{t('home.lead')}</p>
+    <StoreBadges campaign={campaign} locale={locale} />
+    <p class="muted small">{t('home.freeNote')}</p>
+  </section>
+
+  <section id="how-it-works">
+    <h2>{t('home.howTitle')}</h2>
+    <ol class="steps">
+      {raw<string[]>('home.steps').map((_, i) => <li set:html={rich(`home.steps.${i}`, { example: examples[0] })} />)}
+    </ol>
+  </section>
+
+  <section>
+    <h2>{t('home.askTitle')}</h2>
+    <div class="grid">
+      {examples.map((r) => <div class="card"><p>"{r}"</p></div>)}
+    </div>
+    {groups.length > 0 && (
+      <>
+        <h3>{t('home.categories')}</h3>
+        <ul class="chips">{groups.map((g) => <li><span lang={locale.segment ? 'en' : undefined}>{g}</span></li>)}</ul>
+      </>
+    )}
+  </section>
+
+  {hubs.length > 0 && (
+    <section>
+      <h2>{t('home.pricesTitle')}</h2>
+      <p>{t('home.pricesNote')}</p>
+      <ul class="chips">{hubs.map((h) => <li><a href={`/quotes/${h.city.slug}`}>{h.city.name}</a></li>)}</ul>
+    </section>
+  )}
+
+  <section>
+    <h2>{t('home.sellTitle')}</h2>
+    <div class="grid">
+      {raw<{ title: string }[]>('home.sellCards').map((_, i) => <div class="card"><h3>{t(`home.sellCards.${i}.title`)}</h3><p>{t(`home.sellCards.${i}.text`)}</p></div>)}
+    </div>
+    <div class="actions"><a class="btn" href={href('/sellers')}>{t('home.sellCta')}</a></div>
+  </section>
+
+  <section>
+    <h2>{t('home.dataTitle')}</h2>
+    <p set:html={rich('home.dataText')} />
+  </section>
+</Base>

@@ -1,0 +1,22 @@
+---
+// About page body for every locale (pages/about.astro and pages/[lang]/about.astro).
+import Base from '../../layouts/Base.astro';
+import { localePath, translator, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { t, rich } = translator(locale);
+---
+<Base title={t('about.title')} description={t('about.description')} path={localePath(locale, '/about')}>
+  <div class="prose">
+    <h1>{t('about.h1')}</h1>
+    <p>{t('about.intro')}</p>
+    <p set:html={rich('about.operator')} />
+    <h2>{t('about.dataTitle')}</h2>
+    <p set:html={rich('about.dataText')} />
+    <h2>{t('about.contactTitle')}</h2>
+    <p set:html={rich('about.contactText')} />
+  </div>
+</Base>

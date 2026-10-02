@@ -1,0 +1,164 @@
+{
+  "$comment": "Neutral Latin American Spanish (es-US) strings for I Want USA: /es, /es/sellers, /es/waitlist, /es/about. Written by hand, not machine-translated; informal tú and terms as in the app (lib/l10n/app_es.arb: vendedores, compradores, cotizaciones, solicitudes, Verificado). Missing keys fall back to en.json.",
+  "language": "Español",
+  "facts": {
+    "usa": {
+      "postalLabel": "código postal",
+      "postalLabels": "códigos postales",
+      "sellerIds": "EIN o licencia estatal",
+      "exampleRequests": [
+        "Refrigerador Samsung French door de 28 pies cúbicos, entregado en el 75201 antes del viernes",
+        "Mantenimiento de aire acondicionado para 2 equipos en Dallas esta semana",
+        "100 camisetas estampadas para un evento de la empresa"
+      ]
+    }
+  },
+  "layout": {
+    "skip": "Saltar al contenido",
+    "homeLabel": "Inicio de {appName}",
+    "navMain": "Principal",
+    "navCompany": "Empresa",
+    "navLegal": "Legal",
+    "navHow": "Cómo funciona",
+    "navPrices": "Precios locales",
+    "navSellers": "Para vendedores",
+    "navContact": "Contacto",
+    "tagline": "Publica lo que quieres. Vendedores locales y en línea te envían cotizaciones.",
+    "about": "Acerca de",
+    "editorial": "Política editorial",
+    "becomeSeller": "Hazte vendedor",
+    "waitlist": "Únete a la lista de espera",
+    "contact": "Contacto",
+    "terms": "Términos del servicio",
+    "privacy": "Política de privacidad",
+    "ccpa": "No vender ni compartir mi información personal",
+    "deleteAccount": "Eliminar tu cuenta",
+    "allLegal": "Todas las páginas legales",
+    "englishOnly": "Por ahora, las páginas legales, de precios locales y de contacto solo están en inglés.",
+    "languages": "Idiomas",
+    "ogCta": "Recibe cotizaciones de vendedores locales"
+  },
+  "badges": {
+    "playLive": "DISPONIBLE EN",
+    "playSoon": "MUY PRONTO EN",
+    "appleLive": "Descárgalo en el",
+    "appleSoon": "Muy pronto en el"
+  },
+  "form": {
+    "off": "Este formulario todavía no está activado.",
+    "offEmail": "Mientras tanto, escríbenos a [{email}](mailto:{email}).",
+    "offContact": "Mientras tanto, usa los datos de contacto de nuestra página Contact / Support.",
+    "honeypot": "Deja este campo vacío",
+    "noscript": "Este formulario necesita JavaScript (para protegernos del spam).",
+    "requireOne": "Completa al menos uno de estos campos: {fields}.",
+    "spamCheck": "Primero completa la verificación contra spam.",
+    "sending": "Enviando...",
+    "tooMany": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
+    "failed": "Algo salió mal. Vuelve a intentarlo.",
+    "network": "Error de conexión. Vuelve a intentarlo.",
+    "thanks": "Gracias.",
+    "optional": "(opcional)",
+    "email": "Correo electrónico",
+    "city": "Ciudad",
+    "privacyLink": "Consulta nuestra [Política de privacidad](/legal/privacy-policy) (en inglés)."
+  },
+  "home": {
+    "title": "{appName}: publica lo que quieres y recibe cotizaciones de vendedores locales",
+    "description": "En {appName} publicas lo que quieres y vendedores locales y en línea te envían cotizaciones. Compara precios lado a lado, chatea y elige la mejor oferta. Gratis para compradores.",
+    "h1": [
+      "Publica lo que quieres.",
+      "Vendedores locales te envían cotizaciones."
+    ],
+    "lead": "Deja de llamar a diez tiendas. Dile a {appName} lo que necesitas, y negocios locales y en línea compiten para darte su mejor precio. Compara cotizaciones lado a lado, chatea y acepta la que más te guste.",
+    "freeNote": "Gratis para compradores. Tu número de teléfono se comparte con un vendedor solo después de que aceptas su cotización; antes de eso, hablan por el chat de la app.",
+    "howTitle": "Cómo funciona",
+    "steps": [
+      "**Publica una solicitud en menos de un minuto.** Por ejemplo: *\"{example}\"*. Agrega fotos, tu {postalLabel} y para cuándo lo necesitas.",
+      "**Recibe cotizaciones de los vendedores adecuados.** Solo pueden cotizar los vendedores que venden o dan servicio en esa categoría cerca de ti, y cada solicitud tiene un límite de cotizaciones para que no te saturen.",
+      "**Compara, chatea y acepta.** Ve el precio, los impuestos, el tiempo de entrega, la garantía y las calificaciones lado a lado. Le pagas directamente al vendedor como lo acuerden."
+    ],
+    "askTitle": "Lo que la gente pide",
+    "categories": "Categorías",
+    "pricesTitle": "Precios locales con cotizaciones reales",
+    "pricesNote": "Precios medianos de las cotizaciones enviadas en {appName}, actualizados cada noche. Estas páginas están en inglés.",
+    "sellTitle": "¿Tienes una tienda o un negocio de servicios?",
+    "sellCards": [
+      {
+        "title": "Compradores listos, cerca de ti",
+        "text": "Ve solicitudes de personas que ya saben lo que quieren, filtradas por tus categorías y tu zona de servicio."
+      },
+      {
+        "title": "Cotiza en segundos",
+        "text": "Envía un precio con impuestos, entrega y garantía desde tu teléfono. Chatea cuando el comprador muestre interés."
+      },
+      {
+        "title": "Verificado y justo",
+        "text": "Obtén la insignia de Verificado ({sellerIds}). Los compradores califican a los vendedores después de cada trabajo, y cualquier lugar patrocinado está claramente identificado."
+      }
+    ],
+    "sellCta": "Hazte vendedor",
+    "dataTitle": "Tus datos se quedan en Estados Unidos",
+    "dataText": "{appName} es operado por {company}. Los datos de tu cuenta se guardan en un centro de datos en Estados Unidos y se manejan conforme a la CCPA/CPRA. Lee nuestra [Política de privacidad](/legal/privacy-policy) (en inglés) o [elimina tu cuenta](/legal/account-deletion) cuando quieras.",
+    "og": {
+      "kicker": "Gratis para compradores",
+      "detail": "Compara cotizaciones de vendedores locales y en línea lado a lado, chatea y elige la mejor oferta."
+    }
+  },
+  "sellers": {
+    "title": "Vende en la app: recibe solicitudes de compradores locales",
+    "description": "Únete a {appName} como vendedor: ve solicitudes de compradores locales en tus categorías y envía cotizaciones desde tu teléfono.",
+    "h1": "Haz crecer tu negocio con {appName}",
+    "lead": "Los compradores cerca de ti publican exactamente lo que quieren. Tú envías una cotización. Sin llamadas en frío ni anuncios que administrar.",
+    "steps": [
+      "Deja tus datos abajo, o instala la app y elige **\"Tengo un negocio\"**.",
+      "Agrega tus categorías, marcas y zona de servicio ({postalLabels} o un radio alrededor de tu tienda).",
+      "Verifica tu negocio ({sellerIds}) para obtener la insignia de Verificado y ver antes las nuevas solicitudes."
+    ],
+    "terms": "Antes de empezar, lee los [Términos para vendedores](/legal/seller-terms) y los [términos de los planes](/legal/subscription-terms) (en inglés).",
+    "formTitle": "Registro de vendedores",
+    "businessName": "Nombre del negocio",
+    "contactName": "Tu nombre",
+    "phone": "Teléfono",
+    "category": "Categoría principal",
+    "chooseOne": "Elige una",
+    "other": "Otra",
+    "website": "Sitio web o perfil de Google Business (opcional)",
+    "consentContact": "Acepto que {company} me contacte por correo electrónico o teléfono sobre unirme a {appName} como vendedor. Puedo darme de baja en cualquier momento.",
+    "privacy": "Usamos estos datos solo para ayudarte a unirte. Consulta nuestra [Política de privacidad](/legal/privacy-policy) (en inglés).",
+    "submit": "Enviar mis datos",
+    "success": "¡Gracias! Nos pondremos en contacto para ayudarte a configurar tu tienda.",
+    "og": {
+      "kicker": "Para vendedores",
+      "detail": "Los compradores cerca de ti publican exactamente lo que quieren. Tú envías una cotización."
+    }
+  },
+  "waitlist": {
+    "title": "Únete a la lista de espera",
+    "description": "Recibe un correo cuando {appName} llegue a tu ciudad.",
+    "h1": "Únete a la lista de espera",
+    "intro": "Estamos abriendo ciudad por ciudad. Déjanos tu correo y te avisaremos cuando los vendedores cerca de ti estén listos para cotizar.",
+    "doubleOptIn": "Primero te enviamos un correo de confirmación (doble opt-in). No te enviamos nada más si no confirmas.",
+    "consentEmail": "Envíame un correo cuando {appName} esté disponible en mi zona, junto con algunos consejos breves para recibir cotizaciones. Puedo darme de baja en cualquier momento desde cualquier correo.",
+    "submit": "Unirme a la lista de espera",
+    "success": "Ya casi: revisa tu bandeja de entrada y confirma tu correo.",
+    "og": {
+      "kicker": "Abrimos ciudad por ciudad",
+      "detail": "Déjanos tu correo y te avisaremos cuando los vendedores cerca de ti estén listos para cotizar."
+    }
+  },
+  "about": {
+    "title": "Acerca de {appName}",
+    "description": "{appName} es un marketplace de cotizaciones inversas operado por {company}.",
+    "h1": "Acerca de {appName}",
+    "intro": "{appName} le da la vuelta a las compras: en lugar de que tú busques tiendas, publicas lo que quieres y los vendedores compiten con cotizaciones. Es un marketplace: conectamos a compradores y vendedores, pero no somos parte de la venta.",
+    "operator": "{appName} es creado y operado por **{company}**. Hay una app por país para que cada una siga las reglas de su país sobre qué se puede cotizar y quién puede hacerlo. Nuestra app hermana para la India es I Want India; las cuentas y los datos están completamente separados.",
+    "dataTitle": "Los datos de este sitio web",
+    "dataText": "Nuestras páginas de precios locales se crean con cotizaciones anonimizadas enviadas en la app. Publicamos medianas y rangos, nunca una cotización individual ni la identidad de un comprador, y solo cuando una ciudad y una categoría tienen suficientes datos. Lee nuestra [política editorial](/editorial-policy) (en inglés) para conocer los detalles.",
+    "contactTitle": "Contacto",
+    "contactText": "Visita [Contacto](/contact) y [Contact and Support](/legal/contact-support) (en inglés).",
+    "og": {
+      "kicker": "Acerca de nosotros",
+      "detail": "Un marketplace de cotizaciones inversas: publicas lo que quieres y los vendedores compiten con cotizaciones."
+    }
+  }
+}

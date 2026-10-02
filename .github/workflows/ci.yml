@@ -183,3 +183,35 @@ jobs:
       - run: npm run build
         env:
           SITE_COUNTRY: ${{ matrix.country }}
+      - name: Check OG images and hreflang
+        run: npm run check:dist
+      # Sample data so the checks below cover price, guide and seller pages
+      # (app_site) and articles (trends_site). trends_site ignores SITE_COUNTRY,
+      # so it runs these once.
+      - name: Build with fixtures
+        if: matrix.site == 'app_site' || matrix.country == 'usa'
+        run: |
+          if [ "$SITE" = app_site ]; then
+            SEO_DATA_FILE="data/seo/fixtures/$SITE_COUNTRY.json" npm run build
+          else
+            BUILD_NOW=2026-10-02T00:00:00Z npm run build:fixtures
+          fi
+          npm run check:dist
+        env:
+          SITE: ${{ matrix.site }}
+          SITE_COUNTRY: ${{ matrix.country }}
+      # Core Web Vitals and Lighthouse scores (performance >= 0.9, accessibility
+      # >= 0.95, SEO >= 0.95, best practices >= 0.9); pages and thresholds in
+      # each site's lighthouserc.cjs. Uses the runner's preinstalled Chrome.
+      - name: Lighthouse CI
+        if: matrix.site == 'app_site' || matrix.country == 'usa'
+        run: npm run lhci
+        env:
+          SITE_COUNTRY: ${{ matrix.country }}
+      - uses: actions/upload-artifact@v5
+        if: always() && (matrix.site == 'app_site' || matrix.country == 'usa')
+        with:
+          name: lighthouse-${{ matrix.site }}-${{ matrix.country }}
+          path: web/${{ matrix.site }}/.lighthouseci/reports
+          if-no-files-found: ignore
+          retention-days: 14

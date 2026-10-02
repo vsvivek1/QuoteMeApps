@@ -1,0 +1,10 @@
+---
+import type { GetStaticPaths } from 'astro';
+import SellersPage from '../../components/pages/SellersPage.astro';
+import { SECOND_LOCALE, localeBySegment } from '../../lib/i18n';
+
+// Translated version (hi-IN on the India site, es-US on the USA site); see lib/i18n.ts.
+export const getStaticPaths = (() => [{ params: { lang: SECOND_LOCALE.segment } }]) satisfies GetStaticPaths;
+const locale = localeBySegment(Astro.params.lang);
+---
+<SellersPage locale={locale} />

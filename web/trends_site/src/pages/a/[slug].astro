@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import { loadArticles, type Built } from '../../lib/articles';
 import { abs, COUNTRY_LABEL, formatDateTime, site } from '../../lib/site';
+import { ogImageFor } from '../../lib/og';
 
 // Only articles that passed every publishing gate are returned by loadArticles().
 export const getStaticPaths = (() =>
@@ -25,6 +26,7 @@ const jsonLd = [
     datePublished: a.published_at,
     dateModified: updated,
     mainEntityOfPage: abs(`/a/${a.slug}`),
+    image: [abs(ogImageFor(`/a/${a.slug}`))],
     contentLocation: a.places.map((p) => ({ '@type': 'Place', name: [p.name, p.state, COUNTRY_LABEL[a.country]].filter(Boolean).join(', ') })),
     author: { '@type': 'Organization', name: site.name, url: abs('/about') },
     editor: { '@type': 'Person', name: site.editorName },

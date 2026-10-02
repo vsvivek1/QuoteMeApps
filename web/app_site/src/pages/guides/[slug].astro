@@ -5,6 +5,7 @@ import StoreBadges from '../../components/StoreBadges.astro';
 import { abs, formatDate, money, site } from '../../lib/site';
 import { loadGuides, loadSeo, type SeoGuide } from '../../lib/seo';
 import { renderMarkdown, wordCount } from '../../lib/markdown';
+import { ogImageFor } from '../../lib/og';
 
 // Buying guides (Section 21.9): written or AI-drafted, always reviewed by a
 // person in the admin panel. Only published guides reviewed within the last
@@ -38,7 +39,7 @@ const jsonLd: object[] = [
     wordCount: wordCount(g.body_md),
     author: { '@type': 'Organization', name: `${site.appName} editorial team`, url: abs('/editorial-policy') },
     publisher: { '@type': 'Organization', name: site.company, url: abs('/about'), logo: { '@type': 'ImageObject', url: abs('/brand/logo_mark.svg') } },
-    image: abs('/brand/og_image_1200x630.png'),
+    image: abs((await ogImageFor(guide.path)).src),
   },
   {
     '@context': 'https://schema.org',

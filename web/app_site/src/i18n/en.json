@@ -1,0 +1,170 @@
+{
+  "$comment": "English strings for the translated marketing pages (/, /sellers, /waitlist, /about) and the shared layout. hi-IN.json (India) and es-US.json (USA) mirror these keys. {name} is filled from facts below, then from lib/site.ts (appName, company, postalLabel, sellerIds, privacyLaw, exampleRequests); **bold**, *italic* and [text](/path) are the only markup.",
+  "language": "English",
+  "facts": {
+    "usa": {
+      "countryName": "the United States",
+      "dataCentre": "US",
+      "sisterApp": "India is I Want India",
+      "postalLabels": "ZIP codes"
+    },
+    "india": {
+      "countryName": "India",
+      "dataCentre": "Mumbai, India",
+      "sisterApp": "the United States is I Want USA",
+      "postalLabels": "PIN codes"
+    }
+  },
+  "layout": {
+    "skip": "Skip to content",
+    "homeLabel": "{appName} home",
+    "navMain": "Main",
+    "navCompany": "Company",
+    "navLegal": "Legal",
+    "navHow": "How it works",
+    "navPrices": "Local prices",
+    "navSellers": "For sellers",
+    "navContact": "Contact",
+    "tagline": "Post what you want. Local and online sellers send you quotes.",
+    "about": "About",
+    "editorial": "Editorial policy",
+    "becomeSeller": "Become a seller",
+    "waitlist": "Join the waitlist",
+    "contact": "Contact",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "ccpa": "Do Not Sell or Share My Personal Information",
+    "grievance": "Grievance Officer",
+    "deleteAccount": "Delete your account",
+    "allLegal": "All legal pages",
+    "englishOnly": "",
+    "languages": "Languages",
+    "ogCta": "Get quotes from local sellers"
+  },
+  "badges": {
+    "playLive": "GET IT ON",
+    "playSoon": "COMING SOON TO",
+    "appleLive": "Download on the",
+    "appleSoon": "Coming soon to the"
+  },
+  "form": {
+    "off": "This form is not switched on yet.",
+    "offEmail": "Please email [{email}](mailto:{email}) instead.",
+    "offContact": "Please use the contact details on our Contact / Support page.",
+    "honeypot": "Leave this empty",
+    "noscript": "This form needs JavaScript (for spam protection).",
+    "requireOne": "Please fill in at least one of: {fields}.",
+    "spamCheck": "Please complete the spam check first.",
+    "sending": "Sending...",
+    "tooMany": "Too many attempts. Please wait a minute and try again.",
+    "failed": "Something went wrong. Please try again.",
+    "network": "Network error. Please try again.",
+    "thanks": "Thank you.",
+    "optional": "(optional)",
+    "email": "Email",
+    "city": "City",
+    "privacyLink": "See our [Privacy Policy](/legal/privacy-policy)."
+  },
+  "home": {
+    "title": "{appName}: post what you want, get quotes from local sellers",
+    "description": "{appName}: post what you want and local and online sellers send you quotes. Compare prices side by side, chat, and pick the best offer. Free for buyers.",
+    "h1": [
+      "Post what you want.",
+      "Local sellers send you quotes."
+    ],
+    "lead": "Stop calling ten shops. Tell {appName} what you need, and local and online firms compete to give you their best price. Compare quotes side by side, chat, and accept the one you like.",
+    "freeNote": "Free for buyers. Your phone number is shared with a seller only after you accept their quote; before that you talk in the in-app chat.",
+    "howTitle": "How it works",
+    "steps": [
+      "**Post a request in under a minute.** For example: *\"{example}\"*. Add photos, your {postalLabel} and when you need it.",
+      "**Get quotes from matching sellers.** Only sellers who sell or service that category near you can quote, and each request is capped so you are not flooded.",
+      "**Compare, chat and accept.** See price, taxes, delivery time, warranty and ratings side by side. Pay the seller directly the way you agree."
+    ],
+    "askTitle": "What people ask for",
+    "categories": "Categories",
+    "pricesTitle": "Local prices from real quotes",
+    "pricesNote": "Median prices from quotes sent on {appName}, updated nightly.",
+    "sellTitle": "Run a shop or a service business?",
+    "sellCards": [
+      {
+        "title": "Ready buyers, near you",
+        "text": "See requests from people who already know what they want, filtered by your categories and service area."
+      },
+      {
+        "title": "Quote in seconds",
+        "text": "Send a price with tax, delivery and warranty from your phone. Chat once the buyer is interested."
+      },
+      {
+        "title": "Verified and fair",
+        "text": "Get a Verified badge ({sellerIds}). Buyers rate sellers after each job, and any sponsored placement is clearly labelled."
+      }
+    ],
+    "sellCta": "Become a seller",
+    "dataTitle": "Your data stays in {countryName}",
+    "dataText": "{appName} is run by {company}. Your account data is stored in a {dataCentre} data centre and handled under {privacyLaw}. Read our [Privacy Policy](/legal/privacy-policy), or [delete your account](/legal/account-deletion) at any time.",
+    "og": {
+      "kicker": "Free for buyers",
+      "detail": "Compare quotes from local and online sellers side by side, chat, and pick the best offer."
+    }
+  },
+  "sellers": {
+    "title": "Sell on the app: get local buyer requests",
+    "description": "Join {appName} as a seller: see local buyer requests in your categories and send quotes from your phone.",
+    "h1": "Grow your business with {appName}",
+    "lead": "Buyers near you post exactly what they want. You send a quote. No cold calls, no ads to manage.",
+    "steps": [
+      "Leave your details below, or install the app and choose **\"I'm a business\"**.",
+      "Add your categories, brands and service area ({postalLabels} or a radius around your shop).",
+      "Verify your business ({sellerIds}) to get the Verified badge and earlier access to new requests."
+    ],
+    "terms": "Read the [Seller Terms](/legal/seller-terms) and [plan terms](/legal/subscription-terms) before you start.",
+    "formTitle": "Seller sign-up",
+    "businessName": "Business name",
+    "contactName": "Your name",
+    "phone": "Phone",
+    "category": "Main category",
+    "chooseOne": "Choose one",
+    "other": "Something else",
+    "website": "Website or Google Business Profile (optional)",
+    "consentContact": "I agree that {company} may contact me by email or phone about joining {appName} as a seller. I can opt out at any time.",
+    "consentWhatsapp": "Send me updates on WhatsApp from {appName}. At most one message a week; reply STOP to opt out.",
+    "privacy": "We use these details only to help you join. See our [Privacy Policy](/legal/privacy-policy).",
+    "submit": "Send my details",
+    "success": "Thanks! We will get in touch to help you set up your shop.",
+    "og": {
+      "kicker": "For sellers",
+      "detail": "Buyers near you post exactly what they want. You send a quote. No cold calls, no ads to manage."
+    }
+  },
+  "waitlist": {
+    "title": "Join the waitlist",
+    "description": "Get an email when {appName} launches in your city.",
+    "h1": "Join the waitlist",
+    "intro": "We are opening city by city. Leave your email and we will tell you when sellers near you are ready to quote.",
+    "doubleOptIn": "We send a confirmation email first (double opt-in). Nothing is sent unless you confirm.",
+    "consentEmail": "Email me when {appName} is live in my area, plus a few short tips on getting quotes. I can unsubscribe at any time from any email.",
+    "whatsapp": "WhatsApp number (optional)",
+    "consentWhatsapp": "Also send me launch updates on WhatsApp. At most one message a week; reply STOP to opt out.",
+    "submit": "Join the waitlist",
+    "success": "Almost done: check your inbox and confirm your email.",
+    "og": {
+      "kicker": "Opening city by city",
+      "detail": "Leave your email and we will tell you when sellers near you are ready to quote."
+    }
+  },
+  "about": {
+    "title": "About {appName}",
+    "description": "{appName} is a reverse-quote marketplace run by {company}.",
+    "h1": "About {appName}",
+    "intro": "{appName} turns shopping around: instead of you searching shops, you post what you want and sellers compete with quotes. It is a marketplace: we connect buyers and sellers but are not a party to the sale.",
+    "operator": "{appName} is built and operated by **{company}**. There is one app per country so that each follows its own country's rules on what may be quoted and by whom. Our sister app for {sisterApp}; accounts and data are completely separate.",
+    "dataTitle": "The data on this website",
+    "dataText": "Our local price pages are built from anonymised quotes sent in the app. We publish medians and ranges, never a single quote, never a buyer's identity, and only once a city and category has enough data. Read our [editorial policy](/editorial-policy) for the details.",
+    "contactTitle": "Contact",
+    "contactText": "See [Contact](/contact) and [Contact and Support](/legal/contact-support).",
+    "og": {
+      "kicker": "About us",
+      "detail": "A reverse-quote marketplace: you post what you want and sellers compete with quotes."
+    }
+  }
+}

@@ -1,0 +1,38 @@
+---
+// Waitlist page body for every locale (pages/waitlist.astro and pages/[lang]/waitlist.astro).
+import Base from '../../layouts/Base.astro';
+import Form from '../Form.astro';
+import { site } from '../../lib/site';
+import { localePath, translator, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { t, rich, fact } = translator(locale);
+
+const emailConsent = t('waitlist.consentEmail');
+const waConsent = t('waitlist.consentWhatsapp');
+const optional = t('form.optional');
+const postal = fact<string>('postalLabel');
+const postalLabel = postal.charAt(0).toUpperCase() + postal.slice(1);
+---
+<Base title={t('waitlist.title')} description={t('waitlist.description')} path={localePath(locale, '/waitlist')}>
+  <h1>{t('waitlist.h1')}</h1>
+  <p>{t('waitlist.intro')}</p>
+  <p class="small muted">{t('waitlist.doubleOptIn')}</p>
+  <Form kind="waitlist" submitLabel={t('waitlist.submit')} successMessage={t('waitlist.success')} locale={locale}>
+    <label>{t('form.email')}<input name="email" type="email" required maxlength="160" autocomplete="email" /></label>
+    <label>{t('form.city')}<input name="city" required maxlength="80" autocomplete="address-level2" /></label>
+    <label>{postalLabel} {optional}<input name="postal_code" maxlength="10" inputmode="numeric" autocomplete="postal-code" /></label>
+    <input type="hidden" name="source" value={locale.segment ? `waitlist_page_${locale.segment}` : 'waitlist_page'} />
+    <label class="check"><input type="checkbox" name="consent_email" value="yes" required data-consent={emailConsent} /><span>{emailConsent}</span></label>
+    {site.smsOptIn === 'whatsapp' && (
+      <>
+        <label>{t('waitlist.whatsapp')}<input name="whatsapp" type="tel" maxlength="20" autocomplete="tel" /></label>
+        <label class="check"><input type="checkbox" name="consent_whatsapp" value="yes" data-consent={waConsent} /><span>{waConsent} {optional}</span></label>
+      </>
+    )}
+    <p class="small muted" set:html={rich('form.privacyLink')} />
+  </Form>
+</Base>

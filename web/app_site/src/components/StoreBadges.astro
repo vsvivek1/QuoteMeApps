@@ -1,22 +1,26 @@
 ---
 import { appStoreLink, playLink, site } from '../lib/site';
+import { LOCALES, localePath, translator, type Locale } from '../lib/i18n';
 
 interface Props {
   campaign: string;
   source?: string;
   medium?: string;
+  locale?: Locale;
 }
-const { campaign, source = 'website', medium = 'web' } = Astro.props;
+const { campaign, source = 'website', medium = 'web', locale = LOCALES[0] } = Astro.props;
+const { t } = translator(locale);
 // Text badges; swap in the official Google Play / App Store badge artwork (their
 // guidelines forbid altering it) once the listings are live.
-const play = site.playStoreLive ? playLink(campaign, source, medium) : '/waitlist';
-const apple = site.appStoreLive ? appStoreLink(campaign) : '/waitlist';
+const waitlist = localePath(locale, '/waitlist');
+const play = site.playStoreLive ? playLink(campaign, source, medium) : waitlist;
+const apple = site.appStoreLive ? appStoreLink(campaign) : waitlist;
 ---
 <div class="badges">
   <a class="badge" href={play} data-store="play" rel={site.playStoreLive ? 'noopener' : undefined}>
-    <small>{site.playStoreLive ? 'GET IT ON' : 'COMING SOON TO'}</small><strong>Google Play</strong>
+    <small>{t(site.playStoreLive ? 'badges.playLive' : 'badges.playSoon')}</small><strong>Google Play</strong>
   </a>
   <a class="badge" href={apple} data-store="apple" rel={site.appStoreLive ? 'noopener' : undefined}>
-    <small>{site.appStoreLive ? 'Download on the' : 'Coming soon to the'}</small><strong>App Store</strong>
+    <small>{t(site.appStoreLive ? 'badges.appleLive' : 'badges.appleSoon')}</small><strong>App Store</strong>
   </a>
 </div>

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { abs, site } from '../lib/site';
+import { ogImageFor } from '../lib/og';
 
 interface Props {
   title: string;
@@ -14,6 +15,7 @@ interface Props {
 const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [] } = Astro.props;
 const fullTitle = title === site.name ? title : `${title} | ${site.name}`;
 const canonicalUrl = abs(canonical ?? path);
+const ogImage = abs(ogImageFor(path));
 const year = new Date().getFullYear();
 ---
 <!doctype html>
@@ -31,7 +33,13 @@ const year = new Date().getFullYear();
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d).replace(/</g, '\\u003c')} />)}
   </head>
   <body>

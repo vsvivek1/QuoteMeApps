@@ -1,11 +1,13 @@
 ---
 import '../styles/global.css';
 import { abs, site } from '../lib/site';
+import { alternates, localePath, splitLocale, translator } from '../lib/i18n';
+import { ogImageFor } from '../lib/og';
 
 interface Props {
   title: string;
   description: string;
-  /** Path of this page (canonical), e.g. "/legal/privacy-policy". */
+  /** Path of this page (canonical), e.g. "/legal/privacy-policy". A /hi or /es prefix selects the translation. */
   path: string;
   canonical?: string;
   noindex?: boolean;
@@ -15,25 +17,38 @@ interface Props {
 }
 
 const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [], smartBanner = false } = Astro.props;
+const { locale } = splitLocale(path);
+const tr = translator(locale);
+const t = tr.t;
+// Links to pages that have a translation stay in the reader's language.
+const href = (p: string) => {
+  const [base, hash] = p.split('#');
+  return localePath(locale, base || '/') + (hash ? `#${hash}` : '');
+};
 const fullTitle = title.includes(site.appName) ? title : `${title} | ${site.appName}`;
 const canonicalUrl = canonical ?? abs(path === '/' ? '/' : path);
-const og = abs('/brand/og_image_1200x630.png');
+const alts = noindex ? [] : alternates(path);
+const others = alternates(path).filter((a) => a.hreflang !== 'x-default' && a.locale.code !== locale.code);
+const og = await ogImageFor(path);
+const ogLocale = (tag: string) => tag.replace('-', '_');
 const nav = [
-  { href: '/#how-it-works', label: 'How it works' },
-  { href: '/quotes', label: 'Local prices' },
-  { href: '/sellers', label: 'For sellers' },
-  { href: '/contact', label: 'Contact' },
+  { href: href('/#how-it-works'), label: t('layout.navHow') },
+  { href: '/quotes', label: t('layout.navPrices') },
+  { href: href('/sellers'), label: t('layout.navSellers') },
+  { href: '/contact', label: t('layout.navContact') },
 ];
+const englishOnly = t('layout.englishOnly');
 const year = new Date().getFullYear();
 ---
 <!doctype html>
-<html lang={site.locale}>
+<html lang={locale.hreflang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    {alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={abs(a.path)} />)}
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content={site.country === 'usa' ? '#1D4ED8' : '#C2410C'} />
     <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
@@ -45,23 +60,31 @@ const year = new Date().getFullYear();
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={og} />
+    <meta property="og:locale" content={ogLocale(locale.hreflang)} />
+    {others.map((a) => <meta property="og:locale:alternate" content={ogLocale(a.hreflang)} />)}
+    <meta property="og:image" content={abs(og.src)} />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={og.generated ? title : site.appName} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={abs(og.src)} />
     {smartBanner && site.ios.appId && <meta name="apple-itunes-app" content={`app-id=${site.ios.appId}`} />}
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d).replace(/</g, '\\u003c')} />)}
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{t('layout.skip')}</a>
     <header class="site-header">
       <div class="wrap header-inner">
-        <a href="/" class="logo" aria-label={`${site.appName} home`}>
+        <a href={href('/')} class="logo" aria-label={t('layout.homeLabel')}>
           <img src="/brand/logo_mark.svg" alt="" width="36" height="36" />
           <span>{site.appName}</span>
         </a>
-        <nav aria-label="Main">
-          <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+        <nav aria-label={t('layout.navMain')}>
+          <ul>
+            {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+            {others.map((a) => <li><a class="lang-switch" href={a.path} hreflang={a.hreflang} lang={a.hreflang}>{a.locale.name}</a></li>)}
+          </ul>
         </nav>
       </div>
     </header>
@@ -72,26 +95,27 @@ const year = new Date().getFullYear();
       <div class="wrap footer-inner">
         <div>
           <p class="footer-brand">{site.appName}</p>
-          <p>Post what you want. Local and online sellers send you quotes.</p>
+          <p>{t('layout.tagline')}</p>
           <p class="muted">&copy; {year} {site.company}</p>
+          {englishOnly && <p class="muted small">{englishOnly}</p>}
         </div>
-        <nav aria-label="Company">
+        <nav aria-label={t('layout.navCompany')}>
           <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/editorial-policy">Editorial policy</a></li>
-            <li><a href="/sellers">Become a seller</a></li>
-            <li><a href="/waitlist">Join the waitlist</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href={href('/about')}>{t('layout.about')}</a></li>
+            <li><a href="/editorial-policy">{t('layout.editorial')}</a></li>
+            <li><a href={href('/sellers')}>{t('layout.becomeSeller')}</a></li>
+            <li><a href={href('/waitlist')}>{t('layout.waitlist')}</a></li>
+            <li><a href="/contact">{t('layout.contact')}</a></li>
           </ul>
         </nav>
-        <nav aria-label="Legal">
+        <nav aria-label={t('layout.navLegal')}>
           <ul>
-            <li><a href="/legal/terms-of-service">Terms of Service</a></li>
-            <li><a href="/legal/privacy-policy">Privacy Policy</a></li>
-            {site.country === 'usa' && <li><a href="/legal/ccpa-notice">Do Not Sell or Share My Personal Information</a></li>}
-            {site.country === 'india' && <li><a href="/legal/grievance-officer">Grievance Officer</a></li>}
-            <li><a href="/legal/account-deletion">Delete your account</a></li>
-            <li><a href="/legal">All legal pages</a></li>
+            <li><a href="/legal/terms-of-service">{t('layout.terms')}</a></li>
+            <li><a href="/legal/privacy-policy">{t('layout.privacy')}</a></li>
+            {site.country === 'usa' && <li><a href="/legal/ccpa-notice">{t('layout.ccpa')}</a></li>}
+            {site.country === 'india' && <li><a href="/legal/grievance-officer">{t('layout.grievance')}</a></li>}
+            <li><a href="/legal/account-deletion">{t('layout.deleteAccount')}</a></li>
+            <li><a href="/legal">{t('layout.allLegal')}</a></li>
           </ul>
         </nav>
       </div>

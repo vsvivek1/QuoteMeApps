@@ -1,0 +1,53 @@
+---
+// Seller sign-up page body for every locale (pages/sellers.astro and pages/[lang]/sellers.astro).
+import Base from '../../layouts/Base.astro';
+import Form from '../Form.astro';
+import { site } from '../../lib/site';
+import { loadSeo } from '../../lib/seo';
+import { localePath, translator, type Locale } from '../../lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const { t, raw, rich, fact } = translator(locale);
+
+const { data } = await loadSeo();
+const cats = data.categories.filter((c) => c.policy === 'allowed');
+const contactConsent = t('sellers.consentContact');
+const waConsent = t('sellers.consentWhatsapp');
+const optional = t('form.optional');
+const postal = fact<string>('postalLabel');
+const postalLabel = postal.charAt(0).toUpperCase() + postal.slice(1);
+---
+<Base title={t('sellers.title')} description={t('sellers.description')} path={localePath(locale, '/sellers')}>
+  <h1>{t('sellers.h1')}</h1>
+  <p class="lead muted">{t('sellers.lead')}</p>
+  <ol class="steps">
+    {raw<string[]>('sellers.steps').map((_, i) => <li set:html={rich(`sellers.steps.${i}`)} />)}
+  </ol>
+  <p set:html={rich('sellers.terms')} />
+
+  <h2>{t('sellers.formTitle')}</h2>
+  <Form kind="seller_signup" submitLabel={t('sellers.submit')} successMessage={t('sellers.success')} locale={locale}>
+    <label>{t('sellers.businessName')}<input name="business_name" required maxlength="120" autocomplete="organization" /></label>
+    <label>{t('sellers.contactName')}<input name="contact_name" required maxlength="80" autocomplete="name" /></label>
+    <label>{t('form.email')}<input name="email" type="email" required maxlength="160" autocomplete="email" /></label>
+    <label>{t('sellers.phone')}<input name="phone" type="tel" required maxlength="20" autocomplete="tel" /></label>
+    <label>{t('form.city')}<input name="city" required maxlength="80" autocomplete="address-level2" /></label>
+    <label>{postalLabel}<input name="postal_code" required maxlength="10" inputmode="numeric" autocomplete="postal-code" placeholder={site.postalExample} /></label>
+    <label>{t('sellers.category')}
+      <select name="category" required>
+        <option value="">{t('sellers.chooseOne')}</option>
+        {cats.map((c) => <option value={c.slug}>{c.group}: {c.name}</option>)}
+        <option value="other">{t('sellers.other')}</option>
+      </select>
+    </label>
+    <label>{t('sellers.website')}<input name="website" type="url" maxlength="200" /></label>
+    <label class="check"><input type="checkbox" name="consent_contact" value="yes" required data-consent={contactConsent} /><span>{contactConsent}</span></label>
+    {site.smsOptIn === 'whatsapp' && (
+      <label class="check"><input type="checkbox" name="consent_whatsapp" value="yes" data-consent={waConsent} /><span>{waConsent} {optional}</span></label>
+    )}
+    <p class="small muted" set:html={rich('sellers.privacy')} />
+  </Form>
+</Base>

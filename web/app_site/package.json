@@ -7,10 +7,14 @@
     "build": "astro build",
     "build:usa": "SITE_COUNTRY=usa astro build",
     "build:india": "SITE_COUNTRY=india astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check:dist": "node ../shared/check-dist.mjs dist",
+    "lhci": "npx --yes @lhci/cli@0.15.1 autorun"
   },
   "dependencies": {
-    "astro": "^7.3.5"
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^7.3.5",
+    "harfbuzzjs": "^1.6.2"
   },
   "engines": { "node": ">=22" }
 }

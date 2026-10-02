@@ -6,3 +6,5 @@ dist/
 .env.*
 !.env.example
 .trends-remote/
+# Lighthouse CI reports (npm run lhci)
+.lighthouseci/

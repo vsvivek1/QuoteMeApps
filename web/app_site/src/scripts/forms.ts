@@ -9,6 +9,9 @@ declare global {
   }
 }
 
+/** Message from the form's data-msg-* attribute (translated pages), else English. */
+const msg = (form: HTMLFormElement, key: string, fallback: string) => form.dataset[key] || fallback;
+
 for (const form of document.querySelectorAll<HTMLFormElement>('form.js-form')) {
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
@@ -22,13 +25,13 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form.js-form')) {
     const oneOf = (form.dataset.requireOne ?? '').split(',').filter(Boolean);
     if (oneOf.length && !oneOf.some((k) => String(data.get(k) ?? '').trim())) {
       status.className = 'form-status err';
-      status.textContent = 'Please fill in at least one of: ' + oneOf.join(', ') + '.';
+      status.textContent = msg(form, 'msgRequireOne', 'Please fill in at least one of: {fields}.').replace('{fields}', oneOf.join(', '));
       return;
     }
     const token = String(data.get('cf-turnstile-response') ?? '');
     if (!token) {
       status.className = 'form-status err';
-      status.textContent = 'Please complete the spam check first.';
+      status.textContent = msg(form, 'msgSpam', 'Please complete the spam check first.');
       return;
     }
     const fields: Record<string, string | string[]> = {};
@@ -56,15 +59,15 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form.js-form')) {
 
     button.disabled = true;
     status.className = 'form-status';
-    status.textContent = 'Sending...';
+    status.textContent = msg(form, 'msgSending', 'Sending...');
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (res.status === 429) throw new Error('Too many attempts. Please wait a minute and try again.');
-      if (!res.ok) throw new Error('Something went wrong. Please try again.');
+      if (res.status === 429) throw new Error(msg(form, 'msgTooMany', 'Too many attempts. Please wait a minute and try again.'));
+      if (!res.ok) throw new Error(msg(form, 'msgFailed', 'Something went wrong. Please try again.'));
       const body = (await res.json().catch(() => ({}))) as { request_id?: string };
       if (form.dataset.kind === 'account_deletion' && body.request_id) showOtpStep(form, body.request_id);
       form.reset();
@@ -72,7 +75,7 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form.js-form')) {
       status.textContent = form.dataset.success ?? 'Thank you.';
     } catch (err) {
       status.className = 'form-status err';
-      status.textContent = err instanceof Error && err.message ? err.message : 'Network error. Please try again.';
+      status.textContent = err instanceof Error && err.message ? err.message : msg(form, 'msgNetwork', 'Network error. Please try again.');
     } finally {
       button.disabled = false;
       window.turnstile?.reset(form.querySelector('.cf-turnstile') ?? undefined);

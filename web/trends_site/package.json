@@ -7,10 +7,14 @@
     "prebuild": "node scripts/fetch-trends-data.mjs",
     "build": "astro build",
     "build:fixtures": "TRENDS_DATA_DIR=data/fixtures astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check:dist": "node ../shared/check-dist.mjs dist",
+    "lhci": "npx --yes @lhci/cli@0.15.1 autorun"
   },
   "dependencies": {
-    "astro": "^7.3.5"
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^7.3.5",
+    "harfbuzzjs": "^1.6.2"
   },
   "engines": { "node": ">=22" }
 }
