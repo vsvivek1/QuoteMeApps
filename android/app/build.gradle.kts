@@ -28,6 +28,10 @@ val countries = mapOf(
 )
 
 android {
+    buildFeatures {
+        resValues = true
+    }
+
     namespace = "com.calecute.iwant"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion

@@ -23,7 +23,7 @@ jobs:
       web: ${{ steps.d.outputs.web }}
       supabase: ${{ steps.d.outputs.supabase }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: d
         run: |
           echo "admin=$([ -f admin/pubspec.yaml ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
@@ -34,7 +34,7 @@ jobs:
     name: Analyze and test (app)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -63,8 +63,8 @@ jobs:
           - { flavor: usaProd, country: usa }
           - { flavor: indiaProd, country: india }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -80,7 +80,7 @@ jobs:
           flutter build appbundle --release
           --flavor ${{ matrix.flavor }} -t lib/main_${{ matrix.country }}.dart
           --dart-define-from-file=config/${{ matrix.country }}.prod.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: aab-${{ matrix.flavor }}
           path: build/app/outputs/bundle/${{ matrix.flavor }}Release/*.aab
@@ -95,7 +95,7 @@ jobs:
       run:
         working-directory: admin
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -112,7 +112,7 @@ jobs:
     if: needs.detect.outputs.supabase == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: supabase/setup-cli@v1
         with:
           version: latest
@@ -143,8 +143,8 @@ jobs:
       run:
         working-directory: web/${{ matrix.site }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
       - run: npm ci || npm install
