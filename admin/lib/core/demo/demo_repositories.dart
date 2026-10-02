@@ -12,6 +12,8 @@ import '../../features/outreach/domain/composer.dart';
 import '../../features/outreach/domain/outreach_models.dart';
 import '../../features/outreach/domain/outreach_repository.dart';
 import '../../features/outreach/domain/stage_machine.dart';
+import '../../features/sellers/domain/manual_payment.dart';
+import '../../features/sellers/domain/seller_models.dart';
 import '../../features/verification/domain/verification_models.dart';
 import 'demo_store.dart';
 
@@ -128,6 +130,73 @@ class DemoVerificationRepository implements VerificationRepository {
     s.log(item.kind == VerificationKind.document ? 'admin_review_document' : 'admin_review_licence',
         targetType: item.kind.name, targetId: item.id, details: {'approve': approve, 'reason': ?reason});
     s.touch();
+  }
+}
+
+class DemoSellerRepository implements SellerRepository {
+  DemoSellerRepository(this.s);
+  final DemoStore s;
+
+  @override
+  Future<List<SellerSummary>> search(String query) async {
+    await _latency();
+    final digits = phoneDigits(query)?.replaceFirst(RegExp(r'^0+'), '');
+    if (digits != null && digits.length >= 4) {
+      return s.sellers
+          .where((x) => [x.phone, x.businessPhone].any((p) => (p ?? '').replaceAll(RegExp(r'\D'), '').contains(digits)))
+          .toList();
+    }
+    final q = query.trim().toLowerCase();
+    if (q.length < 2) return const [];
+    return s.sellers.where((x) => x.businessName.toLowerCase().contains(q)).toList();
+  }
+
+  @override
+  Future<SellerSummary> seller(String id) async {
+    await _latency();
+    return s.sellers.firstWhere((x) => x.id == id, orElse: () => throw StateError('seller_not_found'));
+  }
+
+  @override
+  Future<List<EntitlementRecord>> entitlements(String sellerId) async {
+    await _latency();
+    return s.entitlements.where((e) => e.sellerId == sellerId).toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  @override
+  Future<List<EntitlementRecord>> grantsWithReference(String reference) async {
+    await _latency();
+    return s.entitlements.where((e) => e.manualPayment?['ref'] == reference).toList();
+  }
+
+  @override
+  Future<EntitlementRecord> grant(ManualPaymentGrant grant) async {
+    await _latency();
+    if (!s.sellers.any((x) => x.id == grant.sellerId)) throw StateError('seller_not_found');
+    final e = EntitlementRecord(
+      id: s.nextId('ent'),
+      sellerId: grant.sellerId,
+      store: 'manual',
+      provider: 'admin',
+      productId: 'admin_grant_${grant.tier}',
+      tier: grant.tier,
+      status: 'active',
+      creditsBalance: grant.credits,
+      expiresAt: grant.expiresAt,
+      note: grant.note,
+      createdAt: DateTime.now(),
+    );
+    s.entitlements.add(e);
+    s.log('admin_grant_entitlement', targetType: 'entitlement', targetId: e.id, details: {
+      'seller_id': grant.sellerId,
+      'tier': grant.tier,
+      'credits': grant.credits,
+      'expires_at': grant.expiresAt?.toIso8601String(),
+      'note': grant.note,
+    });
+    s.touch();
+    return e;
   }
 }
 

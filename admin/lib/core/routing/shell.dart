@@ -16,6 +16,7 @@ class _Dest {
 final _dests = <_Dest>[
   _Dest(Routes.dashboard, Icons.insights_outlined, (c) => c.l10n.navDashboard),
   _Dest(Routes.verification, Icons.verified_user_outlined, (c) => c.l10n.navVerification),
+  _Dest(Routes.sellers, Icons.storefront_outlined, (c) => c.l10n.navSellers),
   _Dest(Routes.moderation, Icons.flag_outlined, (c) => c.l10n.navModeration),
   _Dest(Routes.categories, Icons.category_outlined, (c) => c.l10n.navCategories),
   _Dest(Routes.flags, Icons.toggle_on_outlined, (c) => c.l10n.navFlags),

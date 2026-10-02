@@ -14,6 +14,8 @@ import '../../../features/outreach/domain/composer.dart';
 import '../../../features/outreach/domain/outreach_models.dart';
 import '../../../features/outreach/domain/outreach_repository.dart';
 import '../../../features/outreach/domain/stage_machine.dart';
+import '../../../features/sellers/domain/manual_payment.dart';
+import '../../../features/sellers/domain/seller_models.dart';
 import '../../../features/verification/domain/verification_models.dart';
 import '../../config/admin_country.dart';
 
@@ -229,6 +231,122 @@ class SupabaseVerificationRepository implements VerificationRepository {
         'p_reason': reason,
       });
     }
+  }
+}
+
+class SupabaseSellerRepository implements SellerRepository {
+  SupabaseSellerRepository(this.c);
+  final SupabaseClient c;
+
+  static const _sellerCols = 'id, business_name, city, state, verification_status, early_partner, free_until, hidden, '
+      'created_at, profiles(name, phone, email), seller_contacts(business_phone)';
+  static const _entCols =
+      'id, seller_id, store, provider, product_id, tier, status, credits_balance, renews_at, expires_at, raw, created_at';
+
+  /// Strips PostgREST / LIKE syntax from free text.
+  static String _clean(String q) => q.replaceAll(RegExp(r'[%_,()*\\]'), ' ').trim();
+
+  SellerSummary _seller(Map<String, dynamic> r) {
+    final p = r['profiles'] is Map ? Map<String, dynamic>.from(r['profiles'] as Map) : const <String, dynamic>{};
+    final contacts = r['seller_contacts'];
+    final ct = contacts is Map
+        ? Map<String, dynamic>.from(contacts)
+        : contacts is List && contacts.isNotEmpty
+            ? Map<String, dynamic>.from(contacts.first as Map)
+            : const <String, dynamic>{};
+    return SellerSummary(
+      id: r['id'] as String,
+      businessName: r['business_name'] as String? ?? '?',
+      ownerName: p['name'] as String?,
+      phone: p['phone'] as String?,
+      email: p['email'] as String?,
+      businessPhone: ct['business_phone'] as String?,
+      city: r['city'] as String?,
+      state: r['state'] as String?,
+      verificationStatus: r['verification_status'] as String? ?? 'unverified',
+      earlyPartner: r['early_partner'] == true,
+      freeUntil: _ts(r['free_until']),
+      hidden: r['hidden'] == true,
+      createdAt: _ts(r['created_at']),
+    );
+  }
+
+  EntitlementRecord _ent(Map<String, dynamic> r) {
+    final raw = r['raw'];
+    return EntitlementRecord(
+      id: r['id'] as String,
+      sellerId: r['seller_id'] as String,
+      store: r['store'] as String,
+      provider: r['provider'] as String?,
+      productId: r['product_id'] as String,
+      tier: r['tier'] as String,
+      status: r['status'] as String,
+      creditsBalance: _int(r['credits_balance']) ?? 0,
+      renewsAt: _ts(r['renews_at']),
+      expiresAt: _ts(r['expires_at']),
+      note: raw is Map ? raw['note']?.toString() : null,
+      createdAt: _ts(r['created_at'])!,
+    );
+  }
+
+  @override
+  Future<List<SellerSummary>> search(String query) async {
+    final digits = phoneDigits(query)?.replaceFirst(RegExp(r'^0+'), '');
+    if (digits != null && digits.length >= 4) {
+      final byProfile = await c.from('profiles').select('id').ilike('phone', '%$digits%').limit(50);
+      final byContact =
+          await c.from('seller_contacts').select('seller_id').ilike('business_phone', '%$digits%').limit(50);
+      final ids = {
+        for (final r in byProfile) r['id'] as String,
+        for (final r in byContact) r['seller_id'] as String,
+      };
+      if (ids.isEmpty) return const [];
+      final rows = await c.from('sellers').select(_sellerCols).inFilter('id', ids.toList()).order('business_name');
+      return [for (final r in rows) _seller(r)];
+    }
+    final q = _clean(query);
+    if (q.length < 2) return const [];
+    final rows = await c.from('sellers').select(_sellerCols).ilike('business_name', '%$q%').order('business_name').limit(50);
+    return [for (final r in rows) _seller(r)];
+  }
+
+  @override
+  Future<SellerSummary> seller(String id) async =>
+      _seller(await c.from('sellers').select(_sellerCols).eq('id', id).single());
+
+  @override
+  Future<List<EntitlementRecord>> entitlements(String sellerId) async {
+    final rows =
+        await c.from('entitlements').select(_entCols).eq('seller_id', sellerId).order('created_at', ascending: false);
+    return [for (final r in rows) _ent(r)];
+  }
+
+  @override
+  Future<List<EntitlementRecord>> grantsWithReference(String reference) async {
+    // Coarse match on the note text (references are [A-Z0-9._/-] only; a `_`
+    // just widens the LIKE), then an exact check on the parsed note.
+    final rows = await c
+        .from('entitlements')
+        .select(_entCols)
+        .eq('store', 'manual')
+        .ilike('raw->>note', '%$reference%')
+        .limit(20);
+    return [
+      for (final r in rows)
+        if (_ent(r).manualPayment?['ref'] == reference) _ent(r),
+    ];
+  }
+
+  @override
+  Future<EntitlementRecord> grant(ManualPaymentGrant grant) async {
+    final r = await c.rpc('admin_grant_entitlement', params: {
+      'p_seller_id': grant.sellerId,
+      'p_tier': grant.tier,
+      'p_credits': grant.credits,
+      'p_expires_at': grant.expiresAt?.toIso8601String(),
+      'p_note': grant.note,
+    });
+    return _ent(Map<String, dynamic>.from(r as Map));
   }
 }
 

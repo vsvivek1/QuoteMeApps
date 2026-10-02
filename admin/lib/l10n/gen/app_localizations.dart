@@ -1837,6 +1837,257 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a city, category and offer end date.'**
   String get brochureIncomplete;
+
+  /// No description provided for @navSellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sellers'**
+  String get navSellers;
+
+  /// No description provided for @sellersSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Business name or phone number'**
+  String get sellersSearchHint;
+
+  /// No description provided for @sellersSearchPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Search sellers by business name (at least 2 letters) or phone number (at least 4 digits).'**
+  String get sellersSearchPrompt;
+
+  /// No description provided for @sellersNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No sellers match.'**
+  String get sellersNone;
+
+  /// No description provided for @openSeller.
+  ///
+  /// In en, this message translates to:
+  /// **'Open seller'**
+  String get openSeller;
+
+  /// No description provided for @seller.
+  ///
+  /// In en, this message translates to:
+  /// **'Seller'**
+  String get seller;
+
+  /// No description provided for @ownerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get ownerName;
+
+  /// No description provided for @businessPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Business phone'**
+  String get businessPhone;
+
+  /// No description provided for @verificationStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification'**
+  String get verificationStatus;
+
+  /// No description provided for @foundingPartnerFreeUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Founding partner, free until {date}'**
+  String foundingPartnerFreeUntil(String date);
+
+  /// No description provided for @currentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current plan'**
+  String get currentPlan;
+
+  /// No description provided for @planNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No paid plan'**
+  String get planNone;
+
+  /// No description provided for @planProUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro until {date}'**
+  String planProUntil(String date);
+
+  /// No description provided for @planProOpenEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro (no end date)'**
+  String get planProOpenEnded;
+
+  /// No description provided for @creditsBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Quote credits: {count}'**
+  String creditsBalance(int count);
+
+  /// No description provided for @planHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan history'**
+  String get planHistory;
+
+  /// No description provided for @planHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No plans granted or bought yet.'**
+  String get planHistoryEmpty;
+
+  /// No description provided for @recordPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Record manual payment'**
+  String get recordPayment;
+
+  /// No description provided for @recordPaymentIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Only for a payment received outside the app (UPI or bank transfer). The seller gets the plan at once and the grant is written to the audit log.'**
+  String get recordPaymentIntro;
+
+  /// No description provided for @plan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get plan;
+
+  /// No description provided for @planProMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro monthly (30 days)'**
+  String get planProMonthly;
+
+  /// No description provided for @planProAnnual.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro annual (365 days)'**
+  String get planProAnnual;
+
+  /// No description provided for @planCredits10.
+  ///
+  /// In en, this message translates to:
+  /// **'10 quote credits'**
+  String get planCredits10;
+
+  /// No description provided for @planCredits50.
+  ///
+  /// In en, this message translates to:
+  /// **'50 quote credits'**
+  String get planCredits50;
+
+  /// No description provided for @planValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until the end of {date}'**
+  String planValidUntil(String date);
+
+  /// No description provided for @creditsNoExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Credits do not expire.'**
+  String get creditsNoExpiry;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get paymentMethod;
+
+  /// No description provided for @methodUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI'**
+  String get methodUpi;
+
+  /// No description provided for @methodBankTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank transfer'**
+  String get methodBankTransfer;
+
+  /// No description provided for @methodOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get methodOther;
+
+  /// No description provided for @amountReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount received ({currency})'**
+  String amountReceived(String currency);
+
+  /// No description provided for @amountInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount like 499 or 499.50'**
+  String get amountInvalid;
+
+  /// No description provided for @paymentReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment reference (UTR / transaction id)'**
+  String get paymentReference;
+
+  /// No description provided for @referenceInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'4 to 64 letters or digits (. _ / - allowed)'**
+  String get referenceInvalid;
+
+  /// No description provided for @referenceUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'This reference was already used for a grant on {date}. One payment, one grant.'**
+  String referenceUsed(String date);
+
+  /// No description provided for @payerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Payer name (as on the bank statement)'**
+  String get payerName;
+
+  /// No description provided for @bankChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'I have checked this payment arrived in the company bank account'**
+  String get bankChecked;
+
+  /// No description provided for @grantPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant plan'**
+  String get grantPlan;
+
+  /// No description provided for @grantDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan granted. {summary}'**
+  String grantDone(String summary);
+
+  /// No description provided for @manualPaymentLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{method} {currency} {amount}, ref {reference}'**
+  String manualPaymentLine(
+    String method,
+    String currency,
+    String amount,
+    String reference,
+  );
+
+  /// No description provided for @paidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'paid by {name}'**
+  String paidBy(String name);
 }
 
 class _AppLocalizationsDelegate

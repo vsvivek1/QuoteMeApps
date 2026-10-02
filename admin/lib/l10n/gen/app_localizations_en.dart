@@ -988,4 +988,153 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get brochureIncomplete =>
       'Choose a city, category and offer end date.';
+
+  @override
+  String get navSellers => 'Sellers';
+
+  @override
+  String get sellersSearchHint => 'Business name or phone number';
+
+  @override
+  String get sellersSearchPrompt =>
+      'Search sellers by business name (at least 2 letters) or phone number (at least 4 digits).';
+
+  @override
+  String get sellersNone => 'No sellers match.';
+
+  @override
+  String get openSeller => 'Open seller';
+
+  @override
+  String get seller => 'Seller';
+
+  @override
+  String get ownerName => 'Owner';
+
+  @override
+  String get businessPhone => 'Business phone';
+
+  @override
+  String get verificationStatus => 'Verification';
+
+  @override
+  String foundingPartnerFreeUntil(String date) {
+    return 'Founding partner, free until $date';
+  }
+
+  @override
+  String get currentPlan => 'Current plan';
+
+  @override
+  String get planNone => 'No paid plan';
+
+  @override
+  String planProUntil(String date) {
+    return 'Pro until $date';
+  }
+
+  @override
+  String get planProOpenEnded => 'Pro (no end date)';
+
+  @override
+  String creditsBalance(int count) {
+    return 'Quote credits: $count';
+  }
+
+  @override
+  String get planHistory => 'Plan history';
+
+  @override
+  String get planHistoryEmpty => 'No plans granted or bought yet.';
+
+  @override
+  String get recordPayment => 'Record manual payment';
+
+  @override
+  String get recordPaymentIntro =>
+      'Only for a payment received outside the app (UPI or bank transfer). The seller gets the plan at once and the grant is written to the audit log.';
+
+  @override
+  String get plan => 'Plan';
+
+  @override
+  String get planProMonthly => 'Pro monthly (30 days)';
+
+  @override
+  String get planProAnnual => 'Pro annual (365 days)';
+
+  @override
+  String get planCredits10 => '10 quote credits';
+
+  @override
+  String get planCredits50 => '50 quote credits';
+
+  @override
+  String planValidUntil(String date) {
+    return 'Valid until the end of $date';
+  }
+
+  @override
+  String get creditsNoExpiry => 'Credits do not expire.';
+
+  @override
+  String get paymentMethod => 'Payment method';
+
+  @override
+  String get methodUpi => 'UPI';
+
+  @override
+  String get methodBankTransfer => 'Bank transfer';
+
+  @override
+  String get methodOther => 'Other';
+
+  @override
+  String amountReceived(String currency) {
+    return 'Amount received ($currency)';
+  }
+
+  @override
+  String get amountInvalid => 'Enter an amount like 499 or 499.50';
+
+  @override
+  String get paymentReference => 'Payment reference (UTR / transaction id)';
+
+  @override
+  String get referenceInvalid => '4 to 64 letters or digits (. _ / - allowed)';
+
+  @override
+  String referenceUsed(String date) {
+    return 'This reference was already used for a grant on $date. One payment, one grant.';
+  }
+
+  @override
+  String get payerName => 'Payer name (as on the bank statement)';
+
+  @override
+  String get bankChecked =>
+      'I have checked this payment arrived in the company bank account';
+
+  @override
+  String get grantPlan => 'Grant plan';
+
+  @override
+  String grantDone(String summary) {
+    return 'Plan granted. $summary';
+  }
+
+  @override
+  String manualPaymentLine(
+    String method,
+    String currency,
+    String amount,
+    String reference,
+  ) {
+    return '$method $currency $amount, ref $reference';
+  }
+
+  @override
+  String paidBy(String name) {
+    return 'paid by $name';
+  }
 }

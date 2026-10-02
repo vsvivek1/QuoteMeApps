@@ -6,6 +6,7 @@ import '../../features/categories/domain/category_models.dart';
 import '../../features/flags/domain/settings_models.dart';
 import '../../features/moderation/domain/moderation_models.dart';
 import '../../features/outreach/domain/outreach_models.dart';
+import '../../features/sellers/domain/seller_models.dart';
 import '../../features/verification/domain/verification_models.dart';
 import '../config/admin_country.dart';
 
@@ -39,6 +40,8 @@ class DemoStore {
   final audit = <AuditEntry>[];
   final brochures = <BrochureRecord>[];
   final coverage = <CoverageCell>[];
+  final sellers = <SellerSummary>[];
+  final entitlements = <EntitlementRecord>[];
 
   String? currentAdminId;
   String? currentAdminEmail;
@@ -74,6 +77,7 @@ class DemoStore {
     _seedSettings();
     _seedUsers();
     _seedVerification();
+    _seedSellers();
     _seedReports();
     _seedOutreach();
     _seedCoverage();
@@ -211,6 +215,53 @@ class DemoStore {
       sellerStatus: 'pending',
       filePath: 's-0/licence.pdf',
       submittedAt: now.subtract(const Duration(hours: 30)),
+    ));
+  }
+
+  void _seedSellers() {
+    final byId = <String, VerificationItem>{
+      for (final v in verification)
+        if (v.kind == VerificationKind.document) v.sellerId: v,
+    };
+    var i = 0;
+    for (final v in byId.values) {
+      sellers.add(SellerSummary(
+        id: v.sellerId,
+        businessName: v.businessName,
+        ownerName: 'Owner ${i + 1} (demo)',
+        phone: _india ? '+9198765${43210 + i}' : '+1512555${1200 + i}',
+        businessPhone: _india ? '+9180412${34560 + i}' : '+1512555${3400 + i}',
+        email: 'owner${i + 1}@example.com',
+        city: v.city,
+        state: v.state,
+        verificationStatus: 'pending',
+        earlyPartner: i == 0,
+        createdAt: now.subtract(Duration(days: 10 + i)),
+      ));
+      i++;
+    }
+    final city = config.priorityCities.first;
+    sellers.add(SellerSummary(
+      id: 'u-seller',
+      businessName: _india ? 'Demo Electricals (demo)' : 'Demo Electric (demo)',
+      ownerName: 'Demo Seller',
+      phone: _india ? '+919000000001' : '+15125550001',
+      email: sellerEmail,
+      city: city.name,
+      state: city.state,
+      verificationStatus: 'verified',
+      createdAt: now.subtract(const Duration(days: 40)),
+    ));
+    entitlements.add(EntitlementRecord(
+      id: 'ent-1',
+      sellerId: 'u-seller',
+      store: 'manual',
+      provider: 'admin',
+      productId: 'admin_grant_credits',
+      tier: 'credits',
+      status: 'active',
+      creditsBalance: 4,
+      createdAt: now.subtract(const Duration(days: 20)),
     ));
   }
 

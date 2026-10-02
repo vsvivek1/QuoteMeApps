@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/providers.dart';
+import '../../../core/routing/router.dart';
 import '../../../core/utils/context_x.dart';
 import '../../../core/utils/formatting.dart';
 import '../../../core/widgets/async_view.dart';
@@ -136,6 +138,11 @@ class _ItemCardState extends ConsumerState<_ItemCard> {
                 onPressed: it.filePath == null ? null : _open,
                 icon: const Icon(Icons.open_in_new),
                 label: Text(it.filePath == null ? l.noFile : l.viewDocument),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => context.go(Routes.seller(it.sellerId)),
+                icon: const Icon(Icons.storefront_outlined),
+                label: Text(l.openSeller),
               ),
               FilledButton.icon(
                 onPressed: _busy ? null : () => _review(true),

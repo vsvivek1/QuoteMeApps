@@ -594,5 +594,118 @@
   },
   "savedBrochures": "Saved brochures",
   "noBrochures": "None yet.",
-  "brochureIncomplete": "Choose a city, category and offer end date."
+  "brochureIncomplete": "Choose a city, category and offer end date.",
+  "navSellers": "Sellers",
+  "sellersSearchHint": "Business name or phone number",
+  "sellersSearchPrompt": "Search sellers by business name (at least 2 letters) or phone number (at least 4 digits).",
+  "sellersNone": "No sellers match.",
+  "openSeller": "Open seller",
+  "seller": "Seller",
+  "ownerName": "Owner",
+  "businessPhone": "Business phone",
+  "verificationStatus": "Verification",
+  "foundingPartnerFreeUntil": "Founding partner, free until {date}",
+  "@foundingPartnerFreeUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "currentPlan": "Current plan",
+  "planNone": "No paid plan",
+  "planProUntil": "Pro until {date}",
+  "@planProUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planProOpenEnded": "Pro (no end date)",
+  "creditsBalance": "Quote credits: {count}",
+  "@creditsBalance": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planHistory": "Plan history",
+  "planHistoryEmpty": "No plans granted or bought yet.",
+  "recordPayment": "Record manual payment",
+  "recordPaymentIntro": "Only for a payment received outside the app (UPI or bank transfer). The seller gets the plan at once and the grant is written to the audit log.",
+  "plan": "Plan",
+  "planProMonthly": "Pro monthly (30 days)",
+  "planProAnnual": "Pro annual (365 days)",
+  "planCredits10": "10 quote credits",
+  "planCredits50": "50 quote credits",
+  "planValidUntil": "Valid until the end of {date}",
+  "@planValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "creditsNoExpiry": "Credits do not expire.",
+  "paymentMethod": "Payment method",
+  "methodUpi": "UPI",
+  "methodBankTransfer": "Bank transfer",
+  "methodOther": "Other",
+  "amountReceived": "Amount received ({currency})",
+  "@amountReceived": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "amountInvalid": "Enter an amount like 499 or 499.50",
+  "paymentReference": "Payment reference (UTR / transaction id)",
+  "referenceInvalid": "4 to 64 letters or digits (. _ / - allowed)",
+  "referenceUsed": "This reference was already used for a grant on {date}. One payment, one grant.",
+  "@referenceUsed": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "payerName": "Payer name (as on the bank statement)",
+  "bankChecked": "I have checked this payment arrived in the company bank account",
+  "grantPlan": "Grant plan",
+  "grantDone": "Plan granted. {summary}",
+  "@grantDone": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "manualPaymentLine": "{method} {currency} {amount}, ref {reference}",
+  "@manualPaymentLine": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "paidBy": "paid by {name}",
+  "@paidBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

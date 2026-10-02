@@ -11,6 +11,8 @@ import '../../features/moderation/presentation/moderation_screen.dart';
 import '../../features/outreach/presentation/import_screen.dart';
 import '../../features/outreach/presentation/lead_detail_screen.dart';
 import '../../features/outreach/presentation/outreach_screen.dart';
+import '../../features/sellers/presentation/seller_detail_screen.dart';
+import '../../features/sellers/presentation/sellers_screen.dart';
 import '../../features/verification/presentation/verification_screen.dart';
 import '../providers.dart';
 import 'shell.dart';
@@ -21,6 +23,8 @@ abstract final class Routes {
   static const login = '/login';
   static const dashboard = '/dashboard';
   static const verification = '/verification';
+  static const sellers = '/sellers';
+  static String seller(String id) => '/sellers/$id';
   static const moderation = '/moderation';
   static const categories = '/categories';
   static const flags = '/flags';
@@ -61,6 +65,13 @@ GoRouter router(Ref ref) {
           GoRoute(path: '/', redirect: (_, _) => Routes.dashboard),
           GoRoute(path: Routes.dashboard, builder: (_, _) => const DashboardScreen()),
           GoRoute(path: Routes.verification, builder: (_, _) => const VerificationScreen()),
+          GoRoute(
+            path: Routes.sellers,
+            builder: (_, _) => const SellersScreen(),
+            routes: [
+              GoRoute(path: ':id', builder: (_, s) => SellerDetailScreen(sellerId: s.pathParameters['id']!)),
+            ],
+          ),
           GoRoute(path: Routes.moderation, builder: (_, _) => const ModerationScreen()),
           GoRoute(path: Routes.categories, builder: (_, _) => const CategoriesScreen()),
           GoRoute(path: Routes.flags, builder: (_, _) => const FlagsScreen()),

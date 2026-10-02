@@ -573,6 +573,52 @@ final class BrochureRepositoryProvider
 String _$brochureRepositoryHash() =>
     r'44c59dd915711faebcaa2bcea634bdb00c611bb2';
 
+@ProviderFor(sellerRepository)
+final sellerRepositoryProvider = SellerRepositoryProvider._();
+
+final class SellerRepositoryProvider
+    extends
+        $FunctionalProvider<
+          SellerRepository,
+          SellerRepository,
+          SellerRepository
+        >
+    with $Provider<SellerRepository> {
+  SellerRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sellerRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sellerRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<SellerRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SellerRepository create(Ref ref) {
+    return sellerRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SellerRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SellerRepository>(value),
+    );
+  }
+}
+
+String _$sellerRepositoryHash() => r'118137da3814b15dff0a46bbe8866ecb402050bb';
+
 @ProviderFor(adminSession)
 final adminSessionProvider = AdminSessionProvider._();
 

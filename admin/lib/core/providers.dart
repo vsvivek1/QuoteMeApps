@@ -8,6 +8,7 @@ import '../features/dashboard/domain/metrics.dart';
 import '../features/flags/domain/settings_models.dart';
 import '../features/moderation/domain/moderation_models.dart';
 import '../features/outreach/domain/outreach_repository.dart';
+import '../features/sellers/domain/seller_models.dart';
 import '../features/verification/domain/verification_models.dart';
 import 'config/admin_country.dart';
 import 'config/admin_env.dart';
@@ -58,6 +59,9 @@ OutreachRepository outreachRepository(Ref ref) => ref.watch(adminBackendProvider
 
 @Riverpod(keepAlive: true)
 BrochureRepository brochureRepository(Ref ref) => ref.watch(adminBackendProvider).brochures;
+
+@Riverpod(keepAlive: true)
+SellerRepository sellerRepository(Ref ref) => ref.watch(adminBackendProvider).sellers;
 
 @Riverpod(keepAlive: true)
 Stream<AdminSession?> adminSession(Ref ref) => ref.watch(adminAuthRepositoryProvider).sessionChanges();
