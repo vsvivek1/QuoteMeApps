@@ -1,0 +1,45 @@
+{
+  "$comment": "Shared neutral palette and semantic colours for both apps (Tailwind 'slate' neutrals + Material 3 error). Country accents live in branding/<country>/colors.json.",
+  "neutral": {
+    "0": "#FFFFFF",
+    "50": "#F8FAFC",
+    "100": "#F1F5F9",
+    "200": "#E2E8F0",
+    "300": "#CBD5E1",
+    "400": "#94A3B8",
+    "500": "#64748B",
+    "600": "#475569",
+    "700": "#334155",
+    "800": "#1E293B",
+    "900": "#0F172A",
+    "950": "#020617"
+  },
+  "error": {
+    "light": "#B3261E",
+    "onLight": "#FFFFFF",
+    "dark": "#F2B8B5",
+    "onDark": "#601410"
+  },
+  "light": {
+    "secondary": "#475569",
+    "onSecondary": "#FFFFFF",
+    "surface": "#FFFFFF",
+    "onSurface": "#0F172A",
+    "surfaceVariant": "#F1F5F9",
+    "onSurfaceVariant": "#475569",
+    "outline": "#64748B",
+    "error": "#B3261E",
+    "onError": "#FFFFFF"
+  },
+  "dark": {
+    "secondary": "#CBD5E1",
+    "onSecondary": "#1E293B",
+    "surface": "#0F172A",
+    "onSurface": "#E2E8F0",
+    "surfaceVariant": "#1E293B",
+    "onSurfaceVariant": "#CBD5E1",
+    "outline": "#94A3B8",
+    "error": "#F2B8B5",
+    "onError": "#601410"
+  }
+}

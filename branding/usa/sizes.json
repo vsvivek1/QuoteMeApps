@@ -1,0 +1,1154 @@
+{
+  "$comment": "Every platform size for I Want USA in one place. tool/branding/generate.py reads this. Sizes change: re-verify each against its \"source\" page and update \"checked\" before final artwork. safe = [left, top, right, bottom] insets in px; safe_circle = diameter in px centred. {locale} and {n} in paths expand to each locale and 01..count.",
+  "app_name": "I Want USA",
+  "checked": "2026-10-02",
+  "locales": [
+    "en-US",
+    "es-US"
+  ],
+  "assets": [
+    {
+      "path": "logo/logo_mark.svg",
+      "w": 1024,
+      "h": 1024,
+      "kind": "svg_mark",
+      "note": "Icon-only mark with country badge, vector",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "logo/logo_full.svg",
+      "w": 1600,
+      "h": 480,
+      "kind": "svg_full",
+      "theme": "light",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "logo/logo_full_dark.svg",
+      "w": 1600,
+      "h": 480,
+      "kind": "svg_full",
+      "theme": "dark",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "logo/logo_mark_1024.png",
+      "w": 1024,
+      "h": 1024,
+      "kind": "logo_mark",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "logo/logo_full_white.png",
+      "w": 1600,
+      "h": 480,
+      "kind": "logo_full",
+      "variant": "white",
+      "note": "For photos and dark backgrounds",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "logo/logo_full_black.png",
+      "w": 1600,
+      "h": 480,
+      "kind": "logo_full",
+      "variant": "black",
+      "note": "For light photos and print",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "app_icon/icon_1024.png",
+      "w": 1024,
+      "h": 1024,
+      "kind": "icon",
+      "note": "Master icon, square, no transparency",
+      "source": "https://developer.apple.com/design/human-interface-guidelines/app-icons",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "app_icon/android_adaptive_foreground.png",
+      "w": 432,
+      "h": 432,
+      "kind": "adaptive_fg",
+      "safe_circle": 264,
+      "note": "108dp @4x; keep content inside the 66dp (264 px) safe circle",
+      "source": "https://developer.android.com/develop/ui/views/launch/icon_design_adaptive",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "app_icon/android_adaptive_background.png",
+      "w": 432,
+      "h": 432,
+      "kind": "adaptive_bg",
+      "source": "https://developer.android.com/develop/ui/views/launch/icon_design_adaptive",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "app_icon/android_monochrome.png",
+      "w": 432,
+      "h": 432,
+      "kind": "monochrome",
+      "safe_circle": 264,
+      "note": "Android 13+ themed icon, single colour on transparent",
+      "source": "https://developer.android.com/develop/ui/views/launch/icon_design_adaptive",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "app_icon/ios_dark.png",
+      "w": 1024,
+      "h": 1024,
+      "kind": "ios_dark",
+      "note": "iOS 18+ dark variant, transparent background",
+      "source": "https://developer.apple.com/design/human-interface-guidelines/app-icons",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "app_icon/ios_tinted.png",
+      "w": 1024,
+      "h": 1024,
+      "kind": "ios_tinted",
+      "note": "iOS 18+ tinted variant, grayscale",
+      "source": "https://developer.apple.com/design/human-interface-guidelines/app-icons",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "splash/splash_logo.png",
+      "w": 768,
+      "h": 768,
+      "kind": "splash_logo",
+      "theme": "light",
+      "note": "192dp @4x for flutter_native_splash",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "splash/splash_logo_dark.png",
+      "w": 768,
+      "h": 768,
+      "kind": "splash_logo",
+      "theme": "dark",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "splash/android12_splash_icon.png",
+      "w": 1152,
+      "h": 1152,
+      "kind": "android12_icon",
+      "safe_circle": 768,
+      "note": "Android 12+ splash icon without icon background: 1152 px, content inside 768 px circle",
+      "source": "https://developer.android.com/develop/ui/views/launch/splash-screen",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/icon_512.png",
+      "w": 512,
+      "h": 512,
+      "kind": "icon_rgba",
+      "note": "512x512 32-bit PNG",
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/feature_graphic_1024x500.png",
+      "w": 1024,
+      "h": 500,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        48,
+        64,
+        48
+      ],
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/screenshots/phone/{locale}/{n}.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "screenshot",
+      "count": 2,
+      "note": "9:16; Play needs 2-8 per device type, 4-8 recommended",
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/screenshots/tablet_7in/{locale}/{n}.png",
+      "w": 1200,
+      "h": 1920,
+      "kind": "screenshot",
+      "count": 2,
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/screenshots/tablet_10in/{locale}/{n}.png",
+      "w": 1600,
+      "h": 2560,
+      "kind": "screenshot",
+      "count": 2,
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/promo_video.txt",
+      "w": 0,
+      "h": 0,
+      "kind": "text",
+      "content": "# YouTube URL for the Google Play listing video (public or unlisted, no ads, not age-restricted).\n# Replace this line with the URL, e.g. https://www.youtube.com/watch?v=XXXXXXXXXXX\n",
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/custom_listings/buyers/feature_graphic_1024x500.png",
+      "w": 1024,
+      "h": 500,
+      "kind": "graphic",
+      "copy": "buyers",
+      "safe": [
+        64,
+        48,
+        64,
+        48
+      ],
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/google_play/custom_listings/sellers/feature_graphic_1024x500.png",
+      "w": 1024,
+      "h": 500,
+      "kind": "graphic",
+      "copy": "sellers",
+      "safe": [
+        64,
+        48,
+        64,
+        48
+      ],
+      "source": "https://support.google.com/googleplay/android-developer/answer/9866151",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/icon_1024.png",
+      "w": 1024,
+      "h": 1024,
+      "kind": "icon",
+      "source": "https://developer.apple.com/design/human-interface-guidelines/app-icons",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/screenshots/iphone_6.9/{locale}/{n}.png",
+      "w": 1320,
+      "h": 2868,
+      "kind": "screenshot",
+      "count": 2,
+      "note": "Required size; verify in App Store Connect",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/screenshots/iphone_6.5/{locale}/{n}.png",
+      "w": 1284,
+      "h": 2778,
+      "kind": "screenshot",
+      "count": 2,
+      "note": "Fallback",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/screenshots/ipad_13/{locale}/{n}.png",
+      "w": 2064,
+      "h": 2752,
+      "kind": "screenshot",
+      "count": 2,
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/app_previews/iphone_6.9/{locale}/README.md",
+      "w": 886,
+      "h": 1920,
+      "kind": "text",
+      "per_locale": true,
+      "content": "# App preview video placeholder ({locale})\n\nDrop a 15-30 s app preview here: 886x1920 portrait, H.264 or ProRes, 30 fps, .mov/.m4v/.mp4.\nVideos are not generated by tool/branding/generate.py.\n",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/app-preview-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/custom_product_pages/buyers/{locale}/{n}.png",
+      "w": 1320,
+      "h": 2868,
+      "kind": "screenshot",
+      "count": 1,
+      "copy": "buyers",
+      "note": "Custom product page hero screenshot (iPhone 6.9\")",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/custom_product_pages/sellers/{locale}/{n}.png",
+      "w": 1320,
+      "h": 2868,
+      "kind": "screenshot",
+      "count": 1,
+      "copy": "sellers",
+      "note": "Custom product page hero screenshot (iPhone 6.9\")",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/custom_product_pages/appliances/{locale}/{n}.png",
+      "w": 1320,
+      "h": 2868,
+      "kind": "screenshot",
+      "count": 1,
+      "copy": "appliances",
+      "note": "Custom product page hero screenshot (iPhone 6.9\")",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/custom_product_pages/home_services/{locale}/{n}.png",
+      "w": 1320,
+      "h": 2868,
+      "kind": "screenshot",
+      "count": 1,
+      "copy": "home_services",
+      "note": "Custom product page hero screenshot (iPhone 6.9\")",
+      "source": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/in_app_events/launch_week/event_card_1920x1080.png",
+      "w": 1920,
+      "h": 1080,
+      "kind": "graphic",
+      "copy": "event",
+      "safe": [
+        160,
+        120,
+        160,
+        120
+      ],
+      "source": "https://developer.apple.com/help/app-store-connect/reference/in-app-event-image-and-video-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/in_app_events/launch_week/details_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "event",
+      "safe": [
+        96,
+        240,
+        96,
+        240
+      ],
+      "source": "https://developer.apple.com/help/app-store-connect/reference/in-app-event-image-and-video-specifications",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "store/apple/ppo_tests/headline_test/README.md",
+      "w": 0,
+      "h": 0,
+      "kind": "text",
+      "content": "# Product Page Optimization test: headline_test\n\nPut treatment variants here as `variant_a/`, `variant_b/` (same sizes as `screenshots/`).\nUp to 3 treatments per test; icons for treatments must ship in the binary.\n",
+      "source": "https://developer.apple.com/app-store/product-page-optimization/",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/profile_320.png",
+      "w": 320,
+      "h": 320,
+      "kind": "profile",
+      "safe_circle": 288,
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/post_square_1080x1080.png",
+      "w": 1080,
+      "h": 1080,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/post_portrait_1080x1350.png",
+      "w": 1080,
+      "h": 1350,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        80,
+        100,
+        80,
+        100
+      ],
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/story_reel_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        250,
+        64,
+        340
+      ],
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/reel_cover_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "download",
+      "safe": [
+        64,
+        420,
+        64,
+        420
+      ],
+      "note": "Grid crops the cover to a centre 1080x1440 (3:4); keep text in the middle",
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/highlight_covers/requests.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "highlight",
+      "label": "requests",
+      "safe_circle": 700,
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/highlight_covers/quotes.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "highlight",
+      "label": "quotes",
+      "safe_circle": 700,
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/highlight_covers/sellers.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "highlight",
+      "label": "sellers",
+      "safe_circle": 700,
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/highlight_covers/offers.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "highlight",
+      "label": "offers",
+      "safe_circle": 700,
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/instagram/highlight_covers/help.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "highlight",
+      "label": "help",
+      "safe_circle": 700,
+      "source": "https://help.instagram.com/1631821640426723",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/facebook/profile_720.png",
+      "w": 720,
+      "h": 720,
+      "kind": "profile",
+      "safe_circle": 640,
+      "source": "https://www.facebook.com/help/125379114252045",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/facebook/page_cover_1640x624.png",
+      "w": 1640,
+      "h": 624,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        410,
+        156,
+        410,
+        156
+      ],
+      "note": "Safe zone 820x312 centred (mobile crop)",
+      "source": "https://www.facebook.com/help/125379114252045",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/facebook/post_1200x630.png",
+      "w": 1200,
+      "h": 630,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        56,
+        64,
+        56
+      ],
+      "source": "https://www.facebook.com/help/125379114252045",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/facebook/post_square_1080x1080.png",
+      "w": 1080,
+      "h": 1080,
+      "kind": "graphic",
+      "copy": "buyers",
+      "safe": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "source": "https://www.facebook.com/help/125379114252045",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/facebook/event_cover_1920x1005.png",
+      "w": 1920,
+      "h": 1005,
+      "kind": "graphic",
+      "copy": "event",
+      "safe": [
+        160,
+        100,
+        160,
+        100
+      ],
+      "source": "https://www.facebook.com/help/125379114252045",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/tiktok/profile_720.png",
+      "w": 720,
+      "h": 720,
+      "kind": "profile",
+      "safe_circle": 640,
+      "note": "Minimum 200x200",
+      "source": "https://ads.tiktok.com/help/article/tiktok-ads-creative-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/tiktok/video_template_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "video_template",
+      "copy": "need",
+      "safe": [
+        60,
+        160,
+        160,
+        480
+      ],
+      "note": "Shaded areas are covered by TikTok UI",
+      "source": "https://ads.tiktok.com/help/article/tiktok-ads-creative-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/tiktok/video_cover_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        60,
+        160,
+        160,
+        480
+      ],
+      "source": "https://ads.tiktok.com/help/article/tiktok-ads-creative-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/youtube/profile_800.png",
+      "w": 800,
+      "h": 800,
+      "kind": "profile",
+      "safe_circle": 720,
+      "source": "https://support.google.com/youtube/answer/2972003",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/youtube/channel_banner_2560x1440.png",
+      "w": 2560,
+      "h": 1440,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        507,
+        508,
+        507,
+        509
+      ],
+      "note": "Safe area 1546x423 centred (visible on all devices)",
+      "source": "https://support.google.com/youtube/answer/2972003",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/youtube/thumbnail_1280x720.png",
+      "w": 1280,
+      "h": 720,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        56,
+        200,
+        100
+      ],
+      "note": "Bottom-right corner is covered by the duration badge",
+      "source": "https://support.google.com/youtube/answer/2972003",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/youtube/watermark_150.png",
+      "w": 150,
+      "h": 150,
+      "kind": "profile",
+      "safe_circle": 150,
+      "transparent": true,
+      "source": "https://support.google.com/youtube/answer/2972003",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/youtube/shorts_template_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "video_template",
+      "copy": "need",
+      "safe": [
+        60,
+        200,
+        160,
+        420
+      ],
+      "source": "https://support.google.com/youtube/answer/2972003",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/x_twitter/profile_400.png",
+      "w": 400,
+      "h": 400,
+      "kind": "profile",
+      "safe_circle": 360,
+      "source": "https://help.x.com/en/managing-your-account/common-issues-when-uploading-profile-photo",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/x_twitter/header_1500x500.png",
+      "w": 1500,
+      "h": 500,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        340,
+        60,
+        80,
+        90
+      ],
+      "note": "Profile photo overlaps bottom-left on most clients",
+      "source": "https://help.x.com/en/managing-your-account/common-issues-when-uploading-profile-photo",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/x_twitter/post_1600x900.png",
+      "w": 1600,
+      "h": 900,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        96,
+        80,
+        96,
+        80
+      ],
+      "source": "https://help.x.com/en/managing-your-account/common-issues-when-uploading-profile-photo",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/linkedin/logo_400.png",
+      "w": 400,
+      "h": 400,
+      "kind": "profile",
+      "safe_circle": 380,
+      "source": "https://www.linkedin.com/help/linkedin/answer/a563309",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/linkedin/company_cover_1128x191.png",
+      "w": 1128,
+      "h": 191,
+      "kind": "graphic",
+      "copy": "brand",
+      "safe": [
+        220,
+        24,
+        48,
+        24
+      ],
+      "note": "Logo overlaps the left side",
+      "source": "https://www.linkedin.com/help/linkedin/answer/a563309",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/linkedin/post_1200x627.png",
+      "w": 1200,
+      "h": 627,
+      "kind": "graphic",
+      "copy": "sellers",
+      "safe": [
+        64,
+        56,
+        64,
+        56
+      ],
+      "source": "https://www.linkedin.com/help/linkedin/answer/a563309",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/whatsapp/business_profile_640.png",
+      "w": 640,
+      "h": 640,
+      "kind": "profile",
+      "safe_circle": 576,
+      "source": "https://faq.whatsapp.com/",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/whatsapp/status_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        200,
+        64,
+        260
+      ],
+      "source": "https://faq.whatsapp.com/",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/whatsapp/catalog_square_1080.png",
+      "w": 1080,
+      "h": 1080,
+      "kind": "graphic",
+      "copy": "sellers",
+      "safe": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "source": "https://faq.whatsapp.com/",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/pinterest/pin_1000x1500.png",
+      "w": 1000,
+      "h": 1500,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        80,
+        120,
+        80,
+        200
+      ],
+      "source": "https://help.pinterest.com/en/business/article/pinterest-product-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/google_business_profile/logo_720.png",
+      "w": 720,
+      "h": 720,
+      "kind": "profile",
+      "safe_circle": 640,
+      "source": "https://support.google.com/business/answer/6103862",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/google_business_profile/cover_1024x576.png",
+      "w": 1024,
+      "h": 576,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        56,
+        64,
+        56
+      ],
+      "source": "https://support.google.com/business/answer/6103862",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/post_square.svg",
+      "w": 1080,
+      "h": 1080,
+      "kind": "svg_template",
+      "copy": "need",
+      "safe": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/post_portrait.svg",
+      "w": 1080,
+      "h": 1350,
+      "kind": "svg_template",
+      "copy": "need",
+      "safe": [
+        80,
+        100,
+        80,
+        100
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/story.svg",
+      "w": 1080,
+      "h": 1920,
+      "kind": "svg_template",
+      "copy": "need",
+      "safe": [
+        64,
+        250,
+        64,
+        340
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/reel_cover.svg",
+      "w": 1080,
+      "h": 1920,
+      "kind": "svg_template",
+      "copy": "download",
+      "safe": [
+        64,
+        420,
+        64,
+        420
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/got_a_need.svg",
+      "w": 1080,
+      "h": 1080,
+      "kind": "svg_template",
+      "copy": "need",
+      "safe": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/seller_of_the_week.svg",
+      "w": 1080,
+      "h": 1350,
+      "kind": "svg_template",
+      "copy": "seller_week",
+      "safe": [
+        80,
+        100,
+        80,
+        100
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/festival_offer.svg",
+      "w": 1080,
+      "h": 1920,
+      "kind": "svg_template",
+      "copy": "festival",
+      "safe": [
+        64,
+        250,
+        64,
+        340
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "social/templates/link_post.svg",
+      "w": 1200,
+      "h": 630,
+      "kind": "svg_template",
+      "copy": "need",
+      "safe": [
+        64,
+        56,
+        64,
+        56
+      ],
+      "note": "Editable SVG; replace {{PLACEHOLDERS}}",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/meta/square_1080x1080.png",
+      "w": 1080,
+      "h": 1080,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        80,
+        80,
+        80,
+        80
+      ],
+      "source": "https://www.facebook.com/business/ads-guide",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/meta/portrait_1080x1350.png",
+      "w": 1080,
+      "h": 1350,
+      "kind": "graphic",
+      "copy": "buyers",
+      "safe": [
+        80,
+        100,
+        80,
+        100
+      ],
+      "source": "https://www.facebook.com/business/ads-guide",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/meta/story_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        250,
+        64,
+        340
+      ],
+      "source": "https://www.facebook.com/business/ads-guide",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/google_app_campaigns/landscape_1200x628.png",
+      "w": 1200,
+      "h": 628,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        64,
+        56,
+        64,
+        56
+      ],
+      "source": "https://support.google.com/google-ads/answer/9562005",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/google_app_campaigns/square_1200x1200.png",
+      "w": 1200,
+      "h": 1200,
+      "kind": "graphic",
+      "copy": "buyers",
+      "safe": [
+        90,
+        90,
+        90,
+        90
+      ],
+      "source": "https://support.google.com/google-ads/answer/9562005",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/google_app_campaigns/portrait_1200x1500.png",
+      "w": 1200,
+      "h": 1500,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        90,
+        110,
+        90,
+        110
+      ],
+      "source": "https://support.google.com/google-ads/answer/9562005",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/google_app_campaigns/logo_1200.png",
+      "w": 1200,
+      "h": 1200,
+      "kind": "icon",
+      "source": "https://support.google.com/google-ads/answer/9562005",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/apple_search_ads/README.md",
+      "w": 0,
+      "h": 0,
+      "kind": "text",
+      "content": "# Apple Search Ads\n\nNo separate creatives: ad variations use the custom product pages in `store/apple/custom_product_pages/`.\n",
+      "source": "https://searchads.apple.com/",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/tiktok_ads/video_1080x1920_template.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "video_template",
+      "copy": "need",
+      "safe": [
+        60,
+        160,
+        160,
+        480
+      ],
+      "source": "https://ads.tiktok.com/help/article/tiktok-ads-creative-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/tiktok_ads/end_card_1080x1920.png",
+      "w": 1080,
+      "h": 1920,
+      "kind": "graphic",
+      "copy": "download",
+      "safe": [
+        60,
+        160,
+        160,
+        480
+      ],
+      "source": "https://ads.tiktok.com/help/article/tiktok-ads-creative-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "ads/tiktok_ads/README.md",
+      "w": 0,
+      "h": 0,
+      "kind": "text",
+      "content": "# TikTok ads\n\n`video_1080x1920_template.png` shows the UI safe zones; edit videos (9:16, 1080x1920, 5-60 s) outside this repo and finish on `end_card_1080x1920.png`.\nVideos are not generated by tool/branding/generate.py.\n",
+      "source": "https://ads.tiktok.com/help/article/tiktok-ads-creative-specs",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/favicon_32.png",
+      "w": 32,
+      "h": 32,
+      "kind": "favicon",
+      "source": "https://web.dev/articles/add-manifest",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/favicon.svg",
+      "w": 32,
+      "h": 32,
+      "kind": "svg_favicon",
+      "source": "https://web.dev/articles/add-manifest",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/apple_touch_icon_180.png",
+      "w": 180,
+      "h": 180,
+      "kind": "icon",
+      "source": "https://web.dev/articles/add-manifest",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/pwa_192.png",
+      "w": 192,
+      "h": 192,
+      "kind": "icon",
+      "source": "https://web.dev/articles/add-manifest",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/pwa_512.png",
+      "w": 512,
+      "h": 512,
+      "kind": "icon",
+      "source": "https://web.dev/articles/add-manifest",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/og_image_1200x630.png",
+      "w": 1200,
+      "h": 630,
+      "kind": "graphic",
+      "copy": "need",
+      "safe": [
+        72,
+        64,
+        72,
+        64
+      ],
+      "note": "Link preview (deep links, website, WhatsApp shares); WhatsApp may crop to a centred square",
+      "source": "https://ogp.me/",
+      "checked": "2026-10-02"
+    },
+    {
+      "path": "web/email_header_600x200.png",
+      "w": 600,
+      "h": 200,
+      "kind": "graphic",
+      "copy": "brand",
+      "safe": [
+        32,
+        24,
+        32,
+        24
+      ],
+      "checked": "2026-10-02"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<title>I Want mark (shared, uses currentColor)</title>
+<defs><mask id="m" maskUnits="userSpaceOnUse"><rect x="-10000" y="-10000" width="20000" height="20000" fill="#fff"/><g fill="#000"><polygon points="512,225 313.83,423.17 710.17,423.17"/><rect x="446.4" y="402.67" width="131.2" height="218.67"/></g></mask></defs>
+<g fill="currentColor" mask="url(#m)"><rect x="102" y="108.83" width="820" height="628.67" rx="164"/><polygon points="225,682.83 443.67,682.83 184,915.17"/></g>
+</svg>

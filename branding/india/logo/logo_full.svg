@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="480" viewBox="0 0 1600 480">
+<title>I Want India logo</title>
+<defs><mask id="m" maskUnits="userSpaceOnUse"><rect x="-10000" y="-10000" width="20000" height="20000" fill="#fff"/><g fill="#000"><polygon points="261.5,114.18 174.62,201.05 348.38,201.05"/><rect x="232.74" y="192.07" width="57.52" height="95.87"/></g></mask></defs>
+<g fill="#C2410C" mask="url(#m)"><rect x="81.75" y="63.25" width="359.5" height="275.62" rx="71.9"/><polygon points="135.68,314.9 231.54,314.9 117.7,416.75"/></g>
+<text x="486.72" y="240" dominant-baseline="central" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-weight="700" font-size="152.98"><tspan fill="#0F172A">I Want </tspan><tspan fill="#C2410C">India</tspan></text>
+</svg>

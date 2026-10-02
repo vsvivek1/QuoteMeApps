@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+<title>I Want USA mark</title>
+<defs><mask id="m" maskUnits="userSpaceOnUse"><rect x="-10000" y="-10000" width="20000" height="20000" fill="#fff"/><g fill="#000"><polygon points="512,209.53 329.26,392.27 694.74,392.27"/><rect x="451.51" y="373.37" width="120.99" height="201.65"/><text x="699.79" y="833.38" text-anchor="middle" dominant-baseline="central" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-weight="700" font-size="115.95">USA</text></g></mask></defs>
+<g fill="#1D4ED8" mask="url(#m)"><rect x="133.91" y="102.4" width="756.18" height="579.74" rx="151.24"/><polygon points="247.34,631.73 448.98,631.73 209.53,845.98"/></g><g fill="#1D4ED8" mask="url(#m)"><rect x="509.48" y="745.16" width="380.61" height="176.44" rx="88.22"/></g>
+</svg>

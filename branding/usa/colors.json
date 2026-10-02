@@ -1,0 +1,35 @@
+{
+  "$comment": "Brand colours for I Want USA (Material 3 roles). One brand accent + shared neutrals from branding/shared/colors.json. tool/branding/generate.py reads this file, checks WCAG AA contrast and emits lib/core/theme/brand_colors.g.dart.",
+  "app_name": "I Want USA",
+  "accent_name": "Liberty blue",
+  "light": {
+    "primary": "#1D4ED8",
+    "onPrimary": "#FFFFFF",
+    "primaryContainer": "#DBE6FF",
+    "onPrimaryContainer": "#0B1F5C",
+    "secondary": "#475569",
+    "onSecondary": "#FFFFFF",
+    "surface": "#FFFFFF",
+    "onSurface": "#0F172A",
+    "surfaceVariant": "#F1F5F9",
+    "onSurfaceVariant": "#475569",
+    "outline": "#64748B",
+    "error": "#B3261E",
+    "onError": "#FFFFFF"
+  },
+  "dark": {
+    "primary": "#93B4FF",
+    "onPrimary": "#0B1F5C",
+    "primaryContainer": "#1E3A8A",
+    "onPrimaryContainer": "#DBE6FF",
+    "secondary": "#CBD5E1",
+    "onSecondary": "#1E293B",
+    "surface": "#0F172A",
+    "onSurface": "#E2E8F0",
+    "surfaceVariant": "#1E293B",
+    "onSurfaceVariant": "#CBD5E1",
+    "outline": "#94A3B8",
+    "error": "#F2B8B5",
+    "onError": "#601410"
+  }
+}

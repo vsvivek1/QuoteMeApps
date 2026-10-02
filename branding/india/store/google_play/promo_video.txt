@@ -1,0 +1,2 @@
+# YouTube URL for the Google Play listing video (public or unlisted, no ads, not age-restricted).
+# Replace this line with the URL, e.g. https://www.youtube.com/watch?v=XXXXXXXXXXX

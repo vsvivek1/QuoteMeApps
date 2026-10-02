@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="480" viewBox="0 0 1600 480">
+<title>I Want USA logo</title>
+<defs><mask id="m" maskUnits="userSpaceOnUse"><rect x="-10000" y="-10000" width="20000" height="20000" fill="#fff"/><g fill="#000"><polygon points="267.93,106.27 175.6,198.61 360.27,198.61"/><rect x="237.37" y="189.06" width="61.13" height="101.89"/></g></mask></defs>
+<g fill="#1D4ED8" mask="url(#m)"><rect x="76.89" y="52.14" width="382.08" height="292.93" rx="76.42"/><polygon points="134.21,319.6 236.09,319.6 115.1,427.86"/></g>
+<text x="507.3" y="240" dominant-baseline="central" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-weight="700" font-size="162.59"><tspan fill="#0F172A">I Want </tspan><tspan fill="#1D4ED8">USA</tspan></text>
+</svg>

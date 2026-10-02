@@ -1,0 +1,36 @@
+{
+  "$comment": "Brand colours for I Want India (Material 3 roles). One brand accent + shared neutrals from branding/shared/colors.json. tool/branding/generate.py reads this file, checks WCAG AA contrast and emits lib/core/theme/brand_colors.g.dart.",
+  "app_name": "I Want India",
+  "accent_name": "Deep saffron",
+  "light": {
+    "primary": "#C2410C",
+    "onPrimary": "#FFFFFF",
+    "primaryContainer": "#FFE3D1",
+    "onPrimaryContainer": "#4A1800",
+    "secondary": "#475569",
+    "onSecondary": "#FFFFFF",
+    "surface": "#FFFFFF",
+    "onSurface": "#0F172A",
+    "surfaceVariant": "#F1F5F9",
+    "onSurfaceVariant": "#475569",
+    "outline": "#64748B",
+    "error": "#B3261E",
+    "onError": "#FFFFFF"
+  },
+  "dark": {
+    "primary": "#FFB077",
+    "onPrimary": "#4A1800",
+    "primaryContainer": "#7C2D12",
+    "onPrimaryContainer": "#FFE3D1",
+    "secondary": "#CBD5E1",
+    "onSecondary": "#1E293B",
+    "surface": "#0F172A",
+    "onSurface": "#E2E8F0",
+    "surfaceVariant": "#1E293B",
+    "onSurfaceVariant": "#CBD5E1",
+    "outline": "#94A3B8",
+    "error": "#F2B8B5",
+    "onError": "#601410"
+  },
+  "$note": "Requested saffron #E8590C gives only 3.58:1 with white text (fails AA). Darkened to #C2410C (5.18:1). Use #E8590C only for large decorative shapes, never behind text."
+}
