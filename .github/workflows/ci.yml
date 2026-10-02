@@ -121,7 +121,7 @@ jobs:
         with:
           deno-version: v2.x
       - name: Start local Supabase (migrations + seed)
-        run: supabase start -x studio,imgproxy,inbucket,edge-runtime,logflare,vector,supavisor
+        run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
       - name: pgTAP
         run: supabase test db
       - name: Edge Function tests

@@ -35,7 +35,7 @@ jobs:
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
-      - run: supabase start -x studio,imgproxy,inbucket,edge-runtime,logflare,vector,supavisor
+      - run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
       - run: supabase test db
       - working-directory: supabase/functions
         run: deno test --allow-env --allow-net --allow-read
