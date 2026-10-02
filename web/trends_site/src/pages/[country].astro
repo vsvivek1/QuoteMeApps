@@ -1,0 +1,20 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../layouts/Base.astro';
+import ArticleList from '../components/ArticleList.astro';
+import { loadArticles, placesIndex, type Country } from '../lib/articles';
+import { COUNTRY_LABEL } from '../lib/site';
+
+export const getStaticPaths = (() => [{ params: { country: 'india' } }, { params: { country: 'usa' } }]) satisfies GetStaticPaths;
+
+const country = Astro.params.country as Country;
+const { built } = loadArticles();
+const items = built.filter((b) => b.article.country === country && (b.indexable || b.article.fixture));
+const places = placesIndex(built).filter((p) => p.country === country && p.items.some((i) => i.indexable || i.article.fixture));
+const label = COUNTRY_LABEL[country];
+---
+<Base title={`Trending in ${label}`} description={`Local stories trending in ${label}, explained from two sides.`} path={`/${country}`} noindex={items.filter((b) => b.indexable).length === 0}>
+  <h1>Trending in {label}</h1>
+  {places.length > 0 && <ul class="tags">{places.map((p) => <li><a href={`/place/${p.country}/${p.slug}`}>{p.name}</a></li>)}</ul>}
+  {items.length ? <ArticleList items={items} /> : <p class="notice">No stories for {label} yet.</p>}
+</Base>

@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+---
+<Base title="About" description={`About ${site.name}.`} path="/about">
+  <h1>About {site.name}</h1>
+  <p>{site.name} covers what is trending in Indian and US states and cities, usually within minutes of a topic taking off. Every story sets out the facts, then looks at the topic from two clearly labelled, neutral perspectives, and links every source it used.</p>
+  <h2>Who runs it</h2>
+  <p>The US edition is published by {site.publishers.usa}. The India edition is published by {site.publishers.india}. The editor responsible for the site is {site.editorName}.</p>
+  <h2>How it is made</h2>
+  <p>Stories are drafted with AI from published reports and then pass automatic checks before they go live. Sensitive topics are never published automatically. Read our <a href="/ai-policy">AI use policy</a>, <a href="/editorial-policy">editorial policy</a> and <a href="/corrections-policy">corrections policy</a>.</p>
+  <h2>Contact</h2>
+  <p><a href="/contact">Send us a message or report an error</a>.</p>
+</Base>

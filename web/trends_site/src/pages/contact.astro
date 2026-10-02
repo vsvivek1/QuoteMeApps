@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Form from '../components/Form.astro';
+import { site } from '../lib/site';
+---
+<Base title="Contact" description={`Contact ${site.name} or report an error.`} path="/contact">
+  <h1>Contact us</h1>
+  <p>Report an error, suggest a correction or send us a message. The editor responsible is {site.editorName}.</p>
+  <Form kind="trends_contact" submitLabel="Send" successMessage="Thanks. Your message has reached the editor.">
+    <label>Topic
+      <select name="topic" id="topic" required>
+        <option value="error">Report an error in an article</option>
+        <option value="feedback">Feedback</option>
+        <option value="other">Something else</option>
+      </select>
+    </label>
+    <label>Article (link or title, if any)<input name="article" id="article" maxlength="300" /></label>
+    <label>Your email (optional, if you want a reply)<input name="email" type="email" maxlength="160" autocomplete="email" /></label>
+    <label>Message<textarea name="message" required maxlength="4000"></textarea></label>
+  </Form>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const topic = document.getElementById('topic') as HTMLSelectElement | null;
+    const article = document.getElementById('article') as HTMLInputElement | null;
+    if (topic && q.get('topic') === 'error') topic.value = 'error';
+    if (article && q.get('article')) article.value = `/a/${q.get('article')}`;
+  </script>
+</Base>

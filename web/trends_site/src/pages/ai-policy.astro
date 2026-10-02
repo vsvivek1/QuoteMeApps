@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+---
+<Base title="AI use policy" description={`How ${site.name} uses AI to write and check articles.`} path="/ai-policy">
+  <h1>AI use policy</h1>
+  <p>Articles on {site.name} are <strong>AI-assisted and automatically published</strong>. Every article says so at the top.</p>
+  <h2>What the AI does</h2>
+  <ul>
+    <li>Reads the headlines and short snippets of the published reports on a trending topic.</li>
+    <li>Writes an original article: a neutral summary of the facts, two balanced perspectives, where they agree, why it matters locally and what to watch next.</li>
+    <li>A second, separate check verifies each factual claim against the sources and checks that the two perspectives are balanced.</li>
+  </ul>
+  <h2>What the AI does not do</h2>
+  <ul>
+    <li>It does not publish on sensitive topics (politics, religion, crime, health, deaths and others listed in our <a href="/editorial-policy">editorial policy</a>); a human decides.</li>
+    <li>It does not copy reports: drafts that overlap too much with any source are rejected.</li>
+    <li>It does not use photos from other publishers.</li>
+  </ul>
+  <h2>Human oversight</h2>
+  <p>A named editor ({site.editorName}) is responsible for the site, reviews error reports, and can pause all automatic publishing instantly.</p>
+</Base>

@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+---
+<Base title="Corrections policy" description={`How ${site.name} handles errors and corrections.`} path="/corrections-policy">
+  <h1>Corrections policy</h1>
+  <p>Every article has a "Report an error" link. Reports go to the editor responsible, {site.editorName}.</p>
+  <ul>
+    <li>When a source corrects a fact, or a reader shows us an error we can verify, we fix the article and add a dated note in a "Corrections" box at the top.</li>
+    <li>We do not silently change facts. Small fixes to spelling or formatting are not noted.</li>
+    <li>If an article turns out to be fundamentally wrong, we replace it with a note explaining why it was withdrawn.</li>
+    <li>If error reports spike, automatic publishing pauses until an editor has reviewed them.</li>
+  </ul>
+  <p><a href="/contact">Report an error</a></p>
+</Base>

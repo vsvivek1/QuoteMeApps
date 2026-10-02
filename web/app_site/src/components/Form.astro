@@ -1,0 +1,44 @@
+---
+import { formsEnabled, site, warnOnce } from '../lib/site';
+
+interface Props {
+  /** Sent as "form" to the Edge Function, which routes on it. */
+  kind: 'seller_signup' | 'contact' | 'waitlist' | 'account_deletion';
+  submitLabel: string;
+  successMessage: string;
+  /** Comma-separated field names of which at least one must be filled. */
+  requireOne?: string;
+}
+const { kind, submitLabel, successMessage, requireOne } = Astro.props;
+if (!formsEnabled) {
+  warnOnce('PUBLIC_TURNSTILE_SITE_KEY or FORMS_ENDPOINT unset: forms render disabled.');
+}
+---
+{!formsEnabled && (
+  <p class="notice warn">
+    This form is not switched on yet.
+    {site.supportEmail ? <>Please email <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a> instead.</> : 'Please use the contact details on our Contact / Support page.'}
+  </p>
+)}
+<form
+  class="form js-form"
+  data-endpoint={site.formsEndpoint}
+  data-kind={kind}
+  data-country={site.country}
+  data-success={successMessage}
+  data-require-one={requireOne}
+  novalidate
+>
+  <slot />
+  <div class="hp" aria-hidden="true">
+    <label>Leave this empty<input type="text" name="website_url_confirm" tabindex="-1" autocomplete="off" /></label>
+  </div>
+  {formsEnabled && <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey} data-action={kind}></div>}
+  <noscript><p class="notice warn">This form needs JavaScript (for spam protection).</p></noscript>
+  <div><button class="btn" type="submit" disabled={!formsEnabled}>{submitLabel}</button></div>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+{formsEnabled && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+<script>
+  import '../scripts/forms';
+</script>

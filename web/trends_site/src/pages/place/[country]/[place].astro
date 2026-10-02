@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import ArticleList from '../../../components/ArticleList.astro';
+import { loadArticles, placesIndex } from '../../../lib/articles';
+import { COUNTRY_LABEL } from '../../../lib/site';
+
+export const getStaticPaths = (() =>
+  placesIndex(loadArticles().built).map((p) => ({ params: { country: p.country, place: p.slug }, props: { p } }))) satisfies GetStaticPaths;
+
+const { p } = Astro.props as { p: ReturnType<typeof placesIndex>[number] };
+const items = p.items.filter((b) => b.indexable || b.article.fixture);
+const indexable = p.items.some((b) => b.indexable);
+---
+<Base title={`Trending in ${p.name}`} description={`What is trending in ${p.name}${p.state ? `, ${p.state}` : ''} right now.`} path={`/place/${p.country}/${p.slug}`} noindex={!indexable}>
+  <p class="meta"><a href={`/${p.country}`}>{COUNTRY_LABEL[p.country]}</a> /</p>
+  <h1>Trending in {p.name}</h1>
+  {items.length ? <ArticleList items={items} /> : <p class="notice">No current stories for {p.name}.</p>}
+</Base>

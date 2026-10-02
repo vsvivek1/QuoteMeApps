@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+import { loadSeo } from '../lib/seo';
+
+const { thresholds: t } = await loadSeo();
+---
+<Base title="Editorial policy" description={`How ${site.appName} builds its local price pages and guides.`} path="/editorial-policy">
+  <div class="prose">
+    <h1>Editorial policy</h1>
+    <p>This website exists to help people get fair prices. Every page is built from our own data or written by a person, and we would rather publish fewer pages than thin ones.</p>
+    <h2>Local price pages</h2>
+    <ul>
+      <li>Figures come from quotes sellers sent on {site.appName} in the last {t.window_days} days. We show medians and the middle range, never a single quote, and never anything that identifies a buyer.</li>
+      <li>A city and category page is published for search engines only when it has at least {t.min_quotes} quotes from at least {t.min_sellers} different sellers. Below that it is hidden from search (noindex) or not created at all.</li>
+      <li>If no new quotes arrive for {t.stale_days} days, the page is automatically hidden from search again until fresh data arrives.</li>
+      <li>Small neighbouring towns are merged into the larger area page rather than getting near-duplicate pages.</li>
+      <li>Each page states its data basis (number of quotes and sellers, and the period) and when it was last updated.</li>
+      <li>Text on these pages only describes the numbers in plain words.</li>
+    </ul>
+    <h2>Guides and articles</h2>
+    <p>Any guide drafted with AI assistance is reviewed and approved by a named person before it goes live, and we cap new AI-assisted articles per week. Guides are reviewed at least twice a year.</p>
+    <h2>Corrections</h2>
+    <p>Spotted an error? Tell us through the <a href="/contact">contact form</a> (topic "Report an error on a price page"). We fix confirmed errors and note significant corrections on the page.</p>
+    <h2>Advertising</h2>
+    <p>There are no ads on this site today. Sponsored placement inside the app is always labelled.</p>
+  </div>
+</Base>

@@ -1,0 +1,85 @@
+{
+  "fixture": true,
+  "topic_tags": [
+    "weather",
+    "home"
+  ],
+  "sensitive": false,
+  "review": {
+    "approved_by": null,
+    "approved_at": null
+  },
+  "checks": {
+    "originality": {
+      "passed": true,
+      "max_similarity": 0.08
+    },
+    "fact_consistency": {
+      "passed": true,
+      "conflicts": false,
+      "unsupported_claims_removed": 0
+    },
+    "balance": {
+      "passed": true
+    }
+  },
+  "updates": [],
+  "corrections": [],
+  "trend_ended_at": null,
+  "traffic": {
+    "visits_14d_after_end": null
+  },
+  "superseded_by": null,
+  "app_link": {
+    "label": "Get furnace repair quotes in Chicago on I Want USA",
+    "url": "https://iwantusa.app/quotes/chicago/appliance-repair"
+  },
+  "id": "fixture-usa-chicago-snow-2",
+  "slug": "sample-chicago-snow-day-two",
+  "country": "usa",
+  "places": [
+    {
+      "slug": "chicago",
+      "name": "Chicago",
+      "state": "Illinois",
+      "level": "metro"
+    }
+  ],
+  "headline": "Sample: Chicago snow, day two: what changes for commuters",
+  "summary": [
+    "Sample article for build tests: forecasters expect the first significant snowfall of the season in Chicago.",
+    "Two sample sources report that hardware stores are seeing more requests for snow blowers and furnace checks.",
+    "City crews in the sample reports are preparing salt and plows ahead of the weekend."
+  ],
+  "context": "The first heavy snow of the season usually brings a rush of furnace tune-ups, snow removal contracts and equipment purchases, because many people put these off until the weather forces the issue.",
+  "perspectives": {
+    "framing": "Short-term vs Long-term",
+    "a": {
+      "label": "Short-term",
+      "body": "In the next few days the priority is getting through the storm safely and warmly. That means checking that the furnace starts, that there is a working shovel or blower, and that driveways and sidewalks can be cleared. Demand spikes can mean longer waits for repairs and higher prices for last-minute equipment, so people who act early usually get better availability and choice. Comparing a few quotes for a furnace check can still be done quickly."
+    },
+    "b": {
+      "label": "Long-term",
+      "body": "Over the full winter, the bigger costs come from heating efficiency and wear. A furnace that is serviced and running well can lower monthly bills, and sealing drafts or adding insulation pays off across many storms rather than one. Seasonal snow removal contracts can cost less per visit than one-off calls. Households that plan their winter upkeep in advance tend to spend less overall and face fewer emergency repairs during the coldest weeks."
+    }
+  },
+  "agree": "Both views agree that acting before the storm is cheaper and less stressful than reacting during it, and that clear, comparable quotes help people decide quickly.",
+  "local_angle": "In Chicago, older homes with original heating systems are especially exposed to first-cold-snap failures, and many neighborhoods rely on residents to clear their own sidewalks.",
+  "watch_next": "Watch the updated snowfall totals from the weather service and any city parking restrictions on snow routes. If the cold lasts into next week, demand for heating repairs is likely to stay high.",
+  "sources": [
+    {
+      "publisher": "Example Forecast",
+      "url": "https://forecast.example.com/chicago-snow",
+      "title": "Sample: first snow expected",
+      "snippet": "Sample snippet: forecasters expect several inches of snow in the city by the weekend."
+    },
+    {
+      "publisher": "Example Metro",
+      "url": "https://metro.example.net/chicago-stores",
+      "title": "Sample: stores see rush",
+      "snippet": "Sample snippet: hardware stores reported more interest in snow blowers this week."
+    }
+  ],
+  "published_at": "2026-10-01T16:00:00Z",
+  "velocity": 70
+}

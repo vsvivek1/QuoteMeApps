@@ -1,0 +1,76 @@
+{
+  "fixture": true,
+  "topic_tags": [
+    "weather"
+  ],
+  "sensitive": false,
+  "review": {
+    "approved_by": null,
+    "approved_at": null
+  },
+  "checks": {
+    "originality": {
+      "passed": true,
+      "max_similarity": 0.08
+    },
+    "fact_consistency": {
+      "passed": true,
+      "conflicts": false,
+      "unsupported_claims_removed": 0
+    },
+    "balance": {
+      "passed": true
+    }
+  },
+  "updates": [],
+  "corrections": [],
+  "trend_ended_at": null,
+  "traffic": {
+    "visits_14d_after_end": null
+  },
+  "superseded_by": null,
+  "app_link": null,
+  "id": "fixture-single-source",
+  "slug": "sample-single-source",
+  "country": "usa",
+  "places": [
+    {
+      "slug": "dallas",
+      "name": "Dallas",
+      "state": "Texas",
+      "level": "metro"
+    }
+  ],
+  "headline": "Sample: single-source story",
+  "summary": [
+    "Only one source reports this."
+  ],
+  "perspectives": {
+    "framing": "Short-term vs Long-term",
+    "a": {
+      "label": "Short-term",
+      "body": "In the next few days the priority is getting through the storm safely and warmly. That means checking that the furnace starts, that there is a working shovel or blower, and that driveways and sidewalks can be cleared. Demand spikes can mean longer waits for repairs and higher prices for last-minute equipment, so people who act early usually get better availability and choice. Comparing a few quotes for a furnace check can still be done quickly."
+    },
+    "b": {
+      "label": "Long-term",
+      "body": "Over the full winter, the bigger costs come from heating efficiency and wear. A furnace that is serviced and running well can lower monthly bills, and sealing drafts or adding insulation pays off across many storms rather than one. Seasonal snow removal contracts can cost less per visit than one-off calls. Households that plan their winter upkeep in advance tend to spend less overall and face fewer emergency repairs during the coldest weeks."
+    }
+  },
+  "agree": "Both views agree that acting before the storm is cheaper and less stressful than reacting during it, and that clear, comparable quotes help people decide quickly.",
+  "local_angle": "In Chicago, older homes with original heating systems are especially exposed to first-cold-snap failures, and many neighborhoods rely on residents to clear their own sidewalks.",
+  "watch_next": "Watch the updated snowfall totals from the weather service and any city parking restrictions on snow routes. If the cold lasts into next week, demand for heating repairs is likely to stay high.",
+  "sources": [
+    {
+      "publisher": "Example Forecast",
+      "url": "https://forecast.example.com/chicago-snow",
+      "title": "Sample: first snow expected",
+      "snippet": "Sample snippet: forecasters expect several inches of snow in the city by the weekend."
+    },
+    {
+      "publisher": "Same",
+      "url": "https://www.forecast.example.com/other",
+      "title": "Same publisher"
+    }
+  ],
+  "published_at": "2026-09-30T10:00:00Z"
+}

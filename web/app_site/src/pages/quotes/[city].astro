@@ -1,0 +1,50 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import StoreBadges from '../../components/StoreBadges.astro';
+import { abs, money, site } from '../../lib/site';
+import { cityHubs, type CityHub } from '../../lib/seo';
+
+export const getStaticPaths = (async () =>
+  (await cityHubs()).map((hub) => ({ params: { city: hub.city.slug }, props: { hub } }))) satisfies GetStaticPaths;
+
+const { hub } = Astro.props as { hub: CityHub };
+const { city } = hub;
+const merged = [...new Set(hub.pages.flatMap((p) => p.mergedTowns.map((t) => t.name)))];
+const shown = hub.pages.filter((p) => p.showPrices);
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Local prices', item: abs('/quotes') },
+    { '@type': 'ListItem', position: 2, name: city.name, item: abs(`/quotes/${city.slug}`) },
+  ],
+};
+---
+<Base title={`Prices and quotes in ${city.name}`} description={`What local sellers in ${city.name}, ${city.state} quoted on ${site.appName}: median prices by category.`} path={`/quotes/${city.slug}`} noindex={!hub.indexable} jsonLd={[crumbs]}>
+  <p class="breadcrumbs"><a href="/quotes">Local prices</a> /</p>
+  <h1>Prices and quotes in {city.name}</h1>
+  {merged.length > 0 && <p class="muted">Also covers {merged.join(', ')}.</p>}
+  {shown.length > 0 ? (
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Category</th><th>Median quote</th><th>Typical range</th><th>Quotes</th></tr></thead>
+        <tbody>
+          {shown.map((p) => (
+            <tr>
+              <td><a href={p.path}>{p.category.name}</a></td>
+              <td>{money(p.data.price!.median)}</td>
+              <td>{money(p.data.price!.p25)} to {money(p.data.price!.p75)}</td>
+              <td>{p.data.quotes_window}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <p class="notice">We don't have enough quotes in {city.name} yet to show prices. Post a request and local sellers will quote you directly.</p>
+  )}
+  <h2>Get quotes in {city.name}</h2>
+  <p>Post what you want in the app and sellers in {city.name} will send you their prices.</p>
+  <StoreBadges campaign={`city_${city.slug}`} source="seo" medium="city_page" />
+</Base>

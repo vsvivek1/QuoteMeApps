@@ -1,0 +1,83 @@
+:root {
+  --bg: #ffffff;
+  --fg: #111827;
+  --muted: #4b5563;
+  --line: #e5e7eb;
+  --panel: #f3f4f6;
+  --accent: #0f766e;
+  --accent-fg: #ffffff;
+  --a-bg: #ecfeff;
+  --b-bg: #fef9c3;
+  --error: #b91c1c;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1120;
+    --fg: #e5e7eb;
+    --muted: #9ca3af;
+    --line: #1f2937;
+    --panel: #111827;
+    --accent: #5eead4;
+    --accent-fg: #042f2e;
+    --a-bg: #083344;
+    --b-bg: #3f3a0b;
+    --error: #fca5a5;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: Georgia, 'Iowan Old Style', 'Noto Serif', serif;
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+h1, h2, h3, .logo, nav, .meta, .btn, .form, .tags, .notice, .site-footer {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
+}
+h1 { font-size: clamp(1.7rem, 4.5vw, 2.4rem); line-height: 1.2; margin: 0.5em 0 0.3em; text-wrap: balance; }
+h2 { font-size: 1.3rem; margin-top: 1.8em; }
+a { color: var(--accent); text-underline-offset: 2px; }
+.wrap { width: 100%; max-width: 46rem; margin: 0 auto; padding: 0 16px; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 8px; top: 8px; background: var(--bg); padding: 8px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
+.site-header { border-bottom: 1px solid var(--line); }
+.header-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 20px; padding-top: 12px; padding-bottom: 12px; }
+.logo { font-weight: 800; font-size: 1.2rem; color: var(--fg); text-decoration: none; }
+nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+nav a { color: var(--fg); text-decoration: none; }
+.site-footer { margin-top: 64px; padding: 28px 0 40px; background: var(--panel); font-size: 0.92rem; }
+.footer-inner { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.site-footer nav ul { display: block; }
+.site-footer li { margin: 4px 0; }
+.footer-brand { font-weight: 700; margin: 0; }
+.meta { font-size: 0.88rem; color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 8px 0; font-size: 0.85rem; }
+.tags a { background: var(--panel); padding: 3px 10px; border-radius: 999px; color: var(--fg); text-decoration: none; }
+.notice { padding: 12px 16px; border-radius: 10px; background: var(--panel); border-left: 4px solid var(--accent); font-size: 0.93rem; }
+.notice.warn { border-left-color: var(--error); }
+.summary { font-size: 1.12rem; padding-left: 1.2em; }
+.persp { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.persp section { padding: 16px; border-radius: 12px; }
+.persp section:first-child { background: var(--a-bg); }
+.persp section:last-child { background: var(--b-bg); }
+.persp h3 { margin-top: 0; }
+.list { list-style: none; padding: 0; }
+.list li { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.list h2, .list h3 { margin: 0 0 4px; font-size: 1.15rem; }
+.list a { color: var(--fg); text-decoration: none; }
+.list a:hover { text-decoration: underline; }
+.btn { display: inline-flex; align-items: center; min-height: 46px; padding: 10px 20px; border: 0; border-radius: 10px; background: var(--accent); color: var(--accent-fg); font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
+.btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+.form { display: grid; gap: 14px; max-width: 34rem; margin: 20px 0; }
+.form label { display: grid; gap: 6px; font-weight: 600; font-size: 0.95rem; }
+.form input, .form select, .form textarea { font: inherit; font-weight: 400; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--muted); background: var(--bg); color: var(--fg); width: 100%; }
+.form textarea { min-height: 7rem; }
+.form .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-status { min-height: 1.5em; font-weight: 600; }
+.form-status.ok { color: var(--accent); }
+.form-status.err { color: var(--error); }

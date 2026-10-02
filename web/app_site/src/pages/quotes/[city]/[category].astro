@@ -1,0 +1,161 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../../layouts/Base.astro';
+import StoreBadges from '../../../components/StoreBadges.astro';
+import { abs, formatDate, money, site } from '../../../lib/site';
+import { loadSeo, monthRange, type SeoPage } from '../../../lib/seo';
+
+// One page per city x category row that passed the "skip" gates in lib/seo.ts.
+// Rows below the data threshold, stale or fixture rows render with noindex and
+// are left out of the sitemap; prices are only shown above the threshold.
+export const getStaticPaths = (async () => {
+  const { pages } = await loadSeo();
+  return pages.map((page) => ({ params: { city: page.city.slug, category: page.category.slug }, props: { page, all: pages } }));
+}) satisfies GetStaticPaths;
+
+const { page, all } = Astro.props as { page: SeoPage; all: SeoPage[] };
+const { data: seo, thresholds: t } = await loadSeo();
+const { city, category, data: d } = page;
+const p = page.showPrices ? d.price! : null;
+const basis = `Based on ${d.quotes_window} quotes from ${d.sellers_window} ${city.name} sellers, ${monthRange(d.period.from, d.period.to, site.locale)}.`;
+// Lower-case a category name for running text, keeping acronyms ("TVs", "AC repair").
+const lc = (s: string) => (/^[A-Z]{2}/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1));
+const cat = lc(category.name);
+const title = category.kind === 'service' ? `Quotes for ${cat} in ${city.name}, ${city.state}` : `Prices for ${cat} in ${city.name}, ${city.state}`;
+const description = p
+  ? `${category.name} in ${city.name}: median quote ${money(p.median)}, typical range ${money(p.p25)} to ${money(p.p75)}. ${basis}`
+  : `Get quotes for ${cat} from local sellers in ${city.name}, ${city.state} on ${site.appName}.`;
+const unit = category.unit ? ` ${category.unit}` : '';
+const trend = d.trend_pct_vs_last_month;
+const trendText =
+  trend == null ? null : Math.abs(trend) < 1 ? 'about the same as last month' : `${Math.abs(Math.round(trend))}% ${trend > 0 ? 'higher' : 'lower'} than last month`;
+
+const sameCity = all.filter((o) => o.city.slug === city.slug && o !== page && o.status === 'indexable').slice(0, 12);
+const sameCat = all.filter((o) => o.category.slug === category.slug && o !== page && o.status === 'indexable').slice(0, 12);
+
+const faq = p
+  ? [
+      {
+        q: `How much ${category.kind === 'service' ? 'does' : 'do'} ${cat} cost in ${city.name}?`,
+        a: `The median quote on ${site.appName} in ${city.name} was ${money(p.median)}${unit}, and half of all quotes fell between ${money(p.p25)} and ${money(p.p75)}. ${basis}`,
+      },
+      {
+        q: `How many sellers in ${city.name} quote for ${cat}?`,
+        a: `${d.sellers_window} different sellers sent quotes in this period${d.local_sellers ? `, and ${d.local_sellers} sellers in and around ${city.name} list this category` : ''}.`,
+      },
+    ]
+  : [];
+
+const jsonLd: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Local prices', item: abs('/quotes') },
+      { '@type': 'ListItem', position: 2, name: city.name, item: abs(`/quotes/${city.slug}`) },
+      { '@type': 'ListItem', position: 3, name: category.name, item: abs(page.path) },
+    ],
+  },
+];
+if (p) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${category.name} in ${city.name}`,
+    description,
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: site.currency,
+      lowPrice: p.p25,
+      highPrice: p.p75,
+      offerCount: d.quotes_window,
+    },
+  });
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  });
+}
+---
+<Base title={title} description={description} path={page.path} noindex={page.status !== 'indexable'} jsonLd={jsonLd}>
+  <p class="breadcrumbs"><a href="/quotes">Local prices</a> / <a href={`/quotes/${city.slug}`}>{city.name}</a> /</p>
+  {seo.fixture && <p class="notice warn">Sample data for testing only. These are not real prices.</p>}
+  <h1>{title}</h1>
+  {page.mergedTowns.length > 0 && <p class="muted">Also covers {page.mergedTowns.map((m) => m.name).join(', ')}.</p>}
+
+  {p ? (
+    <>
+      <p><strong>{basis}</strong> <span class="muted">Last updated {formatDate(seo.generated_at)}.</span></p>
+      <div class="stats">
+        <div class="stat"><b>{money(p.median)}</b><span>median quote{unit}</span></div>
+        <div class="stat"><b>{money(p.p25)} to {money(p.p75)}</b><span>typical range (middle half of quotes)</span></div>
+        <div class="stat"><b>{d.sellers_window}</b><span>sellers quoted</span></div>
+        {d.median_response_hours != null && (
+          <div class="stat"><b>{d.median_response_hours < 1 ? 'Under 1 hour' : `${Math.round(d.median_response_hours)} hours`}</b><span>median time to first quote</span></div>
+        )}
+        {d.median_delivery_days != null && (
+          <div class="stat"><b>{d.median_delivery_days} {d.median_delivery_days === 1 ? 'day' : 'days'}</b><span>median {category.kind === 'service' ? 'time to service' : 'delivery time'}</span></div>
+        )}
+      </div>
+      <p>
+        Sellers in {city.name} quoted a median of {money(p.median)}{unit} for {cat}.
+        Half of the quotes were between {money(p.p25)} and {money(p.p75)}.
+        {trendText && <>{' '}The median is {trendText}.</>}{' '}
+        {category.kind === 'service'
+          ? 'Quotes vary with the size of the job and what is included (parts, visit charge, warranty), so compare the details, not just the total.'
+          : 'Quotes vary with brand, size and what is included (delivery, installation, warranty), so compare the details, not just the total.'}
+      </p>
+      {d.top_models && d.top_models.length > 0 && (
+        <>
+          <h2>Most-quoted models</h2>
+          <ul>{d.top_models.slice(0, 5).map((m) => <li>{m.name} <span class="muted">({m.quotes} quotes)</span></li>)}</ul>
+        </>
+      )}
+    </>
+  ) : (
+    <p class="notice">
+      We don't have enough quotes yet to show reliable prices for {cat} in {city.name}
+      (we wait for at least {t.min_quotes} quotes from {t.min_sellers} different sellers). Post a request and sellers will quote you directly.
+    </p>
+  )}
+
+  <h2>Get quotes for {cat} in {city.name}</h2>
+  <ol class="steps">
+    <li>Install {site.appName} and post what you need, with your {site.postalLabel}.</li>
+    <li>Sellers in and around {city.name} who {category.kind === 'service' ? 'offer' : 'sell'} {cat} send you quotes.</li>
+    <li>Compare price, delivery and warranty side by side, chat, and accept the best one.</li>
+  </ol>
+  <StoreBadges campaign={`seo_${city.slug}_${category.slug}`} source="seo" medium="price_page" />
+  <p class="small"><a href="/waitlist">Not live in your area yet? Join the waitlist.</a></p>
+
+  {faq.length > 0 && (
+    <>
+      <h2>Questions</h2>
+      {faq.map((f) => (
+        <>
+          <h3>{f.q}</h3>
+          <p>{f.a}</p>
+        </>
+      ))}
+    </>
+  )}
+
+  {sameCity.length > 0 && (
+    <>
+      <h2>More prices in {city.name}</h2>
+      <ul class="chips">{sameCity.map((o) => <li><a href={o.path}>{o.category.name}</a></li>)}</ul>
+    </>
+  )}
+  {sameCat.length > 0 && (
+    <>
+      <h2>{category.name} in other cities</h2>
+      <ul class="chips">{sameCat.map((o) => <li><a href={o.path}>{o.city.name}</a></li>)}</ul>
+    </>
+  )}
+
+  <p class="small muted">
+    Figures are medians of quotes sent on {site.appName}; individual quotes and buyers are never shown.
+    <a href="/editorial-policy">Editorial policy</a> · <a href="/contact">Report an error</a>
+  </p>
+</Base>

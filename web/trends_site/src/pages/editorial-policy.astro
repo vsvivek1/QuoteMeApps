@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadArticles } from '../lib/articles';
+import { site } from '../lib/site';
+
+const { config: c } = loadArticles();
+---
+<Base title="Editorial policy" description={`How ${site.name} chooses, writes and checks stories.`} path="/editorial-policy">
+  <h1>Editorial policy</h1>
+  <h2>What we cover</h2>
+  <p>Topics that are trending in a specific country, state or city, detected from public trend and news feeds. We publish only a few stories a day per country (currently at most {c.caps.per_day.india} for India and {c.caps.per_day.usa} for the United States, and never more than {c.caps.max_per_hour} an hour), so only the fastest-rising, most useful topics make it.</p>
+  <h2>Standards every story must meet</h2>
+  <ul>
+    <li>At least {c.gates.min_sources} independent sources (different publishers) report it.</li>
+    <li>It is original: we compare every draft with its sources and reject drafts that copy them. Quotes are short and attributed.</li>
+    <li>Every factual claim is checked against the sources; claims that cannot be supported are removed, and if sources disagree on key facts we wait.</li>
+    <li>It adds value: the local angle, context and what to watch next, at least {c.gates.min_words} words of real content.</li>
+    <li>Two perspectives of similar length and strength, with neutral labels such as "Consumer view vs Business view" or "Short-term vs Long-term". We never use party, religious or ideological labels, and never attribute a view to a real group or person unless a cited source shows they hold it.</li>
+  </ul>
+  <h2>Topics we never publish automatically</h2>
+  <p>Religion and caste, communal or ethnic conflict, deaths and disasters with casualties, crime, health and medical topics, elections and politics, legal cases, financial or market advice, anything involving minors, and named private individuals. These go to a human editor or are skipped.</p>
+  <h2>Keeping the site clean</h2>
+  <p>Follow-ups are merged into the original article as dated updates. Stories that are superseded or no longer read are removed from search engines. Advertising, if any, is clearly labelled and never placed above the summary.</p>
+</Base>

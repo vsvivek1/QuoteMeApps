@@ -1,0 +1,621 @@
+{
+  "_comment": "FIXTURE for build tests only (SEO_DATA_FILE=data/seo/fixtures/usa.json). Numbers are invented; fixture:true forces noindex on every page and shows a sample-data banner. Covers each gate: pass, below threshold, stale, restricted category, merged town, zero quotes.",
+  "fixture": true,
+  "country": "usa",
+  "generated_at": "2026-10-02T00:00:00Z",
+  "thresholds": {
+    "min_quotes": 10,
+    "min_sellers": 3,
+    "window_days": 90,
+    "stale_days": 90
+  },
+  "categories": [
+    {
+      "slug": "refrigerators",
+      "name": "Refrigerators",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "washers-dryers",
+      "name": "Washers and dryers",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "air-conditioners",
+      "name": "Air conditioners",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "televisions",
+      "name": "TVs",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "microwaves",
+      "name": "Microwaves",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "dishwashers",
+      "name": "Dishwashers",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "water-heaters",
+      "name": "Water heaters",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "phones",
+      "name": "Phones",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "laptops",
+      "name": "Laptops",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "cameras",
+      "name": "Cameras and security",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "accessories",
+      "name": "Accessories",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "sofas",
+      "name": "Sofas",
+      "group": "Furniture and home",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "beds",
+      "name": "Beds",
+      "group": "Furniture and home",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "mattresses",
+      "name": "Mattresses",
+      "group": "Furniture and home",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "kitchen-remodel",
+      "name": "Kitchen cabinets and remodel",
+      "group": "Furniture and home",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "interior-design",
+      "name": "Interior design",
+      "group": "Furniture and home",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "hvac",
+      "name": "HVAC repair and install",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "restricted",
+      "unit": "per job"
+    },
+    {
+      "slug": "roofing",
+      "name": "Roofing",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "restricted",
+      "unit": "per job"
+    },
+    {
+      "slug": "plumbing",
+      "name": "Plumbing",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "restricted",
+      "unit": "per job"
+    },
+    {
+      "slug": "electrical",
+      "name": "Electrical",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "restricted",
+      "unit": "per job"
+    },
+    {
+      "slug": "handyman",
+      "name": "Handyman",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "cleaning",
+      "name": "House cleaning",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "pest-control",
+      "name": "Pest control",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "painting",
+      "name": "Painting",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "moving",
+      "name": "Movers",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "appliance-repair",
+      "name": "Appliance repair",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "new-cars",
+      "name": "New cars",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "vehicle-servicing",
+      "name": "Auto repair and service",
+      "group": "Vehicles",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "tires",
+      "name": "Tires",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "used-vehicles",
+      "name": "Used vehicles",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "catering",
+      "name": "Catering",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "photography",
+      "name": "Photography",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "decoration",
+      "name": "Decor and rentals",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "venues",
+      "name": "Venues",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "printing",
+      "name": "Printing",
+      "group": "Business supplies",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "packaging",
+      "name": "Packaging",
+      "group": "Business supplies",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "office-supplies",
+      "name": "Bulk office supplies",
+      "group": "Business supplies",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "uniforms",
+      "name": "Uniforms and workwear",
+      "group": "Business supplies",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "rentals",
+      "name": "Rent a home",
+      "group": "Real estate",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "buy-home",
+      "name": "Buy a home",
+      "group": "Real estate",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "lawyers",
+      "name": "Lawyers",
+      "group": "Legal services",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "medical-providers",
+      "name": "Doctor, dentist or therapist",
+      "group": "Health",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "health-insurance",
+      "name": "Health insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "auto-insurance",
+      "name": "Auto insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "life-insurance",
+      "name": "Life insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "home-insurance",
+      "name": "Home insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "loans",
+      "name": "Loans",
+      "group": "Finance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "credit-cards",
+      "name": "Credit cards",
+      "group": "Finance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "investments",
+      "name": "Investments, securities and crypto",
+      "group": "Finance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "medicines",
+      "name": "Medicines",
+      "group": "Pharmacy",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "alcohol",
+      "name": "Alcohol",
+      "group": "Alcohol and tobacco",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "tobacco-vapes",
+      "name": "Tobacco and vapes",
+      "group": "Alcohol and tobacco",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "firearms",
+      "name": "Firearms and ammunition",
+      "group": "Weapons",
+      "kind": "product",
+      "policy": "blocked"
+    }
+  ],
+  "cities": [
+    {
+      "slug": "new-york",
+      "name": "New York",
+      "state": "New York"
+    },
+    {
+      "slug": "los-angeles",
+      "name": "Los Angeles",
+      "state": "California"
+    },
+    {
+      "slug": "chicago",
+      "name": "Chicago",
+      "state": "Illinois"
+    },
+    {
+      "slug": "houston",
+      "name": "Houston",
+      "state": "Texas"
+    },
+    {
+      "slug": "phoenix",
+      "name": "Phoenix",
+      "state": "Arizona"
+    },
+    {
+      "slug": "philadelphia",
+      "name": "Philadelphia",
+      "state": "Pennsylvania"
+    },
+    {
+      "slug": "san-antonio",
+      "name": "San Antonio",
+      "state": "Texas"
+    },
+    {
+      "slug": "san-diego",
+      "name": "San Diego",
+      "state": "California"
+    },
+    {
+      "slug": "dallas",
+      "name": "Dallas",
+      "state": "Texas"
+    },
+    {
+      "slug": "austin",
+      "name": "Austin",
+      "state": "Texas"
+    },
+    {
+      "slug": "jacksonville",
+      "name": "Jacksonville",
+      "state": "Florida"
+    },
+    {
+      "slug": "miami",
+      "name": "Miami",
+      "state": "Florida"
+    },
+    {
+      "slug": "atlanta",
+      "name": "Atlanta",
+      "state": "Georgia"
+    },
+    {
+      "slug": "seattle",
+      "name": "Seattle",
+      "state": "Washington"
+    },
+    {
+      "slug": "denver",
+      "name": "Denver",
+      "state": "Colorado"
+    },
+    {
+      "slug": "highland-park",
+      "name": "Highland Park",
+      "state": "Texas",
+      "merge_into": "dallas"
+    }
+  ],
+  "pages": [
+    {
+      "city": "dallas",
+      "category": "refrigerators",
+      "quotes_window": 37,
+      "sellers_window": 12,
+      "last_quote_at": "2026-09-30T18:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 1450,
+        "p25": 1100,
+        "p75": 1890
+      },
+      "local_sellers": 24,
+      "median_response_hours": 3.2,
+      "median_delivery_days": 3,
+      "trend_pct_vs_last_month": -4.1,
+      "top_models": [
+        {
+          "name": "Sample Model A 28 cu ft",
+          "quotes": 9
+        },
+        {
+          "name": "Sample Model B 25 cu ft",
+          "quotes": 6
+        }
+      ]
+    },
+    {
+      "city": "dallas",
+      "category": "appliance-repair",
+      "quotes_window": 22,
+      "sellers_window": 7,
+      "last_quote_at": "2026-09-28T15:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 180,
+        "p25": 140,
+        "p75": 240
+      },
+      "median_response_hours": 1.5,
+      "median_delivery_days": 2
+    },
+    {
+      "city": "new-york",
+      "category": "televisions",
+      "quotes_window": 15,
+      "sellers_window": 5,
+      "last_quote_at": "2026-09-25T12:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 780,
+        "p25": 520,
+        "p75": 1150
+      },
+      "trend_pct_vs_last_month": 6.0
+    },
+    {
+      "city": "dallas",
+      "category": "laptops",
+      "quotes_window": 4,
+      "sellers_window": 2,
+      "last_quote_at": "2026-09-20T12:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 900,
+        "p25": 800,
+        "p75": 1000
+      }
+    },
+    {
+      "city": "new-york",
+      "category": "moving",
+      "quotes_window": 30,
+      "sellers_window": 9,
+      "last_quote_at": "2026-05-01T12:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 1200,
+        "p25": 900,
+        "p75": 1600
+      }
+    },
+    {
+      "city": "dallas",
+      "category": "hvac",
+      "quotes_window": 40,
+      "sellers_window": 10,
+      "last_quote_at": "2026-09-30T12:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 300,
+        "p25": 200,
+        "p75": 450
+      }
+    },
+    {
+      "city": "highland-park",
+      "category": "refrigerators",
+      "quotes_window": 12,
+      "sellers_window": 4,
+      "last_quote_at": "2026-09-30T12:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": {
+        "median": 1500,
+        "p25": 1200,
+        "p75": 1900
+      }
+    },
+    {
+      "city": "dallas",
+      "category": "sofas",
+      "quotes_window": 0,
+      "sellers_window": 0,
+      "last_quote_at": "2026-09-30T12:00:00Z",
+      "period": {
+        "from": "2026-07-04",
+        "to": "2026-10-01"
+      },
+      "price": null
+    }
+  ]
+}

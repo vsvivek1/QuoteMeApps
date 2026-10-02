@@ -1,0 +1,96 @@
+{
+  "fixture": true,
+  "topic_tags": [
+    "weather",
+    "consumer"
+  ],
+  "sensitive": false,
+  "review": {
+    "approved_by": null,
+    "approved_at": null
+  },
+  "checks": {
+    "originality": {
+      "passed": true,
+      "max_similarity": 0.08
+    },
+    "fact_consistency": {
+      "passed": true,
+      "conflicts": false,
+      "unsupported_claims_removed": 0
+    },
+    "balance": {
+      "passed": true
+    }
+  },
+  "updates": [
+    {
+      "at": "2026-10-01T09:00:00Z",
+      "text": "Sample update: a second sample source confirmed longer waiting times for servicing in western suburbs."
+    }
+  ],
+  "corrections": [],
+  "trend_ended_at": null,
+  "traffic": {
+    "visits_14d_after_end": null
+  },
+  "superseded_by": null,
+  "app_link": {
+    "label": "Get AC servicing quotes in Pune on I Want India",
+    "url": "https://iwantindia.app/quotes/pune/ac-repair"
+  },
+  "id": "fixture-india-pune-heat-ac",
+  "slug": "sample-pune-heat-ac-demand",
+  "country": "india",
+  "places": [
+    {
+      "slug": "pune",
+      "name": "Pune",
+      "state": "Maharashtra",
+      "level": "metro"
+    },
+    {
+      "slug": "maharashtra",
+      "name": "Maharashtra",
+      "level": "state"
+    }
+  ],
+  "headline": "Sample: Hot spell in Pune lifts searches for air conditioners and servicing",
+  "summary": [
+    "Sample article for build tests: searches for air conditioners and AC servicing in Pune rose sharply this week.",
+    "Two sample sources report daytime temperatures several degrees above the seasonal average.",
+    "Local shops in the sample reports say servicing slots are filling up faster than usual."
+  ],
+  "context": "Pune usually sees its hottest days in April and May. A spell of unusually warm days tends to bring a burst of demand for cooling, servicing and repairs, because many households only service their units when they first need them.",
+  "perspectives": {
+    "framing": "Consumer view vs Business view",
+    "a": {
+      "label": "Consumer view",
+      "body": "For households, a sudden hot spell turns a postponed chore into an urgent one. Units that were not serviced over the winter may cool poorly or trip, and waiting times for technicians grow as everyone calls at once. Buyers who compare several quotes before booking often find a wide spread in prices for the same gas top-up or cleaning job, so asking two or three providers can save money. Checking what is included, such as visit charges, parts and warranty on the work, matters as much as the headline price."
+    },
+    "b": {
+      "label": "Business view",
+      "body": "For shops and technicians, a hot spell is the busiest stretch of the year and a test of capacity. Small service businesses can only add so many visits a day, so they prioritise jobs that are nearby and clearly described. Sellers of new units see more enquiries but also more price comparison, which squeezes margins. Firms that respond quickly, explain their charges up front and honour warranties tend to win repeat customers long after the heat breaks."
+    }
+  },
+  "agree": "Both sides benefit when requests are specific and prices are transparent. Clear details about the model, the problem and the location help technicians plan visits, and help buyers compare like with like.",
+  "local_angle": "In Pune, apartment complexes often book servicing for many flats at once, which can absorb local capacity quickly. Residents in newer suburbs on the city edge may face longer waits because fewer technicians are based nearby.",
+  "watch_next": "Watch the weather service forecast for the coming week and whether servicing waiting times ease. A further rise in temperatures would likely push demand for new units, while a cooler spell would shift attention back to routine maintenance.",
+  "sources": [
+    {
+      "publisher": "Example Weather Desk",
+      "url": "https://weather.example.com/pune-hot-spell",
+      "title": "Sample: Pune records warm week",
+      "snippet": "Sample snippet: temperatures in the city stayed above the seasonal average for several days this week."
+    },
+    {
+      "publisher": "Example City News",
+      "url": "https://citynews.example.org/pune-ac-servicing",
+      "title": "Sample: AC servicing slots fill up",
+      "snippet": "Sample snippet: local service shops reported more bookings than in a typical week."
+    }
+  ],
+  "published_at": "2026-10-01T06:30:00Z",
+  "updated_at": "2026-10-01T09:00:00Z",
+  "velocity": 88
+}

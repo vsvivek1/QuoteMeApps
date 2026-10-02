@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import { abs, site } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  canonical?: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  jsonLd?: object[];
+}
+const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [] } = Astro.props;
+const fullTitle = title === site.name ? title : `${title} | ${site.name}`;
+const canonicalUrl = abs(canonical ?? path);
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d).replace(/</g, '\\u003c')} />)}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a href="/" class="logo">{site.name}</a>
+        <nav aria-label="Main">
+          <ul>
+            <li><a href="/india">India</a></li>
+            <li><a href="/usa">United States</a></li>
+            <li><a href="/about">About</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <div>
+          <p class="footer-brand">{site.name}</p>
+          <p>What people near you are talking about, explained from two sides, with every source linked.</p>
+          <p class="muted small">&copy; {year}. US edition: {site.publishers.usa}. India edition: {site.publishers.india}.</p>
+        </div>
+        <nav aria-label="Policies">
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/editorial-policy">Editorial policy</a></li>
+            <li><a href="/corrections-policy">Corrections policy</a></li>
+            <li><a href="/ai-policy">AI use policy</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

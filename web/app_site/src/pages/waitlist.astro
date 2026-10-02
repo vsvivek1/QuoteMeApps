@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Form from '../components/Form.astro';
+import { site } from '../lib/site';
+
+const emailConsent = `Email me when ${site.appName} is live in my area, plus a few short tips on getting quotes. I can unsubscribe at any time from any email.`;
+const waConsent = `Also send me launch updates on WhatsApp. At most one message a week; reply STOP to opt out.`;
+---
+<Base title="Join the waitlist" description={`Get an email when ${site.appName} launches in your city.`} path="/waitlist">
+  <h1>Join the waitlist</h1>
+  <p>We are opening city by city. Leave your email and we will tell you when sellers near you are ready to quote.</p>
+  <p class="small muted">We send a confirmation email first (double opt-in). Nothing is sent unless you confirm.</p>
+  <Form kind="waitlist" submitLabel="Join the waitlist" successMessage="Almost done: check your inbox and confirm your email.">
+    <label>Email<input name="email" type="email" required maxlength="160" autocomplete="email" /></label>
+    <label>City<input name="city" required maxlength="80" autocomplete="address-level2" /></label>
+    <label>{site.postalLabel} (optional)<input name="postal_code" maxlength="10" inputmode="numeric" autocomplete="postal-code" /></label>
+    <input type="hidden" name="source" value="waitlist_page" />
+    <label class="check"><input type="checkbox" name="consent_email" value="yes" required data-consent={emailConsent} /><span>{emailConsent}</span></label>
+    {site.smsOptIn === 'whatsapp' && (
+      <>
+        <label>WhatsApp number (optional)<input name="whatsapp" type="tel" maxlength="20" autocomplete="tel" /></label>
+        <label class="check"><input type="checkbox" name="consent_whatsapp" value="yes" data-consent={waConsent} /><span>{waConsent} (optional)</span></label>
+      </>
+    )}
+    <p class="small muted">See our <a href="/legal/privacy-policy">Privacy Policy</a>.</p>
+  </Form>
+</Base>

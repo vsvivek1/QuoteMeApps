@@ -1,0 +1,74 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/r/:id", "destination": "/link/r" },
+    { "source": "/q/:id", "destination": "/link/q" },
+    { "source": "/s/:id", "destination": "/link/s" }
+  ],
+  "redirects": [
+    { "source": "/r", "destination": "/", "permanent": false },
+    { "source": "/q", "destination": "/", "permanent": false },
+    { "source": "/s", "destination": "/", "permanent": false },
+    { "source": "/privacy", "destination": "/legal/privacy-policy", "permanent": true },
+    { "source": "/privacy-policy", "destination": "/legal/privacy-policy", "permanent": true },
+    { "source": "/terms", "destination": "/legal/terms-of-service", "permanent": true },
+    { "source": "/tos", "destination": "/legal/terms-of-service", "permanent": true },
+    { "source": "/delete-account", "destination": "/legal/account-deletion", "permanent": true },
+    { "source": "/account-deletion", "destination": "/legal/account-deletion", "permanent": true },
+    { "source": "/support", "destination": "/legal/contact-support", "permanent": true },
+    { "source": "/eula", "destination": "/legal/eula", "permanent": true },
+    { "source": "/seller-signup", "destination": "/sellers", "permanent": true },
+    { "source": "/prices", "destination": "/quotes", "permanent": true },
+    { "source": "/legal/licenses", "destination": "/legal/open-source", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.supabase.co; frame-src https://challenges.cloudflare.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; upgrade-insecure-requests"
+        },
+        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/_astro/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/brand/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+    },
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/.well-known/assetlinks.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    },
+    {
+      "source": "/(r|q|s|link)/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
+}

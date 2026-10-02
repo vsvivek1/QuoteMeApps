@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../lib/site';
+---
+<Base title="Open-source licences" description={`Open-source software used by ${site.appName}.`} path="/legal/open-source">
+  <div class="prose">
+    <p class="breadcrumbs"><a href="/legal">Legal</a> /</p>
+    <h1>Open-source licences</h1>
+    <p>{site.appName} is built with open-source software, including Flutter and Dart (BSD-3-Clause), Supabase client libraries (MIT) and this website's generator, Astro (MIT).</p>
+    <p>The full list of licences for every package in the app is shown in the app under <strong>Settings &gt; Legal &gt; Open-source licences</strong>.</p>
+  </div>
+</Base>

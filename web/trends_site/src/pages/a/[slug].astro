@@ -1,0 +1,106 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import { loadArticles, type Built } from '../../lib/articles';
+import { abs, COUNTRY_LABEL, formatDateTime, site } from '../../lib/site';
+
+// Only articles that passed every publishing gate are returned by loadArticles().
+export const getStaticPaths = (() =>
+  loadArticles().built.map((b) => ({ params: { slug: b.article.slug }, props: { b } }))) satisfies GetStaticPaths;
+
+const { b } = Astro.props as { b: Built };
+const a = b.article;
+const { config } = loadArticles();
+const tz = config.caps.timezones[a.country];
+const when = (d: string) => formatDateTime(d, a.country, tz);
+const hostOf = (u: string) => new URL(u).hostname.replace(/^www\./, '');
+const updated = a.updated_at ?? a.published_at;
+const reportHref = `/contact?topic=error&article=${encodeURIComponent(a.slug)}`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: a.headline.slice(0, 110),
+    datePublished: a.published_at,
+    dateModified: updated,
+    mainEntityOfPage: abs(`/a/${a.slug}`),
+    contentLocation: a.places.map((p) => ({ '@type': 'Place', name: [p.name, p.state, COUNTRY_LABEL[a.country]].filter(Boolean).join(', ') })),
+    author: { '@type': 'Organization', name: site.name, url: abs('/about') },
+    editor: { '@type': 'Person', name: site.editorName },
+    publisher: { '@type': 'Organization', name: site.publishers[a.country] },
+    isBasedOn: a.sources.map((s) => s.url),
+  },
+];
+---
+<Base title={a.headline} description={a.summary.join(' ').slice(0, 300)} path={`/a/${a.slug}`} canonical={b.canonical} noindex={!b.indexable} ogType="article" jsonLd={jsonLd}>
+  <article>
+    <ul class="tags">
+      {a.places.map((p) => <li><a href={`/place/${a.country}/${p.slug}`}>{p.name}</a></li>)}
+      <li><a href={`/${a.country}`}>{COUNTRY_LABEL[a.country]}</a></li>
+    </ul>
+    {a.fixture && <p class="notice warn">Sample article for testing. This is not real news.</p>}
+    {a.superseded_by && <p class="notice">This story continues in <a href={`/a/${a.superseded_by}`}>a newer article</a>.</p>}
+    <h1>{a.headline}</h1>
+    <p class="meta">
+      Published <time datetime={a.published_at}>{when(a.published_at)}</time>
+      {updated !== a.published_at && <> · Updated <time datetime={updated}>{when(updated)}</time></>}
+    </p>
+    <p class="notice small">
+      <strong>AI-assisted, automatically published.</strong> This article was written with AI from the sources listed below and checked automatically for originality, factual consistency and balance.
+      <a href="/ai-policy">How this works</a> · <a href={reportHref}>Report an error</a>
+    </p>
+
+    {a.corrections && a.corrections.length > 0 && (
+      <section class="notice warn">
+        <strong>Corrections</strong>
+        <ul>{a.corrections.map((c) => <li><time datetime={c.at}>{when(c.at)}</time>: {c.text}</li>)}</ul>
+      </section>
+    )}
+
+    <h2>The facts</h2>
+    <ul class="summary">{a.summary.map((s) => <li>{s}</li>)}</ul>
+
+    {a.context && (<><h2>Context</h2><p>{a.context}</p></>)}
+
+    <h2>Two perspectives: {a.perspectives.framing}</h2>
+    <div class="persp">
+      <section aria-label={`Perspective A: ${a.perspectives.a.label}`}>
+        <h3>{a.perspectives.a.label}</h3>
+        {a.perspectives.a.body.split(/\n{2,}/).map((p) => <p>{p}</p>)}
+      </section>
+      <section aria-label={`Perspective B: ${a.perspectives.b.label}`}>
+        <h3>{a.perspectives.b.label}</h3>
+        {a.perspectives.b.body.split(/\n{2,}/).map((p) => <p>{p}</p>)}
+      </section>
+    </div>
+
+    <h2>Where they agree</h2>
+    <p>{a.agree}</p>
+
+    <h2>Why it matters locally</h2>
+    <p>{a.local_angle}</p>
+
+    <h2>What to watch next</h2>
+    <p>{a.watch_next}</p>
+
+    {a.updates && a.updates.length > 0 && (
+      <>
+        <h2>Updates</h2>
+        {a.updates.map((u) => <p><strong><time datetime={u.at}>{when(u.at)}</time>:</strong> {u.text}</p>)}
+      </>
+    )}
+
+    {b.appLink && (
+      <p class="notice"><a href={b.appLink.url}>{b.appLink.label}</a></p>
+    )}
+
+    <h2>Sources</h2>
+    <ol>
+      {a.sources.map((s) => (
+        <li><a href={s.url} rel="noopener nofollow">{s.title ?? s.url}</a> <span class="muted">({s.publisher || hostOf(s.url)})</span></li>
+      ))}
+    </ol>
+    <p class="meta">Editor responsible: {site.editorName}. Published by {site.publishers[a.country]}. <a href="/corrections-policy">Corrections policy</a> · <a href={reportHref}>Report an error</a></p>
+  </article>
+</Base>

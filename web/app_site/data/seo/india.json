@@ -1,0 +1,478 @@
+{
+  "_comment": "Committed default for the india site. The nightly export job (aggregated, anonymised quote stats from Supabase) replaces this via SEO_DATA_URL or by overwriting this file. pages[] stays empty until real data exists, so no city x category page is published without real content. Category policy mirrors supabase/seed/india.sql: only \"allowed\" categories get public pages.",
+  "country": "india",
+  "generated_at": "2026-10-02T00:00:00Z",
+  "thresholds": {
+    "min_quotes": 10,
+    "min_sellers": 3,
+    "window_days": 90,
+    "stale_days": 90
+  },
+  "categories": [
+    {
+      "slug": "refrigerators",
+      "name": "Refrigerators",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "washing-machines",
+      "name": "Washing machines",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "air-conditioners",
+      "name": "Air conditioners",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "televisions",
+      "name": "Televisions",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "microwaves",
+      "name": "Microwave ovens",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "water-purifiers",
+      "name": "Water purifiers",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "dishwashers",
+      "name": "Dishwashers",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "inverters",
+      "name": "Inverters and batteries",
+      "group": "Appliances",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "phones",
+      "name": "Mobile phones",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "laptops",
+      "name": "Laptops",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "cameras",
+      "name": "Cameras and CCTV",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "accessories",
+      "name": "Accessories",
+      "group": "Electronics",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "sofas",
+      "name": "Sofas",
+      "group": "Furniture and home",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "beds",
+      "name": "Beds",
+      "group": "Furniture and home",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "mattresses",
+      "name": "Mattresses",
+      "group": "Furniture and home",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "modular-kitchens",
+      "name": "Modular kitchens",
+      "group": "Furniture and home",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "interiors",
+      "name": "Interior design",
+      "group": "Furniture and home",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "ac-repair",
+      "name": "AC repair and service",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "plumbing",
+      "name": "Plumbing",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "electrical",
+      "name": "Electrician",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "cleaning",
+      "name": "Cleaning",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "pest-control",
+      "name": "Pest control",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "painting",
+      "name": "Painting",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "packers-movers",
+      "name": "Packers and movers",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "appliance-repair",
+      "name": "Appliance repair",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "carpentry",
+      "name": "Carpentry",
+      "group": "Home services",
+      "kind": "service",
+      "policy": "allowed",
+      "unit": "per job"
+    },
+    {
+      "slug": "new-cars",
+      "name": "New cars",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "new-bikes",
+      "name": "New bikes and scooters",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "vehicle-servicing",
+      "name": "Vehicle servicing",
+      "group": "Vehicles",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "tyres",
+      "name": "Tyres",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "used-vehicles",
+      "name": "Used vehicles",
+      "group": "Vehicles",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "catering",
+      "name": "Catering",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "photography",
+      "name": "Photography",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "decoration",
+      "name": "Decoration",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "venues",
+      "name": "Venues and banquet halls",
+      "group": "Events",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "printing",
+      "name": "Printing",
+      "group": "Business supplies",
+      "kind": "service",
+      "policy": "allowed"
+    },
+    {
+      "slug": "packaging",
+      "name": "Packaging",
+      "group": "Business supplies",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "office-supplies",
+      "name": "Bulk office supplies",
+      "group": "Business supplies",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "uniforms",
+      "name": "Uniforms",
+      "group": "Business supplies",
+      "kind": "product",
+      "policy": "allowed"
+    },
+    {
+      "slug": "property-rent",
+      "name": "Rent a home or shop",
+      "group": "Real estate",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "property-buy",
+      "name": "Buy property",
+      "group": "Real estate",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "doctors-clinics",
+      "name": "Doctor / clinic visit",
+      "group": "Health",
+      "kind": "product",
+      "policy": "restricted"
+    },
+    {
+      "slug": "health-insurance",
+      "name": "Health insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "motor-insurance",
+      "name": "Motor insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "life-insurance",
+      "name": "Life insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "home-insurance",
+      "name": "Home insurance",
+      "group": "Insurance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "loans",
+      "name": "Loans",
+      "group": "Finance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "credit-cards",
+      "name": "Credit cards",
+      "group": "Finance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "investments",
+      "name": "Investments, securities and crypto",
+      "group": "Finance",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "advocates",
+      "name": "Advocates",
+      "group": "Legal services",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "medicines",
+      "name": "Medicines",
+      "group": "Pharmacy",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "alcohol",
+      "name": "Alcohol",
+      "group": "Alcohol and tobacco",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "tobacco-vapes",
+      "name": "Tobacco and vapes",
+      "group": "Alcohol and tobacco",
+      "kind": "product",
+      "policy": "blocked"
+    },
+    {
+      "slug": "firearms",
+      "name": "Firearms and ammunition",
+      "group": "Weapons",
+      "kind": "product",
+      "policy": "blocked"
+    }
+  ],
+  "cities": [
+    {
+      "slug": "mumbai",
+      "name": "Mumbai",
+      "state": "Maharashtra"
+    },
+    {
+      "slug": "delhi",
+      "name": "Delhi",
+      "state": "Delhi"
+    },
+    {
+      "slug": "bengaluru",
+      "name": "Bengaluru",
+      "state": "Karnataka"
+    },
+    {
+      "slug": "hyderabad",
+      "name": "Hyderabad",
+      "state": "Telangana"
+    },
+    {
+      "slug": "ahmedabad",
+      "name": "Ahmedabad",
+      "state": "Gujarat"
+    },
+    {
+      "slug": "chennai",
+      "name": "Chennai",
+      "state": "Tamil Nadu"
+    },
+    {
+      "slug": "kolkata",
+      "name": "Kolkata",
+      "state": "West Bengal"
+    },
+    {
+      "slug": "pune",
+      "name": "Pune",
+      "state": "Maharashtra"
+    },
+    {
+      "slug": "jaipur",
+      "name": "Jaipur",
+      "state": "Rajasthan"
+    },
+    {
+      "slug": "lucknow",
+      "name": "Lucknow",
+      "state": "Uttar Pradesh"
+    },
+    {
+      "slug": "surat",
+      "name": "Surat",
+      "state": "Gujarat"
+    },
+    {
+      "slug": "kochi",
+      "name": "Kochi",
+      "state": "Kerala"
+    },
+    {
+      "slug": "chandigarh",
+      "name": "Chandigarh",
+      "state": "Chandigarh"
+    },
+    {
+      "slug": "indore",
+      "name": "Indore",
+      "state": "Madhya Pradesh"
+    },
+    {
+      "slug": "coimbatore",
+      "name": "Coimbatore",
+      "state": "Tamil Nadu"
+    }
+  ],
+  "pages": []
+}

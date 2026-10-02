@@ -1,0 +1,24 @@
+---
+import { formsEnabled, site, warnOnce } from '../lib/site';
+
+interface Props {
+  kind: 'trends_contact' | 'trends_error_report';
+  submitLabel: string;
+  successMessage: string;
+}
+const { kind, submitLabel, successMessage } = Astro.props;
+if (!formsEnabled) warnOnce('PUBLIC_TURNSTILE_SITE_KEY or FORMS_ENDPOINT unset: contact form renders disabled.');
+---
+{!formsEnabled && <p class="notice warn">This form is not switched on yet.{site.editorEmail && <> Please email <a href={`mailto:${site.editorEmail}`}>{site.editorEmail}</a>.</>}</p>}
+<form class="form js-form" data-endpoint={site.formsEndpoint} data-kind={kind} data-country="" data-success={successMessage} novalidate>
+  <slot />
+  <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="website_url_confirm" tabindex="-1" autocomplete="off" /></label></div>
+  {formsEnabled && <div class="cf-turnstile" data-sitekey={site.turnstileSiteKey} data-action={kind}></div>}
+  <noscript><p class="notice warn">This form needs JavaScript (for spam protection).</p></noscript>
+  <div><button class="btn" type="submit" disabled={!formsEnabled}>{submitLabel}</button></div>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+{formsEnabled && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+<script>
+  import '../scripts/forms';
+</script>

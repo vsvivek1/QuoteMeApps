@@ -1,0 +1,23 @@
+---
+import type { Built } from '../lib/articles';
+import { COUNTRY_LABEL, formatDateTime } from '../lib/site';
+import { loadArticles } from '../lib/articles';
+
+interface Props {
+  items: Built[];
+}
+const { items } = Astro.props;
+const { config } = loadArticles();
+---
+<ul class="list">
+  {items.map((b) => (
+    <li>
+      <h2><a href={`/a/${b.article.slug}`}>{b.article.headline}</a></h2>
+      <p class="meta">
+        {b.article.places.map((p) => p.name).join(', ')} · {COUNTRY_LABEL[b.article.country]} ·
+        <time datetime={b.article.published_at}>{formatDateTime(b.article.published_at, b.article.country, config.caps.timezones[b.article.country])}</time>
+      </p>
+      <p>{b.article.summary[0]}</p>
+    </li>
+  ))}
+</ul>

@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../lib/site';
+import { cityHubs, loadSeo } from '../../lib/seo';
+
+const { thresholds: t, data } = await loadSeo();
+const hubs = await cityHubs();
+const live = hubs.filter((h) => h.indexable);
+const listed = data.fixture ? hubs : live;
+---
+<Base title="Local prices from real quotes" description={`Median prices for appliances, electronics and services by city, from real quotes on ${site.appName}.`} path="/quotes">
+  <h1>Local prices from real quotes</h1>
+  <p>These pages show what sellers actually quoted on {site.appName}: medians and typical ranges by city and category, updated nightly. A page appears only once a city and category has at least {t.min_quotes} quotes from {t.min_sellers} or more sellers. <a href="/editorial-policy">How we build these pages</a>.</p>
+  {data.fixture && <p class="notice warn">Sample data: these pages use fixture data for testing and are hidden from search engines.</p>}
+  {live.length === 0 && !data.fixture && (
+    <p class="notice">We are still collecting quotes. Price pages will appear here as soon as there is enough real data. <a href="/waitlist">Join the waitlist</a> to hear when we launch in your city.</p>
+  )}
+  {listed.map((h) => (
+    <section>
+      <h2><a href={`/quotes/${h.city.slug}`}>{h.city.name}, {h.city.state}</a></h2>
+      <ul class="chips">
+        {h.pages.filter((p) => p.status === 'indexable' || data.fixture).map((p) => <li><a href={p.path}>{p.category.name}</a></li>)}
+      </ul>
+    </section>
+  ))}
+</Base>

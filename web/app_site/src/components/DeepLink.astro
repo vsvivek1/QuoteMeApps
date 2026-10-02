@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import StoreBadges from './StoreBadges.astro';
+import { site } from '../lib/site';
+
+interface Props {
+  kind: 'r' | 'q' | 's';
+}
+const { kind } = Astro.props;
+const copy = {
+  r: { thing: 'request', title: 'Open this request', body: 'Someone shared a request with you. Open it in the app to see the details and the quotes.' },
+  q: { thing: 'quote', title: 'Open this quote', body: 'This link opens a quote in the app. Sign in with the account the quote was sent to.' },
+  s: { thing: 'seller', title: 'See this seller', body: 'This link opens a seller profile in the app, where you can see their ratings and ask them for a quote.' },
+}[kind];
+// Served for /r/:id, /q/:id and /s/:id via vercel.json rewrites when the app is not
+// installed (App Links / Universal Links open the app directly when it is). No data is
+// fetched: anonymous page views never hit Supabase.
+---
+<Base title={`${copy.title} in ${site.appName}`} description={copy.body} path={`/link/${kind}`} noindex smartBanner>
+  <section class="hero" id="deeplink" data-kind={kind} data-package={site.android.packages[0]} data-play={site.playStoreUrl}>
+    <h1>{copy.title} in {site.appName}</h1>
+    <p class="lead">{copy.body}</p>
+    <div class="actions">
+      <a class="btn" id="open-in-app" href="/">Open in the app</a>
+    </div>
+    <p class="muted small">Don't have the app yet? It's free:</p>
+    <StoreBadges campaign={`deeplink_${kind}`} source="share_link" medium="deeplink" />
+    <p class="small muted">On Android the link above opens the app if it is installed. On iPhone, open this link from Messages, Mail or Notes, or tap the banner at the top of Safari.</p>
+  </section>
+  <script>
+    import '../scripts/deeplink';
+  </script>
+</Base>

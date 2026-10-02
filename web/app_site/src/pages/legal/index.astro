@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import { legalPages } from '../../lib/legal';
+import { formatDate, site } from '../../lib/site';
+
+const pages = await legalPages();
+---
+<Base title="Legal" description={`Terms, privacy and other legal pages for ${site.appName}.`} path="/legal">
+  <h1>Legal</h1>
+  <p>Legal pages for {site.appName}, operated by {site.company}.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Page</th><th>Version</th><th>Last updated</th></tr></thead>
+      <tbody>
+        {pages.map((p) => (
+          <tr><td><a href={`/legal/${p.data.slug}`}>{p.data.title}</a></td><td>{p.data.version}</td><td>{formatDate(p.data.last_updated)}</td></tr>
+        ))}
+        <tr><td><a href="/legal/open-source">Open-source licences</a></td><td>-</td><td>-</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Base>

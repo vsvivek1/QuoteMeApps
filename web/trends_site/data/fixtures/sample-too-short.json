@@ -1,0 +1,76 @@
+{
+  "fixture": true,
+  "topic_tags": [
+    "weather"
+  ],
+  "sensitive": false,
+  "review": {
+    "approved_by": null,
+    "approved_at": null
+  },
+  "checks": {
+    "originality": {
+      "passed": true,
+      "max_similarity": 0.08
+    },
+    "fact_consistency": {
+      "passed": true,
+      "conflicts": false,
+      "unsupported_claims_removed": 0
+    },
+    "balance": {
+      "passed": true
+    }
+  },
+  "updates": [],
+  "corrections": [],
+  "trend_ended_at": null,
+  "traffic": {
+    "visits_14d_after_end": null
+  },
+  "superseded_by": null,
+  "app_link": null,
+  "id": "fixture-short",
+  "slug": "sample-too-short",
+  "country": "india",
+  "places": [
+    {
+      "slug": "mumbai",
+      "name": "Mumbai",
+      "level": "metro"
+    }
+  ],
+  "headline": "Sample: thin story",
+  "summary": [
+    "Sample text."
+  ],
+  "perspectives": {
+    "framing": "For vs Against",
+    "a": {
+      "label": "For",
+      "body": "Short."
+    },
+    "b": {
+      "label": "Against",
+      "body": "Also short."
+    }
+  },
+  "agree": "Short.",
+  "local_angle": "Short.",
+  "watch_next": "Short.",
+  "sources": [
+    {
+      "publisher": "Example Weather Desk",
+      "url": "https://weather.example.com/pune-hot-spell",
+      "title": "Sample: Pune records warm week",
+      "snippet": "Sample snippet: temperatures in the city stayed above the seasonal average for several days this week."
+    },
+    {
+      "publisher": "Example City News",
+      "url": "https://citynews.example.org/pune-ac-servicing",
+      "title": "Sample: AC servicing slots fill up",
+      "snippet": "Sample snippet: local service shops reported more bookings than in a typical week."
+    }
+  ],
+  "published_at": "2026-09-29T08:00:00Z"
+}

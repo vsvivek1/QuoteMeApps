@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/site';
+---
+<Base title={`About ${site.appName}`} description={`${site.appName} is a reverse-quote marketplace run by ${site.company}.`} path="/about">
+  <div class="prose">
+    <h1>About {site.appName}</h1>
+    <p>{site.appName} turns shopping around: instead of you searching shops, you post what you want and sellers compete with quotes. It is a marketplace: we connect buyers and sellers but are not a party to the sale.</p>
+    <p>{site.appName} is built and operated by <strong>{site.company}</strong>. There is one app per country so that each follows its own country's rules on what may be quoted and by whom. Our sister app for {site.country === 'usa' ? 'India is I Want India' : 'the United States is I Want USA'}; accounts and data are completely separate.</p>
+    <h2>The data on this website</h2>
+    <p>Our local price pages are built from anonymised quotes sent in the app. We publish medians and ranges, never a single quote, never a buyer's identity, and only once a city and category has enough data. Read our <a href="/editorial-policy">editorial policy</a> for the details.</p>
+    <h2>Contact</h2>
+    <p>See <a href="/contact">Contact</a> and <a href="/legal/contact-support">Contact and Support</a>.</p>
+  </div>
+</Base>

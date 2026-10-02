@@ -1,0 +1,22 @@
+---
+import { appStoreLink, playLink, site } from '../lib/site';
+
+interface Props {
+  campaign: string;
+  source?: string;
+  medium?: string;
+}
+const { campaign, source = 'website', medium = 'web' } = Astro.props;
+// Text badges; swap in the official Google Play / App Store badge artwork (their
+// guidelines forbid altering it) once the listings are live.
+const play = site.playStoreLive ? playLink(campaign, source, medium) : '/waitlist';
+const apple = site.appStoreLive ? appStoreLink(campaign) : '/waitlist';
+---
+<div class="badges">
+  <a class="badge" href={play} data-store="play" rel={site.playStoreLive ? 'noopener' : undefined}>
+    <small>{site.playStoreLive ? 'GET IT ON' : 'COMING SOON TO'}</small><strong>Google Play</strong>
+  </a>
+  <a class="badge" href={apple} data-store="apple" rel={site.appStoreLive ? 'noopener' : undefined}>
+    <small>{site.appStoreLive ? 'Download on the' : 'Coming soon to the'}</small><strong>App Store</strong>
+  </a>
+</div>

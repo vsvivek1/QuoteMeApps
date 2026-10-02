@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Form from '../components/Form.astro';
+import { site } from '../lib/site';
+import { loadSeo } from '../lib/seo';
+
+const { data } = await loadSeo();
+const cats = data.categories.filter((c) => c.policy === 'allowed');
+const contactConsent = `I agree that ${site.company} may contact me by email or phone about joining ${site.appName} as a seller. I can opt out at any time.`;
+const waConsent = `Send me updates on WhatsApp from ${site.appName}. At most one message a week; reply STOP to opt out.`;
+---
+<Base title="Sell on the app: get local buyer requests" description={`Join ${site.appName} as a seller: see local buyer requests in your categories and send quotes from your phone.`} path="/sellers">
+  <h1>Grow your business with {site.appName}</h1>
+  <p class="lead muted">Buyers near you post exactly what they want. You send a quote. No cold calls, no ads to manage.</p>
+  <ol class="steps">
+    <li>Leave your details below, or install the app and choose <strong>"I'm a business"</strong>.</li>
+    <li>Add your categories, brands and service area ({site.postalLabel}s or a radius around your shop).</li>
+    <li>Verify your business ({site.sellerIds}) to get the Verified badge and earlier access to new requests.</li>
+  </ol>
+  <p>Read the <a href="/legal/seller-terms">Seller Terms</a> and <a href="/legal/subscription-terms">plan terms</a> before you start.</p>
+
+  <h2>Seller sign-up</h2>
+  <Form kind="seller_signup" submitLabel="Send my details" successMessage="Thanks! We will get in touch to help you set up your shop.">
+    <label>Business name<input name="business_name" required maxlength="120" autocomplete="organization" /></label>
+    <label>Your name<input name="contact_name" required maxlength="80" autocomplete="name" /></label>
+    <label>Email<input name="email" type="email" required maxlength="160" autocomplete="email" /></label>
+    <label>Phone<input name="phone" type="tel" required maxlength="20" autocomplete="tel" /></label>
+    <label>City<input name="city" required maxlength="80" autocomplete="address-level2" /></label>
+    <label>{site.postalLabel}<input name="postal_code" required maxlength="10" inputmode="numeric" autocomplete="postal-code" placeholder={site.postalExample} /></label>
+    <label>Main category
+      <select name="category" required>
+        <option value="">Choose one</option>
+        {cats.map((c) => <option value={c.slug}>{c.group}: {c.name}</option>)}
+        <option value="other">Something else</option>
+      </select>
+    </label>
+    <label>Website or Google Business Profile (optional)<input name="website" type="url" maxlength="200" /></label>
+    <label class="check"><input type="checkbox" name="consent_contact" value="yes" required data-consent={contactConsent} /><span>{contactConsent}</span></label>
+    {site.smsOptIn === 'whatsapp' && (
+      <label class="check"><input type="checkbox" name="consent_whatsapp" value="yes" data-consent={waConsent} /><span>{waConsent} (optional)</span></label>
+    )}
+    <p class="small muted">We use these details only to help you join. See our <a href="/legal/privacy-policy">Privacy Policy</a>.</p>
+  </Form>
+</Base>

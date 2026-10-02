@@ -1,0 +1,36 @@
+{
+  "_comment": "Publishing controls for the trends site (brief Section 21.10). The admin panel owns these values; the build enforces them. caps.per_day must be one of ramp_levels: step up one level at most once a month, and only while indexing and traffic look healthy. Kill switch: set publishing.paused=true with paused_at; articles published after paused_at are not built.",
+  "publishing": { "paused": false, "paused_at": null },
+  "caps": {
+    "per_day": { "usa": 1, "india": 1 },
+    "ramp_levels": [1, 2, 5, 10, 20],
+    "hard_max_per_day": 20,
+    "max_per_hour": 3,
+    "timezones": { "usa": "America/New_York", "india": "Asia/Kolkata" }
+  },
+  "gates": {
+    "min_sources": 2,
+    "max_similarity": 0.2,
+    "shingle_words": 6,
+    "max_quote_words": 25,
+    "min_words": 250,
+    "min_section_words": 15,
+    "max_perspective_ratio": 1.5,
+    "noindex_min_visits_14d": 20
+  },
+  "sensitive_tags": [
+    "religion", "caste", "communal", "ethnic-conflict", "death", "deaths", "disaster-casualties", "crime",
+    "health", "medical", "election", "elections", "politics", "legal-case", "court", "finance-advice",
+    "markets", "minors", "children", "private-individual"
+  ],
+  "sensitive_keywords": [
+    "killed", "dead", "death", "deaths", "died", "murder", "rape", "assault", "riot", "riots", "communal", "caste",
+    "religious", "mosque", "temple", "church", "gurdwara", "election", "elections", "poll", "vote", "voting", "minister",
+    "senator", "congressman", "party", "court", "lawsuit", "arrested", "police", "vaccine", "disease", "outbreak",
+    "cancer", "stock tips", "invest now", "crypto", "child", "children", "minor", "suicide", "terror", "shooting"
+  ],
+  "banned_perspective_terms": [
+    "left", "right", "left-wing", "right-wing", "liberal", "conservative", "communist", "capitalist", "socialist",
+    "progressive", "democrat", "republican", "bjp", "congress", "aap", "hindu", "muslim", "christian", "sikh", "secular"
+  ]
+}

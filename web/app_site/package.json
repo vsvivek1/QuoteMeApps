@@ -1,0 +1,16 @@
+{
+  "name": "iwant-app-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build:usa": "SITE_COUNTRY=usa astro build",
+    "build:india": "SITE_COUNTRY=india astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.3.5"
+  },
+  "engines": { "node": ">=22" }
+}

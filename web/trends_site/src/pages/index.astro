@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleList from '../components/ArticleList.astro';
+import { loadArticles } from '../lib/articles';
+import { abs, site } from '../lib/site';
+
+const { built } = loadArticles();
+const shown = built.filter((b) => b.indexable || b.article.fixture).slice(0, 30);
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: abs('/') }];
+---
+<Base title={site.name} description="What is trending in Indian and US cities right now, explained from two neutral perspectives with every source linked." path="/" jsonLd={jsonLd}>
+  <h1>What's happening near you</h1>
+  <p class="muted">Trending local stories in India and the United States. Each one is explained from two clearly labelled perspectives, with every source linked. <a href="/ai-policy">Articles are AI-assisted and automatically published</a> under strict checks.</p>
+  {shown.some((b) => b.article.fixture) && <p class="notice warn">Sample articles for testing. Not real news.</p>}
+  {shown.length ? <ArticleList items={shown} /> : <p class="notice">No stories yet. Check back soon.</p>}
+</Base>
