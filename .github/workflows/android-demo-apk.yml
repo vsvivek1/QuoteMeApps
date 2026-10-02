@@ -46,7 +46,7 @@ jobs:
           --dart-define-from-file=config/${{ matrix.country }}.prod.json
           --dart-define=DEMO_MODE=true
       - name: Rename
-        run: cp build/app/outputs/flutter-apk/app-${{ matrix.flavor }}-release.apk iwant-${{ matrix.country }}-demo.apk
+        run: cp build/app/outputs/flutter-apk/app-$(echo ${{ matrix.flavor }} | tr A-Z a-z)-release.apk iwant-${{ matrix.country }}-demo.apk
       - uses: actions/upload-artifact@v5
         with:
           name: apk-${{ matrix.country }}
