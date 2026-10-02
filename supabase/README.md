@@ -132,7 +132,7 @@ keeps working. Jobs (`select jobname, schedule from cron.job`): `iwant-expire-st
 `iwant-licence-expiry` (daily), `iwant-push-digests` (*/5), `iwant-outreach-send` (*/10 on
 weekdays, only when `outreach_enabled`; it sends only for campaigns an admin activated and only
 once `outreach_business_address` holds a real postal address), `iwant-outreach-purge` (daily), `iwant-rate-limit-cleanup`
-(hourly), `iwant-expire-web-forms` (hourly).
+(hourly), `iwant-expire-web-forms` (hourly), `iwant-seo-export` (02:40 UTC daily, see below).
 
 ### External webhooks to register
 
@@ -163,7 +163,7 @@ supabase/tests/local/run_local.sh usa        # one country
 KEEP_CLUSTER=1 PGPORT=55433 supabase/tests/local/run_local.sh india   # leave it running for psql
 ```
 
-Current result: India 11 files / 321 tests PASS, USA 11 files / 321 tests PASS.
+Current result: India 13 files / 437 tests PASS, USA 13 files / 437 tests PASS.
 
 ### Edge Functions (Deno)
 
@@ -178,7 +178,11 @@ signatures (Stripe, Razorpay, Svix with independent vectors), the anti-spam cont
 classification, push scheduling (priority window, digests, quiet hours), store status mapping,
 lead import mapping, the Apple ES256 client secret, web-forms validation, the outreach-send
 `send_one` flow (with fakes: request checks, gate order, server-built footer, recording, audit)
-and the brochure format aliases.
+and the brochure format aliases, and the `seo-export` flow (data checks, upload, deploy hook
+dry run, run bookkeeping), and the trends pipeline (`tests/trends_*_test.ts`: feed parsing,
+clustering, velocity, every quality gate, the Claude drafting flow against a mocked Messages API,
+caps, ramp, kill switch, publish index and full poll / draft / publish runs on an in-memory store;
+`trends_store_test.ts` runs the same flow on a real database when `TRENDS_TEST_DB_URL` is set).
 
 ## Conventions
 
@@ -192,3 +196,46 @@ and the brochure format aliases.
 - Every client write goes through RPCs or column-limited grants. RLS is on for every table.
   `anon` can read only `app_settings` (public keys), `postal_codes`, `cities`, `categories`,
   `sellers`, `seller_categories` and `reviews`.
+
+## SEO data export (Section 21.9)
+
+Migrations `20261002001100_seo_export.sql` and `20261002001110_seo_storage_cron.sql`; contract in
+[API.md section 12](API.md#12-seo-data-export-and-guide-review-section-219-migrations-1100-1110).
+The nightly job calls the `seo-export` Edge Function, which runs `public.seo_export()`, uploads
+`seo/<country>.json` to the public bucket `public-data` and POSTs the Vercel Deploy Hook of that
+country's `app_site` project. Per project, once:
+
+1. `supabase functions deploy seo-export` (with the others).
+2. In Vercel (project `iwant-usa-web` or `iwant-india-web`) > Settings > Git > Deploy Hooks, create a
+   hook for `main`, then store it as a function secret (never commit it):
+   `supabase secrets set VERCEL_DEPLOY_HOOK_APP_SITE=<hook url> --project-ref <ref>`.
+   Until it is set the function uploads the file and logs a dry run instead of rebuilding.
+3. In Vercel set `SEO_DATA_URL=https://<ref>.supabase.co/storage/v1/object/public/public-data/seo/<country>.json`
+   and, on Production, `SEO_DATA_REQUIRED=1` (see `web/README.md`).
+4. Thresholds (`seo_thresholds`, default 10 quotes / 3 sellers / 90 days), the weekly AI-guide cap
+   and the guide review queue live in the admin panel (SEO pages). Run a first export there with
+   **Run export now**, or `select private.call_edge_function('seo-export', '{"action":"run"}')`.
+
+Sellers appear in the exported directory only after `set_seller_directory_opt_in(true)` (default
+off). pgTAP: `tests/database/12_seo_export.test.sql`; Deno: `functions/tests/seo_export_test.ts`.
+
+## Trends pipeline (Section 21.10)
+
+Migrations `20261002001200_trends_schema.sql`, `..._1210_trends_admin_rpc.sql` and
+`..._1220_trends_storage_cron.sql`; contract in [API.md section 13](API.md#13-trends-pipeline-section-2110-migrations-1200-1220).
+Everything lives in the `trends` schema (not exposed through the API, no grants for app users), the
+public bucket `trends-public` and the cron jobs `trends-poll`, `trends-draft`, `trends-publish`
+(every 5 minutes) and `trends-cleanup` (daily). Run it in **one** project only (it covers both
+countries), once:
+
+1. `supabase functions deploy trends-poll trends-draft trends-publish`.
+2. Secrets (never commit them): `supabase secrets set ANTHROPIC_API_KEY=... VERCEL_DEPLOY_HOOK_TRENDS_SITE=...`
+   and, optionally, `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USER_AGENT`,
+   `ANTHROPIC_MODEL` (default `claude-sonnet-5-5`). Without the Anthropic key the pipeline polls and
+   routes topics but drafts nothing.
+3. In Vercel (trends_site project) set `TRENDS_DATA_URL=https://<ref>.supabase.co/storage/v1/object/public/trends-public/`.
+4. Turn it on from the admin panel (`admin_trends_set_setting('pipeline', '{"enabled": true}')`).
+   Publishing starts at 1 article per day per country; the kill switch, caps, ramp and review queue
+   are in the admin panel (`admin/TRENDS_ADMIN_NEEDS.md`).
+
+pgTAP: `tests/database/20_trends.test.sql`; Deno: `functions/tests/trends_*_test.ts`.

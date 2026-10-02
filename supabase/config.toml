@@ -124,9 +124,19 @@ max_frequency = "30s"
 910000000005 = "123456" # store-review buyer
 910000000006 = "123456" # store-review seller
 
+# Local stack: GoTrue refuses phone sign-in unless some SMS provider is enabled,
+# even for test_otp numbers (which never reach the provider). This Twilio block
+# uses obviously fake, non-secret values so the local stack accepts phone OTP;
+# no SMS can be sent with them. Hosted projects configure the real provider in
+# the dashboard.
+[auth.sms.twilio]
+enabled = true
+account_sid = "AC00000000000000000000000000000000"
+message_service_sid = "MG00000000000000000000000000000000"
+auth_token = "local-dummy-not-a-secret"
+
 # Real SMS: Twilio Verify (USA) / Twilio or a Send SMS hook to MSG91 (India,
-# DLT-registered template). Disabled locally: test_otp numbers above work
-# without a provider.
+# DLT-registered template), configured in the dashboard for hosted projects.
 [auth.sms.twilio_verify]
 enabled = false
 account_sid = "env(SUPABASE_AUTH_SMS_TWILIO_ACCOUNT_SID)"
@@ -201,6 +211,20 @@ verify_jwt = false
 # import-leads runs from the admin panel (admin JWT) and from pg_cron
 # (x-webhook-secret), so it checks both itself.
 [functions.import-leads]
+verify_jwt = false
+
+# seo-export: pg_cron (x-webhook-secret) or the admin panel (admin JWT), checked in the function.
+[functions.seo-export]
+verify_jwt = false
+
+# Trends pipeline (Section 21.10): pg_cron (x-webhook-secret) or an admin "run now", checked in the function.
+[functions.trends-poll]
+verify_jwt = false
+
+[functions.trends-draft]
+verify_jwt = false
+
+[functions.trends-publish]
 verify_jwt = false
 
 # User-facing functions keep the gateway JWT check.

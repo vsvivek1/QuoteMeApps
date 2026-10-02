@@ -560,3 +560,133 @@ for local and staging only.
   added (`APPSTORE_ALLOW_UNVERIFIED_CHAIN=true` only on staging).
 - The `seller:{id}` broadcast is a public channel carrying ids only. Moving it to private
   channels with `realtime.messages` RLS is a later hardening step.
+
+## 12. SEO data export and guide review (Section 21.9; migrations 1100, 1110)
+
+Nightly pipeline: `pg_cron` job `iwant-seo-export` (02:40 UTC) → Edge Function `seo-export` →
+`public.seo_export()` → upload `seo/<country>.json` to the public bucket `public-data` → POST the
+Vercel Deploy Hook (`VERCEL_DEPLOY_HOOK_APP_SITE`; unset = dry-run log) → `web/app_site` rebuilds
+from `SEO_DATA_URL` = `https://<ref>.supabase.co/storage/v1/object/public/public-data/seo/<country>.json`.
+
+**Settings** (`app_settings`, admin-editable with `admin_set_setting`, validated by
+`private.validate_seo_setting` on every write):
+
+| Key | Default | Rule |
+|---|---|---|
+| `seo_thresholds` | `{"min_quotes":10,"min_sellers":3,"window_days":90,"stale_days":90}` | all four integer keys; `min_quotes` 3..1000, `min_sellers` 2..100 (anonymity floor), `window_days` / `stale_days` 7..365 |
+| `seo_ai_guides_weekly_cap` | `10` | integer 0..100: new AI-assisted guides per rolling 7 days |
+| `seo_merge` | `{"max_population":50000,"radius_km":25,"assign_radius_km":40}` | towns below `max_population` within `radius_km` of a city of at least that size share its page; a quote's request is assigned to the nearest city within `assign_radius_km` (no location: city name match) |
+| `seo_category_meta` | service overrides | `{slug: {kind: "product"\|"service", unit?}}`; children of `home-services` default to service "per job", of `events` to service; categories whose request has a required `quantity` field get "per item" |
+
+**Export data** (`SeoData`, the shape `web/app_site/src/lib/seo.ts` reads): `country`,
+`generated_at`, `thresholds`, `categories[]` (active leaf categories with `policy`, `group`, `kind`,
+`unit`), `cities[]` (areas with pages plus merged towns with `merge_into` = canonical area),
+`pages[]`, `guides[]`, `sellers[]`. Per city x allowed category with a quote in `window_days`:
+`quotes_window`, `sellers_window` (distinct), `local_sellers` (sellers covering the area),
+`last_quote_at` (truncated to the day), `period`, and **only when the gates pass**: `price`
+(`median`, `p25`, `p75` in major units, rounded: <100 → 1, <1k → 5, <10k → 10, <100k → 100,
+else 1000; USA pre-tax subtotal, India tax inclusive, both without delivery, per unit of the
+request `quantity`), `median_delivery_days`, `median_response_hours` (each from at least 3
+values), `trend_pct_vs_last_month` (last 30 vs previous 30 days, each with at least 5 quotes from
+2 sellers) and `top_models` (only models quoted by at least `min_sellers` different sellers).
+Counted quotes: not hidden or withdrawn, project currency, allowed and active category, no
+review-account buyer or seller, no banned or deleted seller. No buyer data, request text, contact
+details or individual quotes are ever exported. `manual_noindex: true` when an admin forced it.
+
+| Function / table | Caller | Notes |
+|---|---|---|
+| `seo_export(p_triggered_by text = 'cron', p_dry_run bool = false, p_now timestamptz = now()) → {run_id, country, data}` | service role (`seo-export`) | refreshes `seo_pages` and inserts a `seo_export_runs` row unless `p_dry_run` |
+| `seo_finish_export(p_run_id, p_storage_path, p_upload_ok, p_deploy_hook, p_error)` | service role | `deploy_hook` = `triggered` / `dry_run` / `failed` / `skipped` |
+| `seo_pages` | admin read (RLS) | one row per area x allowed category with a quote in the last 365 days: `status` (`indexable`, `noindex` = enough data but stale / no price / manual, `waiting_for_data` = below the gates), `reasons[]`, `quotes_window`, `sellers_window`, `local_sellers`, `merged_city_ids`, `last_quote_at`, `manual_noindex`, `indexable_since`, `refreshed_at` |
+| `seo_export_runs` | admin read | `triggered_by`, `started_at`, `finished_at`, counts per status, `guides`, `sellers`, `storage_path`, `upload_ok`, `deploy_hook`, `error` |
+| `seo_guides` | admin read | `slug` (unique, `^[a-z0-9]+(-[a-z0-9]+)*$`), `title`, `description`, `city_id?`, `category_id`, `body_md`, `status` (`draft` / `approved` / `published`), `ai_assisted`, `author_id`, `reviewer_id`, `reviewed_at`, `published_at`. Exported only when approved (site: noindex preview) or published (indexable while reviewed within 184 days) |
+| `admin_set_seo_page_noindex(p_city_id, p_category_id, p_noindex) → seo_pages` | admin | kept across exports; audited |
+| `admin_upsert_seo_guide(p_id uuid?, p_slug, p_title, p_category_id, p_body_md, p_city_id?, p_description?, p_ai_assisted = false) → seo_guides` | admin | `p_id` null = create. Any edit sends the guide back to `draft` (new review needed). Errors: `invalid_slug`, `invalid_category` (blocked), `invalid_city` (400), `guide_not_found` (404), `ai_flag_cannot_be_added` (400), `ai_guide_weekly_cap` (429, details "n of cap this week"); duplicate slug → `23505` |
+| `admin_review_seo_guide(p_id, p_action) → seo_guides` | admin | `approve` (draft → approved; stores `reviewer_id` + `reviewed_at`), `publish` (approved → published; else `409 guide_not_approved`), `unpublish` (published → approved), `reject` (→ draft, clears the review); other moves `409 invalid_transition`, unknown action `400 invalid_action` |
+| `set_seller_directory_opt_in(p_opt_in bool) → sellers` | seller | `sellers.seo_directory_opt_in` (default **false**) + `seo_directory_opt_in_at`. Only opted-in sellers appear in `sellers[]` (name, description, area city, allowed categories, verified, years, rating when at least 3 reviews, response time when at least 5 quotes; never contact details). Also returned by `get_my_seller_profile()`. Non-sellers: `403 not_a_seller` |
+
+**Storage:** bucket `public-data` (public read, 50 MB, `application/json`, no client write
+policies: only the service role writes). Put nothing but aggregated, anonymised data there.
+
+**Edge Function `seo-export`** (`verify_jwt = false`; accepts `x-webhook-secret` =
+`EDGE_WEBHOOK_SECRET` or an admin JWT, admin calls rate-limited to 10/hour):
+`POST {action?: "run", dry_run?: bool, skip_deploy?: bool}` →
+`{run_id, country, path, public_url, dry_run, pages, priced_pages, guides, sellers, bytes, uploaded, deploy_hook}`.
+Before uploading it re-checks the data (thresholds floor, slugs, duplicates, no price / models /
+medians below the gates, only allowed categories, only approved or published guides); a failed
+check uploads nothing and returns `422 export_check_failed` (details: problems), a failed upload
+`502 upload_failed`. Secrets: `VERCEL_DEPLOY_HOOK_APP_SITE` (never logged), optional
+`SEO_PUBLIC_BUCKET` (default `public-data`).
+
+## 13. Trends pipeline (Section 21.10; migrations 1200-1220)
+
+Backend of the separate trends news site (`web/trends_site`). It lives in its own Postgres schema
+`trends`, which is **not exposed through PostgREST** and has no grants for `anon` or
+`authenticated`; only `service_role` (and the Edge Functions, which connect with
+`SUPABASE_DB_URL`) can use it. Nothing in `public` references it, so it can be removed with
+`drop schema trends cascade`, the `trends-public` bucket and the `trends-*` cron jobs. The admin
+panel reaches it only through the `admin_trends_*` RPCs below.
+
+Tables (`trends.`): `trend_sources` (polled feeds: `google_trends` geo such as `IN`, `IN-MH`,
+`US`, `US-CA`; `google_news` query per place; `reddit` subreddit), `trend_signals` (topic, place,
+source, url, publisher domain, `citable`, feed snippet of at most 600 characters, score,
+first/last seen), `trend_topics` (clustered signals per place, `velocity` 0-100, `fired_at`,
+`status` `watching | fired | review | drafted | published | waiting_sources | dropped | ended`),
+`trend_drafts` (article JSON in the `web/trends_site/data/fixtures` format, `gates` per gate,
+`status` `queued | review | rejected | published | noindex`, `review_stage` `topic | content`,
+reviewer and dates), `trend_settings` (key/value; seeded from `web/trends_site/data/config.json`),
+`trend_health`, `trend_publish_log` (append-only decision log) and `trend_runs`.
+
+**Settings keys:** `pipeline` (`enabled`, default **false**: enable it in one project only),
+`publishing` (kill switch: `paused`, `paused_at`, `paused_reason`), `caps` (`ramp_levels`
+[1,2,5,10,20], `hard_max_per_day` 20, `max_per_hour` 3, `timezones`, `max_drafts_per_run`,
+`queue_ttl_hours`), `ramp` (`usa`/`india` `{level, changed_at}`, `min_days_between_steps` 30,
+`auto_step_up` false, `health` thresholds), `gates` (same names and values as the site config plus
+`max_rewrites` 1), `detection` (`fire_threshold`, `min_signals`, `cluster_similarity`, velocity
+window, TTLs, `source_weights`, `non_publisher_domains`), `sensitive_tags`, `sensitive_keywords`,
+`banned_perspective_terms`, `app_links` (keyword → app category link rules), `app_hosts`.
+
+**Pipeline** (pg_cron, every 5 minutes, staggered, only while `pipeline.enabled`; the calls are
+no-ops until `edge_functions_url` and the Vault secret are set):
+
+| Function | Cron | Does |
+|---|---|---|
+| `trends-poll` | `*/5` | Google Trends RSS per geo, Google News RSS per place (headlines, links and feed snippets only), Reddit `/rising` via the official OAuth API only when `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` are set → `trend_signals`; clusters by normalised-title similarity (place name ignored); velocity; fires topics over `fire_threshold` with at least `min_signals` |
+| `trends-draft` | `2-59/5` | kill switch → nothing. Gate 1 (at least `min_sources` independent publisher domains with citable links; Google News redirect links and Reddit never count) and gate 2 (sensitive tags or keywords → `review` queue, stage `topic`) **before** any model call; then Claude (`ANTHROPIC_MODEL`, default `claude-sonnet-5-5`; without `ANTHROPIC_API_KEY` drafting is skipped and logged) writes the two-perspective article; gate 3 originality (6-word shingle containment against every source title + snippet ≤ `max_similarity`, no quote over `max_quote_words`; one rewrite, then reject); gate 4 fact consistency (second model pass: unsupported sentences removed, conflicting sources → rejected and the topic waits for more sources); gate 5 value (≥ `min_words`, local angle, context, what to watch); balance (neutral, non-partisan labels, length ratio, plus a model pass); a finished text that turns out sensitive goes to `review` stage `content`. Drafts nothing beyond today's remaining cap. Also appends dated "Update" sections and corrections to published articles that keep trending |
+| `trends-publish` | `4-59/5` | ramp (automatic one-level step-down when a health snapshot newer than the last change shows a low indexed share, a traffic drop, Search Console warnings or a manual action; step-up only with `auto_step_up`, healthy and 30+ days after the last step; a manual action or error-report spike pauses publishing), kill switch, gate 6 caps (per country per local day = `ramp_levels[level]`, at most `max_per_hour`, highest velocity first, queue expires after `queue_ttl_hours`); writes `articles/<slug>.json` and `index.json` to the public bucket `trends-public`, re-uploads changed articles (updates, corrections, noindex), marks superseded and dead-traffic articles (`< noindex_min_visits_14d` visits in the 14 days after the trend ended) `noindex`, deletes unpublished ones, and POSTs `VERCEL_DEPLOY_HOOK_TRENDS_SITE` when the index changed |
+
+All three: `POST {action?: "run"}` with `x-webhook-secret` (= `EDGE_WEBHOOK_SECRET`), the
+service-role key as bearer, or an admin JWT ("run now"); `verify_jwt = false`. Response
+`{ok, dry_run, reason?, stats}`. Dry runs: no `SUPABASE_DB_URL` (nothing done), no
+`ANTHROPIC_API_KEY` (no drafting), no `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` (nothing
+uploaded). Each run is recorded in `trends.trend_runs`.
+
+**Bucket `trends-public`** (public read, JSON only, 1 MB per object, written only by the service
+role): `index.json` = `{version: 1, generated_at, settings: {paused, paused_at, per_day: {usa,
+india}}, articles: [{slug, path: "articles/<slug>.json", country, published_at, updated_at,
+noindex}]}`. The site build reads it through `TRENDS_DATA_URL` (`web/README.md`) and re-runs all
+of its gates; the index can only tighten the kill switch and caps of the site's `config.json`.
+
+**Admin RPCs** (admin JWT + `profiles.roles`; reads are not logged, every change writes
+`admin_audit_log` and, for publish decisions, `trends.trend_publish_log`). Details and payloads:
+`admin/TRENDS_ADMIN_NEEDS.md`.
+
+| RPC | Purpose |
+|---|---|
+| `admin_trends_board(p_country?, p_hours = 24) → jsonb` | live trend board: `places[]` with their topics (velocity, status, signals, domains), `sources[]` with poll status |
+| `admin_trends_topics(p_status?, p_country?, p_limit = 100) → jsonb[]` | fired / watching / ... topics |
+| `admin_trends_drafts(p_status?, p_country?, p_limit = 100, p_offset = 0) → jsonb[]` | published / queued / rejected / review / noindex lists with gate results |
+| `admin_trends_draft(p_draft_id) → jsonb` | one draft: article, gates, topic, signals, decision log (`404 draft_not_found`) |
+| `admin_trends_review_queue(p_country?) → jsonb[]` | sensitive-topic review queue |
+| `admin_trends_review(p_draft_id, p_approve, p_note?) → jsonb` | approve / reject; stage `topic` approval lets the pipeline draft it, stage `content` approval queues it for publishing and stamps `article.review`; stores reviewer and date (`409 draft_not_in_review`) |
+| `admin_trends_settings() → jsonb` | all settings, effective daily caps, latest health and problems, last runs, published in 24 h |
+| `admin_trends_set_setting(p_key, p_value jsonb) → jsonb` | edit caps, ramp schedule, gates, detection, keyword lists, app links, pipeline switch. Floors: ≥ 2 sources, ≥ 250 words, ≤ 3 per hour, ≤ 20 per day, ≥ 30 days between steps (`400 invalid_setting_value`); `publishing` only via the kill switch |
+| `admin_trends_set_kill_switch(p_paused, p_reason?) → jsonb` | pause / resume drafting and publishing |
+| `admin_trends_set_ramp(p_country, p_level, p_reason?) → jsonb` | down any time; up one level (`409 ramp_one_level_at_a_time`), 30+ days after the last step (`409 ramp_step_too_soon`), only with a recent healthy snapshot (`409 ramp_unhealthy`, detail = problem) |
+| `admin_trends_record_health(p_country, p_indexed_share, p_clicks_7d, p_clicks_prev_7d, p_sc_warnings = 0, p_manual_action = false, p_error_reports_24h = 0, p_note?) → jsonb` | Search Console / analytics snapshot; a manual action or error-report spike pauses publishing at once (`auto_pause`) |
+| `admin_trends_set_draft_status(p_draft_id, p_action, p_reason?) → jsonb` | `reject` (queued / review), `noindex` / `index` (published), `unpublish` (removed from the bucket on the next publish run); else `409 invalid_draft_action` |
+| `admin_trends_add_correction(p_draft_id, p_text) → jsonb` | appends a dated correction and re-publishes the article |
+| `admin_trends_supersede(p_slug, p_by_slug) → jsonb` | noindex + canonical to the newer article |
+| `admin_trends_record_traffic(p_slug, p_visits_14d) → jsonb` | visits in the 14 days after the trend ended (drives the traffic noindex rule) |
+| `admin_trends_publish_log(p_limit = 100, p_draft_id?) → jsonb[]` | publish decision log |
+| `admin_trends_upsert_source(p_source jsonb) → jsonb` | add / edit / enable / disable a polled source (`400 invalid_source`, `409 source_exists`) |

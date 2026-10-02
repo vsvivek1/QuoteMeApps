@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/fetch-trends-data.mjs",
     "build": "astro build",
     "build:fixtures": "TRENDS_DATA_DIR=data/fixtures astro build",
     "preview": "astro preview"

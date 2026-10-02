@@ -25,6 +25,9 @@ export const site = {
     india: 'Calecute Technologies (OPC) Private Limited',
   } as const,
   dataDir: path.resolve(process.cwd(), env('TRENDS_DATA_DIR') || 'data/articles'),
+  /** Trends pipeline bucket (index.json + articles/); fetched by scripts/fetch-trends-data.mjs before the build. */
+  remoteDataUrl: env('TRENDS_DATA_URL'),
+  remoteDir: path.resolve(process.cwd(), '.trends-remote'),
   configFile: path.resolve(process.cwd(), env('TRENDS_CONFIG') || 'data/config.json'),
   turnstileSiteKey: env('PUBLIC_TURNSTILE_SITE_KEY'),
   formsEndpoint: env('FORMS_ENDPOINT'),

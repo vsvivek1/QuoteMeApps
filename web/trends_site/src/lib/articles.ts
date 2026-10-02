@@ -18,6 +18,11 @@
  *   6 caps         kill switch, per-country daily cap (ramp level), max per hour
  * Articles failing 0-6 are NOT built. Built articles become noindex when
  * superseded, flagged, fixture data, or when traffic died after the trend ended.
+ *
+ * Sources: TRENDS_DATA_DIR (default data/articles) and, when TRENDS_DATA_URL is set, the
+ * pipeline bucket downloaded by scripts/fetch-trends-data.mjs into .trends-remote/. Remote
+ * articles go through exactly the same gates; the remote index may only tighten the kill
+ * switch and the daily caps of data/config.json, never loosen them.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -239,19 +244,58 @@ const localDay = (iso: string, tz: string) =>
 
 let cache: { built: Built[]; rejected: GateResult[]; config: Config } | null = null;
 
+/** Article sources: local files first (they win on duplicate slugs), then the remote bucket copy. */
+function articleFiles(): { file: string; full: string }[] {
+  const list = (dir: string, prefix: string) =>
+    fs.existsSync(dir)
+      ? fs.readdirSync(dir).filter((f) => f.endsWith('.json')).sort().map((f) => ({ file: `${prefix}${f}`, full: path.join(dir, f) }))
+      : [];
+  const out = list(site.dataDir, '');
+  if (site.remoteDataUrl) {
+    const dir = path.join(site.remoteDir, 'articles');
+    if (!fs.existsSync(path.join(site.remoteDir, 'settings.json'))) {
+      throw new Error('TRENDS_DATA_URL is set but .trends-remote/ is missing: build with `npm run build` (its prebuild step downloads the data)');
+    }
+    out.push(...list(dir, 'remote:'));
+  }
+  return out;
+}
+
+/** The remote index can pause publishing or lower a daily cap (to another ramp level), never the reverse. */
+function applyRemoteSettings(config: Config): void {
+  if (!site.remoteDataUrl) return;
+  const f = path.join(site.remoteDir, 'settings.json');
+  if (!fs.existsSync(f)) return;
+  const r = JSON.parse(fs.readFileSync(f, 'utf8')) as { paused?: boolean; paused_at?: string | null; per_day?: Partial<Record<Country, number | null>> };
+  if (r.paused === true) {
+    const at = r.paused_at && !Number.isNaN(Date.parse(r.paused_at)) ? r.paused_at : site.now.toISOString();
+    const localAt = config.publishing.paused ? Date.parse(config.publishing.paused_at ?? '') : Infinity;
+    if (!(Date.parse(at) >= localAt)) config.publishing = { paused: true, paused_at: at };
+    console.log(`[trends_site] remote kill switch: publishing paused at ${config.publishing.paused_at}`);
+  }
+  for (const country of ['usa', 'india'] as const) {
+    const n = r.per_day?.[country];
+    if (typeof n === 'number' && config.caps.ramp_levels.includes(n) && n < config.caps.per_day[country]) {
+      console.log(`[trends_site] remote ramp: ${country} daily cap ${config.caps.per_day[country]} -> ${n}`);
+      config.caps.per_day[country] = n;
+    }
+  }
+}
+
 export function loadArticles() {
   if (cache) return cache;
   const config = JSON.parse(fs.readFileSync(site.configFile, 'utf8')) as Config;
+  applyRemoteSettings(config);
   validateConfig(config);
   const rejected: GateResult[] = [];
   const passed: { file: string; a: Article }[] = [];
-  const files = fs.existsSync(site.dataDir) ? fs.readdirSync(site.dataDir).filter((f) => f.endsWith('.json')).sort() : [];
+  const files = articleFiles();
   const slugs = new Set<string>();
 
-  for (const file of files) {
+  for (const { file, full } of files) {
     let a: Article;
     try {
-      a = JSON.parse(fs.readFileSync(path.join(site.dataDir, file), 'utf8'));
+      a = JSON.parse(fs.readFileSync(full, 'utf8'));
     } catch (e) {
       rejected.push({ file, slug: '?', gate: 'schema', reason: `invalid JSON: ${e}` });
       continue;
