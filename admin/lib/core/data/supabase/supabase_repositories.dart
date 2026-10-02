@@ -545,35 +545,11 @@ class SupabaseOutreachRepository implements OutreachRepository {
   @override
   Future<OutreachLead> moveStage(OutreachLead lead, LeadStage to, TransitionResult result, {String? note}) async {
     if (!result.allowed) throw StateError('transition_refused');
-    // Prefer the atomic RPC when the backend has it (BACKEND_NEEDS.md).
-    try {
-      await c.rpc('admin_outreach_set_stage', params: {'p_lead_id': lead.id, 'p_stage': to.wire, 'p_note': note});
-      return await this.lead(lead.id);
-    } on PostgrestException catch (e) {
-      if (e.code != 'PGRST202') rethrow; // function not found -> fall back
-    }
-    if (result.effects.contains(TransitionEffect.suppress)) {
-      await c.from('suppression_list').insert({
-        'email': lead.email,
-        'phone': lead.phone,
-        'business_key': lead.businessKey,
-        'reason': 'do_not_contact',
-        'source': 'admin_stage_change',
-        'note': note,
-      });
-    }
-    await c.from('outreach_leads').update({
-      'stage': to.wire,
-      if (result.effects.contains(TransitionEffect.stopSequence)) 'sequence_status': 'stopped',
-    }).eq('id', lead.id);
-    await c.from('outreach_events').insert({
-      'lead_id': lead.id,
-      'channel': 'system',
-      'event_type': 'stage_change',
-      'body_preview': note,
-      'meta': {'from': lead.stage.wire, 'to': to.wire},
-      'created_by': c.auth.currentUser?.id,
-    });
+    // Atomic server-side move (supabase/migrations/20261002001020_outreach_safety.sql):
+    // the RPC re-applies the same forward-only rules as StageMachine, stops the
+    // sequence, adds do-not-contact leads to suppression_list, records the
+    // stage_change event and writes the audit log in one transaction.
+    await c.rpc('admin_outreach_set_stage', params: {'p_lead_id': lead.id, 'p_stage': to.wire, 'p_note': note});
     return this.lead(lead.id);
   }
 

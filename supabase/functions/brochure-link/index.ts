@@ -2,11 +2,12 @@
 // and field kit (Section 21.3 / 21.4). Returns the tracked signup URL and the
 // best stored brochure for a city x category x language.
 //
-// POST (admin JWT) { city?, category_id?, category_slug?, language?: "en"|"hi"|"es", format?: "pdf"|"png",
+// POST (admin JWT) { city?, category_id?, category_slug?, language?: "en"|"hi"|"es",
+//                    format?: "pdf"|"image"|"onepager" (default pdf; "png" is accepted as an alias of "image"),
 //                    source?: "brochure"|"qr"|"whatsapp"|"field"|"email", campaign?, lead_id? }
-// -> { signup_url, brochure: { url, version, storage_path } | null }
+// -> { signup_url, brochure: { url, version, storage_path, format } | null }
 // With lead_id, the lead's signup token is added so a sign-up links back to the CRM lead.
-import { findBrochure, signupUrl } from "../_shared/brochure.ts";
+import { findBrochure, normalizeBrochureFormat, signupUrl } from "../_shared/brochure.ts";
 import { HttpError, json, readJson, requireMethod, serve } from "../_shared/http.ts";
 import { adminClient, requireAdmin, unwrap } from "../_shared/supabase.ts";
 
@@ -23,6 +24,8 @@ serve(async (req) => {
     campaign?: string;
     lead_id?: string;
   }>(req);
+  const format = normalizeBrochureFormat(b.format);
+  if (!format) throw new HttpError(400, "invalid_format", { allowed: ["pdf", "image", "onepager"] });
   const db = adminClient();
 
   let categoryId = b.category_id ?? null, categorySlug = b.category_slug ?? null;
@@ -51,10 +54,12 @@ serve(async (req) => {
     city,
     categoryIds: categoryId ? [categoryId] : [],
     language: b.language ?? "en",
-    format: b.format ?? "pdf",
+    format,
   });
   return json({
     signup_url: url,
-    brochure: brochure ? { url: brochure.url, version: brochure.version, storage_path: brochure.storage_path } : null,
+    brochure: brochure
+      ? { url: brochure.url, version: brochure.version, storage_path: brochure.storage_path, format: brochure.format }
+      : null,
   });
 });

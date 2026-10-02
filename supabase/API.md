@@ -82,14 +82,15 @@ Write through RPCs unless a write is listed here. RLS is on everywhere.
 | `quotes`, `quote_line_items`, `quote_revisions` | – | the quote's seller and the request's buyer | quote RPCs |
 | `lead_states` | – | own (seller) | `dismiss_lead`, `mark_leads_seen` |
 | `chats` | – | members | `get_or_create_chat` / `open_chat` |
-| `messages` | – | members (hidden ones only to the sender) | `insert (chat_id, sender_id, type, body, attachment_path)`, `type in text, image`, sender = you, not blocked, attachment under `{chat_id}/` |
+| `messages` | – | members (hidden ones only to the sender) | `insert (chat_id, sender_id, type, body, attachment_path, client_id)`, `type in text, image`, sender = you, not blocked, attachment under `{chat_id}/`; `client_id` makes retries idempotent (see Chat) |
 | `orders`, `order_events` | – | parties | order RPCs |
 | `notifications` | – | own | `mark_notifications_read` |
 | `entitlements` | – | own (seller) | stores only (Edge Functions) |
 | `seller_documents`, `seller_licences`, `seller_contacts` | – | own (contacts: also order parties) | `submit_verification`, `submit_licence`, `upsert_seller_profile` |
 | `reports` | – | own | `report_content` |
 | `billing_events`, `category_keywords` | – | admin | – |
-| `outreach_*`, `suppression_list`, `brochures` | – | admin | admin (full CRUD) |
+| `outreach_*`, `suppression_list`, `brochures` | – | admin | admin (full CRUD; campaign activation and stage moves have extra rules, see Outreach below) |
+| `admin_audit_log` | – | admin | – (written only server side; append-only) |
 | `web_form_submissions`, `waitlist_signups`, `account_deletion_requests` | – | admin | admin `update` (status, handled_by) |
 
 Selected columns:
@@ -107,7 +108,15 @@ Selected columns:
   attachments[], status (sent|revised|shortlisted|declined|accepted|withdrawn|expired),
   revision_count, decline_reason, counter_target_minor, counter_note, shortlisted_at, accepted_at,
   billing_source, created_at`
-- `orders.status`: `accepted → scheduled → dispatched → delivered → completed`, or `cancelled`.
+- `orders`: `id, request_id, request_title, quote_id, buyer_id, seller_id, status, total_minor, currency,
+  payment_method (cash|upi|card|bank_transfer|zelle|check|seller_link|other), payment_amount_minor,
+  payment_recorded_at, scheduled_for, completed_at, cancelled_reason, created_at`.
+  `status`: `accepted → scheduled → dispatched → delivered → completed`, or `cancelled`.
+- `chats`: `id, request_id, request_title, buyer_id, seller_id, last_message_at, last_message_preview`.
+  `request_title` (on chats and orders) is a copy of `requests.title`, kept in sync by the server,
+  because sellers cannot read `requests` directly.
+- `messages`: `id, chat_id, sender_id, type, body, attachment_path, quote_id, contains_contact,
+  hidden, read_at, client_id, created_at`.
 - `sellers`: `id, business_name, slug, logo_url, photos[], description, years_in_business,
   brands[], area_type (radius|codes|nationwide), center, radius_km, service_codes[], city, state,
   timezone, verification_status, rating_avg, rating_count, quotes_sent, quotes_won,
@@ -115,14 +124,22 @@ Selected columns:
   quiet_hours_start, quiet_hours_end, featured_until`
 - `categories`: `id, parent_id, slug, names {en, hi|es}, policy (allowed|restricted|blocked),
   required_licence_type, disclaimer, policy_reason, field_schema, keywords[], icon, sort, active`.
-  `field_schema`: `[{key, type: text|number|select|multiselect|boolean|date, label{..},
-  required, scope: request|quote|both, options[{value,label{..}}], min, max, unit}]`.
+  `field_schema` (one shape everywhere: SQL validator, seeds, admin editor; a bare array is
+  rejected with `23514`/HTTP 400): `{version: 1, fields: [{key, type: text|number|select|multiselect|boolean|date,
+  label{..}, required, scope: request|quote|both, options[{value,label{..}}], min, max, unit}]}`.
 
 Public `app_settings` keys (`get_app_settings()` returns them as one object): `country`,
 `currency`, `default_timezone`, `monetization_enabled`, `early_partner_free_until`,
 `free_quotes_per_month`, `quote_cap`, `priority_window_minutes`,
 `max_requests_per_buyer_per_day`, `max_quotes_per_seller_per_hour`, `quote_valid_days_default`,
-`max_quote_revisions`, `legal_versions`, `languages` and the other rows marked `is_public`.
+`max_quote_revisions`, `legal_versions`, `languages`, `web_purchase_links_allowed` (bool, default
+`false`: show external web checkout links in the apps), `paywall_default_period` (`"monthly"` |
+`"annual"`, default `"annual"`), `whatsapp_notifications` (bool, default `false`) and the other rows
+marked `is_public`.
+
+Admin-only keys (read with `admin_get_settings`, write with `admin_set_setting`) include the outreach
+flags and caps, `outreach_business_address` (see Outreach) and `kpi_product_prices_minor`
+(`{"seller_pro_monthly": 49900, ...}`, used only for the revenue estimate in `admin_kpis`).
 
 ## 3. RPCs (`supabase.rpc(name, params: {...})`)
 
@@ -194,6 +211,11 @@ Buyers read their requests and quotes directly:
 Send messages with a direct insert:
 `from('messages').insert({chat_id, sender_id: uid, type: 'text', body})`. For images, upload to
 `chat-media/{chat_id}/{uuid}.jpg` first, then insert with `type: 'image'` and `attachment_path`.
+For an offline queue, give every outgoing message a client-generated `client_id` (uuid) and send
+(and retry) it with
+`from('messages').upsert({chat_id, sender_id: uid, type, body, client_id}, onConflict: 'chat_id,client_id', ignoreDuplicates: true)`
+(`INSERT … ON CONFLICT (chat_id, client_id) DO NOTHING`): a retry of a message that already arrived
+creates nothing. Messages without `client_id` are unaffected.
 The server flags phone numbers and emails before an order (`contains_contact`) and bumps the
 chat preview.
 
@@ -201,7 +223,7 @@ chat preview.
 | RPC | → | notes |
 |---|---|---|
 | `update_order_status(p_order_id, p_status, p_note=null, p_scheduled_for=null)` | `orders` | seller: scheduled, dispatched, delivered; either party: completed; cancel while accepted or scheduled |
-| `record_payment(p_order_id, p_method, p_amount_minor)` | `orders` | offline payment note (cash, upi, card, bank_transfer, zelle, seller_link, other) |
+| `record_payment(p_order_id, p_method, p_amount_minor)` | `orders` | offline payment note (cash, upi, card, bank_transfer, zelle, check, seller_link, other) |
 | `get_order_contacts(p_order_id)` | `jsonb {buyer{name, phone, full_address}, seller{business_name, phone, email, website, address_line}}` | order parties only |
 | `submit_review(p_order_id, p_stars, p_tags text[]='{}', p_text=null, p_photos text[]='{}')` | `reviews` | completed orders only, once |
 | `seller_reply_review(p_review_id, p_reply)` | `reviews` | once |
@@ -222,7 +244,40 @@ chat preview.
 `admin_get_settings() → setof app_settings`,
 `admin_grant_entitlement(p_seller_id, p_tier pro|credits, p_credits=0, p_expires_at=null, p_note=null) → entitlements`,
 `admin_metrics() → jsonb`,
-`admin_seller_coverage(p_min_sellers=5) → table(city, state, category_id, sellers, needs_sellers)`.
+`admin_kpis() → jsonb` (Section 13 KPIs, see below),
+`admin_seller_coverage(p_min_sellers=5) → table(city, state, category_id, sellers, needs_sellers)`,
+`admin_outreach_set_stage(p_lead_id, p_stage, p_note=null) → outreach_leads` (see Outreach).
+
+**Audit log.** Every admin RPC above that changes data writes one `admin_audit_log` row in the same
+transaction: `{id, actor_id, actor_email, action (= the RPC name), target_type (document | licence |
+report | user | seller | category | keyword | setting | entitlement | outreach_lead), target_id,
+details (old/new values, reason, note), created_at}`. Triggers add rows for `outreach_leads` stage
+changes (`outreach_stage_change`), `suppression_list` inserts (`suppression_add`),
+`outreach_campaigns` creation and status changes (`outreach_campaign_create`,
+`outreach_campaign_status`, including automatic brakes) and `brochures` inserts
+(`brochure_create`); `outreach-send` adds `outreach_send_one`. Rows written without a user
+(service role, cron, webhooks) have `actor_id = null` and `details.via` (`service_role` or
+`system`). Admins read it with `from('admin_audit_log').select(...).order('created_at', ascending: false)`;
+nobody can insert, update or delete through the API, and the table refuses updates and deletes
+even for the owner (`audit_log_append_only`). Read-only RPCs (`admin_get_settings`, `admin_metrics`,
+`admin_kpis`, `admin_seller_coverage`) are not logged.
+
+**`admin_kpis()`** (admin only) returns, all keys optional (null = not enough data), percentages
+0-100 with one decimal:
+
+| key | meaning |
+|---|---|
+| `request_to_acceptance_pct` | requests created in the last 30 days that were awarded |
+| `seller_response_rate_pct` | (seller, request) pairs notified as `new_lead` in the last 30 days that the seller quoted |
+| `free_to_paid_pct` | sellers with a store-paid entitlement (any store except `manual`) / all sellers |
+| `retention` | `{buyer_d1, buyer_d7, buyer_d30, seller_d1, seller_d7, seller_d30}`: rolling retention of users who signed up in the 30 days ending n days ago, active on or after day n (activity = request, chat message, quote, lead opened, push token refresh); review accounts excluded |
+| `revenue_30d_minor`, `revenue_per_seller_minor` | estimate: `kpi_product_prices_minor` × store entitlements with a billing event in the last 30 days (per seller = / visible sellers); null until prices are set |
+| `refunds_30d` | entitlements refunded in the last 30 days |
+| `outreach_sent_today` | outreach sends since 00:00 UTC |
+| `outreach_daily_capacity` | sum of active inboxes' warm-up caps, bounded by `outreach_global_daily_cap` |
+| `outreach_queue` | leads still in the automated pipeline (sourced/contacted, sequence none/active, < 3 touches, not a seller) |
+| `outreach_reply_rate_pct`, `outreach_signup_rate_pct` | contacted leads that replied / became sellers |
+| `outreach_active_campaigns`, `outreach_business_address_ready`, `computed_at` | extras for the outreach dashboard |
 
 Outreach CRM (admin or service): `outreach_can_send(p_lead_id, p_channel='email', p_inbox_id=null, p_at=now()) → table(allowed, reason)`,
 `outreach_next_batch(p_campaign_id, p_limit=20, p_at=now())`, `outreach_record_send(…)`,
@@ -231,6 +286,67 @@ Outreach CRM (admin or service): `outreach_can_send(p_lead_id, p_channel='email'
 `outreach_check_brakes(p_campaign_id) → jsonb`, `outreach_is_suppressed(p_email, p_phone, p_business_key) → bool`.
 The admin panel logs manual WhatsApp, call and visit touches by inserting `outreach_events` with
 event types `whatsapp_manual`, `call_logged`, `visit_logged` or `note`.
+
+#### Outreach (Section 21.2 / 21.5 / 21.8)
+
+**Automated email sequences** run exactly as Section 21.2 describes: pg_cron calls
+`outreach-send {action: "run"}` every 10 minutes on weekdays (only while `outreach_enabled`), and
+each run sends due touches of a 1-3 step sequence to business leads, with per-inbox warm-up caps,
+per-domain and global daily caps, campaign daily caps, weekday business hours in the lead's time
+zone, randomised pacing, template rotation and automatic brakes (bounce > 2 %, complaints > 0.08 %,
+negative replies > 5 % pause the campaign). On top of that, nothing is sent until a person turns a
+campaign on:
+
+- **Every new campaign is created paused.** An insert into `outreach_campaigns` always stores
+  `status = 'draft'` (a `'paused'` insert stays paused), whatever status the caller passes.
+- **Only an admin activates.** Changing `status` to `active` needs an admin JWT (the panel's
+  `update outreach_campaigns set status = 'active'`); the server stamps `activated_by` and
+  `activated_at`. The service role, cron, Edge Functions and direct SQL sessions get
+  `403 campaign_activation_requires_admin`. Leaving `active` (manual pause, automatic brake,
+  content-check pause, `completed`) clears the stamp, so a paused campaign needs a new admin
+  activation.
+- **The cron run only processes campaigns an admin explicitly set to active** (`status = 'active'`
+  and `activated_by` set). `outreach_can_send` answers `campaign_draft`, `campaign_paused`,
+  `campaign_completed` or `campaign_not_activated` otherwise, and the `outreach_events` trigger
+  refuses to record a send for such a campaign (`409 outreach_campaign_not_active`).
+
+**Business address.** `app_settings.outreach_business_address` (admin only) is the physical postal
+address printed in every outreach email (CAN-SPAM, rule 21.8-8). It ships as the placeholder
+`"{{BUSINESS_ADDRESS}}"`. While it is empty, shorter than 10 characters or contains `{{` / `}}`,
+`outreach_can_send` answers `business_address_missing`, the `run` action skips with
+`{skipped: "business_address_missing"}`, `send_one` refuses, and recording a send fails with
+`409 outreach_business_address_missing`. `outreach-send` builds the footer from this setting (not
+from an env variable). Set it with `admin_set_setting('outreach_business_address', '"…"')`.
+
+`outreach_can_send` reasons (first failing rule wins): `outreach_disabled`,
+`business_address_missing`, `lead_not_found`, `suppressed`, `already_seller`, `stage_<stage>`,
+`max_touches`, `conversation_finished`, `remind_later`, `not_relevant`, `no_email`,
+`email_not_verified`, `unknown_address_source`, `no_opt_in`, `weekly_cap`, `channel_not_automated`,
+`no_campaign`, `campaign_<status>`, `campaign_not_activated`, `sequence_done`, `not_due`,
+`outside_business_hours`, `global_daily_cap`, `campaign_daily_cap`, `domain_daily_cap`,
+`inbox_inactive`, `inbox_daily_cap`, or `ok`.
+
+**Stage moves.** `admin_outreach_set_stage(p_lead_id, p_stage, p_note=null)` is the only way the
+panel moves a lead. Forward-only edges (same as `admin/lib/features/outreach/domain/stage_machine.dart`):
+
+| from | allowed to |
+|---|---|
+| `sourced` | `contacted`, `replied`, `not_interested`, `do_not_contact` |
+| `contacted` | `replied`, `onboarding`, `not_interested`, `do_not_contact` |
+| `replied` | `onboarding`, `not_interested`, `do_not_contact` |
+| `onboarding` | `live_seller`, `not_interested`, `do_not_contact` |
+| `live_seller` | `active`, `do_not_contact` |
+| `active` | `do_not_contact` |
+| `not_interested` | `replied`, `do_not_contact` |
+| `do_not_contact` | nothing (permanent) |
+
+`live_seller` / `active` need `seller_id`; a manual move to `contacted` needs a logged
+`whatsapp_manual`, `call_logged` or `visit_logged` event. Moves to replied, onboarding, live seller,
+active or not interested stop a running sequence; `do_not_contact` stops it and adds the email,
+phone and business key to `suppression_list`. Each move inserts a `stage_change` event (note in
+`body_preview`, `{from, to}` in `meta`) and one audit row. Errors: `400 invalid_stage`,
+`404 lead_not_found`, `409 stage_no_change | stage_terminal | stage_not_allowed |
+stage_needs_seller_link | stage_needs_logged_contact`.
 
 Service role only (Edge Functions): `match_sellers_for_request`, `claim_due_notifications`,
 `mark_notifications_pushed`, `delete_device_tokens`, `record_billing_event`, `apply_entitlement`,
@@ -251,13 +367,14 @@ device before upload (max 1600 px, quality 80).
 
 ## 5. Realtime
 
-`postgres_changes` (RLS-filtered) on `requests`, `quotes`, `messages`, `chats`, `notifications`:
+`postgres_changes` (RLS-filtered) on `requests`, `quotes`, `messages`, `chats`, `orders`, `notifications`:
 
 | Screen | Subscription |
 |---|---|
 | Buyer request detail | `quotes` filter `request_id=eq.{id}` (new and revised quotes) and `requests` filter `id=eq.{id}` |
 | Chat | `messages` filter `chat_id=eq.{id}` |
 | Chat list | `chats` (RLS gives only your chats) |
+| Order detail / list | `orders` filter `id=eq.{id}` (or none for the list; RLS gives only your orders as buyer or seller) |
 | Inbox badge | `notifications` filter `user_id=eq.{uid}` |
 | Seller lead feed | **broadcast** channel `seller:{seller_id}`, event `new_lead`, payload `{request_id, category_id, created_at}`, sent by `match-request` when the lead is matched. Re-query `get_lead_feed` (no PII in the payload) |
 
@@ -280,11 +397,49 @@ also send `X-Firebase-AppCheck` (enforced when `APP_CHECK_ENFORCE=true`).
 | `razorpay-webhook` | Razorpay signature | Razorpay event | `{received, applied}` |
 | `match-request` | database trigger (`x-webhook-secret`) | `{record: {id}}` or `{request_id}` | `{matched, pushed_now, queued, failed}` |
 | `send-push` | trigger and cron (`x-webhook-secret`) | `{action: "flush_due", limit?}` | `{claimed, pushes, sent, skipped, failed, tokens_deleted}` |
-| `outreach-send` | cron (`x-webhook-secret`) or admin JWT | `{action: run\|preview\|verify_emails, campaign_id?, limit?}` | per-campaign report (`preview` renders without sending) |
+| `outreach-send` | cron (`x-webhook-secret`) or admin JWT; `send_one`: admin JWT only | `{action: run\|preview\|verify_emails, campaign_id?, limit?}` or `send_one` (below) | per-campaign report (`preview` renders without sending; `run` only touches admin-activated campaigns) / `send_one`: `{ok: true, event_id, provider_message_id}` or `{ok: false, reason, problems?}` |
 | `outreach-webhook` | Resend (Svix), Brevo (`?provider=brevo&secret=`), or `x-webhook-secret` | provider event, or `{type: "reply", from, text, in_reply_to?}`; `GET/POST ?action=unsubscribe&token=` | `{event}` / HTML page |
 | `import-leads` | admin JWT or `x-webhook-secret` | `{source: osm\|places, city: {name, state?, lat, lng, city_id?, timezone?, priority?} \| {city_id}, radius_m?=15000, category_slugs?, max_results?=200, dry_run?}` | `{found, upserted, duplicates, places_requests}` |
-| `brochure-link` | admin JWT | `{city?, category_id?\|category_slug?, language?, format?, source?, campaign?, lead_id?}` | `{signup_url, brochure: {url, version, storage_path}\|null}` |
+| `brochure-link` | admin JWT | `{city?, category_id?\|category_slug?, language?, format?: pdf\|image\|onepager (default pdf; png = image), source?, campaign?, lead_id?}` | `{signup_url, brochure: {url, version, storage_path, format}\|null}`; unknown format: `400 invalid_format` |
 | `web-forms` | websites (CORS allow-list + Turnstile) | see below | `{ok: true}` |
+
+### `outreach-send` action `send_one` (admin panel)
+
+One lead, one admin-reviewed message, one explicit confirmation. Never called by cron: the webhook
+secret or service key is not accepted for this action (`401`/`403`).
+
+```json
+{ "action": "send_one", "lead_id": "uuid", "campaign_id": "uuid|null", "inbox_id": "uuid|null",
+  "channel": "email|whatsapp", "step": 1, "variant": 0, "category_id": 4,
+  "subject": "...", "body": "...", "footer": "client preview only",
+  "whatsapp_template": "approved_template_name|null", "confirmed_by_admin": true }
+```
+
+The function checks, in order, and answers `200 {ok: false, reason}` at the first failure (nothing
+is sent): `confirmed_by_admin` must be `true` (`not_confirmed_by_admin`); request shape
+(`invalid_lead_id`, `channel_not_allowed`, `invalid_step`, `inbox_required`,
+`subject_and_body_required`, `message_too_long`); `outreach_disabled`; `business_address_missing`;
+`outreach_identity_not_configured`; `lead_not_found`; `step` must be the lead's next touch
+(`step_mismatch`); the lead's campaign must exist, match `campaign_id` and be admin-activated
+(`no_campaign`, `campaign_mismatch`, `campaign_<status>`, `campaign_not_activated`); `category_id`
+must be one of the lead's matched categories (`not_relevant`); the inbox must be active and in the
+campaign (`inbox_inactive`, `inbox_not_in_campaign`); email content rules on the edited subject and
+body (`content_check_failed:<problems>` plus `problems[]`: length, links, question CTA, caps, spam
+phrases, personalisation, no fake `Re:`, no brochure link in touch 1); WhatsApp: an approved
+template (`whatsapp_template_required`, `invalid_whatsapp_template`,
+`whatsapp_template_not_approved` against `WHATSAPP_APPROVED_TEMPLATES`) and a phone (`no_phone`);
+then `outreach_can_send(lead, channel, inbox)` (its reason is returned as is). The function builds
+its own identity footer (postal address from `outreach_business_address`) and List-Unsubscribe
+headers; the client `footer` is ignored. It sends (email provider, or the WhatsApp Cloud API
+template), records the send with `outreach_record_send` (the database re-checks the hard rules),
+stamps the admin on the event (`created_by`, `meta.via = "send_one"`) and writes an
+`outreach_send_one` audit row. Provider failure: `send_failed`; sent but refused by the database:
+`sent_not_recorded`.
+
+Secrets/config for WhatsApp: `WHATSAPP_PROVIDER` (`cloud` | `dry_run`, default dry run),
+`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_GRAPH_VERSION`,
+`WHATSAPP_TEMPLATE_LANGUAGE`, `WHATSAPP_APPROVED_TEMPLATES` (comma separated). Templates are sent
+without parameters.
 
 ### `web-forms` (websites in `web/`)
 
@@ -373,15 +528,15 @@ Otherwise the answer is `402 quota_exhausted`.
 
 ## 9. Error codes (message → meaning; HTTP from PTnnn)
 
-- **400:** `business_name_required, cannot_block_self, cannot_change_own_status, category_not_leaf, invalid_action, invalid_amount, invalid_area_type, invalid_audience, invalid_budget, invalid_delivery_amount, invalid_field_value, invalid_fields, invalid_file_path, invalid_line_item, invalid_location, invalid_mode, invalid_payment_method, invalid_policy, invalid_postal_code, invalid_quote_window, invalid_reason, invalid_role, invalid_sales_tax_input, invalid_seller_profile, invalid_setting_value, invalid_stars, invalid_status, invalid_target_price, invalid_target_type, invalid_tier, invalid_validity, licence_details_required, licence_type_required, line_items_required, location_required, missing_required_field (details = field key), needed_by_in_past, reply_required, seller_required, title_too_short, too_many_categories, too_many_line_items, too_many_service_codes`
+- **400:** `business_name_required, cannot_block_self, cannot_change_own_status, category_not_leaf, invalid_action, invalid_amount, invalid_area_type, invalid_audience, invalid_budget, invalid_delivery_amount, invalid_field_value, invalid_fields, invalid_file_path, invalid_line_item, invalid_location, invalid_mode, invalid_payment_method, invalid_policy, invalid_stage, invalid_postal_code, invalid_quote_window, invalid_reason, invalid_role, invalid_sales_tax_input, invalid_seller_profile, invalid_setting_value, invalid_stars, invalid_status, invalid_target_price, invalid_target_type, invalid_tier, invalid_validity, licence_details_required, licence_type_required, line_items_required, location_required, missing_required_field (details = field key), needed_by_in_past, reply_required, seller_required, title_too_short, too_many_categories, too_many_line_items, too_many_service_codes`
 - **401:** `not_authenticated`
 - **402:** `quota_exhausted`
-- **403:** `account_not_active, admin_only, blocked, cannot_quote_own_request, category_blocked, chat_not_allowed, licence_required, not_a_seller, priority_window, request_not_in_service_area, seller_suspended`
-- **404:** `category_not_found, chat_not_found, document_not_found, licence_not_found, order_not_found, quote_not_found, report_not_found, request_not_found, review_not_found, seller_not_found, unknown_setting, user_not_found`
-- **409:** `already_quoted, already_replied, already_reviewed, duplicate_request, invalid_status_transition, order_cancelled, order_not_completed, quote_cap_reached, quote_expired, quote_not_acceptable, quote_not_counterable, quote_not_declinable, quote_not_revisable, quote_not_shortlistable, quote_not_withdrawable, quote_window_closed, request_not_open, revision_limit_reached`, outreach: `outreach_suppressed, outreach_max_touches, outreach_conversation_finished, outreach_email_not_verified, outreach_no_opt_in`
+- **403:** `account_not_active, admin_only, audit_log_append_only, campaign_activation_requires_admin, blocked, cannot_quote_own_request, category_blocked, chat_not_allowed, licence_required, not_a_seller, priority_window, request_not_in_service_area, seller_suspended`
+- **404:** `category_not_found, chat_not_found, document_not_found, lead_not_found, licence_not_found, order_not_found, quote_not_found, report_not_found, request_not_found, review_not_found, seller_not_found, unknown_setting, user_not_found`
+- **409:** `already_quoted, already_replied, already_reviewed, duplicate_request, invalid_status_transition, order_cancelled, order_not_completed, quote_cap_reached, quote_expired, quote_not_acceptable, quote_not_counterable, quote_not_declinable, quote_not_revisable, quote_not_shortlistable, quote_not_withdrawable, quote_window_closed, request_not_open, revision_limit_reached`, outreach: `outreach_suppressed, outreach_max_touches, outreach_conversation_finished, outreach_email_not_verified, outreach_no_opt_in, outreach_business_address_missing, outreach_campaign_not_active, stage_no_change, stage_terminal, stage_not_allowed, stage_needs_seller_link, stage_needs_logged_contact`
 - **422:** `blocked_content (details: matched keyword reason), category_blocked, invalid_ein, invalid_gstin, invalid_or_blocked_category, invalid_udyam, licence_expired, unknown_postal_code`
 - **429:** `rate_limited`
-- **Edge Functions** also use: `invalid_json, method_not_allowed, invalid_token, invalid_webhook_secret, invalid_signature, app_check_failed, unknown_product, product_not_configured, no_billing_account, portal_not_available, captcha_failed, origin_not_allowed, invalid_or_expired_code, internal_error`.
+- **Edge Functions** also use: `invalid_json, method_not_allowed, invalid_token, invalid_webhook_secret, invalid_signature, app_check_failed, unknown_product, product_not_configured, no_billing_account, portal_not_available, captcha_failed, origin_not_allowed, invalid_or_expired_code, invalid_format, internal_error`.
 
 ## 10. Test accounts
 

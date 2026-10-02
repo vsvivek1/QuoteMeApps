@@ -5,6 +5,9 @@ select plan(22);
 
 update public.app_settings set value = 'true' where key = 'outreach_enabled';
 update public.app_settings set value = '"Asia/Kolkata"' where key = 'default_timezone';
+-- a real postal address (the placeholder blocks every send, see 10_admin_audit_outreach)
+update public.app_settings set value = '"1 Test Road, Testpur 990001"' where key = 'outreach_business_address';
+select tests.create_user('or-admin', 'Outreach Admin', '{buyer,admin}') as or_admin \gset
 
 insert into public.outreach_sequences (id, name, steps) values
   ('00000000-0000-0000-0000-0000000000a1', 'Three touches',
@@ -18,6 +21,11 @@ select throws_ok($$ insert into public.outreach_sequences (name, steps) values (
 
 insert into public.outreach_campaigns (id, name, sequence_id, status, daily_cap)
 values ('00000000-0000-0000-0000-0000000000c1', 'Test campaign', '00000000-0000-0000-0000-0000000000a1', 'active', 100);
+-- campaigns are created paused; an admin activates them explicitly
+select tests.authenticate_as(:'or_admin');
+update public.outreach_campaigns set status = 'active' where id = '00000000-0000-0000-0000-0000000000c1';
+reset role;
+select tests.clear_auth();
 
 insert into public.outreach_leads (id, business_key, business_name, email, email_status, address_source, source,
                                    lawful_basis, chosen_reason, matched_category_ids, campaign_id, timezone)
@@ -83,7 +91,10 @@ select throws_ok($$ select public.outreach_record_send('00000000-0000-0000-0000-
 -- automatic brakes: 1 negative reply in 3 sends (> 5 %) already paused the campaign
 select is((select status || ':' || paused_reason from public.outreach_campaigns where id = '00000000-0000-0000-0000-0000000000c1'),
   'paused:auto_brake:negative_reply_rate', 'negative replies above 5 % pause the campaign');
+select tests.authenticate_as(:'or_admin');
 update public.outreach_campaigns set status = 'active', paused_reason = null where id = '00000000-0000-0000-0000-0000000000c1';
+reset role;
+select tests.clear_auth();
 select public.outreach_record_event('complained', 'msg-1', null) is not null as complained \gset
 select is((select status || ':' || paused_reason from public.outreach_campaigns where id = '00000000-0000-0000-0000-0000000000c1'),
   'paused:auto_brake:complaint_rate', 'complaint rate above 0.08 % pauses the campaign');

@@ -51,7 +51,7 @@ export async function findBrochure(
   o: { city?: string | null; categoryIds?: number[]; language?: string; format?: string },
 ): Promise<(BrochureRow & { url: string }) | null> {
   const { data, error } = await db.from("brochures").select("*")
-    .eq("format", o.format ?? "pdf").eq("language", o.language ?? "en")
+    .eq("format", normalizeBrochureFormat(o.format) ?? "pdf").eq("language", o.language ?? "en")
     .order("version", { ascending: false }).limit(200);
   if (error || !data?.length) return null;
   const rows = data as BrochureRow[];
@@ -66,4 +66,17 @@ export async function findBrochure(
   if (score(best) < 0) return null;
   const url = best.public_url ?? db.storage.from("brochures").getPublicUrl(best.storage_path).data.publicUrl;
   return { ...best, url };
+}
+
+// Brochure formats as stored in public.brochures.format (and used by the admin
+// brochure generator): pdf (A4), onepager (A5) and image (1080x1350 PNG).
+// "png" and "one_pager" are accepted aliases.
+export const BROCHURE_FORMATS = ["pdf", "image", "onepager"] as const;
+export type BrochureFormat = typeof BROCHURE_FORMATS[number];
+
+export function normalizeBrochureFormat(v: string | null | undefined): BrochureFormat | null {
+  const f = (v ?? "pdf").trim().toLowerCase();
+  if (f === "png") return "image";
+  if (f === "one_pager") return "onepager";
+  return (BROCHURE_FORMATS as readonly string[]).includes(f) ? f as BrochureFormat : null;
 }

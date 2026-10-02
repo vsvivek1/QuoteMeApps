@@ -1,18 +1,28 @@
-// outreach-send: the only automated sender for seller cold email (Section 21.2 / 21.8).
+// outreach-send: the only sender for seller cold email (Section 21.2 / 21.8).
 //
 // Callers: pg_cron every 10 min on weekdays (x-webhook-secret, { action: "run" })
 //          or an admin from the panel (admin JWT):
-//   { action: "run", campaign_id?, limit? }       send due touches
+//   { action: "run", campaign_id?, limit? }       send due touches (cron or admin)
 //   { action: "preview", campaign_id, limit? }    render only (no send, no record)
 //   { action: "verify_emails", limit? }           syntax + disposable + MX -> email_status
+//   { action: "send_one", lead_id, campaign_id, inbox_id, channel, step, variant, category_id,
+//     subject, body, footer, whatsapp_template, confirmed_by_admin: true }
+//                                                 one admin-reviewed message (admin JWT only,
+//                                                 never cron); see _shared/send_one.ts
+//
+// "run" only processes campaigns an admin explicitly set to active (status = active AND
+// activated_by stamped by the outreach_campaign_guard trigger). New campaigns are always
+// created as draft, so nothing is sent until an admin activates a campaign.
 //
 // Hard rules live in Postgres and are re-checked on every send:
-//   outreach_enabled flag, suppression, max 3 touches, one conversation per business,
-//   verified address, weekday business hours in the lead's time zone, global /
-//   campaign / per-domain / per-inbox (warm-up) daily caps, automatic brakes.
+//   outreach_enabled flag, business address set, suppression, max 3 touches, one
+//   conversation per business, verified address, admin-activated campaign, weekday
+//   business hours in the lead's time zone, global / campaign / per-domain / per-inbox
+//   (warm-up) daily caps, automatic brakes.
 // This function adds the content rules (plain text, < 120 words, one link, no
 // brochure in touch 1, no caps/spam phrases, personalised), honest identity
-// footer, one-click List-Unsubscribe, randomised pacing and template rotation.
+// footer (postal address from app_settings.outreach_business_address), one-click
+// List-Unsubscribe, randomised pacing and template rotation.
 // A template that fails the content rules pauses its campaign (never "sends anyway").
 import { findBrochure, signupUrl } from "../_shared/brochure.ts";
 import { type EmailProvider, hasMxRecord, providerFromEnv } from "../_shared/email.ts";
@@ -20,6 +30,7 @@ import { appCountry, env, envInt } from "../_shared/env.ts";
 import { HttpError, json, readJson, requireMethod, serve } from "../_shared/http.ts";
 import {
   buildFooter,
+  businessAddressReady,
   checkEmailSyntax,
   checkFooter,
   checkOutreachContent,
@@ -29,18 +40,21 @@ import {
   renderTemplate,
   type SequenceStep,
 } from "../_shared/outreach.ts";
+import { sendOne, type SendOneDeps } from "../_shared/send_one.ts";
 import { adminClient, isServiceCaller, requireAdmin, unwrap } from "../_shared/supabase.ts";
+import { approvedTemplatesFromEnv, whatsappProviderFromEnv } from "../_shared/whatsapp.ts";
 
 const TIME_BUDGET_MS = 45_000;
 
-function identity(): OutreachIdentity {
+/** Sender identity from env; the postal address is app_settings.outreach_business_address. */
+function identity(physicalAddress = ""): OutreachIdentity {
   const us = appCountry() === "US";
   return {
     senderName: env("OUTREACH_SENDER_NAME") ?? "Vivek",
     senderRole: env("OUTREACH_SENDER_ROLE") ?? "Founder",
     companyName: env("OUTREACH_COMPANY_NAME") ??
       (us ? "Calecute Technologies LLC" : "Calecute Technologies (OPC) Private Limited"),
-    physicalAddress: env("OUTREACH_PHYSICAL_ADDRESS") ?? "",
+    physicalAddress,
     websiteUrl: env("OUTREACH_WEBSITE_URL") ?? "",
     privacyUrl: env("OUTREACH_PRIVACY_URL") ?? "",
     adNotice: env("OUTREACH_AD_NOTICE") ?? (us ? "This is a business offer from I Want USA." : ""),
@@ -59,19 +73,28 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 serve(async (req) => {
   requireMethod(req, "POST");
-  if (!isServiceCaller(req)) await requireAdmin(req);
   const body = await readJson<{ action?: string; campaign_id?: string; limit?: number }>(req);
   const action = body.action ?? "run";
+
+  // send_one: a person reviewed and confirmed this exact message. Admin JWT
+  // only; the webhook secret / service key (cron) is never enough.
+  if (action === "send_one") {
+    const ctx = await requireAdmin(req);
+    return json(await sendOne(sendOneDeps(), { id: ctx.user.id, email: ctx.user.email ?? null }, body));
+  }
+
+  if (!isServiceCaller(req)) await requireAdmin(req);
   const db = adminClient();
 
   if (action === "verify_emails") return json(await verifyEmails(body.limit ?? 50));
 
-  const enabled = unwrap(await db.from("app_settings").select("value").eq("key", "outreach_enabled").maybeSingle());
-  if (enabled?.value !== true) return json({ skipped: "outreach_disabled" });
+  const settings = await outreachSettings();
+  if (!settings.outreachEnabled) return json({ skipped: "outreach_disabled" });
+  if (!businessAddressReady(settings.businessAddress)) return json({ skipped: "business_address_missing" });
 
-  const id = identity();
-  if (!id.physicalAddress || !id.websiteUrl || !id.privacyUrl) {
-    throw new HttpError(503, "outreach_identity_not_configured", "Set OUTREACH_PHYSICAL_ADDRESS, OUTREACH_WEBSITE_URL, OUTREACH_PRIVACY_URL");
+  const id = identity(settings.businessAddress);
+  if (!id.websiteUrl || !id.privacyUrl) {
+    throw new HttpError(503, "outreach_identity_not_configured", "Set OUTREACH_WEBSITE_URL, OUTREACH_PRIVACY_URL");
   }
   const preview = action === "preview";
   if (!preview && action !== "run") throw new HttpError(400, "unknown_action");
@@ -79,8 +102,11 @@ serve(async (req) => {
   // Verify a few new addresses each run so the queue keeps moving.
   const verified = preview ? null : await verifyEmails(25);
 
-  let q = db.from("outreach_campaigns").select("*").eq("status", "active");
-  if (body.campaign_id) q = db.from("outreach_campaigns").select("*").eq("id", body.campaign_id);
+  // Sending runs only for campaigns an admin explicitly activated; a preview
+  // may render any campaign by id.
+  let q = db.from("outreach_campaigns").select("*");
+  if (!preview || !body.campaign_id) q = q.eq("status", "active").not("activated_by", "is", null);
+  if (body.campaign_id) q = q.eq("id", body.campaign_id);
   const campaigns = unwrap(await q) as any[];
   const provider = providerFromEnv();
   const started = Date.now();
@@ -100,6 +126,63 @@ serve(async (req) => {
   }
   return json({ provider: provider.name, verified, campaigns: report });
 });
+
+async function outreachSettings(): Promise<{ outreachEnabled: boolean; businessAddress: unknown }> {
+  const rows = unwrap(
+    await adminClient().from("app_settings").select("key,value").in("key", ["outreach_enabled", "outreach_business_address"]),
+  ) as { key: string; value: unknown }[];
+  const get = (k: string) => rows.find((r) => r.key === k)?.value;
+  return { outreachEnabled: get("outreach_enabled") === true, businessAddress: get("outreach_business_address") };
+}
+
+function sendOneDeps(): SendOneDeps {
+  const db = adminClient();
+  const { physicalAddress: _unused, ...id } = identity();
+  return {
+    settings: outreachSettings,
+    loadLead: async (leadId) =>
+      unwrap(
+        await db.from("outreach_leads")
+          .select("id,business_name,email,phone,city,stage,touches_sent,campaign_id,matched_category_ids,unsubscribe_token")
+          .eq("id", leadId).maybeSingle(),
+      ),
+    loadCampaign: async (campaignId) =>
+      unwrap(await db.from("outreach_campaigns").select("id,status,activated_by,inbox_ids").eq("id", campaignId).maybeSingle()),
+    loadInbox: async (inboxId) =>
+      unwrap(await db.from("outreach_inboxes").select("id,email,display_name,active").eq("id", inboxId).maybeSingle()),
+    canSend: async (leadId, channel, inboxId) => {
+      const r = (unwrap(await db.rpc("outreach_can_send", {
+        p_lead_id: leadId, p_channel: channel, p_inbox_id: inboxId, p_at: new Date().toISOString(),
+      })) as any[])[0];
+      return { allowed: r?.allowed === true, reason: r?.reason ?? "no_answer" };
+    },
+    recordSend: async (a) =>
+      unwrap(await db.rpc("outreach_record_send", {
+        p_lead_id: a.leadId, p_campaign_id: a.campaignId, p_inbox_id: a.inboxId, p_channel: a.channel,
+        p_step: a.step, p_variant: a.variant, p_subject: a.subject, p_body_preview: a.bodyPreview,
+        p_recipient: a.recipient, p_provider_message_id: a.providerMessageId,
+      })) as string,
+    annotate: async (eventId, adminId, meta) => {
+      const { error } = await db.from("outreach_events").update({ created_by: adminId, meta }).eq("id", eventId);
+      if (error) console.error("send_one annotate failed", eventId, error);
+    },
+    audit: async (row) => {
+      const { error } = await db.from("admin_audit_log").insert({
+        actor_id: row.actorId, actor_email: row.actorEmail, action: "outreach_send_one",
+        target_type: "outreach_lead", target_id: row.leadId, details: row.details,
+      });
+      if (error) console.error("send_one audit failed", row.leadId, error);
+    },
+    email: providerFromEnv(),
+    whatsapp: whatsappProviderFromEnv(),
+    identity: id,
+    unsubscribeUrl,
+    unsubscribeMailto: env("OUTREACH_UNSUBSCRIBE_MAILTO"),
+    replyTo: env("OUTREACH_REPLY_TO"),
+    approvedTemplates: approvedTemplatesFromEnv(),
+    whatsappLanguage: env("WHATSAPP_TEMPLATE_LANGUAGE") ?? (appCountry() === "US" ? "en_US" : "en"),
+  };
+}
 
 async function runCampaign(
   c: any,

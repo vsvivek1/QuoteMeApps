@@ -16,12 +16,12 @@ Indian personal data stays in `ap-south-1`. Create each project in its region fr
 ```
 supabase/
   config.toml            local stack: auth (phone + test OTPs, Google, Apple, captcha), token hook, functions
-  migrations/            schema, RLS, RPCs, storage, realtime, outreach CRM, web forms, cron (17 files)
+  migrations/            schema, RLS, RPCs, storage, realtime, outreach CRM, web forms, cron, admin audit log, KPIs, outreach safety, app sync (22 files)
   seed.sql               shared seed (legal versions, languages, seed_tools helpers)
   seed/<country>.sql     categories (policies, labels, field schemas), keywords, postal codes, metros
   seed/demo_generator.sql + seed/<country>_demo.sql   demo data (local + staging only)
   functions/             Edge Functions (Deno, deno.json import map, _shared/, tests/)
-  tests/database/        pgTAP suites (9 files, 214 tests)
+  tests/database/        pgTAP suites (11 files, 298 tests)
   tests/local/           Docker-free harness: Postgres + PostGIS + pgTAP + Supabase shims
   tests/fixtures/        money rounding cases shared by SQL, Deno and Dart
 tool/data/geo_import.py  postal code + city import (India Post, GeoNames, US Census ZCTA)
@@ -130,7 +130,8 @@ select vault.create_secret('<long random string>', 'edge_webhook_secret');
 Until both are set, the triggers do nothing (no error), so local development without functions
 keeps working. Jobs (`select jobname, schedule from cron.job`): `iwant-expire-stale` (*/15),
 `iwant-licence-expiry` (daily), `iwant-push-digests` (*/5), `iwant-outreach-send` (*/10 on
-weekdays, only when `outreach_enabled`), `iwant-outreach-purge` (daily), `iwant-rate-limit-cleanup`
+weekdays, only when `outreach_enabled`; it sends only for campaigns an admin activated and only
+once `outreach_business_address` holds a real postal address), `iwant-outreach-purge` (daily), `iwant-rate-limit-cleanup`
 (hourly), `iwant-expire-web-forms` (hourly).
 
 ### External webhooks to register
@@ -162,7 +163,7 @@ supabase/tests/local/run_local.sh usa        # one country
 KEEP_CLUSTER=1 PGPORT=55433 supabase/tests/local/run_local.sh india   # leave it running for psql
 ```
 
-Current result: India 9 files / 214 tests PASS, USA 9 files / 214 tests PASS.
+Current result: India 11 files / 298 tests PASS, USA 11 files / 298 tests PASS.
 
 ### Edge Functions (Deno)
 
@@ -175,7 +176,9 @@ deno test --allow-env --allow-read=../tests/fixtures tests/
 These cover the pure helpers: money rounding (shared fixtures), rate-limit keys, webhook
 signatures (Stripe, Razorpay, Svix with independent vectors), the anti-spam content rules, reply
 classification, push scheduling (priority window, digests, quiet hours), store status mapping,
-lead import mapping, the Apple ES256 client secret and web-forms validation.
+lead import mapping, the Apple ES256 client secret, web-forms validation, the outreach-send
+`send_one` flow (with fakes: request checks, gate order, server-built footer, recording, audit)
+and the brochure format aliases.
 
 ## Conventions
 

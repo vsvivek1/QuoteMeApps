@@ -190,3 +190,21 @@ export function classifyReply(text: string): ReplyClass {
   if (NOT_NOW.some((r) => r.test(fresh))) return "not_now";
   return "replied";
 }
+
+// --- business address (rule 8) and manual sends -----------------------------------------------
+
+/**
+ * The CAN-SPAM postal address lives in app_settings.outreach_business_address.
+ * Same rule as private.outreach_business_address_ready(): a string of at least
+ * 10 characters with no {{...}} placeholder.
+ */
+export function businessAddressReady(v: unknown): v is string {
+  return typeof v === "string" && v.trim().length >= 10 && !/\{\{|\}\}/.test(v);
+}
+
+const BROCHURE_LINK_RE = /\/(?:storage\/v1\/object\/public\/)?brochures\//i;
+
+/** True when the text links to a stored brochure (only allowed from touch 2, rule 4). */
+export function hasBrochureLink(text: string): boolean {
+  return (text.match(URL_RE) ?? []).some((u) => BROCHURE_LINK_RE.test(u));
+}
