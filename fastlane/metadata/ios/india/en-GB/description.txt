@@ -1,0 +1,36 @@
+Tell local shops and service providers what you want and let them compete for your order. I Want India is the reverse marketplace for getting quotes: instead of visiting ten shops or calling five technicians, you post one request and sellers near you send their best price.
+
+HOW IT WORKS
+• Post a request in under a minute. Type or speak what you need ("AC service, 2 split ACs", "Samsung 300L double-door fridge delivered to 560034 by Friday", "100 printed T-shirts"), add photos, your PIN code, a budget and a date.
+• Get quotes. Local shops, technicians and online sellers send itemised quotes with price, GST (CGST/SGST or IGST), delivery, installation, warranty and dates.
+• Compare quotes side by side. Sort by price, rating, delivery date or distance.
+• Chat, bargain with a counter-offer and accept the best quote. Your address and phone number are shared only with the seller you choose.
+
+GET QUOTES FOR
+• Home services: AC repair and service, plumber, electrician, carpenter, deep cleaning, pest control, painting, appliance repair
+• Packers and movers: home shifting within the city or to another state
+• Appliances: refrigerator, washing machine, AC, TV, microwave, RO water purifier, inverter and battery
+• Electronics: mobile phones, laptops, cameras, accessories
+• Furniture and home: sofa, bed, mattress, modular kitchen, interiors
+• Vehicles: new car and bike quotes, servicing, tyres
+• Events: catering, photography, decoration, venues
+• Business supplies: printing, packaging, uniforms, bulk office supplies
+
+WHY PEOPLE USE IT
+• Always free for buyers
+• Real prices with GST shown, not "call for price"
+• Verified sellers with GSTIN, ratings and reviews from completed orders only
+• No spam calls: sellers reach you in the app until you accept a quote
+• Pay the seller directly by UPI, cash or card
+• Report and block on every chat and profile
+• English and Hindi, light enough for 2 GB phones and slow networks
+
+FOR SHOPS AND SERVICE PROVIDERS
+Get new customers without paying for ads. Choose your categories and service area by PIN code or distance, see matching requests in your lead feed and send a quote in seconds with saved templates. Verify with your GSTIN and shop photo to earn the Verified badge and see new requests first. Businesses that join during our launch become founding partners with free access to seller features.
+
+I Want India is operated by Calecute Technologies (OPC) Private Limited. Buyers pay sellers directly; I Want India is a marketplace and is not a party to transactions between buyers and sellers.
+
+Grievance Officer: https://{{WEB_DOMAIN}}/legal/grievance-officer
+Privacy Policy: https://{{WEB_DOMAIN}}/legal/privacy-policy
+Terms: https://{{WEB_DOMAIN}}/legal/terms-of-service
+Help and support: https://{{WEB_DOMAIN}}/legal/contact-support

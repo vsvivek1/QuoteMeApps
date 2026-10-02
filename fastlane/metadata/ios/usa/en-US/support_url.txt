@@ -1,0 +1,1 @@
+https://{{WEB_DOMAIN}}/legal/contact-support

@@ -1,0 +1,21 @@
+I Want USA is a reverse marketplace: buyers post what they need and local businesses send quotes. Sign-in is by phone number with a one-time code. The demo numbers below are test numbers configured in our production backend: no SMS is sent, enter the fixed code shown.
+
+BUYER DEMO
+1. Tap "Continue with phone".
+2. Phone: {{REVIEW_BUYER_PHONE}}  Code: {{REVIEW_BUYER_OTP}}
+3. Home shows demo requests with quotes. Open one, tap Compare, open a chat, or accept a quote.
+
+SELLER DEMO
+1. Sign out (Settings > Sign out) and sign in again with:
+2. Phone: {{REVIEW_SELLER_PHONE}}  Code: {{REVIEW_SELLER_OTP}}
+3. The lead feed shows matching requests. Open one and tap "Send quote". Profile > Switch to buyer/seller changes modes.
+
+USER-GENERATED CONTENT (Guideline 1.2): every chat, request, quote, review and profile has Report and Block in its "..." menu. Reports are reviewed within 24 hours; images are screened automatically.
+
+ACCOUNT DELETION: Settings > Delete account (re-authentication required; Apple token is revoked for Sign in with Apple users).
+
+PURCHASES: seller plans and quote credits use StoreKit; they are hidden while our launch promotion keeps seller features free. Sign in with Apple is offered alongside Google sign-in.
+
+Payments for goods and services happen directly between buyers and sellers outside the app (physical goods and real-world services).
+
+Language: English (Spanish in Settings > Language).

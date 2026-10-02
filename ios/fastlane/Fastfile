@@ -1,0 +1,203 @@
+# iOS release lanes for I Want USA and I Want India (brief Section 19).
+#
+#   bundle exec fastlane ios test
+#   bundle exec fastlane ios certs    country:usa              # match, App Store profile
+#   bundle exec fastlane ios beta     country:usa              # build IPA, upload to TestFlight
+#   bundle exec fastlane ios release  country:usa              # submit latest TestFlight build for review
+#   bundle exec fastlane ios metadata country:india
+#
+# Requires an Xcode scheme per flavor (usaProd, indiaProd) with a matching
+# Release-<flavor> build configuration, as created by the Flutter flavors setup.
+# Every env var is documented in fastlane/README.md.
+
+def iwant_require_shared
+  dir = Dir.pwd
+  loop do
+    lib = File.join(dir, "fastlane", "lib", "iwant_release.rb")
+    return require(lib) if File.exist?(lib)
+    parent = File.dirname(dir)
+    UI.user_error!("Could not find fastlane/lib/iwant_release.rb above #{Dir.pwd}") if parent == dir
+    dir = parent
+  end
+end
+iwant_require_shared
+skip_docs
+
+# App Store Connect API key for the country's Apple developer team.
+def iwant_asc_api_key(country)
+  content = IWant.env("ASC_KEY_CONTENT", country, required: false)
+  key_path = IWant.env("ASC_KEY_PATH", country, required: content.nil?)
+  app_store_connect_api_key(
+    key_id: IWant.env("ASC_KEY_ID", country),
+    issuer_id: IWant.env("ASC_ISSUER_ID", country),
+    key_content: content,
+    is_key_content_base64: !content.nil?,
+    key_filepath: (content ? nil : File.expand_path(key_path, IWant.root)),
+    duration: 1200,
+    in_house: false
+  )
+end
+
+def iwant_match(country, readonly:, type: "appstore")
+  c = IWant.cfg(country)
+  match(
+    type: type,
+    app_identifier: [c[:package]],
+    team_id: IWant.env("APPLE_TEAM_ID", country),
+    git_url: IWant.env("MATCH_GIT_URL", country, required: false),
+    git_branch: IWant.env("MATCH_GIT_BRANCH", country, required: false, default: country),
+    storage_mode: IWant.env("MATCH_STORAGE_MODE", country, required: false, default: "git"),
+    readonly: readonly,
+    api_key: iwant_asc_api_key(country)
+  )
+end
+
+def iwant_submission_information
+  {
+    add_id_info_uses_idfa: false,
+    export_compliance_uses_encryption: false,
+    export_compliance_encryption_updated: false,
+    content_rights_contains_third_party_content: false,
+    content_rights_has_rights: true
+  }
+end
+
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    setup_ci if ENV["CI"]
+  end
+
+  desc "flutter analyze + unit/widget tests (country-agnostic; country: is accepted and ignored)"
+  lane :test do |_options|
+    IWant.flutter("pub get")
+    IWant.flutter("analyze")
+    IWant.flutter("test")
+  end
+
+  desc "Sync code signing with match for country:<usa|india>"
+  desc "Options: readonly:false (create/renew certs and profiles; default true), type:<appstore|development>"
+  lane :certs do |options|
+    country = IWant.country!(options)
+    readonly = options.key?(:readonly) ? options[:readonly].to_s != "false" : ENV.fetch("MATCH_READONLY", "true") != "false"
+    iwant_match(country, readonly: readonly, type: (options[:type] || "appstore"))
+  end
+
+  desc "Build the prod IPA for country:<usa|india> and upload it to TestFlight"
+  desc "Options: external:true (distribute to external groups), groups:'A,B', skip_version_check:true"
+  lane :beta do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    api_key = iwant_asc_api_key(country)
+
+    unless options[:skip_version_check]
+      latest = latest_testflight_build_number(api_key: api_key, app_identifier: c[:package],
+                                              version: IWant.version_name, initial_build_number: 0)
+      if IWant.build_number <= latest.to_i
+        UI.user_error!("pubspec build number #{IWant.build_number} is not above TestFlight's #{latest}. Run `bundle exec fastlane android bump` first.")
+      end
+    end
+
+    iwant_match(country, readonly: true)
+
+    IWant.flutter("pub get")
+    # Writes Generated.xcconfig (flavor, entry point, obfuscation, dart defines); Xcode does the build.
+    IWant.flutter("build ios --config-only #{IWant.flutter_build_args(country, 'ios')}")
+
+    ios_dir = File.join(IWant.root, "ios")
+    configuration = "Release-#{c[:flavor]}"
+    profile = "match AppStore #{c[:package]}"
+
+    if ENV["CI"] || ENV["IOS_FORCE_MANUAL_SIGNING"] == "true"
+      update_code_signing_settings(
+        path: File.join(ios_dir, "Runner.xcodeproj"),
+        use_automatic_signing: false,
+        targets: ["Runner"],
+        build_configurations: [configuration],
+        team_id: IWant.env("APPLE_TEAM_ID", country),
+        bundle_identifier: c[:package],
+        code_sign_identity: "Apple Distribution",
+        profile_name: profile
+      )
+    end
+
+    ipa_dir = File.join(IWant.root, "build", "ios", "ipa", country)
+    build_app(
+      workspace: File.join(ios_dir, "Runner.xcworkspace"),
+      scheme: c[:flavor],
+      configuration: configuration,
+      export_method: "app-store",
+      export_options: { provisioningProfiles: { c[:package] => profile } },
+      output_directory: ipa_dir,
+      output_name: "#{c[:flavor]}.ipa",
+      clean: true
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      app_identifier: c[:package],
+      ipa: File.join(ipa_dir, "#{c[:flavor]}.ipa"),
+      changelog: IWant.release_notes(country),
+      distribute_external: !!options[:external],
+      groups: (options[:groups] || ENV["TESTFLIGHT_GROUPS"])&.split(",")&.map(&:strip),
+      skip_waiting_for_build_processing: !options[:external]
+    )
+
+    gsp = File.join(ios_dir, "config", country, "GoogleService-Info.plist")
+    if File.exist?(gsp)
+      upload_symbols_to_crashlytics(gsp_path: gsp)
+    else
+      UI.message("#{gsp} not found; skipping Crashlytics dSYM upload")
+    end
+  end
+
+  desc "Submit a TestFlight build for App Review with metadata (phased release, manual release after approval)"
+  desc "Options: build_number:<n> (default: latest TestFlight build of the pubspec version), automatic_release:true"
+  lane :release do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    api_key = iwant_asc_api_key(country)
+    build = options[:build_number] || latest_testflight_build_number(
+      api_key: api_key, app_identifier: c[:package], version: IWant.version_name
+    )
+
+    deliver(
+      api_key: api_key,
+      app_identifier: c[:package],
+      app_version: IWant.version_name,
+      build_number: build.to_s,
+      metadata_path: IWant.render_metadata("ios", country),
+      screenshots_path: IWant.screenshots_path(country),
+      skip_screenshots: IWant.screenshots_path(country).nil?,
+      skip_binary_upload: true,
+      skip_app_version_update: false,
+      submit_for_review: true,
+      automatic_release: !!options[:automatic_release],
+      phased_release: true,
+      reject_if_possible: true,
+      force: true,
+      run_precheck_before_submit: true,
+      precheck_include_in_app_purchases: false,
+      submission_information: iwant_submission_information
+    )
+  end
+
+  desc "Upload App Store metadata (and screenshots if present) without submitting"
+  lane :metadata do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    deliver(
+      api_key: iwant_asc_api_key(country),
+      app_identifier: c[:package],
+      app_version: IWant.version_name,
+      metadata_path: IWant.render_metadata("ios", country),
+      screenshots_path: IWant.screenshots_path(country),
+      skip_screenshots: IWant.screenshots_path(country).nil?,
+      skip_binary_upload: true,
+      submit_for_review: false,
+      force: true,
+      run_precheck_before_submit: false
+    )
+  end
+end

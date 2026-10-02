@@ -1,0 +1,170 @@
+# Android release lanes for I Want USA and I Want India (brief Section 19).
+#
+#   bundle exec fastlane android test
+#   bundle exec fastlane android internal   country:india
+#   bundle exec fastlane android closed     country:india
+#   bundle exec fastlane android production country:india            # staged rollout, 10%
+#   bundle exec fastlane android production country:india rollout:0.5 update_rollout:true
+#   bundle exec fastlane android metadata   country:usa
+#   bundle exec fastlane android bump
+#
+# Run from the repo root (or android/). Every env var is documented in fastlane/README.md.
+
+def iwant_require_shared
+  dir = Dir.pwd
+  loop do
+    lib = File.join(dir, "fastlane", "lib", "iwant_release.rb")
+    return require(lib) if File.exist?(lib)
+    parent = File.dirname(dir)
+    UI.user_error!("Could not find fastlane/lib/iwant_release.rb above #{Dir.pwd}") if parent == dir
+    dir = parent
+  end
+end
+iwant_require_shared
+skip_docs
+
+# Uploads Dart symbols for Crashlytics when the Firebase CLI and app id are available.
+def upload_crashlytics_symbols(country)
+  app_id = IWant.env("FIREBASE_ANDROID_APP_ID", country, required: false)
+  return UI.message("FIREBASE_ANDROID_APP_ID_#{IWant.cfg(country)[:suffix]} not set; skipping Crashlytics symbol upload") unless app_id
+  symbols = File.join(IWant.root, "build", "symbols", country, "android")
+  sh("firebase crashlytics:symbols:upload --app=#{app_id} #{symbols.shellescape}")
+rescue StandardError => e
+  UI.important("Crashlytics symbol upload failed (release continues): #{e.message}")
+end
+
+default_platform(:android)
+
+platform :android do
+  desc "flutter analyze + unit/widget tests (country-agnostic; country: is accepted and ignored)"
+  lane :test do |_options|
+    IWant.flutter("pub get")
+    IWant.flutter("analyze")
+    IWant.flutter("test")
+  end
+
+  desc "Build the prod AAB for country:<usa|india> and upload it to the Internal testing track"
+  desc "Options: release_status:<completed|draft> (draft until the app's first review), skip_version_check:true"
+  lane :internal do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    key = IWant.play_json_key(country)
+
+    unless options[:skip_version_check]
+      existing = %w[internal alpha beta production].flat_map do |track|
+        google_play_track_version_codes(package_name: c[:package], track: track, **key)
+      rescue StandardError
+        []
+      end
+      if existing.any? && IWant.build_number <= existing.max.to_i
+        UI.user_error!("pubspec build number #{IWant.build_number} is not above Play's #{existing.max}. Run `bundle exec fastlane android bump` first.")
+      end
+    end
+
+    IWant.export_android_signing_env(country)
+    IWant.flutter("pub get")
+    IWant.flutter("build appbundle #{IWant.flutter_build_args(country, 'android')}")
+
+    upload_to_play_store(
+      package_name: c[:package],
+      track: "internal",
+      aab: IWant.find_aab(country),
+      mapping: IWant.find_mapping(country),
+      release_status: (options[:release_status] || ENV["PLAY_RELEASE_STATUS"] || "completed"),
+      metadata_path: IWant.render_metadata("android", country),
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: false,
+      **key
+    )
+
+    upload_crashlytics_symbols(country)
+  end
+
+  desc "Promote the latest Internal release to the closed testing track (PLAY_CLOSED_TRACK, default alpha)"
+  desc "Options: from:<track> (default internal), track:<closed track>, version_code:<n>"
+  lane :closed do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    upload_to_play_store(
+      package_name: c[:package],
+      track: (options[:from] || "internal"),
+      track_promote_to: (options[:track] || ENV["PLAY_CLOSED_TRACK"] || "alpha"),
+      track_promote_release_status: "completed",
+      version_code: options[:version_code],
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      **IWant.play_json_key(country)
+    )
+  end
+
+  desc "Promote the closed-testing release to Production as a staged rollout (default 10%)"
+  desc "Options: rollout:<0.0-1.0> (default PLAY_ROLLOUT or 0.1), from:<track>, update_rollout:true (change the % of the live release)"
+  lane :production do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    rollout = (options[:rollout] || ENV["PLAY_ROLLOUT"] || "0.1").to_s
+    UI.user_error!("rollout must be between 0 and 1 (e.g. 0.1 for 10%)") unless rollout.to_f.positive? && rollout.to_f <= 1.0
+    full = rollout.to_f >= 1.0
+    common = {
+      package_name: c[:package],
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    }.merge(IWant.play_json_key(country))
+
+    if options[:update_rollout]
+      # supply marks the release completed when rollout is 1.0
+      upload_to_play_store(track: "production", rollout: rollout, **common)
+    else
+      upload_to_play_store(
+        track: (options[:from] || ENV["PLAY_CLOSED_TRACK"] || "alpha"),
+        track_promote_to: "production",
+        track_promote_release_status: (full ? "completed" : "inProgress"),
+        rollout: (full ? nil : rollout),
+        **common
+      )
+    end
+    UI.success("#{c[:name]} production rollout at #{(rollout.to_f * 100).round}%")
+  end
+
+  desc "Upload store listing text and images only (fastlane/metadata/android/<country>/)"
+  desc "Options: skip_images:true"
+  lane :metadata do |options|
+    country = IWant.country!(options)
+    c = IWant.cfg(country)
+    upload_to_play_store(
+      package_name: c[:package],
+      metadata_path: IWant.render_metadata("android", country),
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: !!options[:skip_images],
+      skip_upload_screenshots: !!options[:skip_images],
+      sync_image_upload: true,
+      **IWant.play_json_key(country)
+    )
+  end
+
+  desc "Bump the build number in pubspec.yaml (shared by both apps) and commit it"
+  desc "Options: build_number:<n> (explicit), version:<x.y.z> (also set the version name), commit:false"
+  lane :bump do |options|
+    name, build = IWant.version
+    new_build = options[:build_number] ? options[:build_number].to_i : build + 1
+    UI.user_error!("New build number #{new_build} must be greater than #{build}") unless new_build > build
+    new_name, = IWant.write_version!(build: new_build, name: options[:version])
+    unless options[:commit].to_s == "false"
+      git_commit(path: [IWant.pubspec_path],
+                 message: "chore(release): bump version to #{new_name}+#{new_build}")
+    end
+    UI.success("#{name}+#{build} -> #{new_name}+#{new_build}")
+  end
+end

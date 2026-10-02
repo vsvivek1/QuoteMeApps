@@ -1,0 +1,19 @@
+# match: App Store distribution certificates and profiles for both apps.
+# The lanes override app_identifier, team_id, git_url and git_branch per country
+# (I Want USA and I Want India are on different Apple teams), so these are defaults.
+#
+# Create or renew (once per team, from a trusted machine):
+#   bundle exec fastlane ios certs country:usa readonly:false
+#   bundle exec fastlane ios certs country:india readonly:false
+# Everyone else and CI use readonly mode (the default).
+
+_country = (ENV["IWANT_COUNTRY"] || "usa").downcase
+_suffix = _country == "india" ? "INDIA" : "USA"
+
+storage_mode(ENV["MATCH_STORAGE_MODE_#{_suffix}"] || ENV["MATCH_STORAGE_MODE"] || "git")
+git_url(ENV["MATCH_GIT_URL_#{_suffix}"] || ENV["MATCH_GIT_URL"] || "")
+git_branch(ENV["MATCH_GIT_BRANCH_#{_suffix}"] || _country)
+type("appstore")
+app_identifier([_country == "india" ? "com.calecute.iwant.india" : "com.calecute.iwant.usa"])
+readonly(ENV.fetch("MATCH_READONLY", "true") != "false")
+# MATCH_PASSWORD (encryption passphrase) and MATCH_GIT_BASIC_AUTHORIZATION are read from the environment.

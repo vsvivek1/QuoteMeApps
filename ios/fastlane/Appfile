@@ -1,0 +1,13 @@
+# Defaults only. Lanes pass the bundle ID, team and App Store Connect API key
+# explicitly for the country chosen with `country:usa|india` (ios/fastlane/Fastfile).
+# The two apps belong to two Apple developer teams (one per legal entity).
+_country = (ENV["IWANT_COUNTRY"] || "usa").downcase
+_suffix = _country == "india" ? "INDIA" : "USA"
+
+app_identifier(_country == "india" ? "com.calecute.iwant.india" : "com.calecute.iwant.usa")
+
+_team = ENV["APPLE_TEAM_ID_#{_suffix}"] || ENV["APPLE_TEAM_ID"]
+team_id(_team) if _team && !_team.empty?
+
+_itc = ENV["ASC_TEAM_ID_#{_suffix}"] || ENV["ASC_TEAM_ID"]
+itc_team_id(_itc) if _itc && !_itc.empty?

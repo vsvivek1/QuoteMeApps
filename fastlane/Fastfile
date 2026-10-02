@@ -1,0 +1,9 @@
+# Root entry point so every lane can be run from the repo root:
+#   bundle exec fastlane android internal country:india
+#   bundle exec fastlane ios beta country:usa
+# The lanes live in android/fastlane/Fastfile and ios/fastlane/Fastfile (they also work
+# when run from inside android/ or ios/). All paths in the lanes are absolute, so the
+# working directory does not matter. When running from the root, put secrets in
+# fastlane/.env (git-ignored); from android/ or ios/, in that folder's fastlane/.env.
+import("../android/fastlane/Fastfile")
+import("../ios/fastlane/Fastfile")

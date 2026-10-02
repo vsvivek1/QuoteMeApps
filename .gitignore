@@ -46,3 +46,6 @@ supabase/.temp
 __pycache__/
 *.pyc
 .venv/
+**/fastlane/report.xml
+**/fastlane/README.md.bak
+fastlane/build/

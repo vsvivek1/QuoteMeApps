@@ -1,0 +1,34 @@
+Tell local businesses what you want and let them compete for your job. I Want USA is the reverse marketplace for getting quotes: instead of calling five contractors or checking ten stores, you post one request and sellers near you send their best price.
+
+HOW IT WORKS
+• Post a request in under a minute. Type or say what you need ("AC repair, 2 units", "French door refrigerator delivered by Friday", "100 printed T-shirts"), add photos, your ZIP code, a budget and a date.
+• Get quotes. Local pros, stores and online sellers send itemized quotes with price, sales tax, delivery, warranty and dates.
+• Compare quotes side by side. Sort by price, rating, delivery date or distance.
+• Chat, counter-offer and accept the best quote. Your address and phone number are shared only with the seller you choose.
+
+GET QUOTES FOR
+• Home services: HVAC repair and installation, plumbing, electrical, roofing, handyman, house cleaning, pest control, painting, appliance repair
+• Moving: local and interstate movers (USDOT number shown)
+• Appliances and electronics: refrigerators, washers and dryers, TVs, laptops, phones
+• Furniture and home: sofas, mattresses, kitchens, interiors
+• Vehicles: new car quotes, auto service, tires
+• Events: catering, photography, decoration, venues
+• Business supplies: custom printing, packaging, uniforms, bulk office supplies
+
+WHY PEOPLE USE IT
+• Always free for buyers
+• Real prices instead of "call for a quote"
+• Verified sellers, ratings and reviews from completed jobs only
+• Licensed pros only where the law requires a license, such as contractors in many states
+• No spam calls: sellers reach you in the app until you accept a quote
+• Report and block on every chat and profile
+• English and Spanish
+
+FOR BUSINESSES
+Win new customers without paying for ads. Choose your categories and service area, see matching requests in your lead feed and send a quote in seconds with saved templates. Get verified with your EIN or state business license to earn the Verified badge and see new requests first. Businesses that join during our launch become founding partners with free access to seller features.
+
+I Want USA is operated by Calecute Technologies LLC. Buyers pay sellers directly; I Want USA is a marketplace and is not a party to transactions between buyers and sellers.
+
+Privacy Policy: https://{{WEB_DOMAIN}}/legal/privacy-policy
+Terms: https://{{WEB_DOMAIN}}/legal/terms-of-service
+Help and support: https://{{WEB_DOMAIN}}/legal/contact-support

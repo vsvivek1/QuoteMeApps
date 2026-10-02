@@ -1,0 +1,34 @@
+Dile a los negocios locales lo que quieres y deja que compitan por tu trabajo. I Want USA es el mercado inverso para pedir cotizaciones: en lugar de llamar a cinco contratistas o revisar diez tiendas, publicas una solicitud y los vendedores cerca de ti te envían su mejor precio.
+
+CÓMO FUNCIONA
+• Publica una solicitud en menos de un minuto. Escribe o di lo que necesitas ("reparación de aire acondicionado, 2 equipos", "refrigerador entregado el viernes", "100 camisetas impresas"), agrega fotos, tu código postal (ZIP), un presupuesto y una fecha.
+• Recibe cotizaciones. Profesionales, tiendas y vendedores en línea te envían cotizaciones detalladas con precio, impuesto sobre ventas, entrega, garantía y fechas.
+• Compara cotizaciones lado a lado. Ordena por precio, calificación, fecha de entrega o distancia.
+• Chatea, haz una contraoferta y acepta la mejor cotización. Tu dirección y teléfono solo se comparten con el vendedor que elijas.
+
+PIDE COTIZACIONES PARA
+• Servicios del hogar: reparación e instalación de aire acondicionado y calefacción (HVAC), plomería, electricidad, techos, handyman, limpieza, control de plagas, pintura, reparación de electrodomésticos
+• Mudanzas: locales y entre estados (con número USDOT)
+• Electrodomésticos y electrónica: refrigeradores, lavadoras y secadoras, televisores, laptops, teléfonos
+• Muebles y hogar: sofás, colchones, cocinas, interiores
+• Vehículos: cotizaciones de autos nuevos, servicio, llantas
+• Eventos: banquetes, fotografía, decoración, salones
+• Suministros para negocios: impresión, empaques, uniformes, artículos de oficina al por mayor
+
+POR QUÉ LA GENTE LA USA
+• Siempre gratis para compradores
+• Precios reales en lugar de "llame para cotizar"
+• Vendedores verificados, calificaciones y reseñas solo de trabajos terminados
+• Solo profesionales con licencia donde la ley la exige, como contratistas en muchos estados
+• Sin llamadas de spam: los vendedores te contactan dentro de la app hasta que aceptas
+• Reportar y bloquear en cada chat y perfil
+• En inglés y español
+
+PARA NEGOCIOS
+Consigue clientes nuevos sin pagar anuncios. Elige tus categorías y zona de servicio, mira las solicitudes que coinciden en tu feed y envía una cotización en segundos con plantillas guardadas. Verifícate con tu EIN o licencia comercial estatal para obtener la insignia de Verificado y ver primero las solicitudes nuevas. Los negocios que se unan durante el lanzamiento serán socios fundadores con acceso gratis a las funciones para vendedores.
+
+I Want USA es operada por Calecute Technologies LLC. Los compradores pagan directamente a los vendedores; I Want USA es un mercado y no es parte de las transacciones entre compradores y vendedores.
+
+Política de privacidad: https://{{WEB_DOMAIN}}/legal/privacy-policy
+Términos: https://{{WEB_DOMAIN}}/legal/terms-of-service
+Ayuda y soporte: https://{{WEB_DOMAIN}}/legal/contact-support

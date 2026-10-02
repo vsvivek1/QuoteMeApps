@@ -1,0 +1,9 @@
+# Defaults only. Lanes pass package_name and the Play key explicitly for the
+# country chosen with `country:usa|india` (see android/fastlane/Fastfile).
+_country = (ENV["IWANT_COUNTRY"] || "usa").downcase
+_suffix = _country == "india" ? "INDIA" : "USA"
+
+package_name(_country == "india" ? "com.calecute.iwant.india" : "com.calecute.iwant.usa")
+
+_key = ENV["PLAY_JSON_KEY_PATH_#{_suffix}"] || ENV["PLAY_JSON_KEY_PATH"]
+json_key_file(_key) if _key && !_key.empty?
