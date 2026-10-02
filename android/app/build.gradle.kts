@@ -4,8 +4,17 @@ plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    id("com.google.gms.google-services") apply false
+    id("com.google.firebase.crashlytics") apply false
+}
+
+// Firebase (FCM, Crashlytics) is wired only once a flavor has its google-services.json
+// (gitignored, see README). Without it Crashlytics' mapping upload would fail the build.
+val hasFirebaseConfig = file("src").listFiles()?.any { File(it, "google-services.json").exists() } == true ||
+    file("google-services.json").exists()
+if (hasFirebaseConfig) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
 }
 
 // Release signing comes from android/key.properties (gitignored) or CI env vars.
@@ -105,8 +114,10 @@ android {
 
 // Firebase config files live per flavor (android/app/src/<country><Env>/google-services.json)
 // and are gitignored; builds without them still work with Firebase disabled at runtime.
-googleServices {
-    missingGoogleServicesStrategy = com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy.WARN
+if (hasFirebaseConfig) {
+    configure<com.google.gms.googleservices.GoogleServicesPlugin.GoogleServicesPluginConfig> {
+        missingGoogleServicesStrategy = com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy.WARN
+    }
 }
 
 kotlin {
