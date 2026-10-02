@@ -13,7 +13,7 @@ Defaults picked while building, per brief Section 22. Newest last. Change any of
 | 2026-10-02 | GST slabs offered in the quote form: 0, 5, 18, 40 percent (default 18). | GST 2.0 rate structure from September 2025. |
 | 2026-10-02 | All tax maths in integer basis points with half-up rounding; intra-state GST splits into CGST + SGST each rounded separately, inter-state uses IGST. US sales tax is entered by the seller and applies to the subtotal; delivery is untaxed. | Brief Section 20.1 (no floating point money). |
 | 2026-10-02 | Demo mode: when `SUPABASE_URL` is empty the app runs on an in-memory marketplace (OTP `123456`, simulated sellers quote automatically). | Lets every flavor run and be tested before any account exists. |
-| 2026-10-02 | Store product ids `seller_pro_monthly`, `seller_pro_annual`, `quote_credits_10`, `quote_credits_50`. | Same ids in both stores and both apps. |
+| 2026-10-02 | Store product ids `seller_pro_monthly`, `seller_pro_annual`, `credits_10`, `credits_50`. | Same ids in both stores and both apps. |
 | 2026-10-02 | Test OTP numbers: USA `+1 555-0100` to `+1 555-0103`, India `+91 0000000001` to `+91 0000000004`, code `123456`, configured only in `supabase/config.toml` and the hosted dashboard. | Section 23 addendum (fictional numbers, never in `seed.sql`). |
 | 2026-10-02 | Edge Functions use a `deno.json` import map; no `package.json` under `supabase/functions`. | Section 23 addendum. |
 | 2026-10-02 | Offline cache: one drift schema, one database file per flavor (`iwant_<country>_<env>.sqlite`). | Section 23 addendum. |

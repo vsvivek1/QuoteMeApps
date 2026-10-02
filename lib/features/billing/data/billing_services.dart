@@ -18,8 +18,8 @@ part 'billing_services.g.dart';
 abstract final class ProductIds {
   static const monthly = 'seller_pro_monthly';
   static const annual = 'seller_pro_annual';
-  static const credits10 = 'quote_credits_10';
-  static const credits50 = 'quote_credits_50';
+  static const credits10 = 'credits_10';
+  static const credits50 = 'credits_50';
   static const subscriptions = {monthly, annual};
   static const all = {monthly, annual, credits10, credits50};
 }
