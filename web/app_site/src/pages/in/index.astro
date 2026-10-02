@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../lib/site';
+import { LOCALES, translator } from '../../lib/i18n';
+import { townPages } from '../../lib/towns';
+
+// Every town page, grouped by state. Also the no-JavaScript fallback of the town picker.
+const { t } = translator(LOCALES[0]);
+const pages = await townPages();
+const states = [...new Set(pages.map((p) => p.town.state))].sort((a, b) => a.localeCompare(b));
+---
+<Base title={`Choose your town`} description={`${site.appName} town pages: areas, ${site.postalLabel}s and categories for ${pages.length} towns. Post what you want and local sellers send you quotes.`} path="/in">
+  <div class="page-head">
+    <h1>{t('town.choose')}</h1>
+    <p class="lead">Pick your town to see its areas and {site.postalLabel}s, what people ask for, and how to get quotes from sellers near you.</p>
+    <p><a class="btn sm secondary" href="/in" data-town-open>{t('town.useLocation')} / {t('town.showMap').toLowerCase()}</a></p>
+  </div>
+  {states.map((state) => (
+    <section>
+      <h2>{state}</h2>
+      <ul class="chips">
+        {pages.filter((p) => p.town.state === state).map((p) => <li><a href={p.path}>{p.town.name}</a></li>)}
+      </ul>
+    </section>
+  ))}
+</Base>

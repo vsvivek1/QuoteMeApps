@@ -1,0 +1,193 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import StoreBadges from '../../components/StoreBadges.astro';
+import { abs, site } from '../../lib/site';
+import { loadSeo } from '../../lib/seo';
+import { LOCALES, translator } from '../../lib/i18n';
+import { distanceText, joinList, postalPattern, towns, townPages, type TownPage } from '../../lib/towns';
+
+// One page per town in data/towns/<country>.json (English only, like the price pages).
+export const getStaticPaths = (async () =>
+  (await townPages()).map((page) => ({ params: { town: page.town.slug }, props: { page } }))) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: TownPage };
+const { town, nearby, hub, sellers } = page;
+const { t, rich } = translator(LOCALES[0]);
+const { data } = await loadSeo();
+const isUsa = site.country === 'usa';
+const areas = town.areas;
+const [a0, a1, a2, a3] = [areas[0], areas[1 % areas.length], areas[2 % areas.length], areas[3 % areas.length]];
+const postal = site.postalLabel;
+const prefixes = town.postal_prefixes;
+const prefixText = joinList(prefixes, 'or');
+
+// Town-specific example requests, built from the town's own areas.
+const examples = isUsa
+  ? [
+      `Samsung 28 cu ft French-door refrigerator, delivered in ${a0} by Friday`,
+      `Washer and dryer repair in ${a1} this week`,
+      `Movers for a 2-bedroom apartment, ${a2} to ${a3}`,
+    ]
+  : [
+      `Samsung 300L double-door refrigerator, delivered in ${a0} by Friday`,
+      `AC repair, 2 split units in ${a1}`,
+      `Packers and movers, ${a2} to ${a3}`,
+    ];
+
+// Categories the app takes requests for (allowed policy), grouped; linked to this town's price page when one has prices.
+const priced = new Map((hub?.pages ?? []).filter((p) => p.showPrices).map((p) => [p.category.slug, p.path]));
+const allowed = data.categories.filter((c) => c.policy === 'allowed');
+const groups = [...new Set(allowed.map((c) => c.group))].map((g) => ({ name: g, cats: allowed.filter((c) => c.group === g) }));
+
+// Locator: every town on the list, equirectangular projection around this country's towns.
+const W = 360;
+const lat0 = (Math.min(...towns.map((x) => x.lat)) + Math.max(...towns.map((x) => x.lat))) / 2;
+const kx = Math.cos((lat0 * Math.PI) / 180);
+const xs = towns.map((x) => x.lng * kx);
+const ys = towns.map((x) => -x.lat);
+const [minX, maxX, minY, maxY] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+const scale = (W - 48) / Math.max(maxX - minX, (maxY - minY) * 0.9);
+const H = Math.round((maxY - minY) * scale + 48);
+const pt = (lat: number, lng: number) => ({ x: 24 + (lng * kx - minX) * scale, y: 24 + (-lat - minY) * scale });
+const here = pt(town.lat, town.lng);
+const near = new Set(nearby.map((n) => n.town.slug));
+
+const title = `Post what you want in ${town.name}, get quotes from local sellers`;
+const description = `Post what you want in ${town.name}, ${town.state}: businesses serving ${joinList(areas.slice(0, 3))} and more send you quotes on ${site.appName}. Free for buyers.`;
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Towns', item: abs('/in') },
+    { '@type': 'ListItem', position: 2, name: town.name, item: abs(page.path) },
+  ],
+};
+const svg = (paths: string) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+const stepIcons = [
+  '<path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />',
+  '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />',
+  '<path d="M20 6 9 17l-5-5" />',
+];
+---
+<Base title={title} description={description} path={page.path} noindex={!page.indexable} jsonLd={[crumbs]} smartBanner wide>
+  <section class="home-hero town-hero" aria-labelledby="town-title">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="breadcrumbs"><a href="/in">Towns</a> / {town.state}</p>
+        <p class="eyebrow">{town.name}, {town.state}</p>
+        <h1 id="town-title">Post what you want in {town.name}. <span class="accent">Local sellers send you quotes.</span></h1>
+        <p class="lead">
+          Tell {site.appName} what you need, whether you are in {a0}, {a1} or {a2}, and businesses that serve your part of {town.name} send you their prices.
+          Compare quotes side by side, chat, and accept the one you like.
+        </p>
+        <StoreBadges campaign={`town_${town.slug}`} medium="town_page" />
+        <p class="town-switch-note small muted">
+          Not in {town.name}? <a href="/in" data-town-open>{t('town.choose')}</a>
+        </p>
+      </div>
+      <figure class="town-locator">
+        <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-labelledby="locator-cap">
+          {nearby.map((n) => {
+            const p = pt(n.town.lat, n.town.lng);
+            return <line x1={here.x} y1={here.y} x2={p.x} y2={p.y} class="loc-line" />;
+          })}
+          {towns.filter((x) => x.slug !== town.slug).map((x) => {
+            const p = pt(x.lat, x.lng);
+            return <circle cx={p.x} cy={p.y} r={near.has(x.slug) ? 4.5 : 3.5} class={near.has(x.slug) ? 'loc-dot near' : 'loc-dot'} />;
+          })}
+          <circle cx={here.x} cy={here.y} r="14" class="loc-halo" />
+          <circle cx={here.x} cy={here.y} r="7" class="loc-here" />
+        </svg>
+        <figcaption id="locator-cap" class="small muted">
+          {town.name} among the {towns.length} towns on {site.appName}{nearby.length > 0 && <>; nearest: {joinList(nearby.map((n) => n.town.name))}</>}.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="areas-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="areas-title">Areas in {town.name}</h2>
+        <p>
+          Add your {postal} when you post. {town.name} {postal}s start with {prefixText}, and sellers choose the areas they serve by {postal} or by distance from their shop,
+          so a request from {a3} goes to businesses that cover {a3}.
+        </p>
+      </div>
+      <ul class="chips town-areas">{areas.map((a) => <li><span>{a}</span></li>)}</ul>
+      <p class="small muted">{postal}s: {joinList(prefixes.map(postalPattern), 'and')}. Area names are a guide; your {postal} decides who can quote.</p>
+    </div>
+  </section>
+
+  <section class="section section-tint" aria-labelledby="ask-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="ask-title">What you can ask for in {town.name}</h2>
+        <p>A few examples of requests, one per line. Add photos, your {postal} and when you need it.</p>
+      </div>
+      <div class="ask-grid">
+        {examples.map((r) => <p class="bubble">{r}</p>)}
+      </div>
+      <h3 class="sub-head">Categories</h3>
+      {priced.size > 0 && <p class="small muted">Linked categories have local prices from real quotes in {town.name}.</p>}
+      <div class="town-groups">
+        {groups.map((g) => (
+          <div>
+            <h4>{g.name}</h4>
+            <ul class="chips">
+              {g.cats.map((c) => <li>{priced.has(c.slug) ? <a href={priced.get(c.slug)}>{c.name}</a> : <span>{c.name}</span>}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+      {(hub || sellers) && (
+        <div class="actions">
+          {hub && <a class="btn secondary" href={`/quotes/${town.slug}`}>Prices and quotes in {town.name}</a>}
+          {sellers && <a class="btn ghost" href={sellers.path}>Local sellers in {town.name}</a>}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="how-title">How it works in {town.name}</h2>
+      </div>
+      <ol class="step-grid">
+        {[0, 1, 2].map((i) => (
+          <li class="step-card">
+            <span class="icon"><Fragment set:html={svg(stepIcons[i])} /></span>
+            <p set:html={rich(`home.steps.${i}`, { example: examples[0] })} />
+          </li>
+        ))}
+      </ol>
+      {nearby.length > 0 && (
+        <>
+          <h3 class="sub-head">Nearby towns</h3>
+          <ul class="town-nearby">
+            {nearby.map((n) => (
+              <li>
+                <a href={`/in/${n.town.slug}`}><strong>{n.town.name}</strong><span>{n.town.state} · {distanceText(n.distance)} away</span></a>
+              </li>
+            ))}
+          </ul>
+          <p class="small muted">Straight-line distances between town centres.</p>
+        </>
+      )}
+    </div>
+  </section>
+
+  <section class="section-end" aria-labelledby="cta-title">
+    <div class="wrap">
+      <div class="cta-band band">
+        <h2 id="cta-title">Get quotes from sellers in {town.name}</h2>
+        <p class="muted">Free for buyers. Your phone number is shared with a seller only after you accept their quote.</p>
+        <StoreBadges campaign={`town_${town.slug}_cta`} medium="town_page" />
+        <a href="/sellers">Run a business in {town.name}? Become a seller</a>
+      </div>
+    </div>
+  </section>
+</Base>

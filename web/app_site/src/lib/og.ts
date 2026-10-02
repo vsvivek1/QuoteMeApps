@@ -18,6 +18,7 @@ import { createOgRenderer } from '../../../shared/og.mjs';
 import { REPO_ROOT, WEB_ROOT, brandColors, country, money, site } from './site';
 import { cityHubs, loadGuides, loadSellers, loadSeo, responseTimeText, sellerCities } from './seo';
 import { LOCALES, TRANSLATED, localePath, translator } from './i18n';
+import { joinList, townPages } from './towns';
 
 export interface OgSpec {
   kicker?: string;
@@ -54,6 +55,17 @@ export function ogEntries(): Promise<Map<string, OgSpec>> {
       page('/sellers', 'sellers', tr.t('sellers.h1'));
       page('/waitlist', 'waitlist', tr.t('waitlist.h1'));
       page('/about', 'about', tr.t('about.h1'));
+    }
+
+    // Town pages (committed data, so not tied to the SEO export): indexable ones only.
+    for (const tp of await townPages()) {
+      if (!tp.indexable) continue;
+      add(tp.path, {
+        kicker: `${tp.town.name}, ${tp.town.state}`,
+        title: `Post what you want in ${tp.town.name}`,
+        detail: `Local sellers in ${joinList(tp.town.areas.slice(0, 3))} and more send you quotes. Free for buyers.`,
+        footerRight: cta,
+      });
     }
 
     // Live data: only pages people can find (indexable). Fixture builds: every page, to exercise the template.
