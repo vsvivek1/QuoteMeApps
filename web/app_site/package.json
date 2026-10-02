@@ -14,7 +14,10 @@
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.3.5",
-    "harfbuzzjs": "^1.6.2"
+    "harfbuzzjs": "^1.6.2",
+    "leaflet": "^1.9.4"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

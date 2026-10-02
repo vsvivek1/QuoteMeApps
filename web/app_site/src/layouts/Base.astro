@@ -4,6 +4,7 @@ import { abs, site } from '../lib/site';
 import { alternates, localePath, splitLocale, translator } from '../lib/i18n';
 import { ogImageFor } from '../lib/og';
 import Globe from '../components/icons/Globe.astro';
+import TownPicker from '../components/TownPicker.astro';
 
 interface Props {
   title: string;
@@ -92,6 +93,11 @@ const year = new Date().getFullYear();
           </ul>
         </nav>
         <div class="header-actions">
+          <a class="town-btn" href="/in" data-town-open>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" /><circle cx="12" cy="10" r="2.5" /></svg>
+            <span class="town-btn-full" data-town-label>{t('town.choose')}</span>
+            <span class="town-btn-short" data-town-label>{t('town.short')}</span>
+          </a>
           <a class="btn sm header-cta" href={href('/#get-app')}>{t('layout.getApp')}</a>
           <details class="menu">
             <summary>
@@ -151,5 +157,6 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </footer>
+    <TownPicker tr={tr} />
   </body>
 </html>

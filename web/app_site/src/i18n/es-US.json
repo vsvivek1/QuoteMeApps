@@ -187,5 +187,35 @@
       "kicker": "Acerca de nosotros",
       "detail": "Un marketplace de cotizaciones inversas: publicas lo que quieres y los vendedores compiten con cotizaciones."
     }
+  },
+  "town": {
+    "choose": "Elige tu ciudad",
+    "short": "Tu ciudad",
+    "current": "Tu ciudad: {name}",
+    "change": "Cambiar",
+    "homeNote": "Mira las zonas y categorías locales de tu ciudad.",
+    "title": "Elige tu ciudad",
+    "intro": "Elige tu ciudad de la lista, usa tu ubicación o señálala en un mapa.",
+    "close": "Cerrar",
+    "search": "Buscar ciudades",
+    "searchHint": "Ciudad, barrio o primeros dígitos de tu {postalLabel}",
+    "noResults": "Ninguna ciudad coincide. Prueba el mapa o tu ubicación.",
+    "useLocation": "Usar mi ubicación",
+    "locating": "Buscando tu ubicación…",
+    "locationNote": "Tu ubicación se usa una sola vez, en tu navegador, para encontrar la ciudad más cercana. No nos la envía.",
+    "locationDenied": "El acceso a la ubicación está desactivado. Elige tu ciudad de la lista.",
+    "locationError": "No pudimos obtener tu ubicación. Elige tu ciudad de la lista.",
+    "nearest": "Ciudad más cercana: {name}, a {distance}.",
+    "far": "Todavía no tenemos una página para tu zona. La ciudad más cercana es {name}, a {distance}.",
+    "go": "Ir a {name}",
+    "showMap": "Elegir en un mapa",
+    "hideMap": "Ocultar mapa",
+    "mapLabel": "Mapa de ciudades. Haz clic o toca cerca de ti para encontrar la ciudad más cercana.",
+    "mapHint": "Haz clic o toca el mapa cerca de ti y elegiremos la ciudad más cercana.",
+    "mapLoading": "Cargando mapa…",
+    "mapError": "No se pudo cargar el mapa. Usa la lista.",
+    "distanceKm": "unos {n} km",
+    "distanceMi": "unas {n} millas",
+    "allTowns": "Ver todas las ciudades"
   }
 }

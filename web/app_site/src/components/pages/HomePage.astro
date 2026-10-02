@@ -42,6 +42,8 @@ const campaign = locale.segment ? `home_hero_${locale.segment}` : 'home_hero';
 // Illustrative quotes for the hero mock-up (decorative, aria-hidden): the first example request.
 const mockQuotes = (site.country === 'india' ? [48990, 51200, 52450] : [2849, 2979, 3115]).map((n) => money(n));
 const mockRatings = ['4.9', '4.7', '4.8'];
+// "Your town: {name}" split around the name, which the town picker script fills in.
+const [townBefore, townAfter = ''] = raw<string>('town.current').split('{name}');
 const faq = raw<{ q: string }[]>('home.faq').map((_, i) => ({ q: t(`home.faq.${i}.q`), a: t(`home.faq.${i}.a`) }));
 const sellIcons = [
   '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />',
@@ -69,6 +71,11 @@ const svg = (paths: string) =>
         <p class="free-note">
           <Fragment set:html={svg('<rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />')} />
           <span>{t('home.freeNote')}</span>
+        </p>
+        <p class="town-note">
+          <Fragment set:html={svg('<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" /><circle cx="12" cy="10" r="2.5" />')} />
+          <span data-town-default><a href="/in" data-town-open>{t('town.choose')}</a>: {t('town.homeNote')}</span>
+          <span data-town-current hidden>{townBefore}<a href="/in" data-town-link>{t('town.short')}</a>{townAfter} · <a href="/in" data-town-open>{t('town.change')}</a></span>
         </p>
       </div>
       <div class="mock" aria-hidden="true">

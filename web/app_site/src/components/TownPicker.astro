@@ -1,0 +1,62 @@
+---
+// "Choose your town" dialog (scripts/town-picker.ts). Closed by default; every
+// trigger is a plain link to /in, so without JavaScript people get the town list.
+// The map (Leaflet + OpenStreetMap tiles) is only downloaded when "Pick on a map" is pressed.
+import { site } from '../lib/site';
+import { townsByName } from '../lib/towns';
+import type { Translator } from '../lib/i18n';
+
+interface Props {
+  tr: Translator;
+}
+const { tr } = Astro.props;
+const { t } = tr;
+const keys = ['current', 'change', 'locating', 'locationDenied', 'locationError', 'nearest', 'far', 'go', 'showMap', 'hideMap', 'mapLoading', 'mapError', 'distanceKm', 'distanceMi', 'noResults', 'short', 'choose'];
+const strings = Object.fromEntries(keys.map((k) => [k, t(`town.${k}`)]));
+const config = { strings, unit: site.country === 'usa' ? 'mi' : 'km', country: site.country };
+const lang = tr.locale.segment ? 'en' : undefined;
+const search = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const pin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" /><circle cx="12" cy="10" r="2.5" /></svg>';
+---
+<dialog id="town-picker" class="town-dialog" aria-labelledby="town-picker-title" data-config={JSON.stringify(config)}>
+  <div class="town-dialog-head">
+    <h2 id="town-picker-title">{t('town.title')}</h2>
+    <button type="button" class="town-close" data-town-close>
+      <span class="sr-only">{t('town.close')}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+  <p class="muted small town-intro">{t('town.intro')}</p>
+  <div class="town-tools">
+    <button type="button" class="btn sm secondary" data-town-locate>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /><circle cx="12" cy="12" r="7" /></svg>
+      {t('town.useLocation')}
+    </button>
+    <button type="button" class="btn sm ghost" data-town-map-toggle aria-expanded="false" aria-controls="town-map">
+      <Fragment set:html={pin} />
+      <span data-town-map-label>{t('town.showMap')}</span>
+    </button>
+  </div>
+  <p class="small muted town-loc-note">{t('town.locationNote')}</p>
+  <div class="town-map-wrap" hidden data-town-map-wrap>
+    <p class="small muted" id="town-map-hint">{t('town.mapHint')}</p>
+    <div id="town-map" class="town-map" aria-label={t('town.mapLabel')} aria-describedby="town-map-hint"></div>
+  </div>
+  <div class="town-result" data-town-result role="status" aria-live="polite"></div>
+  <label class="town-search-label" for="town-search">{t('town.search')}</label>
+  <input id="town-search" class="town-search" type="search" autocomplete="off" placeholder={t('town.searchHint')} aria-controls="town-list" data-town-search />
+  <ul id="town-list" class="town-list" data-town-list>
+    {townsByName().map((town) => (
+      <li data-search={search([town.name, ...town.aka, town.state, ...town.areas, ...town.postal_prefixes].join(' '))}>
+        <a href={`/in/${town.slug}`} data-town={town.slug} data-name={town.name} data-lat={town.lat} data-lng={town.lng} lang={lang}>
+          <span>{town.name}</span><small>{town.state}</small>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="town-empty small muted" hidden data-town-empty>{t('town.noResults')}</p>
+  <p class="small town-all"><a href="/in">{t('town.allTowns')}</a></p>
+</dialog>
+<script>
+  import '../scripts/town-picker';
+</script>

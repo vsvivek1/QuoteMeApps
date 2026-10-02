@@ -193,5 +193,35 @@
       "kicker": "About us",
       "detail": "A reverse-quote marketplace: you post what you want and sellers compete with quotes."
     }
+  },
+  "town": {
+    "choose": "Choose your town",
+    "short": "Your town",
+    "current": "Your town: {name}",
+    "change": "Change",
+    "homeNote": "See areas and local categories for your town.",
+    "title": "Choose your town",
+    "intro": "Pick your town from the list, use your location, or point to it on a map.",
+    "close": "Close",
+    "search": "Search towns",
+    "searchHint": "Town, area or first digits of your {postalLabel}",
+    "noResults": "No town matches that. Try the map or your location.",
+    "useLocation": "Use my location",
+    "locating": "Finding your location…",
+    "locationNote": "Your location is used once, in your browser, to find the nearest town. It is not sent to us.",
+    "locationDenied": "Location access was turned off. Pick your town from the list instead.",
+    "locationError": "We could not get your location. Pick your town from the list instead.",
+    "nearest": "Nearest town: {name}, {distance} away.",
+    "far": "We don't have a page for your area yet. The nearest town is {name}, {distance} away.",
+    "go": "Go to {name}",
+    "showMap": "Pick on a map",
+    "hideMap": "Hide map",
+    "mapLabel": "Map of towns. Click or tap near you to find the nearest town.",
+    "mapHint": "Click or tap the map near you and we'll snap to the nearest town.",
+    "mapLoading": "Loading map…",
+    "mapError": "The map could not be loaded. Use the list instead.",
+    "distanceKm": "about {n} km",
+    "distanceMi": "about {n} miles",
+    "allTowns": "See all towns"
   }
 }

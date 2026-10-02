@@ -16,8 +16,8 @@ if (country !== 'usa' && country !== 'india') throw new Error('lighthouserc: set
 
 // Indexable static pages: whole SEO category is asserted.
 const indexable = {
-  usa: ['/index.html', '/es.html', '/legal/privacy-policy.html', '/sellers.html'],
-  india: ['/index.html', '/hi.html', '/legal/privacy-policy.html', '/sellers.html'],
+  usa: ['/index.html', '/es.html', '/legal/privacy-policy.html', '/sellers.html', '/in/dallas.html', '/in.html'],
+  india: ['/index.html', '/hi.html', '/legal/privacy-policy.html', '/sellers.html', '/in/kochi.html', '/in/thiruvananthapuram.html'],
 }[country];
 // Pages built from data/seo/fixtures/<country>.json (noindex in fixture builds).
 const fixtures = {
