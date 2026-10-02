@@ -65,6 +65,8 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form.js-form')) {
       });
       if (res.status === 429) throw new Error('Too many attempts. Please wait a minute and try again.');
       if (!res.ok) throw new Error('Something went wrong. Please try again.');
+      const body = (await res.json().catch(() => ({}))) as { request_id?: string };
+      if (form.dataset.kind === 'account_deletion' && body.request_id) showOtpStep(form, body.request_id);
       form.reset();
       status.className = 'form-status ok';
       status.textContent = form.dataset.success ?? 'Thank you.';
@@ -74,6 +76,46 @@ for (const form of document.querySelectorAll<HTMLFormElement>('form.js-form')) {
     } finally {
       button.disabled = false;
       window.turnstile?.reset(form.querySelector('.cf-turnstile') ?? undefined);
+    }
+  });
+}
+
+/** Second step of web account deletion: confirm with the OTP sent to the registered phone. */
+function showOtpStep(form: HTMLFormElement, requestId: string) {
+  const step = form.nextElementSibling;
+  if (!(step instanceof HTMLFormElement) || !step.classList.contains('js-otp-step')) return;
+  step.hidden = false;
+  step.dataset.requestId = requestId;
+  step.querySelector<HTMLInputElement>('input[name=otp]')?.focus();
+  if (step.dataset.bound) return;
+  step.dataset.bound = '1';
+  step.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (!step.reportValidity()) return;
+    const status = step.querySelector<HTMLElement>('.form-status')!;
+    const button = step.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const otp = String(new FormData(step).get('otp') ?? '').trim();
+    button.disabled = true;
+    status.className = 'form-status';
+    status.textContent = 'Checking...';
+    try {
+      const res = await fetch(step.dataset.endpoint ?? '', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'confirm_deletion', request_id: step.dataset.requestId, otp }),
+      });
+      if (res.status === 429) throw new Error('Too many attempts. Please wait and try again.');
+      if (res.status === 400) throw new Error('That code is wrong or has expired.');
+      if (!res.ok) throw new Error('Something went wrong. Please try again.');
+      step.reset();
+      button.hidden = true;
+      status.className = 'form-status ok';
+      status.textContent = 'Your account has been deleted.';
+    } catch (err) {
+      status.className = 'form-status err';
+      status.textContent = err instanceof Error && err.message ? err.message : 'Network error. Please try again.';
+    } finally {
+      button.disabled = false;
     }
   });
 }

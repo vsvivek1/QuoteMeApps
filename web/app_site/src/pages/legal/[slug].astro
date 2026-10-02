@@ -20,7 +20,7 @@ const deletionConsent = `I confirm I want ${site.appName} to delete my account a
     <section class="prose" id="request-deletion">
       <h2>Request deletion without the app</h2>
       <p>Enter the email and/or phone number on your account (at least one). To protect you, we confirm the request by sending a one-time code to the phone number registered on the account before anything is deleted.</p>
-      <Form kind="account_deletion" requireOne="email,phone" submitLabel="Request account deletion" successMessage="Request received. We will contact you on your registered phone number or email to confirm it is you.">
+      <Form kind="account_deletion" requireOne="email,phone" submitLabel="Request account deletion" successMessage="Request received. If the account has a phone number, enter the code we sent below; otherwise we will contact you to confirm it is you.">
         <label>Email used on your account (if any)<input name="email" type="email" maxlength="160" autocomplete="email" /></label>
         <label>Phone number registered on your account<input name="phone" type="tel" maxlength="20" autocomplete="tel" /></label>
         <label>Why are you leaving? (optional)<textarea name="reason" maxlength="1000"></textarea></label>

@@ -38,6 +38,14 @@ if (!formsEnabled) {
   <div><button class="btn" type="submit" disabled={!formsEnabled}>{submitLabel}</button></div>
   <p class="form-status" role="status" aria-live="polite"></p>
 </form>
+{kind === 'account_deletion' && (
+  <form class="form js-otp-step" data-endpoint={site.formsEndpoint} hidden novalidate>
+    <p>If the account has a phone number, we just sent a 6-digit code to it. Enter it here to confirm the deletion. The code is valid for 15 minutes.</p>
+    <label>Confirmation code<input name="otp" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required /></label>
+    <div><button class="btn" type="submit">Confirm deletion</button></div>
+    <p class="form-status" role="status" aria-live="polite"></p>
+  </form>
+)}
 {formsEnabled && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 <script>
   import '../scripts/forms';
