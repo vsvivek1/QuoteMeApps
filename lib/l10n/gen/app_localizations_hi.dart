@@ -1526,4 +1526,23 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get notNow => 'अभी नहीं';
+
+  @override
+  String get accountBlockedTitle => 'अकाउंट उपलब्ध नहीं है';
+
+  @override
+  String accountSuspendedBody(String date) {
+    return 'आपका अकाउंट $date तक निलंबित है। आप हमारी नीतियाँ पढ़ सकते हैं या सपोर्ट से संपर्क कर सकते हैं।';
+  }
+
+  @override
+  String get accountSuspendedBodyNoDate =>
+      'आपका अकाउंट निलंबित है। आप हमारी नीतियाँ पढ़ सकते हैं या सपोर्ट से संपर्क कर सकते हैं।';
+
+  @override
+  String get accountBannedBody =>
+      'नियम तोड़ने के कारण आपका अकाउंट बंद कर दिया गया है। अगर आपको लगता है कि यह गलती है, तो सपोर्ट से संपर्क करें।';
+
+  @override
+  String get accountDeletedBody => 'यह अकाउंट डिलीट कर दिया गया है।';
 }

@@ -2858,6 +2858,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now'**
   String get notNow;
+
+  /// No description provided for @accountBlockedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account unavailable'**
+  String get accountBlockedTitle;
+
+  /// No description provided for @accountSuspendedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is suspended until {date}. You can still read our policies or contact support.'**
+  String accountSuspendedBody(String date);
+
+  /// No description provided for @accountSuspendedBodyNoDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is suspended. You can still read our policies or contact support.'**
+  String get accountSuspendedBodyNoDate;
+
+  /// No description provided for @accountBannedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been closed for breaking our rules. If you think this is a mistake, contact support.'**
+  String get accountBannedBody;
+
+  /// No description provided for @accountDeletedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been deleted.'**
+  String get accountDeletedBody;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

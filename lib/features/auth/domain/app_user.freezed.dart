@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Profile {
 
- String get id; String? get name; String? get phone; String? get email; String? get photoUrl; String? get language; List<UserRole> get roles; AppMode get activeMode; bool get phoneVerified; DateTime? get createdAt;
+ String get id; String? get name; String? get phone; String? get email; String? get photoUrl; String? get language; List<UserRole> get roles; AppMode get activeMode; bool get phoneVerified; DateTime? get createdAt;/// `active`, `suspended`, `banned` or `deleted` (profiles.status).
+ String get accountStatus; DateTime? get suspendedUntil;
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +28,20 @@ $ProfileCopyWith<Profile> get copyWith => _$ProfileCopyWithImpl<Profile>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Profile;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.photoUrl, _this.photoUrl) || other.photoUrl == _this.photoUrl)&&(identical(other.language, _this.language) || other.language == _this.language)&&const DeepCollectionEquality().equals(other.roles, _this.roles)&&(identical(other.activeMode, _this.activeMode) || other.activeMode == _this.activeMode)&&(identical(other.phoneVerified, _this.phoneVerified) || other.phoneVerified == _this.phoneVerified)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.photoUrl, _this.photoUrl) || other.photoUrl == _this.photoUrl)&&(identical(other.language, _this.language) || other.language == _this.language)&&const DeepCollectionEquality().equals(other.roles, _this.roles)&&(identical(other.activeMode, _this.activeMode) || other.activeMode == _this.activeMode)&&(identical(other.phoneVerified, _this.phoneVerified) || other.phoneVerified == _this.phoneVerified)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.accountStatus, _this.accountStatus) || other.accountStatus == _this.accountStatus)&&(identical(other.suspendedUntil, _this.suspendedUntil) || other.suspendedUntil == _this.suspendedUntil));
 }
 
 
 @override
 int get hashCode {
   final _this = this as Profile;
-  return Object.hash(runtimeType,_this.id,_this.name,_this.phone,_this.email,_this.photoUrl,_this.language,const DeepCollectionEquality().hash(_this.roles),_this.activeMode,_this.phoneVerified,_this.createdAt);
+  return Object.hash(runtimeType,_this.id,_this.name,_this.phone,_this.email,_this.photoUrl,_this.language,const DeepCollectionEquality().hash(_this.roles),_this.activeMode,_this.phoneVerified,_this.createdAt,_this.accountStatus,_this.suspendedUntil);
 }
 
 @override
 String toString() {
   final _this = this as Profile;
-  return 'Profile(id: ${_this.id}, name: ${_this.name}, phone: ${_this.phone}, email: ${_this.email}, photoUrl: ${_this.photoUrl}, language: ${_this.language}, roles: ${_this.roles}, activeMode: ${_this.activeMode}, phoneVerified: ${_this.phoneVerified}, createdAt: ${_this.createdAt})';
+  return 'Profile(id: ${_this.id}, name: ${_this.name}, phone: ${_this.phone}, email: ${_this.email}, photoUrl: ${_this.photoUrl}, language: ${_this.language}, roles: ${_this.roles}, activeMode: ${_this.activeMode}, phoneVerified: ${_this.phoneVerified}, createdAt: ${_this.createdAt}, accountStatus: ${_this.accountStatus}, suspendedUntil: ${_this.suspendedUntil})';
 }
 
 
@@ -51,7 +52,7 @@ abstract mixin class $ProfileCopyWith<$Res>  {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) _then) = _$ProfileCopyWithImpl;
 @useResult
 $Res call({
- String id, String? name, String? phone, String? email, String? photoUrl, String? language, List<UserRole> roles, AppMode activeMode, bool phoneVerified, DateTime? createdAt
+ String id, String? name, String? phone, String? email, String? photoUrl, String? language, List<UserRole> roles, AppMode activeMode, bool phoneVerified, DateTime? createdAt, String accountStatus, DateTime? suspendedUntil
 });
 
 
@@ -68,7 +69,7 @@ class _$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? phone = freezed,Object? email = freezed,Object? photoUrl = freezed,Object? language = freezed,Object? roles = null,Object? activeMode = null,Object? phoneVerified = null,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? phone = freezed,Object? email = freezed,Object? photoUrl = freezed,Object? language = freezed,Object? roles = null,Object? activeMode = null,Object? phoneVerified = null,Object? createdAt = freezed,Object? accountStatus = null,Object? suspendedUntil = freezed,}) {
   return _then(Profile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -80,6 +81,8 @@ as String?,roles: null == roles ? _self.roles : roles // ignore: cast_nullable_t
 as List<UserRole>,activeMode: null == activeMode ? _self.activeMode : activeMode // ignore: cast_nullable_to_non_nullable
 as AppMode,phoneVerified: null == phoneVerified ? _self.phoneVerified : phoneVerified // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,accountStatus: null == accountStatus ? _self.accountStatus : accountStatus // ignore: cast_nullable_to_non_nullable
+as String,suspendedUntil: freezed == suspendedUntil ? _self.suspendedUntil : suspendedUntil // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -165,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? name,  String? phone,  String? email,  String? photoUrl,  String? language,  List<UserRole> roles,  AppMode activeMode,  bool phoneVerified,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? name,  String? phone,  String? email,  String? photoUrl,  String? language,  List<UserRole> roles,  AppMode activeMode,  bool phoneVerified,  DateTime? createdAt,  String accountStatus,  DateTime? suspendedUntil)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that.language,_that.roles,_that.activeMode,_that.phoneVerified,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that.language,_that.roles,_that.activeMode,_that.phoneVerified,_that.createdAt,_that.accountStatus,_that.suspendedUntil);case _:
   return orElse();
 
 }
@@ -186,10 +189,10 @@ return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? name,  String? phone,  String? email,  String? photoUrl,  String? language,  List<UserRole> roles,  AppMode activeMode,  bool phoneVerified,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? name,  String? phone,  String? email,  String? photoUrl,  String? language,  List<UserRole> roles,  AppMode activeMode,  bool phoneVerified,  DateTime? createdAt,  String accountStatus,  DateTime? suspendedUntil)  $default,) {final _that = this;
 switch (_that) {
 case _Profile():
-return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that.language,_that.roles,_that.activeMode,_that.phoneVerified,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that.language,_that.roles,_that.activeMode,_that.phoneVerified,_that.createdAt,_that.accountStatus,_that.suspendedUntil);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +209,10 @@ return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? name,  String? phone,  String? email,  String? photoUrl,  String? language,  List<UserRole> roles,  AppMode activeMode,  bool phoneVerified,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? name,  String? phone,  String? email,  String? photoUrl,  String? language,  List<UserRole> roles,  AppMode activeMode,  bool phoneVerified,  DateTime? createdAt,  String accountStatus,  DateTime? suspendedUntil)?  $default,) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that.language,_that.roles,_that.activeMode,_that.phoneVerified,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that.language,_that.roles,_that.activeMode,_that.phoneVerified,_that.createdAt,_that.accountStatus,_that.suspendedUntil);case _:
   return null;
 
 }
@@ -221,7 +224,7 @@ return $default(_that.id,_that.name,_that.phone,_that.email,_that.photoUrl,_that
 
 
 class _Profile extends Profile {
-  const _Profile({required this.id, this.name, this.phone, this.email, this.photoUrl, this.language,  List<UserRole> roles = const [UserRole.buyer], this.activeMode = AppMode.buyer, this.phoneVerified = false, this.createdAt}): _roles = roles,super._();
+  const _Profile({required this.id, this.name, this.phone, this.email, this.photoUrl, this.language,  List<UserRole> roles = const [UserRole.buyer], this.activeMode = AppMode.buyer, this.phoneVerified = false, this.createdAt, this.accountStatus = 'active', this.suspendedUntil}): _roles = roles,super._();
   
 
 @override final  String id;
@@ -240,6 +243,9 @@ class _Profile extends Profile {
 @override@JsonKey() final  AppMode activeMode;
 @override@JsonKey() final  bool phoneVerified;
 @override final  DateTime? createdAt;
+/// `active`, `suspended`, `banned` or `deleted` (profiles.status).
+@override@JsonKey() final  String accountStatus;
+@override final  DateTime? suspendedUntil;
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
@@ -251,18 +257,18 @@ _$ProfileCopyWith<_Profile> get copyWith => __$ProfileCopyWithImpl<_Profile>(thi
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.language, language) || other.language == language)&&const DeepCollectionEquality().equals(other.roles, _roles)&&(identical(other.activeMode, activeMode) || other.activeMode == activeMode)&&(identical(other.phoneVerified, phoneVerified) || other.phoneVerified == phoneVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.language, language) || other.language == language)&&const DeepCollectionEquality().equals(other.roles, _roles)&&(identical(other.activeMode, activeMode) || other.activeMode == activeMode)&&(identical(other.phoneVerified, phoneVerified) || other.phoneVerified == phoneVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.accountStatus, accountStatus) || other.accountStatus == accountStatus)&&(identical(other.suspendedUntil, suspendedUntil) || other.suspendedUntil == suspendedUntil));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,name,phone,email,photoUrl,language,const DeepCollectionEquality().hash(_roles),activeMode,phoneVerified,createdAt);
+    return Object.hash(runtimeType,id,name,phone,email,photoUrl,language,const DeepCollectionEquality().hash(_roles),activeMode,phoneVerified,createdAt,accountStatus,suspendedUntil);
 }
 
 @override
 String toString() {
-    return 'Profile(id: $id, name: $name, phone: $phone, email: $email, photoUrl: $photoUrl, language: $language, roles: $roles, activeMode: $activeMode, phoneVerified: $phoneVerified, createdAt: $createdAt)';
+    return 'Profile(id: $id, name: $name, phone: $phone, email: $email, photoUrl: $photoUrl, language: $language, roles: $roles, activeMode: $activeMode, phoneVerified: $phoneVerified, createdAt: $createdAt, accountStatus: $accountStatus, suspendedUntil: $suspendedUntil)';
 }
 
 
@@ -273,7 +279,7 @@ abstract mixin class _$ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   factory _$ProfileCopyWith(_Profile value, $Res Function(_Profile) _then) = __$ProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? name, String? phone, String? email, String? photoUrl, String? language, List<UserRole> roles, AppMode activeMode, bool phoneVerified, DateTime? createdAt
+ String id, String? name, String? phone, String? email, String? photoUrl, String? language, List<UserRole> roles, AppMode activeMode, bool phoneVerified, DateTime? createdAt, String accountStatus, DateTime? suspendedUntil
 });
 
 
@@ -290,7 +296,7 @@ class __$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? phone = freezed,Object? email = freezed,Object? photoUrl = freezed,Object? language = freezed,Object? roles = null,Object? activeMode = null,Object? phoneVerified = null,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? phone = freezed,Object? email = freezed,Object? photoUrl = freezed,Object? language = freezed,Object? roles = null,Object? activeMode = null,Object? phoneVerified = null,Object? createdAt = freezed,Object? accountStatus = null,Object? suspendedUntil = freezed,}) {
   return _then(_Profile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -302,6 +308,8 @@ as String?,roles: null == roles ? _self._roles : roles // ignore: cast_nullable_
 as List<UserRole>,activeMode: null == activeMode ? _self.activeMode : activeMode // ignore: cast_nullable_to_non_nullable
 as AppMode,phoneVerified: null == phoneVerified ? _self.phoneVerified : phoneVerified // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,accountStatus: null == accountStatus ? _self.accountStatus : accountStatus // ignore: cast_nullable_to_non_nullable
+as String,suspendedUntil: freezed == suspendedUntil ? _self.suspendedUntil : suspendedUntil // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

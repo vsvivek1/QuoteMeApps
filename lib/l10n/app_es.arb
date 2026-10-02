@@ -460,5 +460,10 @@
   "permissionNotificationsRationale": "Activa las notificaciones para enterarte al instante de nuevas cotizaciones y mensajes.",
   "permissionMicRationale": "Permite el acceso al micrófono para describir tu solicitud por voz.",
   "allow": "Permitir",
-  "notNow": "Ahora no"
+  "notNow": "Ahora no",
+  "accountBlockedTitle": "Cuenta no disponible",
+  "accountSuspendedBody": "Tu cuenta está suspendida hasta el {date}. Aún puedes leer nuestras políticas o contactar a soporte.",
+  "accountSuspendedBodyNoDate": "Tu cuenta está suspendida. Aún puedes leer nuestras políticas o contactar a soporte.",
+  "accountBannedBody": "Tu cuenta fue cerrada por incumplir nuestras reglas. Si crees que es un error, contacta a soporte.",
+  "accountDeletedBody": "Esta cuenta fue eliminada."
 }

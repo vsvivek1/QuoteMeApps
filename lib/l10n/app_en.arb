@@ -867,5 +867,17 @@
   "permissionNotificationsRationale": "Turn on notifications to hear about new quotes and messages right away.",
   "permissionMicRationale": "Allow the microphone to describe your request by voice.",
   "allow": "Allow",
-  "notNow": "Not now"
+  "notNow": "Not now",
+  "accountBlockedTitle": "Account unavailable",
+  "accountSuspendedBody": "Your account is suspended until {date}. You can still read our policies or contact support.",
+  "@accountSuspendedBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountSuspendedBodyNoDate": "Your account is suspended. You can still read our policies or contact support.",
+  "accountBannedBody": "Your account has been closed for breaking our rules. If you think this is a mistake, contact support.",
+  "accountDeletedBody": "This account has been deleted."
 }

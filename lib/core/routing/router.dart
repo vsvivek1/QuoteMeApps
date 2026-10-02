@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/domain/app_user.dart';
+import '../../features/auth/presentation/account_blocked_screen.dart';
 import '../../features/auth/presentation/consent_screen.dart';
 import '../../features/auth/presentation/phone_screen.dart';
 import '../../features/auth/presentation/profile_setup_screen.dart';
@@ -87,6 +88,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     }
     final profile = ref.read(myProfileProvider);
     if (!profile.hasValue || profile.value == null) return loc == '/splash' ? null : '/splash';
+    if (profile.value!.isBlocked) {
+      return loc == '/account-blocked' || loc.startsWith('/legal') || loc == '/help' ? null : '/account-blocked';
+    }
+    if (loc == '/account-blocked') return homeFor(profile.value!.activeMode);
     if (profile.value!.needsProfileSetup) return loc == '/profile-setup' ? null : '/profile-setup';
     if (_onboardingPaths.contains(loc)) return homeFor(profile.value!.activeMode);
     return null;
@@ -114,6 +119,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(path: '/consent', builder: (_, _) => const ConsentScreen()),
+      GoRoute(path: '/account-blocked', builder: (_, _) => const AccountBlockedScreen()),
       GoRoute(path: '/profile-setup', builder: (_, _) => const ProfileSetupScreen()),
 
       // Buyer tabs.

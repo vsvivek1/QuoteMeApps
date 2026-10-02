@@ -20,6 +20,10 @@ abstract class Profile with _$Profile {
     @Default(AppMode.buyer) AppMode activeMode,
     @Default(false) bool phoneVerified,
     DateTime? createdAt,
+
+    /// `active`, `suspended`, `banned` or `deleted` (profiles.status).
+    @Default('active') String accountStatus,
+    DateTime? suspendedUntil,
   }) = _Profile;
 
   const Profile._();
@@ -27,6 +31,7 @@ abstract class Profile with _$Profile {
   bool get isSeller => roles.contains(UserRole.seller);
   bool get isAdmin => roles.contains(UserRole.admin);
   bool get needsProfileSetup => (name ?? '').trim().isEmpty;
+  bool get isBlocked => accountStatus != 'active';
 }
 
 /// Minimal auth session info the app needs.

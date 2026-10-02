@@ -200,6 +200,8 @@ Profile mapProfile(JsonRow row) {
     // profiles.phone is only ever written from auth.users (verified by OTP).
     phoneVerified: phone != null && phone.isNotEmpty,
     createdAt: parseTimestamp(row['created_at']),
+    accountStatus: asString(row['status']) ?? 'active',
+    suspendedUntil: parseTimestamp(row['suspended_until']),
   );
 }
 
