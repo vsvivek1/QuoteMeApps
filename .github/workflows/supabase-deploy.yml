@@ -36,7 +36,7 @@ jobs:
         with:
           deno-version: v2.x
       - run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
-      - run: supabase test db
+      - run: supabase test db supabase/tests/database
       - working-directory: supabase/functions
         run: deno test --allow-env --allow-net --allow-read
       - if: always()

@@ -123,7 +123,7 @@ jobs:
       - name: Start local Supabase (migrations + seed)
         run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
       - name: pgTAP
-        run: supabase test db
+        run: supabase test db supabase/tests/database
       - name: Edge Function tests
         working-directory: supabase/functions
         run: deno test --allow-env --allow-net --allow-read
