@@ -41,7 +41,16 @@ import 'shell.dart';
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 const _publicPrefixes = ['/language', '/welcome', '/auth/', '/legal', '/help', '/splash'];
-const _onboardingPaths = ['/', '/splash', '/language', '/welcome', '/auth/phone', '/auth/otp', '/consent', '/profile-setup'];
+const _onboardingPaths = [
+  '/',
+  '/splash',
+  '/language',
+  '/welcome',
+  '/auth/phone',
+  '/auth/otp',
+  '/consent',
+  '/profile-setup',
+];
 
 String homeFor(AppMode mode) => mode == AppMode.seller ? '/seller/leads' : '/home';
 
@@ -111,44 +120,105 @@ final routerProvider = Provider<GoRouter>((ref) {
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => AppShell(shell: shell, mode: AppMode.buyer),
         branches: [
-          StatefulShellBranch(routes: [GoRoute(path: '/home', builder: (_, _) => const HomeScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/requests', builder: (_, _) => const MyRequestsScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/chats', builder: (_, _) => const ChatListScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/account', builder: (_, _) => const AccountScreen())]),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/home', builder: (_, _) => const HomeScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/requests', builder: (_, _) => const MyRequestsScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/chats', builder: (_, _) => const ChatListScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/account', builder: (_, _) => const AccountScreen())],
+          ),
         ],
       ),
       // Seller tabs.
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => AppShell(shell: shell, mode: AppMode.seller),
         branches: [
-          StatefulShellBranch(routes: [GoRoute(path: '/seller/leads', builder: (_, _) => const LeadFeedScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/seller/quotes', builder: (_, _) => const MyQuotesScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/seller/chats', builder: (_, _) => const ChatListScreen())]),
-          StatefulShellBranch(routes: [GoRoute(path: '/seller/account', builder: (_, _) => const AccountScreen())]),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/seller/leads', builder: (_, _) => const LeadFeedScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/seller/quotes', builder: (_, _) => const MyQuotesScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/seller/chats', builder: (_, _) => const ChatListScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/seller/account', builder: (_, _) => const AccountScreen())],
+          ),
         ],
       ),
 
       // Buyer screens.
-      GoRoute(path: '/post', pageBuilder: (_, s) => fullscreen(PostRequestScreen(initialText: s.uri.queryParameters['q'], categoryId: int.tryParse(s.uri.queryParameters['c'] ?? '')), s)),
-      GoRoute(path: '/requests/:id', pageBuilder: (_, s) => fullscreen(RequestDetailScreen(requestId: s.pathParameters['id']!), s)),
-      GoRoute(path: '/requests/:id/compare', pageBuilder: (_, s) => fullscreen(CompareScreen(requestId: s.pathParameters['id']!, quoteIds: (s.extra as List?)?.cast<String>()), s)),
-      GoRoute(path: '/quotes/:id', pageBuilder: (_, s) => fullscreen(QuoteDetailScreen(quoteId: s.pathParameters['id']!), s)),
-      GoRoute(path: '/chats/:id', pageBuilder: (_, s) => fullscreen(ChatScreen(chatId: s.pathParameters['id']!), s)),
+      GoRoute(
+        path: '/post',
+        pageBuilder: (_, s) => fullscreen(
+          PostRequestScreen(
+            initialText: s.uri.queryParameters['q'],
+            categoryId: int.tryParse(s.uri.queryParameters['c'] ?? ''),
+          ),
+          s,
+        ),
+      ),
+      GoRoute(
+        path: '/requests/:id',
+        pageBuilder: (_, s) => fullscreen(RequestDetailScreen(requestId: s.pathParameters['id']!), s),
+      ),
+      GoRoute(
+        path: '/requests/:id/compare',
+        pageBuilder: (_, s) => fullscreen(
+          CompareScreen(requestId: s.pathParameters['id']!, quoteIds: (s.extra as List?)?.cast<String>()),
+          s,
+        ),
+      ),
+      GoRoute(
+        path: '/quotes/:id',
+        pageBuilder: (_, s) => fullscreen(QuoteDetailScreen(quoteId: s.pathParameters['id']!), s),
+      ),
+      GoRoute(
+        path: '/chats/:id',
+        pageBuilder: (_, s) => fullscreen(ChatScreen(chatId: s.pathParameters['id']!), s),
+      ),
       GoRoute(path: '/orders', pageBuilder: (_, s) => fullscreen(const OrdersScreen(), s)),
-      GoRoute(path: '/orders/:id', pageBuilder: (_, s) => fullscreen(OrderDetailScreen(orderId: s.pathParameters['id']!), s)),
-      GoRoute(path: '/orders/:id/review', pageBuilder: (_, s) => fullscreen(ReviewFormScreen(orderId: s.pathParameters['id']!), s)),
+      GoRoute(
+        path: '/orders/:id',
+        pageBuilder: (_, s) => fullscreen(OrderDetailScreen(orderId: s.pathParameters['id']!), s),
+      ),
+      GoRoute(
+        path: '/orders/:id/review',
+        pageBuilder: (_, s) => fullscreen(ReviewFormScreen(orderId: s.pathParameters['id']!), s),
+      ),
       GoRoute(path: '/notifications', pageBuilder: (_, s) => fullscreen(const NotificationsScreen(), s)),
 
       // Seller screens.
       GoRoute(path: '/seller/onboarding', pageBuilder: (_, s) => fullscreen(const SellerOnboardingScreen(), s)),
       GoRoute(path: '/seller/verification', pageBuilder: (_, s) => fullscreen(const VerificationScreen(), s)),
-      GoRoute(path: '/seller/leads/:id', pageBuilder: (_, s) => fullscreen(LeadDetailScreen(requestId: s.pathParameters['id']!), s)),
-      GoRoute(path: '/seller/leads/:id/quote', pageBuilder: (_, s) => fullscreen(QuoteFormScreen(requestId: s.pathParameters['id']!, reviseQuoteId: s.uri.queryParameters['revise']), s)),
+      GoRoute(
+        path: '/seller/leads/:id',
+        pageBuilder: (_, s) => fullscreen(LeadDetailScreen(requestId: s.pathParameters['id']!), s),
+      ),
+      GoRoute(
+        path: '/seller/leads/:id/quote',
+        pageBuilder: (_, s) => fullscreen(
+          QuoteFormScreen(requestId: s.pathParameters['id']!, reviseQuoteId: s.uri.queryParameters['revise']),
+          s,
+        ),
+      ),
       GoRoute(path: '/seller/templates', pageBuilder: (_, s) => fullscreen(const TemplatesScreen(), s)),
       GoRoute(path: '/seller/dashboard', pageBuilder: (_, s) => fullscreen(const DashboardScreen(), s)),
       GoRoute(path: '/seller/plan', pageBuilder: (_, s) => fullscreen(const PlanScreen(), s)),
-      GoRoute(path: '/s/:id', pageBuilder: (_, s) => fullscreen(SellerProfileScreen(sellerId: s.pathParameters['id']!), s)),
-      GoRoute(path: '/s/:id/reviews', pageBuilder: (_, s) => fullscreen(ReviewsScreen(userId: s.pathParameters['id']!), s)),
+      GoRoute(
+        path: '/s/:id',
+        pageBuilder: (_, s) => fullscreen(SellerProfileScreen(sellerId: s.pathParameters['id']!), s),
+      ),
+      GoRoute(
+        path: '/s/:id/reviews',
+        pageBuilder: (_, s) => fullscreen(ReviewsScreen(userId: s.pathParameters['id']!), s),
+      ),
 
       // Deep links from the web domains.
       GoRoute(path: '/r/:id', builder: (_, s) => DeepLinkScreen.request(s.pathParameters['id']!)),
@@ -156,14 +226,23 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // Settings, help and legal.
       GoRoute(path: '/settings', pageBuilder: (_, s) => fullscreen(const SettingsScreen(), s)),
-      GoRoute(path: '/settings/language', pageBuilder: (_, s) => fullscreen(const LanguageScreen(fromSettings: true), s)),
-      GoRoute(path: '/settings/notifications', pageBuilder: (_, s) => fullscreen(const NotificationSettingsScreen(), s)),
+      GoRoute(
+        path: '/settings/language',
+        pageBuilder: (_, s) => fullscreen(const LanguageScreen(fromSettings: true), s),
+      ),
+      GoRoute(
+        path: '/settings/notifications',
+        pageBuilder: (_, s) => fullscreen(const NotificationSettingsScreen(), s),
+      ),
       GoRoute(path: '/settings/privacy', pageBuilder: (_, s) => fullscreen(const PrivacySettingsScreen(), s)),
       GoRoute(path: '/settings/blocked', pageBuilder: (_, s) => fullscreen(const BlockedUsersScreen(), s)),
       GoRoute(path: '/settings/delete-account', pageBuilder: (_, s) => fullscreen(const DeleteAccountScreen(), s)),
       GoRoute(path: '/help', pageBuilder: (_, s) => fullscreen(const HelpScreen(), s)),
       GoRoute(path: '/legal', pageBuilder: (_, s) => fullscreen(const LegalIndexScreen(), s)),
-      GoRoute(path: '/legal/:slug', pageBuilder: (_, s) => fullscreen(LegalPageScreen(slug: s.pathParameters['slug']!), s)),
+      GoRoute(
+        path: '/legal/:slug',
+        pageBuilder: (_, s) => fullscreen(LegalPageScreen(slug: s.pathParameters['slug']!), s),
+      ),
     ],
   );
 });
@@ -172,6 +251,5 @@ class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: CircularProgressIndicator()));
 }

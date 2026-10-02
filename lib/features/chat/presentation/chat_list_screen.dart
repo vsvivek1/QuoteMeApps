@@ -42,8 +42,7 @@ class ChatListScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         if (c.lastMessageAt != null)
-                          Text(timeago.format(c.lastMessageAt!, locale: context.lang),
-                              style: context.text.labelSmall),
+                          Text(timeago.format(c.lastMessageAt!, locale: context.lang), style: context.text.labelSmall),
                         if (c.unread > 0) Badge(label: Text('${c.unread}')),
                       ],
                     ),

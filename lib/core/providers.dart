@@ -19,8 +19,7 @@ part 'providers.g.dart';
 
 /// Injected by the country entry point.
 @Riverpod(keepAlive: true)
-CountryConfig countryConfig(Ref ref) =>
-    throw UnimplementedError('countryConfigProvider must be overridden');
+CountryConfig countryConfig(Ref ref) => throw UnimplementedError('countryConfigProvider must be overridden');
 
 @Riverpod(keepAlive: true)
 AppEnv appEnv(Ref ref) => AppEnv.fromEnvironment();

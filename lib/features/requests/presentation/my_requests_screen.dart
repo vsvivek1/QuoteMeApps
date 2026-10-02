@@ -29,11 +29,13 @@ class MyRequestsScreen extends ConsumerWidget {
             ),
             const NotificationsBell(),
           ],
-          bottom: TabBar(tabs: [
-            Tab(text: l10n.requestsOpen),
-            Tab(text: l10n.requestsAwarded),
-            Tab(text: l10n.requestsPast),
-          ]),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: l10n.requestsOpen),
+              Tab(text: l10n.requestsAwarded),
+              Tab(text: l10n.requestsPast),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => context.push('/post'),
@@ -43,11 +45,18 @@ class MyRequestsScreen extends ConsumerWidget {
         body: AsyncView(
           value: requests,
           onRetry: () => ref.invalidate(myRequestsProvider),
-          data: (list) => TabBarView(children: [
-            _list(context, ref, list.where((r) => r.isOpen).toList(), l10n.requestsEmptyOpen),
-            _list(context, ref, list.where((r) => r.status == RequestStatus.awarded).toList(), l10n.requestsEmptyAwarded),
-            _list(context, ref, list.where((r) => r.isPast).toList(), l10n.requestsEmptyPast),
-          ]),
+          data: (list) => TabBarView(
+            children: [
+              _list(context, ref, list.where((r) => r.isOpen).toList(), l10n.requestsEmptyOpen),
+              _list(
+                context,
+                ref,
+                list.where((r) => r.status == RequestStatus.awarded).toList(),
+                l10n.requestsEmptyAwarded,
+              ),
+              _list(context, ref, list.where((r) => r.isPast).toList(), l10n.requestsEmptyPast),
+            ],
+          ),
         ),
       ),
     );

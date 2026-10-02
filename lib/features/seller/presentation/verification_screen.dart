@@ -46,33 +46,36 @@ class VerificationScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.verificationTitle)),
       body: MaxWidth(
-        child: ListView(padding: const EdgeInsets.all(16), children: [
-          Text(l10n.verificationBody),
-          const SizedBox(height: 12),
-          StatusChip(switch (status) {
-            VerificationStatus.none => l10n.verificationStatusNone,
-            VerificationStatus.pending => l10n.verificationStatusPending,
-            VerificationStatus.verified => l10n.verificationStatusVerified,
-            VerificationStatus.rejected => l10n.verificationStatusRejected(''),
-          }),
-          const SizedBox(height: 16),
-          for (final spec in config.verificationDocs)
-            _DocTile(spec: spec, existing: docs.where((d) => d.docType == spec.type).firstOrNull),
-          const Divider(height: 32),
-          Text(l10n.licencesTitle, style: context.text.titleMedium),
-          Text(l10n.licencesBody, style: context.text.bodySmall),
-          for (final lic in licences)
-            ListTile(
-              title: Text('${lic.licenceType} · ${lic.number}'),
-              subtitle: Text(lic.expiresAt == null ? '' : context.date(lic.expiresAt!)),
-              trailing: StatusChip(lic.status.name),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text(l10n.verificationBody),
+            const SizedBox(height: 12),
+            StatusChip(switch (status) {
+              VerificationStatus.none => l10n.verificationStatusNone,
+              VerificationStatus.pending => l10n.verificationStatusPending,
+              VerificationStatus.verified => l10n.verificationStatusVerified,
+              VerificationStatus.rejected => l10n.verificationStatusRejected(''),
+            }),
+            const SizedBox(height: 16),
+            for (final spec in config.verificationDocs)
+              _DocTile(spec: spec, existing: docs.where((d) => d.docType == spec.type).firstOrNull),
+            const Divider(height: 32),
+            Text(l10n.licencesTitle, style: context.text.titleMedium),
+            Text(l10n.licencesBody, style: context.text.bodySmall),
+            for (final lic in licences)
+              ListTile(
+                title: Text('${lic.licenceType} · ${lic.number}'),
+                subtitle: Text(lic.expiresAt == null ? '' : context.date(lic.expiresAt!)),
+                trailing: StatusChip(lic.status.name),
+              ),
+            TextButton.icon(
+              onPressed: () => _addLicence(context, ref),
+              icon: const Icon(Icons.add_rounded),
+              label: Text(l10n.addLicence),
             ),
-          TextButton.icon(
-            onPressed: () => _addLicence(context, ref),
-            icon: const Icon(Icons.add_rounded),
-            label: Text(l10n.addLicence),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -90,33 +93,54 @@ class VerificationScreen extends ConsumerWidget {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, set) => Padding(
           padding: EdgeInsets.fromLTRB(16, 0, 16, MediaQuery.viewInsetsOf(ctx).bottom + 16),
-          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            TextField(controller: type, decoration: InputDecoration(labelText: l10n.licenceType)),
-            TextField(controller: number, decoration: InputDecoration(labelText: l10n.licenceNumber)),
-            TextField(controller: issuer, decoration: InputDecoration(labelText: l10n.licenceIssuer)),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(l10n.licenceExpiry),
-              subtitle: Text(expiry == null ? l10n.postPickDate : ctx.date(expiry!)),
-              onTap: () async {
-                final now = DateTime.now();
-                final d = await showDatePicker(context: ctx, firstDate: now, lastDate: now.add(const Duration(days: 3650)));
-                if (d != null) set(() => expiry = d);
-              },
-            ),
-            FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.submitForReview)),
-          ]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: type,
+                decoration: InputDecoration(labelText: l10n.licenceType),
+              ),
+              TextField(
+                controller: number,
+                decoration: InputDecoration(labelText: l10n.licenceNumber),
+              ),
+              TextField(
+                controller: issuer,
+                decoration: InputDecoration(labelText: l10n.licenceIssuer),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(l10n.licenceExpiry),
+                subtitle: Text(expiry == null ? l10n.postPickDate : ctx.date(expiry!)),
+                onTap: () async {
+                  final now = DateTime.now();
+                  final d = await showDatePicker(
+                    context: ctx,
+                    firstDate: now,
+                    lastDate: now.add(const Duration(days: 3650)),
+                  );
+                  if (d != null) set(() => expiry = d);
+                },
+              ),
+              FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.submitForReview)),
+            ],
+          ),
         ),
       ),
     );
     if (ok != true || number.text.trim().isEmpty) return;
-    await ref.read(sellerRepositoryProvider).submitLicence(SellerLicence(
-          id: '',
-          licenceType: type.text.trim(),
-          number: number.text.trim(),
-          issuer: issuer.text.trim(),
-          expiresAt: expiry,
-        ));
+    await ref
+        .read(sellerRepositoryProvider)
+        .submitLicence(
+          SellerLicence(
+            id: '',
+            licenceType: type.text.trim(),
+            number: number.text.trim(),
+            issuer: issuer.text.trim(),
+            expiresAt: expiry,
+          ),
+        );
     ref.invalidate(_licencesProvider);
     if (context.mounted) context.toast(l10n.submittedForReview);
   }
@@ -150,8 +174,13 @@ class _DocTileState extends ConsumerState<_DocTile> {
       return;
     }
     setState(() => _error = null);
-    await ref.read(sellerRepositoryProvider).submitDocument(spec.type,
-        number: _number.text.trim().isEmpty ? null : _number.text.trim().toUpperCase(), filePath: _file);
+    await ref
+        .read(sellerRepositoryProvider)
+        .submitDocument(
+          spec.type,
+          number: _number.text.trim().isEmpty ? null : _number.text.trim().toUpperCase(),
+          filePath: _file,
+        );
     ref.invalidate(_docsProvider);
     ref.invalidate(mySellerProvider);
     if (mounted) context.toast(l10n.submittedForReview);
@@ -166,30 +195,38 @@ class _DocTileState extends ConsumerState<_DocTile> {
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Row(children: [
-            Expanded(child: Text(label, style: context.text.titleSmall)),
-            if (widget.existing != null) StatusChip(widget.existing!.status.name),
-          ]),
-          const SizedBox(height: 8),
-          if (spec.needsFile)
-            OutlinedButton.icon(
-              onPressed: () async {
-                final p = await ref.read(mediaServiceProvider).pickImages(limit: 1);
-                if (p.isNotEmpty) setState(() => _file = p.first);
-              },
-              icon: Icon(_file == null ? Icons.upload_file_outlined : Icons.check_rounded),
-              label: Text(l10n.uploadFile),
-            )
-          else
-            TextField(
-              controller: _number,
-              textCapitalization: TextCapitalization.characters,
-              decoration: InputDecoration(labelText: label, errorText: _error),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(child: Text(label, style: context.text.titleSmall)),
+                if (widget.existing != null) StatusChip(widget.existing!.status.name),
+              ],
             ),
-          const SizedBox(height: 8),
-          Align(alignment: Alignment.centerRight, child: TextButton(onPressed: _submit, child: Text(l10n.submitForReview))),
-        ]),
+            const SizedBox(height: 8),
+            if (spec.needsFile)
+              OutlinedButton.icon(
+                onPressed: () async {
+                  final p = await ref.read(mediaServiceProvider).pickImages(limit: 1);
+                  if (p.isNotEmpty) setState(() => _file = p.first);
+                },
+                icon: Icon(_file == null ? Icons.upload_file_outlined : Icons.check_rounded),
+                label: Text(l10n.uploadFile),
+              )
+            else
+              TextField(
+                controller: _number,
+                textCapitalization: TextCapitalization.characters,
+                decoration: InputDecoration(labelText: label, errorText: _error),
+              ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(onPressed: _submit, child: Text(l10n.submitForReview)),
+            ),
+          ],
+        ),
       ),
     );
   }

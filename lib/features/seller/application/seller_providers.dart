@@ -21,8 +21,7 @@ Future<SellerStats> sellerStats(Ref ref) {
 }
 
 @riverpod
-Stream<List<Quote>> myQuotes(Ref ref, String bucket) =>
-    ref.watch(quoteRepositoryProvider).watchMyQuotes(bucket);
+Stream<List<Quote>> myQuotes(Ref ref, String bucket) => ref.watch(quoteRepositoryProvider).watchMyQuotes(bucket);
 
 @riverpod
 Future<Seller?> sellerById(Ref ref, String id) => ref.watch(sellerRepositoryProvider).getSeller(id);

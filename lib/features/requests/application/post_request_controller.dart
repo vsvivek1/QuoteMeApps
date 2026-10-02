@@ -40,16 +40,15 @@ class PostRequestState {
     bool? submitting,
     String? Function()? error,
     BuyerRequest? created,
-  }) =>
-      PostRequestState(
-        draft: draft ?? this.draft,
-        step: step ?? this.step,
-        suggestions: suggestions ?? this.suggestions,
-        blocked: blocked == null ? this.blocked : blocked(),
-        submitting: submitting ?? this.submitting,
-        error: error == null ? this.error : error(),
-        created: created ?? this.created,
-      );
+  }) => PostRequestState(
+    draft: draft ?? this.draft,
+    step: step ?? this.step,
+    suggestions: suggestions ?? this.suggestions,
+    blocked: blocked == null ? this.blocked : blocked(),
+    submitting: submitting ?? this.submitting,
+    error: error == null ? this.error : error(),
+    created: created ?? this.created,
+  );
 }
 
 @riverpod
@@ -61,7 +60,9 @@ class PostRequestController extends _$PostRequestController {
   }
 
   void init({String? text, int? categoryId}) {
-    state = state.copyWith(draft: state.draft.copyWith(text: text ?? '', categoryId: categoryId));
+    state = state.copyWith(
+      draft: state.draft.copyWith(text: text ?? '', categoryId: categoryId),
+    );
     if (text != null && text.isNotEmpty) onTextChanged(text);
   }
 
@@ -81,9 +82,9 @@ class PostRequestController extends _$PostRequestController {
   }
 
   void setCategory(Category c) => state = state.copyWith(
-        draft: state.draft.copyWith(categoryId: c.id, fields: const {}),
-        blocked: () => c.isBlocked ? c : null,
-      );
+    draft: state.draft.copyWith(categoryId: c.id, fields: const {}),
+    blocked: () => c.isBlocked ? c : null,
+  );
 
   void setField(String key, Object? value) {
     final fields = {...state.draft.fields};
@@ -103,11 +104,12 @@ class PostRequestController extends _$PostRequestController {
   }
 
   void removeMedia(String path) => state = state.copyWith(
-      draft: state.draft.copyWith(
-          localMediaPaths: state.draft.localMediaPaths.where((p) => p != path).toList()));
+    draft: state.draft.copyWith(localMediaPaths: state.draft.localMediaPaths.where((p) => p != path).toList()),
+  );
 
-  void setBudget(Money? min, Money? max) =>
-      state = state.copyWith(draft: state.draft.copyWith(budgetMin: min, budgetMax: max));
+  void setBudget(Money? min, Money? max) => state = state.copyWith(
+    draft: state.draft.copyWith(budgetMin: min, budgetMax: max),
+  );
 
   void goTo(int step) => state = state.copyWith(step: step, error: () => null);
 

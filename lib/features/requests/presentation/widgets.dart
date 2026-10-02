@@ -9,30 +9,30 @@ import '../domain/buyer_request.dart';
 import '../domain/category.dart';
 
 String requestStatusLabel(BuildContext context, RequestStatus s) => switch (s) {
-      RequestStatus.open => context.l10n.statusOpen,
-      RequestStatus.awarded => context.l10n.statusAwarded,
-      RequestStatus.closed => context.l10n.statusClosed,
-      RequestStatus.expired => context.l10n.statusExpired,
-      RequestStatus.cancelled => context.l10n.statusCancelled,
-    };
+  RequestStatus.open => context.l10n.statusOpen,
+  RequestStatus.awarded => context.l10n.statusAwarded,
+  RequestStatus.closed => context.l10n.statusClosed,
+  RequestStatus.expired => context.l10n.statusExpired,
+  RequestStatus.cancelled => context.l10n.statusCancelled,
+};
 
 Color requestStatusColor(BuildContext context, RequestStatus s) => switch (s) {
-      RequestStatus.open => context.colors.primary,
-      RequestStatus.awarded => Colors.green.shade700,
-      _ => context.colors.outline,
-    };
+  RequestStatus.open => context.colors.primary,
+  RequestStatus.awarded => Colors.green.shade700,
+  _ => context.colors.outline,
+};
 
 IconData categoryIcon(String? name) => switch (name) {
-      'kitchen' => Icons.kitchen_rounded,
-      'devices' => Icons.devices_rounded,
-      'chair' => Icons.chair_rounded,
-      'home_repair_service' => Icons.home_repair_service_rounded,
-      'directions_car' => Icons.directions_car_rounded,
-      'celebration' => Icons.celebration_rounded,
-      'inventory_2' => Icons.inventory_2_rounded,
-      'gavel' => Icons.gavel_rounded,
-      _ => Icons.category_rounded,
-    };
+  'kitchen' => Icons.kitchen_rounded,
+  'devices' => Icons.devices_rounded,
+  'chair' => Icons.chair_rounded,
+  'home_repair_service' => Icons.home_repair_service_rounded,
+  'directions_car' => Icons.directions_car_rounded,
+  'celebration' => Icons.celebration_rounded,
+  'inventory_2' => Icons.inventory_2_rounded,
+  'gavel' => Icons.gavel_rounded,
+  _ => Icons.category_rounded,
+};
 
 class RequestCard extends ConsumerWidget {
   const RequestCard({super.key, required this.request});
@@ -63,10 +63,12 @@ class RequestCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(request.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      request.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                    ),
                     const SizedBox(height: 4),
                     Text(
                       [
@@ -79,8 +81,10 @@ class RequestCard extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        StatusChip(requestStatusLabel(context, request.status),
-                            color: requestStatusColor(context, request.status)),
+                        StatusChip(
+                          requestStatusLabel(context, request.status),
+                          color: requestStatusColor(context, request.status),
+                        ),
                         const SizedBox(width: 8),
                         Text(l10n.quotesCount(request.quoteCount), style: context.text.labelLarge),
                         if (request.unreadQuotes > 0) ...[

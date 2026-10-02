@@ -20,15 +20,15 @@ class AppEnv {
   });
 
   factory AppEnv.fromEnvironment() => AppEnv(
-        env: _envFromFlavor(appFlavor),
-        supabaseUrl: const String.fromEnvironment('SUPABASE_URL'),
-        supabaseAnonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
-        googleWebClientId: const String.fromEnvironment('GOOGLE_WEB_CLIENT_ID'),
-        googleIosClientId: const String.fromEnvironment('GOOGLE_IOS_CLIENT_ID'),
-        turnstileSiteKey: const String.fromEnvironment('TURNSTILE_SITE_KEY'),
-        firebaseEnabled: const bool.fromEnvironment('FIREBASE_ENABLED'),
-        forceDemo: const bool.fromEnvironment('DEMO_MODE'),
-      );
+    env: _envFromFlavor(appFlavor),
+    supabaseUrl: const String.fromEnvironment('SUPABASE_URL'),
+    supabaseAnonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
+    googleWebClientId: const String.fromEnvironment('GOOGLE_WEB_CLIENT_ID'),
+    googleIosClientId: const String.fromEnvironment('GOOGLE_IOS_CLIENT_ID'),
+    turnstileSiteKey: const String.fromEnvironment('TURNSTILE_SITE_KEY'),
+    firebaseEnabled: const bool.fromEnvironment('FIREBASE_ENABLED'),
+    forceDemo: const bool.fromEnvironment('DEMO_MODE'),
+  );
 
   final Env env;
   final String supabaseUrl;

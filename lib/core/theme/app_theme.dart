@@ -6,8 +6,7 @@ import 'brand_colors.g.dart';
 /// Material 3 theme from the country's brand colours
 /// (generated from `branding/<country>/colors.json`).
 abstract final class AppTheme {
-  static BrandColors brandFor(Country c) =>
-      c == Country.india ? BrandColors.india : BrandColors.usa;
+  static BrandColors brandFor(Country c) => c == Country.india ? BrandColors.india : BrandColors.usa;
 
   static ThemeData light(CountryConfig config) => _build(config, Brightness.light);
   static ThemeData dark(CountryConfig config) => _build(config, Brightness.dark);
@@ -15,10 +14,7 @@ abstract final class AppTheme {
   static ThemeData _build(CountryConfig config, Brightness brightness) {
     final brand = brandFor(config.country);
     final dark = brightness == Brightness.dark;
-    final scheme = ColorScheme.fromSeed(
-      seedColor: brand.primary,
-      brightness: brightness,
-    ).copyWith(
+    final scheme = ColorScheme.fromSeed(seedColor: brand.primary, brightness: brightness).copyWith(
       primary: dark ? brand.primaryDark : brand.primary,
       secondary: dark ? brand.secondaryDark : brand.secondary,
       error: dark ? brand.errorDark : brand.error,
@@ -47,10 +43,7 @@ abstract final class AppTheme {
         ),
         margin: EdgeInsets.zero,
       ),
-      inputDecorationTheme: const InputDecorationTheme(
-        border: OutlineInputBorder(borderRadius: radius),
-        filled: false,
-      ),
+      inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder(borderRadius: radius), filled: false),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(64, 52),
@@ -64,17 +57,13 @@ abstract final class AppTheme {
           shape: const RoundedRectangleBorder(borderRadius: radius),
         ),
       ),
-      chipTheme: base.chipTheme.copyWith(
-        shape: const StadiumBorder(),
-      ),
+      chipTheme: base.chipTheme.copyWith(shape: const StadiumBorder()),
       navigationBarTheme: NavigationBarThemeData(
         indicatorColor: scheme.primaryContainer,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       pageTransitionsTheme: config.lowEndDeviceMode
-          ? const PageTransitionsTheme(builders: {
-              TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
-            })
+          ? const PageTransitionsTheme(builders: {TargetPlatform.android: FadeForwardsPageTransitionsBuilder()})
           : null,
     );
   }

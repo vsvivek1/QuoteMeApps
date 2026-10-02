@@ -10,8 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTagline =>
-      'Tell shops what you want. Get quotes. Pick the best.';
+  String get appTagline => 'Tell shops what you want. Get quotes. Pick the best.';
 
   @override
   String get continueLabel => 'Continue';
@@ -193,8 +192,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get consentMarketing => 'Send me offers and tips (optional)';
 
   @override
-  String get consentAnalytics =>
-      'Help improve the app with anonymous usage data (optional)';
+  String get consentAnalytics => 'Help improve the app with anonymous usage data (optional)';
 
   @override
   String consentAge(int age) {
@@ -214,8 +212,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addPhoneTitle => 'Add your mobile number';
 
   @override
-  String get addPhoneBody =>
-      'Sellers need a verified phone number. Buyers can add one to get SMS updates.';
+  String get addPhoneBody => 'Sellers need a verified phone number. Buyers can add one to get SMS updates.';
 
   @override
   String get modeBuyer => 'Buying';
@@ -233,8 +230,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get becomeSeller => 'I\'m a business';
 
   @override
-  String get becomeSellerBody =>
-      'Get leads from buyers near you and send quotes. Free for founding partners.';
+  String get becomeSellerBody => 'Get leads from buyers near you and send quotes. Free for founding partners.';
 
   @override
   String get tabHome => 'Home';
@@ -269,8 +265,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whatDoYouNeed => 'What do you need?';
 
   @override
-  String get whatDoYouNeedHint =>
-      'e.g. Double-door fridge, delivered by Friday';
+  String get whatDoYouNeedHint => 'e.g. Double-door fridge, delivered by Friday';
 
   @override
   String get activeRequests => 'Your active requests';
@@ -282,8 +277,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get howItWorks => 'How it works';
 
   @override
-  String get noActiveRequests =>
-      'Nothing posted yet. Tell local shops what you want and get quotes.';
+  String get noActiveRequests => 'Nothing posted yet. Tell local shops what you want and get quotes.';
 
   @override
   String get postTitle => 'New request';
@@ -298,8 +292,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get postStepWhere => 'When and where';
 
   @override
-  String get postDescribeHint =>
-      'Describe what you want. Brand, size, quantity…';
+  String get postDescribeHint => 'Describe what you want. Brand, size, quantity…';
 
   @override
   String get postSpeak => 'Speak';
@@ -360,8 +353,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get postLocality => 'Area / locality';
 
   @override
-  String get postFullAddress =>
-      'Full address (shared only with the seller you accept)';
+  String get postFullAddress => 'Full address (shared only with the seller you accept)';
 
   @override
   String get postQuoteWindow => 'Accept quotes for';
@@ -414,20 +406,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get postBlockedReason =>
-      'This category is regulated and isn\'t allowed here.';
+  String get postBlockedReason => 'This category is regulated and isn\'t allowed here.';
 
   @override
-  String get postRestrictedNotice =>
-      'Only licensed sellers can quote in this category.';
+  String get postRestrictedNotice => 'Only licensed sellers can quote in this category.';
 
   @override
-  String get postRateLimited =>
-      'You\'ve reached today\'s limit for new requests. Try again tomorrow.';
+  String get postRateLimited => 'You\'ve reached today\'s limit for new requests. Try again tomorrow.';
 
   @override
-  String get postDuplicate =>
-      'You already posted this request in the last 24 hours.';
+  String get postDuplicate => 'You already posted this request in the last 24 hours.';
 
   @override
   String get postDescribeRequired => 'Tell sellers what you need';
@@ -459,16 +447,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestsPast => 'Past';
 
   @override
-  String get requestsEmptyOpen =>
-      'No open requests. Post one and get quotes from local shops.';
+  String get requestsEmptyOpen => 'No open requests. Post one and get quotes from local shops.';
 
   @override
-  String get requestsEmptyAwarded =>
-      'Requests where you accepted a quote show up here.';
+  String get requestsEmptyAwarded => 'Requests where you accepted a quote show up here.';
 
   @override
-  String get requestsEmptyPast =>
-      'Expired and cancelled requests show up here.';
+  String get requestsEmptyPast => 'Expired and cancelled requests show up here.';
 
   @override
   String quotesCount(int count) {
@@ -511,15 +496,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusCancelled => 'Cancelled';
 
   @override
-  String get noQuotesYet =>
-      'No quotes yet. Sellers usually respond within 2 hours.';
+  String get noQuotesYet => 'No quotes yet. Sellers usually respond within 2 hours.';
 
   @override
   String get cancelRequest => 'Cancel request';
 
   @override
-  String get cancelRequestConfirm =>
-      'Cancel this request? Sellers won\'t be able to quote any more.';
+  String get cancelRequestConfirm => 'Cancel this request? Sellers won\'t be able to quote any more.';
 
   @override
   String get shareRequest => 'Share request';
@@ -746,8 +729,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderPayment => 'Payment';
 
   @override
-  String get orderPaymentOffPlatform =>
-      'Pay the seller directly. Record it here for your records.';
+  String get orderPaymentOffPlatform => 'Pay the seller directly. Record it here for your records.';
 
   @override
   String get orderRecordPayment => 'Record payment';
@@ -827,15 +809,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatsTitle => 'Chats';
 
   @override
-  String get chatsEmpty =>
-      'Chats with sellers about your requests show up here.';
+  String get chatsEmpty => 'Chats with sellers about your requests show up here.';
 
   @override
   String get chatHint => 'Message';
 
   @override
-  String get chatContactWarning =>
-      'For your safety, keep contact details in the app until you accept a quote.';
+  String get chatContactWarning => 'For your safety, keep contact details in the app until you accept a quote.';
 
   @override
   String chatAboutRequest(String title) {
@@ -983,8 +963,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sellerProfileSaved =>
-      'Your business is live. New leads will show up in your feed.';
+  String get sellerProfileSaved => 'Your business is live. New leads will show up in your feed.';
 
   @override
   String foundingPartnerBadge(String date) {
@@ -995,8 +974,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verificationTitle => 'Get verified';
 
   @override
-  String get verificationBody =>
-      'Verified sellers get a badge and see new requests first.';
+  String get verificationBody => 'Verified sellers get a badge and see new requests first.';
 
   @override
   String get verificationStatusNone => 'Not verified';
@@ -1034,8 +1012,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get docWebsite => 'Website';
 
   @override
-  String get docInvalid =>
-      'This number doesn\'t look right. Check it and try again.';
+  String get docInvalid => 'This number doesn\'t look right. Check it and try again.';
 
   @override
   String get uploadFile => 'Upload';
@@ -1071,12 +1048,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leadsTitle => 'Leads';
 
   @override
-  String get leadsEmpty =>
-      'No matching requests right now. We\'ll alert you when buyers near you post.';
+  String get leadsEmpty => 'No matching requests right now. We\'ll alert you when buyers near you post.';
 
   @override
-  String get leadsNoSellerProfile =>
-      'Set up your business profile to start getting leads.';
+  String get leadsNoSellerProfile => 'Set up your business profile to start getting leads.';
 
   @override
   String get leadFilters => 'Filters';
@@ -1129,8 +1104,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leadPriorityNote => 'Verified sellers see new requests first.';
 
   @override
-  String get leadLocalityOnly =>
-      'Exact address is shared after the buyer accepts your quote.';
+  String get leadLocalityOnly => 'Exact address is shared after the buyer accepts your quote.';
 
   @override
   String get quoteFormTitle => 'Your quote';
@@ -1161,12 +1135,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String quoteValidityDays(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count days',
-      one: '1 day',
-    );
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count days', one: '1 day');
     return '$_temp0';
   }
 
@@ -1198,8 +1167,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quotePriceRequired => 'Enter a price';
 
   @override
-  String get quoteCapReached =>
-      'This request already has the maximum number of quotes.';
+  String get quoteCapReached => 'This request already has the maximum number of quotes.';
 
   @override
   String get quoteRequestClosed => 'This request is no longer open.';
@@ -1208,16 +1176,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quoteNotAllowed => 'You can\'t quote on this request.';
 
   @override
-  String get quoteLicenceRequired =>
-      'A valid licence is required for this category.';
+  String get quoteLicenceRequired => 'A valid licence is required for this category.';
 
   @override
-  String get quoteNoCredits =>
-      'You\'re out of free quotes this month. See plans.';
+  String get quoteNoCredits => 'You\'re out of free quotes this month. See plans.';
 
   @override
-  String get quotePriorityWindow =>
-      'Verified sellers get the first 15 minutes on new requests.';
+  String get quotePriorityWindow => 'Verified sellers get the first 15 minutes on new requests.';
 
   @override
   String get quoteAlreadySent => 'You\'ve already quoted on this request.';
@@ -1322,8 +1287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get planManage => 'Manage subscription';
 
   @override
-  String get planFixPayment =>
-      'There\'s a problem with your payment. Update it to keep your plan.';
+  String get planFixPayment => 'There\'s a problem with your payment. Update it to keep your plan.';
 
   @override
   String planRenewal(String store) {
@@ -1459,8 +1423,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteButton => 'Delete my account';
 
   @override
-  String get deleteReauth =>
-      'For your security, sign in again before deleting.';
+  String get deleteReauth => 'For your security, sign in again before deleting.';
 
   @override
   String get deleteDone => 'Your account has been deleted.';
@@ -1472,8 +1435,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqQ1 => 'Is it free for buyers?';
 
   @override
-  String get faqA1 =>
-      'Yes. Posting requests and receiving quotes is always free.';
+  String get faqA1 => 'Yes. Posting requests and receiving quotes is always free.';
 
   @override
   String get faqQ2 => 'How do I pay the seller?';
@@ -1486,8 +1448,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqQ3 => 'When does the seller see my phone and address?';
 
   @override
-  String get faqA3 =>
-      'Only after you accept their quote. Before that, you can chat in the app.';
+  String get faqA3 => 'Only after you accept their quote. Before that, you can chat in the app.';
 
   @override
   String get faqQ4 => 'How do sellers get verified?';
@@ -1499,8 +1460,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqQ5 => 'How do I report a problem?';
 
   @override
-  String get faqA5 =>
-      'Use Report on any chat, quote or profile, or contact support.';
+  String get faqA5 => 'Use Report on any chat, quote or profile, or contact support.';
 
   @override
   String get contactSupport => 'Contact support';
@@ -1557,8 +1517,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Turn on notifications to hear about new quotes and messages right away.';
 
   @override
-  String get permissionMicRationale =>
-      'Allow the microphone to describe your request by voice.';
+  String get permissionMicRationale => 'Allow the microphone to describe your request by voice.';
 
   @override
   String get allow => 'Allow';

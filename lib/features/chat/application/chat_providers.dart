@@ -14,8 +14,7 @@ Stream<List<Chat>> myChats(Ref ref) {
 }
 
 @riverpod
-int unreadChatsCount(Ref ref) =>
-    (ref.watch(myChatsProvider).value ?? const []).fold(0, (a, c) => a + c.unread);
+int unreadChatsCount(Ref ref) => (ref.watch(myChatsProvider).value ?? const []).fold(0, (a, c) => a + c.unread);
 
 @riverpod
 Stream<List<ChatMessage>> chatMessages(Ref ref, String chatId) =>
@@ -34,5 +33,4 @@ Stream<List<AppNotification>> inbox(Ref ref) {
 }
 
 @riverpod
-int unreadNotificationsCount(Ref ref) =>
-    (ref.watch(inboxProvider).value ?? const []).where((n) => !n.isRead).length;
+int unreadNotificationsCount(Ref ref) => (ref.watch(inboxProvider).value ?? const []).where((n) => !n.isRead).length;

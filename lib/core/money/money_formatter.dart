@@ -31,12 +31,10 @@ class MoneyFormatter {
     final scale = BigInt.from(10).pow(digits);
     final major = abs ~/ scale;
     final frac = abs.remainder(scale);
-    final grouped = NumberFormat.decimalPattern(_groupingLocale(iso))
-        .format(major.toInt());
+    final grouped = NumberFormat.decimalPattern(_groupingLocale(iso)).format(major.toInt());
     final symbol = _symbols[iso] ?? '$iso ';
     final showFrac = digits > 0 && (showMinorIfZero || frac != BigInt.zero);
-    final fracText =
-        showFrac ? '.${frac.toString().padLeft(digits, '0')}' : '';
+    final fracText = showFrac ? '.${frac.toString().padLeft(digits, '0')}' : '';
     return '${negative ? '-' : ''}$symbol$grouped$fracText';
   }
 

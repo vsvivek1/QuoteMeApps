@@ -19,22 +19,24 @@ class TemplatesScreen extends ConsumerWidget {
         value: templates,
         data: (list) => list.isEmpty
             ? EmptyState(icon: Icons.bookmarks_outlined, message: l10n.templatesEmpty)
-            : ListView(children: [
-                for (final t in list)
-                  ListTile(
-                    leading: const Icon(Icons.bookmark_outline),
-                    title: Text(t.name),
-                    subtitle: Text('${(t.payload['lines'] as List?)?.length ?? 0} × ${l10n.quoteItem}'),
-                    trailing: IconButton(
-                      tooltip: l10n.delete,
-                      icon: const Icon(Icons.delete_outline),
-                      onPressed: () async {
-                        await ref.read(sellerRepositoryProvider).deleteTemplate(t.id);
-                        ref.invalidate(quoteTemplatesProvider);
-                      },
+            : ListView(
+                children: [
+                  for (final t in list)
+                    ListTile(
+                      leading: const Icon(Icons.bookmark_outline),
+                      title: Text(t.name),
+                      subtitle: Text('${(t.payload['lines'] as List?)?.length ?? 0} × ${l10n.quoteItem}'),
+                      trailing: IconButton(
+                        tooltip: l10n.delete,
+                        icon: const Icon(Icons.delete_outline),
+                        onPressed: () async {
+                          await ref.read(sellerRepositoryProvider).deleteTemplate(t.id);
+                          ref.invalidate(quoteTemplatesProvider);
+                        },
+                      ),
                     ),
-                  ),
-              ]),
+                ],
+              ),
       ),
     );
   }

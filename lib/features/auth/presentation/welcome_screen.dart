@@ -52,9 +52,13 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 24),
-                  Text(config.appName,
-                      style: context.text.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800, color: context.colors.primary)),
+                  Text(
+                    config.appName,
+                    style: context.text.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: context.colors.primary,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Text(l10n.welcomeTitle, style: context.text.headlineSmall),
                   const SizedBox(height: 24),
@@ -88,10 +92,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                     const SizedBox(height: 12),
                     // Apple branding: black button, Apple logo, "Sign in with Apple".
                     FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        foregroundColor: Colors.white,
-                      ),
+                      style: FilledButton.styleFrom(backgroundColor: Colors.black, foregroundColor: Colors.white),
                       onPressed: _busy ? null : () => _run(auth.signInWithApple),
                       icon: const Icon(Icons.apple, size: 24),
                       label: Text(l10n.signInApple),
@@ -114,9 +115,9 @@ class _GoogleG extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const Text(
-        'G',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF4285F4)),
-      );
+    'G',
+    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color(0xFF4285F4)),
+  );
 }
 
 class _LegalLine extends StatelessWidget {
@@ -132,21 +133,24 @@ class _LegalLine extends StatelessWidget {
     final second = termsFirst ? ('privacy', l10n.privacyLink) : ('terms', l10n.termsLink);
     return Text.rich(
       textAlign: TextAlign.center,
-      TextSpan(style: style, children: [
-        TextSpan(text: parts[0]),
-        TextSpan(
-          text: first.$2,
-          style: link,
-          recognizer: TapGestureRecognizer()..onTap = () => context.push('/legal/${first.$1}'),
-        ),
-        TextSpan(text: parts.length > 1 ? parts[1] : ''),
-        TextSpan(
-          text: second.$2,
-          style: link,
-          recognizer: TapGestureRecognizer()..onTap = () => context.push('/legal/${second.$1}'),
-        ),
-        TextSpan(text: parts.length > 2 ? parts[2] : ''),
-      ]),
+      TextSpan(
+        style: style,
+        children: [
+          TextSpan(text: parts[0]),
+          TextSpan(
+            text: first.$2,
+            style: link,
+            recognizer: TapGestureRecognizer()..onTap = () => context.push('/legal/${first.$1}'),
+          ),
+          TextSpan(text: parts.length > 1 ? parts[1] : ''),
+          TextSpan(
+            text: second.$2,
+            style: link,
+            recognizer: TapGestureRecognizer()..onTap = () => context.push('/legal/${second.$1}'),
+          ),
+          TextSpan(text: parts.length > 2 ? parts[2] : ''),
+        ],
+      ),
     );
   }
 }

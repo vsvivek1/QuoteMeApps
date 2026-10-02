@@ -35,22 +35,22 @@ class Backend {
   }) : _onDispose = onDispose; // ignore: prefer_initializing_formals
 
   factory Backend.demo(DemoBackend b) => Backend(
-        auth: DemoAuthRepository(b),
-        profiles: DemoProfileRepository(b),
-        categories: DemoCategoryRepository(b),
-        requests: DemoRequestRepository(b),
-        quotes: DemoQuoteRepository(b),
-        sellers: DemoSellerRepository(b),
-        leads: DemoLeadRepository(b),
-        chats: DemoChatRepository(b),
-        orders: DemoOrderRepository(b),
-        reviews: DemoReviewRepository(b),
-        notifications: DemoNotificationRepository(b),
-        safety: DemoSafetyRepository(b),
-        flags: DemoFlagsRepository(),
-        demo: b,
-        onDispose: b.dispose,
-      );
+    auth: DemoAuthRepository(b),
+    profiles: DemoProfileRepository(b),
+    categories: DemoCategoryRepository(b),
+    requests: DemoRequestRepository(b),
+    quotes: DemoQuoteRepository(b),
+    sellers: DemoSellerRepository(b),
+    leads: DemoLeadRepository(b),
+    chats: DemoChatRepository(b),
+    orders: DemoOrderRepository(b),
+    reviews: DemoReviewRepository(b),
+    notifications: DemoNotificationRepository(b),
+    safety: DemoSafetyRepository(b),
+    flags: DemoFlagsRepository(),
+    demo: b,
+    onDispose: b.dispose,
+  );
 
   factory Backend.supabase(CountryConfig config) => createSupabaseBackend(config);
 

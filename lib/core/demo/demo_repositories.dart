@@ -125,13 +125,12 @@ class DemoProfileRepository implements ProfileRepository {
   }
 
   @override
-  Future<void> recordConsents(Map<String, String> documentVersions,
-      {bool marketing = false, bool analytics = false}) async {
-    b.consents[_uid(b)] = {
-      ...documentVersions,
-      if (marketing) 'marketing': '1',
-      if (analytics) 'analytics': '1',
-    };
+  Future<void> recordConsents(
+    Map<String, String> documentVersions, {
+    bool marketing = false,
+    bool analytics = false,
+  }) async {
+    b.consents[_uid(b)] = {...documentVersions, if (marketing) 'marketing': '1', if (analytics) 'analytics': '1'};
     b.notify();
   }
 
@@ -189,9 +188,7 @@ class DemoRequestRepository implements RequestRepository {
   Future<BuyerRequest> createRequest(RequestDraft draft) async {
     try {
       final cat = b.categories.firstWhere((c) => c.id == draft.categoryId);
-      final title = draft.text.trim().isEmpty
-          ? cat.name('en')
-          : draft.text.trim().split('\n').first;
+      final title = draft.text.trim().isEmpty ? cat.name('en') : draft.text.trim().split('\n').first;
       return b.createRequest(_uid(b), draft, title: title.length > 80 ? '${title.substring(0, 80)}…' : title);
     } on StateError catch (e) {
       throw RequestFailure(e.message);
@@ -200,10 +197,9 @@ class DemoRequestRepository implements RequestRepository {
 
   @override
   Stream<List<BuyerRequest>> watchMyRequests() => b.watch(() {
-        final id = b.currentUserId;
-        return b.requests.values.where((r) => r.buyerId == id).toList()
-          ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
-      });
+    final id = b.currentUserId;
+    return b.requests.values.where((r) => r.buyerId == id).toList()..sort((x, y) => y.createdAt.compareTo(x.createdAt));
+  });
 
   @override
   Stream<BuyerRequest?> watchRequest(String id) => b.watch(() => b.requests[id]);
@@ -233,12 +229,10 @@ class DemoQuoteRepository implements QuoteRepository {
 
   @override
   Stream<List<Quote>> watchQuotesForRequest(String requestId) => b.watch(() {
-        final blocked = b.blocks[b.currentUserId] ?? const {};
-        return b.quotes.values
-            .where((q) => q.requestId == requestId && !blocked.contains(q.seller.id))
-            .toList()
-          ..sort((x, y) => x.createdAt.compareTo(y.createdAt));
-      });
+    final blocked = b.blocks[b.currentUserId] ?? const {};
+    return b.quotes.values.where((q) => q.requestId == requestId && !blocked.contains(q.seller.id)).toList()
+      ..sort((x, y) => x.createdAt.compareTo(y.createdAt));
+  });
 
   @override
   Future<Quote?> getQuote(String quoteId) async => b.quotes[quoteId];
@@ -289,43 +283,41 @@ class DemoQuoteRepository implements QuoteRepository {
 
   @override
   Stream<List<Quote>> watchMyQuotes(String bucket) => b.watch(() {
-        final id = b.currentUserId;
-        return b.quotes.values.where((q) {
-          if (b.quoteSellerIds[q.id] != id) return false;
-          return switch (bucket) {
-            'won' => q.status == QuoteStatus.accepted,
-            'lost' => q.status == QuoteStatus.declined ||
-                q.status == QuoteStatus.expired ||
-                q.status == QuoteStatus.withdrawn,
-            _ => q.isActive,
-          };
-        }).toList()
-          ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
-      });
+    final id = b.currentUserId;
+    return b.quotes.values.where((q) {
+      if (b.quoteSellerIds[q.id] != id) return false;
+      return switch (bucket) {
+        'won' => q.status == QuoteStatus.accepted,
+        'lost' =>
+          q.status == QuoteStatus.declined || q.status == QuoteStatus.expired || q.status == QuoteStatus.withdrawn,
+        _ => q.isActive,
+      };
+    }).toList()..sort((x, y) => y.createdAt.compareTo(x.createdAt));
+  });
 
   @override
   Future<String> acceptQuote(String quoteId) async => _wrap(() => b.acceptQuote(_uid(b), quoteId));
 
   @override
   Future<void> declineQuote(String quoteId, {String? reason}) async => b.updateQuote(
-        quoteId,
-        (q) => q.copyWith(status: QuoteStatus.declined, declineReason: reason),
-        notifySellerType: 'quote_declined',
-      );
+    quoteId,
+    (q) => q.copyWith(status: QuoteStatus.declined, declineReason: reason),
+    notifySellerType: 'quote_declined',
+  );
 
   @override
   Future<void> setShortlisted(String quoteId, bool shortlisted) async => b.updateQuote(
-        quoteId,
-        (q) => q.copyWith(status: shortlisted ? QuoteStatus.shortlisted : QuoteStatus.sent),
-        notifySellerType: shortlisted ? 'quote_shortlisted' : null,
-      );
+    quoteId,
+    (q) => q.copyWith(status: shortlisted ? QuoteStatus.shortlisted : QuoteStatus.sent),
+    notifySellerType: shortlisted ? 'quote_shortlisted' : null,
+  );
 
   @override
   Future<void> counterOffer(String quoteId, Money target, {String? note}) async => b.updateQuote(
-        quoteId,
-        (q) => q.copyWith(counterOfferTarget: target, counterOfferNote: note),
-        notifySellerType: 'counter_offer',
-      );
+    quoteId,
+    (q) => q.copyWith(counterOfferTarget: target, counterOfferNote: note),
+    notifySellerType: 'counter_offer',
+  );
 
   @override
   Future<void> markViewed(String quoteId) async {
@@ -480,19 +472,22 @@ class DemoLeadRepository implements LeadRepository {
     final s = b.sellers[id];
     if (s == null) return const LeadPage(leads: []);
     final dismissed = b.dismissedLeads[id] ?? const {};
-    final leads = b.requests.values
-        .where((r) =>
-            r.isOpen &&
-            r.buyerId != id &&
-            s.categoryIds.contains(r.categoryId) &&
-            !dismissed.contains(r.id) &&
-            !(b.blocks[r.buyerId]?.contains(id) ?? false) &&
-            (s.isVerified || r.priorityUntil == null || DateTime.now().isAfter(r.priorityUntil!)) &&
-            (filters.categoryId == null || r.categoryId == filters.categoryId))
-        .map((r) => _toLead(r, id))
-        .where((l) => filters.maxDistanceKm == null || (l.distanceKm ?? 0) <= filters.maxDistanceKm!)
-        .toList()
-      ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
+    final leads =
+        b.requests.values
+            .where(
+              (r) =>
+                  r.isOpen &&
+                  r.buyerId != id &&
+                  s.categoryIds.contains(r.categoryId) &&
+                  !dismissed.contains(r.id) &&
+                  !(b.blocks[r.buyerId]?.contains(id) ?? false) &&
+                  (s.isVerified || r.priorityUntil == null || DateTime.now().isAfter(r.priorityUntil!)) &&
+                  (filters.categoryId == null || r.categoryId == filters.categoryId),
+            )
+            .map((r) => _toLead(r, id))
+            .where((l) => filters.maxDistanceKm == null || (l.distanceKm ?? 0) <= filters.maxDistanceKm!)
+            .toList()
+          ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
     return LeadPage(leads: leads);
   }
 
@@ -523,26 +518,20 @@ class DemoChatRepository implements ChatRepository {
   Chat _decorate(Chat c) {
     final me = b.currentUserId;
     final isBuyer = c.buyerId == me;
-    final name = isBuyer
-        ? b.sellers[c.sellerId]?.businessName ?? ''
-        : b.profiles[c.buyerId]?.name ?? '';
-    final unread = (b.messages[c.id] ?? const [])
-        .where((m) => m.senderId != me && m.readAt == null)
-        .length;
-    final accepted = b.requests[c.requestId]?.acceptedQuoteId != null &&
+    final name = isBuyer ? b.sellers[c.sellerId]?.businessName ?? '' : b.profiles[c.buyerId]?.name ?? '';
+    final unread = (b.messages[c.id] ?? const []).where((m) => m.senderId != me && m.readAt == null).length;
+    final accepted =
+        b.requests[c.requestId]?.acceptedQuoteId != null &&
         b.quoteSellerIds[b.requests[c.requestId]!.acceptedQuoteId] == c.sellerId;
     return c.copyWith(counterpartName: name, unread: unread, quoteAccepted: accepted);
   }
 
   @override
   Stream<List<Chat>> watchMyChats() => b.watch(() {
-        final me = b.currentUserId;
-        return b.chats.values
-            .where((c) => c.buyerId == me || c.sellerId == me)
-            .map(_decorate)
-            .toList()
-          ..sort((x, y) => (y.lastMessageAt ?? DateTime(2000)).compareTo(x.lastMessageAt ?? DateTime(2000)));
-      });
+    final me = b.currentUserId;
+    return b.chats.values.where((c) => c.buyerId == me || c.sellerId == me).map(_decorate).toList()
+      ..sort((x, y) => (y.lastMessageAt ?? DateTime(2000)).compareTo(x.lastMessageAt ?? DateTime(2000)));
+  });
 
   @override
   Future<Chat?> getChat(String chatId) async {
@@ -596,10 +585,10 @@ class DemoOrderRepository implements OrderRepository {
 
   @override
   Stream<List<Order>> watchMyOrders() => b.watch(() {
-        final me = b.currentUserId;
-        return b.orders.values.where((o) => o.buyerId == me || o.sellerId == me).toList()
-          ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
-      });
+    final me = b.currentUserId;
+    return b.orders.values.where((o) => o.buyerId == me || o.sellerId == me).toList()
+      ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
+  });
 
   @override
   Stream<Order?> watchOrder(String id) => b.watch(() => b.orders[id]);
@@ -609,7 +598,10 @@ class DemoOrderRepository implements OrderRepository {
     final o = b.orders[orderId]!;
     b.orders[orderId] = o.copyWith(
       status: status,
-      events: [...o.events, OrderEvent(status: status, at: DateTime.now(), note: note)],
+      events: [
+        ...o.events,
+        OrderEvent(status: status, at: DateTime.now(), note: note),
+      ],
     );
     final other = o.buyerId == b.currentUserId ? o.sellerId : o.buyerId;
     b.addNotification(other, 'order_status', {'order_id': orderId, 'status': status.name});
@@ -657,18 +649,14 @@ class DemoReviewRepository implements ReviewRepository {
     if (asBuyer) {
       final s = b.sellers[o.sellerId]!;
       final count = s.ratingCount + 1;
-      b.sellers[o.sellerId] = s.copyWith(
-        ratingCount: count,
-        ratingAvg: (s.ratingAvg * s.ratingCount + stars) / count,
-      );
+      b.sellers[o.sellerId] = s.copyWith(ratingCount: count, ratingAvg: (s.ratingAvg * s.ratingCount + stars) / count);
     }
     b.notify();
   }
 
   @override
   Future<List<Review>> reviewsFor(String userId) async =>
-      b.reviews.values.where((r) => r.toId == userId).toList()
-        ..sort((x, y) => y.createdAt.compareTo(x.createdAt));
+      b.reviews.values.where((r) => r.toId == userId).toList()..sort((x, y) => y.createdAt.compareTo(x.createdAt));
 
   @override
   Future<void> reply(String reviewId, String text) async {
@@ -740,7 +728,5 @@ class DemoSafetyRepository implements SafetyRepository {
 
 class DemoFlagsRepository implements FlagsRepository {
   @override
-  Future<AppFlags> load() async => AppFlags(
-        earlyPartnerFreeUntil: DateTime.now().add(const Duration(days: 180)),
-      );
+  Future<AppFlags> load() async => AppFlags(earlyPartnerFreeUntil: DateTime.now().add(const Duration(days: 180)));
 }

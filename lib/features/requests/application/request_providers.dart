@@ -8,8 +8,7 @@ import '../domain/category.dart';
 part 'request_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<Category>> categories(Ref ref) =>
-    ref.watch(categoryRepositoryProvider).fetchAll();
+Future<List<Category>> categories(Ref ref) => ref.watch(categoryRepositoryProvider).fetchAll();
 
 @riverpod
 Future<Map<int, Category>> categoryMap(Ref ref) async {
@@ -18,12 +17,10 @@ Future<Map<int, Category>> categoryMap(Ref ref) async {
 }
 
 @riverpod
-Stream<List<BuyerRequest>> myRequests(Ref ref) =>
-    ref.watch(requestRepositoryProvider).watchMyRequests();
+Stream<List<BuyerRequest>> myRequests(Ref ref) => ref.watch(requestRepositoryProvider).watchMyRequests();
 
 @riverpod
-Stream<BuyerRequest?> request(Ref ref, String id) =>
-    ref.watch(requestRepositoryProvider).watchRequest(id);
+Stream<BuyerRequest?> request(Ref ref, String id) => ref.watch(requestRepositoryProvider).watchRequest(id);
 
 @riverpod
 Stream<List<Quote>> requestQuotes(Ref ref, String requestId) =>

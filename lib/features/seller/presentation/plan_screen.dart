@@ -32,21 +32,26 @@ class PlanScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.planTitle)),
       body: MaxWidth(
-        child: ListView(padding: const EdgeInsets.all(16), children: [
-          if (seller?.earlyPartner ?? false)
-            Card(
-              color: context.colors.primaryContainer,
-              child: ListTile(
-                leading: const Icon(Icons.workspace_premium_outlined),
-                title: Text(freeUntil == null ? l10n.quoteFoundingPartner : l10n.foundingPartnerBadge(context.date(freeUntil))),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            if (seller?.earlyPartner ?? false)
+              Card(
+                color: context.colors.primaryContainer,
+                child: ListTile(
+                  leading: const Icon(Icons.workspace_premium_outlined),
+                  title: Text(
+                    freeUntil == null ? l10n.quoteFoundingPartner : l10n.foundingPartnerBadge(context.date(freeUntil)),
+                  ),
+                ),
               ),
-            ),
-          const SizedBox(height: 12),
-          if (flags == null || !flags.monetizationEnabled)
-            EmptyState(icon: Icons.celebration_outlined, message: l10n.planFreeLaunch)
-          else
-            ..._paywall(context, ref, billing),
-        ]),
+            const SizedBox(height: 12),
+            if (flags == null || !flags.monetizationEnabled)
+              EmptyState(icon: Icons.celebration_outlined, message: l10n.planFreeLaunch)
+            else
+              ..._paywall(context, ref, billing),
+          ],
+        ),
       ),
     );
   }
@@ -54,53 +59,66 @@ class PlanScreen extends ConsumerWidget {
   List<Widget> _paywall(BuildContext context, WidgetRef ref, BillingService billing) {
     final l10n = context.l10n;
     final products = ref.watch(_productsProvider);
-    final storeName = billing.store == 'apple' ? 'App Store' : billing.store == 'play' ? 'Google Play' : billing.store;
+    final storeName = billing.store == 'apple'
+        ? 'App Store'
+        : billing.store == 'play'
+        ? 'Google Play'
+        : billing.store;
     return [
       products.when(
         loading: () => const SkeletonList(count: 3),
         error: (_, _) => Text(l10n.planNotAvailable),
-        data: (list) => Column(children: [
-          for (final p in list)
-            Card(
-              child: ListTile(
-                title: Text(switch (p.kind) {
-                  PlanKind.monthly => l10n.planMonthly,
-                  PlanKind.annual => l10n.planAnnual,
-                  PlanKind.credits => l10n.planCredits,
-                }),
-                subtitle: Text([
-                  p.priceText ?? p.price.display,
-                  if (p.credits != null) l10n.planCreditsBalance(p.credits!),
-                ].join(' · ')),
-                trailing: FilledButton(
-                  onPressed: () async {
-                    final r = await billing.buy(p);
-                    if (r.success) {
-                      await ref.read(analyticsProvider).log(
-                            p.kind == PlanKind.credits ? AnalyticsEvent.creditPackBought : AnalyticsEvent.subscriptionStarted,
-                            {'product_id': p.id, 'store': billing.store},
-                          );
-                      ref.invalidate(mySellerProvider);
-                    }
-                  },
-                  child: Text(p.kind == PlanKind.credits ? l10n.planBuyCredits : l10n.planSubscribe),
+        data: (list) => Column(
+          children: [
+            for (final p in list)
+              Card(
+                child: ListTile(
+                  title: Text(switch (p.kind) {
+                    PlanKind.monthly => l10n.planMonthly,
+                    PlanKind.annual => l10n.planAnnual,
+                    PlanKind.credits => l10n.planCredits,
+                  }),
+                  subtitle: Text(
+                    [
+                      p.priceText ?? p.price.display,
+                      if (p.credits != null) l10n.planCreditsBalance(p.credits!),
+                    ].join(' · '),
+                  ),
+                  trailing: FilledButton(
+                    onPressed: () async {
+                      final r = await billing.buy(p);
+                      if (r.success) {
+                        await ref.read(analyticsProvider).log(
+                          p.kind == PlanKind.credits
+                              ? AnalyticsEvent.creditPackBought
+                              : AnalyticsEvent.subscriptionStarted,
+                          {'product_id': p.id, 'store': billing.store},
+                        );
+                        ref.invalidate(mySellerProvider);
+                      }
+                    },
+                    child: Text(p.kind == PlanKind.credits ? l10n.planBuyCredits : l10n.planSubscribe),
+                  ),
                 ),
               ),
-            ),
-        ]),
+          ],
+        ),
       ),
       const SizedBox(height: 8),
       Text(l10n.planRenewal(storeName), style: context.text.bodySmall),
-      Wrap(spacing: 8, children: [
-        TextButton(onPressed: () => context.push('/legal/subscription-terms'), child: Text(l10n.termsLink)),
-        TextButton(onPressed: () => context.push('/legal/privacy'), child: Text(l10n.privacyLink)),
-        if (billing.supportsRestore) TextButton(onPressed: billing.restore, child: Text(l10n.planRestore)),
-        if (billing.manageSubscriptionsUrl(null) != null)
-          TextButton(
-            onPressed: () => launchUrl(billing.manageSubscriptionsUrl(null)!, mode: LaunchMode.externalApplication),
-            child: Text(l10n.planManage),
-          ),
-      ]),
+      Wrap(
+        spacing: 8,
+        children: [
+          TextButton(onPressed: () => context.push('/legal/subscription-terms'), child: Text(l10n.termsLink)),
+          TextButton(onPressed: () => context.push('/legal/privacy'), child: Text(l10n.privacyLink)),
+          if (billing.supportsRestore) TextButton(onPressed: billing.restore, child: Text(l10n.planRestore)),
+          if (billing.manageSubscriptionsUrl(null) != null)
+            TextButton(
+              onPressed: () => launchUrl(billing.manageSubscriptionsUrl(null)!, mode: LaunchMode.externalApplication),
+              child: Text(l10n.planManage),
+            ),
+        ],
+      ),
     ];
   }
 }

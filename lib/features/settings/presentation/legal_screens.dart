@@ -12,7 +12,13 @@ import '../../../core/utils/context_x.dart';
 import '../../../shared/widgets/common.dart';
 
 class LegalPage {
-  const LegalPage({required this.slug, required this.title, required this.version, required this.lastUpdated, required this.markdown});
+  const LegalPage({
+    required this.slug,
+    required this.title,
+    required this.version,
+    required this.lastUpdated,
+    required this.markdown,
+  });
   final String slug;
   final String title;
   final String version;
@@ -52,14 +58,20 @@ class LegalIndexScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.legalTitle)),
       body: AsyncView(
         value: ref.watch(legalPagesProvider),
-        data: (pages) => ListView(children: [
-          for (final p in pages)
-            ListTile(title: Text(p.title), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => context.push('/legal/${p.slug}')),
-          ListTile(
-            title: Text(l10n.settingsLicenses),
-            onTap: () => showLicensePage(context: context, applicationName: ref.read(countryConfigProvider).appName),
-          ),
-        ]),
+        data: (pages) => ListView(
+          children: [
+            for (final p in pages)
+              ListTile(
+                title: Text(p.title),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: () => context.push('/legal/${p.slug}'),
+              ),
+            ListTile(
+              title: Text(l10n.settingsLicenses),
+              onTap: () => showLicensePage(context: context, applicationName: ref.read(countryConfigProvider).appName),
+            ),
+          ],
+        ),
       ),
     );
   }

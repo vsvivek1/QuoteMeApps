@@ -5,8 +5,12 @@ import '../../../core/providers.dart';
 import '../../../core/utils/context_x.dart';
 
 /// Report anything (user, seller, request, quote, message, review).
-Future<void> showReportSheet(BuildContext context, WidgetRef ref,
-    {required String targetType, required String targetId}) async {
+Future<void> showReportSheet(
+  BuildContext context,
+  WidgetRef ref, {
+  required String targetType,
+  required String targetId,
+}) async {
   final l10n = context.l10n;
   final reasons = {
     'spam': l10n.reportReasonSpam,
@@ -24,25 +28,34 @@ Future<void> showReportSheet(BuildContext context, WidgetRef ref,
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, set) => Padding(
         padding: EdgeInsets.fromLTRB(16, 0, 16, MediaQuery.viewInsetsOf(ctx).bottom + 16),
-        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Text(l10n.reportTitle, style: ctx.text.titleLarge),
-          RadioGroup<String>(
-            groupValue: reason,
-            onChanged: (v) => set(() => reason = v ?? reason),
-            child: Column(children: [
-              for (final e in reasons.entries) RadioListTile<String>(value: e.key, title: Text(e.value)),
-            ]),
-          ),
-          TextField(controller: details, maxLines: 3, decoration: InputDecoration(labelText: l10n.reportDetails)),
-          const SizedBox(height: 12),
-          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.report)),
-        ]),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.reportTitle, style: ctx.text.titleLarge),
+            RadioGroup<String>(
+              groupValue: reason,
+              onChanged: (v) => set(() => reason = v ?? reason),
+              child: Column(
+                children: [for (final e in reasons.entries) RadioListTile<String>(value: e.key, title: Text(e.value))],
+              ),
+            ),
+            TextField(
+              controller: details,
+              maxLines: 3,
+              decoration: InputDecoration(labelText: l10n.reportDetails),
+            ),
+            const SizedBox(height: 12),
+            FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.report)),
+          ],
+        ),
       ),
     ),
   );
   if (ok != true) return;
-  await ref.read(safetyRepositoryProvider).report(targetType, targetId, reason,
-      details: details.text.trim().isEmpty ? null : details.text.trim());
+  await ref
+      .read(safetyRepositoryProvider)
+      .report(targetType, targetId, reason, details: details.text.trim().isEmpty ? null : details.text.trim());
   if (context.mounted) context.toast(l10n.reportSent);
 }
 

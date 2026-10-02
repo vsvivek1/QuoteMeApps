@@ -13,30 +13,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<ProviderContainer> demoContainer(CountryConfig config) async {
   SharedPreferences.setMockInitialValues({'locale': config.defaultLocale.languageCode});
   final prefs = await SharedPreferences.getInstance();
-  final c = ProviderContainer(overrides: [
-    countryConfigProvider.overrideWithValue(config),
-    appEnvProvider.overrideWithValue(const AppEnv(env: Env.dev, forceDemo: true)),
-    sharedPreferencesProvider.overrideWithValue(prefs),
-  ]);
+  final c = ProviderContainer(
+    overrides: [
+      countryConfigProvider.overrideWithValue(config),
+      appEnvProvider.overrideWithValue(const AppEnv(env: Env.dev, forceDemo: true)),
+      sharedPreferencesProvider.overrideWithValue(prefs),
+    ],
+  );
   addTearDown(c.dispose);
   return c;
 }
 
-Future<void> pumpScreen(WidgetTester tester, ProviderContainer container, Widget child,
-    {Locale locale = const Locale('en')}) async {
-  await tester.pumpWidget(UncontrolledProviderScope(
-    container: container,
-    child: MaterialApp(
-      locale: locale,
-      supportedLocales: const [Locale('en'), Locale('hi'), Locale('es')],
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      home: child,
+Future<void> pumpScreen(
+  WidgetTester tester,
+  ProviderContainer container,
+  Widget child, {
+  Locale locale = const Locale('en'),
+}) async {
+  await tester.pumpWidget(
+    UncontrolledProviderScope(
+      container: container,
+      child: MaterialApp(
+        locale: locale,
+        supportedLocales: const [Locale('en'), Locale('hi'), Locale('es')],
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        home: child,
+      ),
     ),
-  ));
+  );
   await tester.pump();
 }

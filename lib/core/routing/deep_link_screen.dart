@@ -36,6 +36,5 @@ class _DeepLinkScreenState extends ConsumerState<DeepLinkScreen> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
+  Widget build(BuildContext context) => const Scaffold(body: Center(child: CircularProgressIndicator()));
 }

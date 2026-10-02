@@ -65,10 +65,12 @@ class _QuoteDetailScreenState extends ConsumerState<QuoteDetailScreen> {
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(child: Text(q.seller.businessName.characters.first)),
-                  title: Row(children: [
-                    Flexible(child: Text(q.seller.businessName)),
-                    if (q.seller.verified) ...[const SizedBox(width: 4), const VerifiedBadge()],
-                  ]),
+                  title: Row(
+                    children: [
+                      Flexible(child: Text(q.seller.businessName)),
+                      if (q.seller.verified) ...[const SizedBox(width: 4), const VerifiedBadge()],
+                    ],
+                  ),
                   subtitle: q.seller.ratingCount > 0
                       ? RatingStars(rating: q.seller.ratingAvg, count: q.seller.ratingCount)
                       : null,
@@ -80,35 +82,36 @@ class _QuoteDetailScreenState extends ConsumerState<QuoteDetailScreen> {
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Column(children: [
-                      for (final line in q.lines)
-                        _Row('${line.description} × ${line.qty}', line.lineTotal.display),
-                      const Divider(),
-                      _Row(l10n.quoteSubtotal, q.subtotal.display),
-                      ..._taxRows(context, q),
-                      _Row(l10n.quoteDelivery, q.delivery.isZeroAmount ? l10n.quoteFreeDelivery : q.delivery.display),
-                      const Divider(),
-                      _Row(l10n.quoteTotal, q.total.display, bold: true),
-                    ]),
+                    child: Column(
+                      children: [
+                        for (final line in q.lines) _Row('${line.description} × ${line.qty}', line.lineTotal.display),
+                        const Divider(),
+                        _Row(l10n.quoteSubtotal, q.subtotal.display),
+                        ..._taxRows(context, q),
+                        _Row(l10n.quoteDelivery, q.delivery.isZeroAmount ? l10n.quoteFreeDelivery : q.delivery.display),
+                        const Divider(),
+                        _Row(l10n.quoteTotal, q.total.display, bold: true),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
                 if (q.offeredBrandModel != null) _Row(l10n.quoteOffered, q.offeredBrandModel!),
                 if (q.deliveryDate != null) _Row(l10n.quoteDeliveryDate, context.date(q.deliveryDate!)),
                 if (q.warranty != null) _Row(l10n.quoteWarranty, q.warranty!),
-                if (q.validUntil != null) Text(l10n.quoteValidUntil(context.date(q.validUntil!)), style: context.text.bodySmall),
+                if (q.validUntil != null)
+                  Text(l10n.quoteValidUntil(context.date(q.validUntil!)), style: context.text.bodySmall),
                 if (q.notes != null && q.notes!.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Text(l10n.quoteNotes, style: context.text.labelLarge),
                   Text(q.notes!),
                 ],
                 const SizedBox(height: 8),
-                Text(q.taxBreakdown is GstBreakdown ? l10n.taxIncludedNote : l10n.salesTaxNote,
-                    style: context.text.bodySmall),
-                if (!q.isActive) ...[
-                  const SizedBox(height: 12),
-                  StatusChip(quoteStatusLabel(context, q.status)),
-                ],
+                Text(
+                  q.taxBreakdown is GstBreakdown ? l10n.taxIncludedNote : l10n.salesTaxNote,
+                  style: context.text.bodySmall,
+                ),
+                if (!q.isActive) ...[const SizedBox(height: 12), StatusChip(quoteStatusLabel(context, q.status))],
               ],
             ),
           ),
@@ -116,13 +119,25 @@ class _QuoteDetailScreenState extends ConsumerState<QuoteDetailScreen> {
               ? SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
-                    child: Row(children: [
-                      IconButton.outlined(onPressed: () => actions.chat(q), icon: const Icon(Icons.chat_bubble_outline_rounded)),
-                      const SizedBox(width: 8),
-                      Expanded(child: OutlinedButton(onPressed: () => actions.counterOffer(q), child: Text(l10n.counterOffer, textAlign: TextAlign.center))),
-                      const SizedBox(width: 8),
-                      Expanded(child: FilledButton(onPressed: () => actions.accept(q), child: Text(l10n.accept))),
-                    ]),
+                    child: Row(
+                      children: [
+                        IconButton.outlined(
+                          onPressed: () => actions.chat(q),
+                          icon: const Icon(Icons.chat_bubble_outline_rounded),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => actions.counterOffer(q),
+                            child: Text(l10n.counterOffer, textAlign: TextAlign.center),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: FilledButton(onPressed: () => actions.accept(q), child: Text(l10n.accept)),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               : null,
@@ -154,10 +169,12 @@ class _Row extends StatelessWidget {
     final style = bold ? context.text.titleMedium?.copyWith(fontWeight: FontWeight.w800) : context.text.bodyMedium;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(children: [
-        Expanded(child: Text(label, style: style)),
-        Text(value, style: style),
-      ]),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: style)),
+          Text(value, style: style),
+        ],
+      ),
     );
   }
 }

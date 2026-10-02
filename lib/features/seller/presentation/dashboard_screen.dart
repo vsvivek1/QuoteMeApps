@@ -23,9 +23,17 @@ class DashboardScreen extends ConsumerWidget {
             (l10n.dashActive, '${s.activeQuotes}', Icons.request_quote_outlined),
             (l10n.dashWon, '${s.won}', Icons.emoji_events_outlined),
             (l10n.dashWinRate, '${(s.winRate * 100).round()}%', Icons.percent_rounded),
-            (l10n.dashResponse, s.avgResponseMins == null ? '—' : context.shortDuration(Duration(minutes: s.avgResponseMins!)), Icons.timer_outlined),
+            (
+              l10n.dashResponse,
+              s.avgResponseMins == null ? '—' : context.shortDuration(Duration(minutes: s.avgResponseMins!)),
+              Icons.timer_outlined,
+            ),
             (l10n.dashRevenue, s.revenueLogged?.displayCompact ?? '—', Icons.payments_outlined),
-            (l10n.dashRating, s.ratingCount == 0 ? '—' : '${s.ratingAvg.toStringAsFixed(1)} ★', Icons.star_outline_rounded),
+            (
+              l10n.dashRating,
+              s.ratingCount == 0 ? '—' : '${s.ratingAvg.toStringAsFixed(1)} ★',
+              Icons.star_outline_rounded,
+            ),
             (l10n.dashQuotesThisMonth, '${s.quotesThisMonth}', Icons.calendar_month_outlined),
           ];
           return RefreshIndicator(
@@ -54,12 +62,15 @@ class DashboardScreen extends ConsumerWidget {
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Icon(icon, color: context.colors.primary),
-                        const Spacer(),
-                        Text(value, style: context.text.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
-                        Text(label, style: context.text.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      ]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(icon, color: context.colors.primary),
+                          const Spacer(),
+                          Text(value, style: context.text.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                          Text(label, style: context.text.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        ],
+                      ),
                     ),
                   ),
                 );

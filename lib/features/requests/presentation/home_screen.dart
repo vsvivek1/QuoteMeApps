@@ -36,15 +36,19 @@ class HomeScreen extends ConsumerWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Text(name == null ? l10n.homeGreetingAnon : l10n.homeGreeting(name),
-                    style: context.text.titleLarge),
+                child: Text(
+                  name == null ? l10n.homeGreetingAnon : l10n.homeGreeting(name),
+                  style: context.text.titleLarge,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: _PostButton(onTap: () => context.push('/post')),
               ),
-              SectionHeader(l10n.activeRequests,
-                  trailing: TextButton(onPressed: () => context.go('/requests'), child: Text(l10n.seeAll))),
+              SectionHeader(
+                l10n.activeRequests,
+                trailing: TextButton(onPressed: () => context.go('/requests'), child: Text(l10n.seeAll)),
+              ),
               requests.when(
                 data: (list) {
                   final active = list.where((r) => r.isOpen).take(3).toList();
@@ -90,11 +94,13 @@ class HomeScreen extends ConsumerWidget {
                               child: Icon(categoryIcon(c.icon), color: context.colors.onSecondaryContainer),
                             ),
                             const SizedBox(height: 6),
-                            Text(c.name(context.lang),
-                                maxLines: 2,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.text.labelMedium),
+                            Text(
+                              c.name(context.lang),
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.text.labelMedium,
+                            ),
                           ],
                         ),
                       ),
@@ -139,13 +145,20 @@ class _PostButton extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(context.l10n.whatDoYouNeed,
-                          style: context.text.titleLarge?.copyWith(
-                              color: context.colors.onPrimary, fontWeight: FontWeight.w700)),
+                      Text(
+                        context.l10n.whatDoYouNeed,
+                        style: context.text.titleLarge?.copyWith(
+                          color: context.colors.onPrimary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                       const SizedBox(height: 4),
-                      Text(context.l10n.whatDoYouNeedHint,
-                          style: context.text.bodyMedium
-                              ?.copyWith(color: context.colors.onPrimary.withValues(alpha: 0.85))),
+                      Text(
+                        context.l10n.whatDoYouNeedHint,
+                        style: context.text.bodyMedium?.copyWith(
+                          color: context.colors.onPrimary.withValues(alpha: 0.85),
+                        ),
+                      ),
                     ],
                   ),
                 ),

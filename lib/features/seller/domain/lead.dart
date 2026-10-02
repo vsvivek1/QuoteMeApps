@@ -40,18 +40,11 @@ abstract class Lead with _$Lead {
 
 @freezed
 abstract class LeadFilters with _$LeadFilters {
-  const factory LeadFilters({
-    int? categoryId,
-    int? maxDistanceKm,
-    Money? minBudget,
-    DateTime? neededBefore,
-  }) = _LeadFilters;
+  const factory LeadFilters({int? categoryId, int? maxDistanceKm, Money? minBudget, DateTime? neededBefore}) =
+      _LeadFilters;
 }
 
 @freezed
 abstract class LeadPage with _$LeadPage {
-  const factory LeadPage({
-    required List<Lead> leads,
-    String? nextCursor,
-  }) = _LeadPage;
+  const factory LeadPage({required List<Lead> leads, String? nextCursor}) = _LeadPage;
 }

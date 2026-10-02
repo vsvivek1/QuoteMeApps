@@ -39,7 +39,6 @@ abstract interface class ProfileRepository {
   Future<Profile?> fetchMyProfile();
   Future<void> updateProfile({String? name, String? language, String? photoPath});
   Future<void> setActiveMode(AppMode mode);
-  Future<void> recordConsents(Map<String, String> documentVersions,
-      {bool marketing = false, bool analytics = false});
+  Future<void> recordConsents(Map<String, String> documentVersions, {bool marketing = false, bool analytics = false});
   Future<bool> hasAcceptedCurrentTerms(String termsVersion, String privacyVersion);
 }

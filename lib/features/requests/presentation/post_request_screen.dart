@@ -127,11 +127,13 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
         _c.goTo(2);
       case 2:
         if (!_whereForm.currentState!.validate()) return;
-        _c.update((d) => d.copyWith(
-              locationCode: _code.text.trim(),
-              locality: _locality.text.trim(),
-              fullAddress: _address.text.trim().isEmpty ? null : _address.text.trim(),
-            ));
+        _c.update(
+          (d) => d.copyWith(
+            locationCode: _code.text.trim(),
+            locality: _locality.text.trim(),
+            fullAddress: _address.text.trim().isEmpty ? null : _address.text.trim(),
+          ),
+        );
         _submit();
     }
   }
@@ -152,12 +154,12 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
   }
 
   String? _errorText(String? code) => switch (code) {
-        null => null,
-        'rate_limited' => context.l10n.postRateLimited,
-        'duplicate' => context.l10n.postDuplicate,
-        'blocked_category' => context.l10n.postBlockedReason,
-        _ => context.l10n.somethingWentWrong,
-      };
+    null => null,
+    'rate_limited' => context.l10n.postRateLimited,
+    'duplicate' => context.l10n.postDuplicate,
+    'blocked_category' => context.l10n.postBlockedReason,
+    _ => context.l10n.somethingWentWrong,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -180,25 +182,27 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             preferredSize: const Size.fromHeight(36),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: Row(children: [
-                for (var i = 0; i < steps.length; i++) ...[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        LinearProgressIndicator(
-                          value: i <= s.step ? 1 : 0,
-                          minHeight: 4,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(steps[i], style: context.text.labelSmall),
-                      ],
+              child: Row(
+                children: [
+                  for (var i = 0; i < steps.length; i++) ...[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LinearProgressIndicator(
+                            value: i <= s.step ? 1 : 0,
+                            minHeight: 4,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(steps[i], style: context.text.labelSmall),
+                        ],
+                      ),
                     ),
-                  ),
-                  if (i < steps.length - 1) const SizedBox(width: 8),
+                    if (i < steps.length - 1) const SizedBox(width: 8),
+                  ],
                 ],
-              ]),
+              ),
             ),
           ),
         ),
@@ -267,8 +271,10 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             suffixIcon: IconButton(
               tooltip: _listening ? l10n.postListening : l10n.postSpeak,
               onPressed: _toggleMic,
-              icon: Icon(_listening ? Icons.mic_rounded : Icons.mic_none_rounded,
-                  color: _listening ? context.colors.error : null),
+              icon: Icon(
+                _listening ? Icons.mic_rounded : Icons.mic_none_rounded,
+                color: _listening ? context.colors.error : null,
+              ),
             ),
           ),
         ),
@@ -277,16 +283,18 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             color: context.colors.errorContainer,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(children: [
-                Icon(Icons.block_rounded, color: context.colors.onErrorContainer),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.postBlockedCategory(s.blocked!.name(context.lang), l10n.postBlockedReason),
-                    style: TextStyle(color: context.colors.onErrorContainer),
+              child: Row(
+                children: [
+                  Icon(Icons.block_rounded, color: context.colors.onErrorContainer),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      l10n.postBlockedCategory(s.blocked!.name(context.lang), l10n.postBlockedReason),
+                      style: TextStyle(color: context.colors.onErrorContainer),
+                    ),
                   ),
-                ),
-              ]),
+                ],
+              ),
             ),
           ),
         const SizedBox(height: 8),
@@ -329,23 +337,22 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
               for (final p in s.draft.localMediaPaths)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: Stack(children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: _thumb(p),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: IconButton.filledTonal(
-                        visualDensity: VisualDensity.compact,
-                        iconSize: 16,
-                        tooltip: l10n.delete,
-                        onPressed: () => _c.removeMedia(p),
-                        icon: const Icon(Icons.close_rounded),
+                  child: Stack(
+                    children: [
+                      ClipRRect(borderRadius: BorderRadius.circular(12), child: _thumb(p)),
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: IconButton.filledTonal(
+                          visualDensity: VisualDensity.compact,
+                          iconSize: 16,
+                          tooltip: l10n.delete,
+                          onPressed: () => _c.removeMedia(p),
+                          icon: const Icon(Icons.close_rounded),
+                        ),
                       ),
-                    ),
-                  ]),
+                    ],
+                  ),
                 ),
               if (s.draft.localMediaPaths.length < 6)
                 SizedBox(
@@ -353,11 +360,14 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(padding: EdgeInsets.zero),
                     onPressed: _addPhotos,
-                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      const Icon(Icons.add_a_photo_outlined),
-                      const SizedBox(height: 4),
-                      Text(l10n.postPhotosCount(s.draft.localMediaPaths.length), style: context.text.labelSmall),
-                    ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.add_a_photo_outlined),
+                        const SizedBox(height: 4),
+                        Text(l10n.postPhotosCount(s.draft.localMediaPaths.length), style: context.text.labelSmall),
+                      ],
+                    ),
                   ),
                 ),
             ],
@@ -369,11 +379,22 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
 
   Widget _thumb(String path) {
     if (kIsWeb || path.startsWith('http')) {
-      return Image.network(path, width: 88, height: 88, fit: BoxFit.cover,
-          errorBuilder: (_, _, _) => const SizedBox(width: 88, height: 88, child: Icon(Icons.image)));
+      return Image.network(
+        path,
+        width: 88,
+        height: 88,
+        fit: BoxFit.cover,
+        errorBuilder: (_, _, _) => const SizedBox(width: 88, height: 88, child: Icon(Icons.image)),
+      );
     }
-    return Image.file(File(path), width: 88, height: 88, fit: BoxFit.cover, cacheWidth: 176,
-        errorBuilder: (_, _, _) => const SizedBox(width: 88, height: 88, child: Icon(Icons.image)));
+    return Image.file(
+      File(path),
+      width: 88,
+      height: 88,
+      fit: BoxFit.cover,
+      cacheWidth: 176,
+      errorBuilder: (_, _, _) => const SizedBox(width: 88, height: 88, child: Icon(Icons.image)),
+    );
   }
 
   Widget _detailsStep(BuildContext context, PostRequestState s, Category? category, CountryConfig config) {
@@ -387,21 +408,19 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
           if (category != null) ...[
             Text(category.name(context.lang), style: context.text.titleMedium),
             const SizedBox(height: 12),
-            DynamicFields(
-              fields: category.fields,
-              values: s.draft.fields,
-              onChanged: _c.setField,
-            ),
+            DynamicFields(fields: category.fields, values: s.draft.fields, onChanged: _c.setField),
           ],
           if (disclaimer != null) _Notice(icon: Icons.info_outline_rounded, text: disclaimer),
           const SizedBox(height: 8),
           Text('${l10n.postBudget} (${l10n.optional})', style: context.text.labelLarge),
           const SizedBox(height: 8),
-          Row(children: [
-            Expanded(child: _moneyField(_budgetMin, l10n.postBudgetMin, config)),
-            const SizedBox(width: 12),
-            Expanded(child: _moneyField(_budgetMax, l10n.postBudgetMax, config)),
-          ]),
+          Row(
+            children: [
+              Expanded(child: _moneyField(_budgetMin, l10n.postBudgetMin, config)),
+              const SizedBox(width: 12),
+              Expanded(child: _moneyField(_budgetMax, l10n.postBudgetMax, config)),
+            ],
+          ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             value: !s.draft.budgetVisible,
@@ -419,7 +438,8 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
                 : IconButton(
                     tooltip: l10n.delete,
                     onPressed: () => _c.update((d) => d.copyWith(neededBy: null)),
-                    icon: const Icon(Icons.close_rounded)),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
             onTap: () async {
               final now = DateTime.now();
               final picked = await showDatePicker(
@@ -448,17 +468,14 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
   }
 
   Widget _moneyField(TextEditingController c, String label, CountryConfig config) => TextFormField(
-        controller: c,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
-        decoration: InputDecoration(
-          labelText: label,
-          prefixText: config.currencyCode == 'INR' ? '₹ ' : r'$ ',
-        ),
-        validator: (v) => (v ?? '').trim().isEmpty || parseUserAmount(v!, config.currencyCode) != null
-            ? null
-            : context.l10n.quotePriceRequired,
-      );
+    controller: c,
+    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+    inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+    decoration: InputDecoration(labelText: label, prefixText: config.currencyCode == 'INR' ? '₹ ' : r'$ '),
+    validator: (v) => (v ?? '').trim().isEmpty || parseUserAmount(v!, config.currencyCode) != null
+        ? null
+        : context.l10n.quotePriceRequired,
+  );
 
   Widget _whereStep(BuildContext context, PostRequestState s, Category? category, CountryConfig config) {
     final l10n = context.l10n;
@@ -485,37 +502,47 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             icon: _locating
                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                 : Icon(s.draft.lat != null ? Icons.my_location_rounded : Icons.location_searching_rounded),
-            label: Text(s.draft.lat != null
-                ? '${s.draft.lat!.toStringAsFixed(3)}, ${s.draft.lng!.toStringAsFixed(3)}'
-                : l10n.postUseGps),
+            label: Text(
+              s.draft.lat != null
+                  ? '${s.draft.lat!.toStringAsFixed(3)}, ${s.draft.lng!.toStringAsFixed(3)}'
+                  : l10n.postUseGps,
+            ),
           ),
           const SizedBox(height: 12),
-          Row(children: [
-            Expanded(
-              child: TextFormField(
-                controller: _code,
-                keyboardType: config.country == Country.india ? TextInputType.number : TextInputType.text,
-                maxLength: config.postalCodeMaxLength,
-                decoration: InputDecoration(labelText: codeLabel, counterText: ''),
-                validator: (v) {
-                  final t = (v ?? '').trim();
-                  if (t.isEmpty && s.draft.lat == null) return l10n.postLocationRequired;
-                  if (t.isNotEmpty && !config.postalCodeValidator(t)) return l10n.postCodeInvalid(codeLabel);
-                  return null;
-                },
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _code,
+                  keyboardType: config.country == Country.india ? TextInputType.number : TextInputType.text,
+                  maxLength: config.postalCodeMaxLength,
+                  decoration: InputDecoration(labelText: codeLabel, counterText: ''),
+                  validator: (v) {
+                    final t = (v ?? '').trim();
+                    if (t.isEmpty && s.draft.lat == null) return l10n.postLocationRequired;
+                    if (t.isNotEmpty && !config.postalCodeValidator(t)) return l10n.postCodeInvalid(codeLabel);
+                    return null;
+                  },
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: DropdownButtonFormField<String>(
-                initialValue: s.draft.state,
-                isExpanded: true,
-                decoration: InputDecoration(labelText: l10n.sellerState),
-                items: [for (final st in config.states) DropdownMenuItem(value: st, child: Text(st, overflow: TextOverflow.ellipsis))],
-                onChanged: (v) => _c.update((d) => d.copyWith(state: v)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  initialValue: s.draft.state,
+                  isExpanded: true,
+                  decoration: InputDecoration(labelText: l10n.sellerState),
+                  items: [
+                    for (final st in config.states)
+                      DropdownMenuItem(
+                        value: st,
+                        child: Text(st, overflow: TextOverflow.ellipsis),
+                      ),
+                  ],
+                  onChanged: (v) => _c.update((d) => d.copyWith(state: v)),
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _locality,
@@ -550,14 +577,19 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             Card(
               child: ListTile(
                 leading: const Icon(Icons.fact_check_outlined),
-                title: Text(_text.text.trim().isEmpty ? category.name(context.lang) : _text.text.trim(),
-                    maxLines: 2, overflow: TextOverflow.ellipsis),
-                subtitle: Text([
-                  category.name(context.lang),
-                  if (s.draft.budgetMin != null || s.draft.budgetMax != null)
-                    moneyRange(s.draft.budgetMin, s.draft.budgetMax),
-                  if (s.draft.neededBy != null) context.date(s.draft.neededBy!),
-                ].join(' · ')),
+                title: Text(
+                  _text.text.trim().isEmpty ? category.name(context.lang) : _text.text.trim(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  [
+                    category.name(context.lang),
+                    if (s.draft.budgetMin != null || s.draft.budgetMax != null)
+                      moneyRange(s.draft.budgetMin, s.draft.budgetMax),
+                    if (s.draft.neededBy != null) context.date(s.draft.neededBy!),
+                  ].join(' · '),
+                ),
               ),
             ),
         ],
@@ -573,16 +605,17 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: context.colors.secondaryContainer,
-          borderRadius: BorderRadius.circular(12),
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(color: context.colors.secondaryContainer, borderRadius: BorderRadius.circular(12)),
+    child: Row(
+      children: [
+        Icon(icon, size: 20, color: context.colors.onSecondaryContainer),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(text, style: TextStyle(color: context.colors.onSecondaryContainer)),
         ),
-        child: Row(children: [
-          Icon(icon, size: 20, color: context.colors.onSecondaryContainer),
-          const SizedBox(width: 8),
-          Expanded(child: Text(text, style: TextStyle(color: context.colors.onSecondaryContainer))),
-        ]),
-      );
+      ],
+    ),
+  );
 }

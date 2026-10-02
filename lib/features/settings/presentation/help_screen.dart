@@ -21,16 +21,21 @@ class HelpScreen extends ConsumerWidget {
     ];
     return Scaffold(
       appBar: AppBar(title: Text(l10n.helpTitle)),
-      body: ListView(children: [
-        for (final (q, a) in faqs)
-          ExpansionTile(title: Text(q), children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 16), child: Text(a))]),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.support_agent_rounded),
-          title: Text(l10n.contactSupport),
-          onTap: () => launchUrl(config.legalUrl('contact-support'), mode: LaunchMode.externalApplication),
-        ),
-      ]),
+      body: ListView(
+        children: [
+          for (final (q, a) in faqs)
+            ExpansionTile(
+              title: Text(q),
+              children: [Padding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 16), child: Text(a))],
+            ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.support_agent_rounded),
+            title: Text(l10n.contactSupport),
+            onTap: () => launchUrl(config.legalUrl('contact-support'), mode: LaunchMode.externalApplication),
+          ),
+        ],
+      ),
     );
   }
 }

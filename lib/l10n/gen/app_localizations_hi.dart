@@ -10,346 +10,341 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appTagline =>
-      'Tell shops what you want. Get quotes. Pick the best.';
+  String get appTagline => 'दुकानों को बताइए आपको क्या चाहिए। कोटेशन पाइए। सबसे अच्छा चुनिए।';
 
   @override
-  String get continueLabel => 'Continue';
+  String get continueLabel => 'आगे बढ़ें';
 
   @override
-  String get next => 'Next';
+  String get next => 'आगे';
 
   @override
-  String get back => 'Back';
+  String get back => 'वापस';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'रद्द करें';
 
   @override
-  String get save => 'Save';
+  String get save => 'सेव करें';
 
   @override
-  String get done => 'Done';
+  String get done => 'हो गया';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'बदलें';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'हटाएं';
 
   @override
-  String get retry => 'Retry';
+  String get retry => 'फिर से कोशिश करें';
 
   @override
-  String get close => 'Close';
+  String get close => 'बंद करें';
 
   @override
-  String get send => 'Send';
+  String get send => 'भेजें';
 
   @override
-  String get skip => 'Skip';
+  String get skip => 'छोड़ें';
 
   @override
-  String get yes => 'Yes';
+  String get yes => 'हां';
 
   @override
-  String get no => 'No';
+  String get no => 'नहीं';
 
   @override
-  String get optional => 'Optional';
+  String get optional => 'वैकल्पिक';
 
   @override
-  String get required => 'Required';
+  String get required => 'ज़रूरी';
 
   @override
-  String get loading => 'Loading…';
+  String get loading => 'लोड हो रहा है…';
 
   @override
-  String get somethingWentWrong => 'Something went wrong. Please try again.';
+  String get somethingWentWrong => 'कुछ गड़बड़ हो गई। कृपया फिर से कोशिश करें।';
 
   @override
-  String get offlineBanner => 'You\'re offline. Showing saved data.';
+  String get offlineBanner => 'आप ऑफ़लाइन हैं। सेव किया हुआ डेटा दिखाया जा रहा है।';
 
   @override
-  String get demoModeBanner => 'Demo mode: sample data, OTP 123456';
+  String get demoModeBanner => 'डेमो मोड: सैंपल डेटा, OTP 123456';
 
   @override
-  String get seeAll => 'See all';
+  String get seeAll => 'सभी देखें';
 
   @override
-  String get share => 'Share';
+  String get share => 'शेयर करें';
 
   @override
-  String get report => 'Report';
+  String get report => 'रिपोर्ट करें';
 
   @override
-  String get block => 'Block';
+  String get block => 'ब्लॉक करें';
 
   @override
-  String get unblock => 'Unblock';
+  String get unblock => 'अनब्लॉक करें';
 
   @override
-  String get call => 'Call';
+  String get call => 'कॉल करें';
 
   @override
-  String get chat => 'Chat';
+  String get chat => 'चैट';
 
   @override
-  String get languageTitle => 'Choose your language';
+  String get languageTitle => 'अपनी भाषा चुनें';
 
   @override
-  String get languageSubtitle => 'You can change this later in Settings.';
+  String get languageSubtitle => 'आप इसे बाद में सेटिंग्स में बदल सकते हैं।';
 
   @override
-  String get welcomeTitle => 'Get quotes from local shops';
+  String get welcomeTitle => 'आस-पास की दुकानों से कोटेशन पाएं';
 
   @override
-  String get welcomeBody1 => 'Post what you need in seconds.';
+  String get welcomeBody1 => 'कुछ ही सेकंड में बताएं आपको क्या चाहिए।';
 
   @override
-  String get welcomeBody2 => 'Shops and service pros send you prices.';
+  String get welcomeBody2 => 'दुकानें और सर्विस देने वाले आपको अपने दाम भेजते हैं।';
 
   @override
-  String get welcomeBody3 => 'Compare, chat and pick the best deal.';
+  String get welcomeBody3 => 'तुलना करें, चैट करें और सबसे अच्छी डील चुनें।';
 
   @override
-  String get signInPhone => 'Continue with phone';
+  String get signInPhone => 'फ़ोन नंबर से आगे बढ़ें';
 
   @override
-  String get signInGoogle => 'Continue with Google';
+  String get signInGoogle => 'Google से आगे बढ़ें';
 
   @override
-  String get signInApple => 'Sign in with Apple';
+  String get signInApple => 'Apple से साइन इन करें';
 
   @override
   String signInLegal(String terms, String privacy) {
-    return 'By continuing you agree to our $terms and $privacy.';
+    return 'आगे बढ़कर आप हमारी $terms और $privacy से सहमत होते हैं।';
   }
 
   @override
-  String get termsLink => 'Terms of Service';
+  String get termsLink => 'सेवा की शर्तें';
 
   @override
-  String get privacyLink => 'Privacy Policy';
+  String get privacyLink => 'प्राइवेसी पॉलिसी';
 
   @override
-  String get phoneTitle => 'Your mobile number';
+  String get phoneTitle => 'आपका मोबाइल नंबर';
 
   @override
-  String get phoneSubtitle => 'We\'ll send a one-time code by SMS.';
+  String get phoneSubtitle => 'हम SMS से एक बार इस्तेमाल होने वाला कोड भेजेंगे।';
 
   @override
-  String get phoneLabel => 'Mobile number';
+  String get phoneLabel => 'मोबाइल नंबर';
 
   @override
-  String get phoneInvalid => 'Enter a valid mobile number';
+  String get phoneInvalid => 'सही मोबाइल नंबर डालें';
 
   @override
-  String get sendCode => 'Send code';
+  String get sendCode => 'कोड भेजें';
 
   @override
-  String get otpTitle => 'Enter the code';
+  String get otpTitle => 'कोड डालें';
 
   @override
   String otpSubtitle(String phone) {
-    return 'Sent to $phone';
+    return '$phone पर भेजा गया';
   }
 
   @override
-  String get otpLabel => '6-digit code';
+  String get otpLabel => '6 अंकों का कोड';
 
   @override
-  String get otpInvalid => 'That code didn\'t work. Check it and try again.';
+  String get otpInvalid => 'यह कोड काम नहीं किया। जांचकर फिर से कोशिश करें।';
 
   @override
-  String get verify => 'Verify';
+  String get verify => 'वेरिफ़ाई करें';
 
   @override
-  String get resendCode => 'Resend code';
+  String get resendCode => 'कोड दोबारा भेजें';
 
   @override
   String resendIn(int seconds) {
-    return 'Resend in ${seconds}s';
+    return '$seconds सेकंड में दोबारा भेजें';
   }
 
   @override
-  String get authFailed => 'Sign-in failed. Please try again.';
+  String get authFailed => 'साइन इन नहीं हो पाया। कृपया फिर से कोशिश करें।';
 
   @override
-  String get authCancelled => 'Sign-in was cancelled.';
+  String get authCancelled => 'साइन इन रद्द कर दिया गया।';
 
   @override
-  String get otpRateLimited => 'Too many attempts. Please wait a few minutes.';
+  String get otpRateLimited => 'बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट रुकें।';
 
   @override
-  String get consentTitle => 'Before you start';
+  String get consentTitle => 'शुरू करने से पहले';
 
   @override
   String consentAccept(String terms, String privacy) {
-    return 'I agree to the $terms and $privacy';
+    return 'मैं $terms और $privacy से सहमत हूं';
   }
 
   @override
-  String get consentMarketing => 'Send me offers and tips (optional)';
+  String get consentMarketing => 'मुझे ऑफ़र और टिप्स भेजें (वैकल्पिक)';
 
   @override
-  String get consentAnalytics =>
-      'Help improve the app with anonymous usage data (optional)';
+  String get consentAnalytics => 'बिना पहचान वाले इस्तेमाल के डेटा से app को बेहतर बनाने में मदद करें (वैकल्पिक)';
 
   @override
   String consentAge(int age) {
-    return 'I am $age or older';
+    return 'मेरी उम्र $age साल या उससे ज़्यादा है';
   }
 
   @override
-  String get profileSetupTitle => 'What should we call you?';
+  String get profileSetupTitle => 'हम आपको किस नाम से बुलाएं?';
 
   @override
-  String get nameLabel => 'Your name';
+  String get nameLabel => 'आपका नाम';
 
   @override
-  String get nameRequired => 'Please enter your name';
+  String get nameRequired => 'कृपया अपना नाम डालें';
 
   @override
-  String get addPhoneTitle => 'Add your mobile number';
+  String get addPhoneTitle => 'अपना मोबाइल नंबर जोड़ें';
 
   @override
   String get addPhoneBody =>
-      'Sellers need a verified phone number. Buyers can add one to get SMS updates.';
+      'सेलर्स के लिए वेरिफ़ाइड फ़ोन नंबर ज़रूरी है। खरीदार SMS अपडेट पाने के लिए नंबर जोड़ सकते हैं।';
 
   @override
-  String get modeBuyer => 'Buying';
+  String get modeBuyer => 'खरीदारी';
 
   @override
-  String get modeSeller => 'Selling';
+  String get modeSeller => 'बिक्री';
 
   @override
-  String get switchToSelling => 'Switch to selling';
+  String get switchToSelling => 'बिक्री पर जाएं';
 
   @override
-  String get switchToBuying => 'Switch to buying';
+  String get switchToBuying => 'खरीदारी पर जाएं';
 
   @override
-  String get becomeSeller => 'I\'m a business';
+  String get becomeSeller => 'मेरा बिज़नेस है';
 
   @override
-  String get becomeSellerBody =>
-      'Get leads from buyers near you and send quotes. Free for founding partners.';
+  String get becomeSellerBody => 'आस-पास के खरीदारों से लीड पाएं और कोटेशन भेजें। फ़ाउंडिंग पार्टनर्स के लिए मुफ़्त।';
 
   @override
-  String get tabHome => 'Home';
+  String get tabHome => 'होम';
 
   @override
-  String get tabRequests => 'My requests';
+  String get tabRequests => 'मेरी रिक्वेस्ट';
 
   @override
-  String get tabChats => 'Chats';
+  String get tabChats => 'चैट';
 
   @override
-  String get tabAccount => 'Account';
+  String get tabAccount => 'अकाउंट';
 
   @override
-  String get tabLeads => 'Leads';
+  String get tabLeads => 'लीड';
 
   @override
-  String get tabMyQuotes => 'My quotes';
+  String get tabMyQuotes => 'मेरे कोटेशन';
 
   @override
-  String get tabDashboard => 'Dashboard';
+  String get tabDashboard => 'डैशबोर्ड';
 
   @override
   String homeGreeting(String name) {
-    return 'Hi $name';
+    return 'नमस्ते $name';
   }
 
   @override
-  String get homeGreetingAnon => 'Hi there';
+  String get homeGreetingAnon => 'नमस्ते';
 
   @override
-  String get whatDoYouNeed => 'What do you need?';
+  String get whatDoYouNeed => 'आपको क्या चाहिए?';
 
   @override
-  String get whatDoYouNeedHint =>
-      'e.g. Double-door fridge, delivered by Friday';
+  String get whatDoYouNeedHint => 'जैसे: डबल-डोर फ्रिज, शुक्रवार तक डिलीवरी';
 
   @override
-  String get activeRequests => 'Your active requests';
+  String get activeRequests => 'आपकी चालू रिक्वेस्ट';
 
   @override
-  String get browseCategories => 'Popular categories';
+  String get browseCategories => 'लोकप्रिय कैटेगरी';
 
   @override
-  String get howItWorks => 'How it works';
+  String get howItWorks => 'यह कैसे काम करता है';
 
   @override
   String get noActiveRequests =>
-      'Nothing posted yet. Tell local shops what you want and get quotes.';
+      'अभी तक कुछ पोस्ट नहीं किया। आस-पास की दुकानों को बताइए आपको क्या चाहिए और कोटेशन पाइए।';
 
   @override
-  String get postTitle => 'New request';
+  String get postTitle => 'नई रिक्वेस्ट';
 
   @override
-  String get postStepWhat => 'What';
+  String get postStepWhat => 'क्या';
 
   @override
-  String get postStepDetails => 'Details';
+  String get postStepDetails => 'जानकारी';
 
   @override
-  String get postStepWhere => 'When and where';
+  String get postStepWhere => 'कब और कहां';
 
   @override
-  String get postDescribeHint =>
-      'Describe what you want. Brand, size, quantity…';
+  String get postDescribeHint => 'बताइए आपको क्या चाहिए। ब्रांड, साइज़, मात्रा…';
 
   @override
-  String get postSpeak => 'Speak';
+  String get postSpeak => 'बोलें';
 
   @override
-  String get postListening => 'Listening…';
+  String get postListening => 'सुन रहे हैं…';
 
   @override
-  String get postSuggestedCategory => 'Suggested category';
+  String get postSuggestedCategory => 'सुझाई गई कैटेगरी';
 
   @override
-  String get postPickCategory => 'Pick a category';
+  String get postPickCategory => 'कैटेगरी चुनें';
 
   @override
-  String get postChangeCategory => 'Change';
+  String get postChangeCategory => 'बदलें';
 
   @override
-  String get postAddPhotos => 'Add photos';
+  String get postAddPhotos => 'फ़ोटो जोड़ें';
 
   @override
   String postPhotosCount(int count) {
-    return '$count/6 photos';
+    return '$count/6 फ़ोटो';
   }
 
   @override
-  String get postReferenceLink => 'Reference link (product page)';
+  String get postReferenceLink => 'रेफ़रेंस लिंक (प्रोडक्ट पेज)';
 
   @override
-  String get postBudget => 'Budget';
+  String get postBudget => 'बजट';
 
   @override
-  String get postBudgetMin => 'From';
+  String get postBudgetMin => 'से';
 
   @override
-  String get postBudgetMax => 'To';
+  String get postBudgetMax => 'तक';
 
   @override
-  String get postBudgetHidden => 'Hide my budget from sellers';
+  String get postBudgetHidden => 'मेरा बजट सेलर्स से छिपाएं';
 
   @override
-  String get postNeededBy => 'Needed by';
+  String get postNeededBy => 'कब तक चाहिए';
 
   @override
-  String get postPickDate => 'Pick a date';
+  String get postPickDate => 'तारीख चुनें';
 
   @override
-  String get postLocation => 'Delivery or service location';
+  String get postLocation => 'डिलीवरी या सर्विस की जगह';
 
   @override
-  String get postUseGps => 'Use my location';
+  String get postUseGps => 'मेरी लोकेशन इस्तेमाल करें';
 
   @override
   String postPostalCode(String codeLabel) {
@@ -357,247 +352,237 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get postLocality => 'Area / locality';
+  String get postLocality => 'इलाका / मोहल्ला';
 
   @override
-  String get postFullAddress =>
-      'Full address (shared only with the seller you accept)';
+  String get postFullAddress => 'पूरा पता (सिर्फ़ उसी सेलर को दिखेगा जिसका कोटेशन आप स्वीकार करेंगे)';
 
   @override
-  String get postQuoteWindow => 'Accept quotes for';
+  String get postQuoteWindow => 'कोटेशन कब तक लें';
 
   @override
-  String get quoteWindow24h => '24 hours';
+  String get quoteWindow24h => '24 घंटे';
 
   @override
-  String get quoteWindow48h => '48 hours';
+  String get quoteWindow48h => '48 घंटे';
 
   @override
-  String get quoteWindow7d => '7 days';
+  String get quoteWindow7d => '7 दिन';
 
   @override
-  String get postWhoCanQuote => 'Who can quote';
+  String get postWhoCanQuote => 'कौन कोटेशन भेज सकता है';
 
   @override
-  String get audienceLocal => 'Local shops';
+  String get audienceLocal => 'आस-पास की दुकानें';
 
   @override
-  String get audienceOnline => 'Online sellers';
+  String get audienceOnline => 'ऑनलाइन सेलर्स';
 
   @override
-  String get audienceBoth => 'Both';
+  String get audienceBoth => 'दोनों';
 
   @override
-  String get postReview => 'Review and post';
+  String get postReview => 'जांचें और पोस्ट करें';
 
   @override
-  String get postSubmit => 'Post request';
+  String get postSubmit => 'रिक्वेस्ट पोस्ट करें';
 
   @override
-  String get postSuccessTitle => 'Request posted';
+  String get postSuccessTitle => 'रिक्वेस्ट पोस्ट हो गई';
 
   @override
   String postSuccessBody(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'We\'ve notified $count sellers near you.',
-      one: 'We\'ve notified 1 seller near you.',
-      zero: 'We\'ll notify sellers as they join your area.',
+      other: 'हमने आपके पास के $count सेलर्स को बता दिया है।',
+      one: 'हमने आपके पास के 1 सेलर को बता दिया है।',
+      zero: 'आपके इलाके में सेलर्स जुड़ते ही हम उन्हें बता देंगे।',
     );
     return '$_temp0';
   }
 
   @override
   String postBlockedCategory(String category, String reason) {
-    return 'We can\'t take requests for $category in this app. $reason';
+    return 'इस app में $category के लिए रिक्वेस्ट नहीं ली जा सकती। $reason';
   }
 
   @override
-  String get postBlockedReason =>
-      'This category is regulated and isn\'t allowed here.';
+  String get postBlockedReason => 'यह कैटेगरी नियमों के दायरे में है और यहां इसकी अनुमति नहीं है।';
 
   @override
-  String get postRestrictedNotice =>
-      'Only licensed sellers can quote in this category.';
+  String get postRestrictedNotice => 'इस कैटेगरी में सिर्फ़ लाइसेंस वाले सेलर्स ही कोटेशन भेज सकते हैं।';
 
   @override
-  String get postRateLimited =>
-      'You\'ve reached today\'s limit for new requests. Try again tomorrow.';
+  String get postRateLimited => 'आज की नई रिक्वेस्ट की सीमा पूरी हो गई है। कल फिर कोशिश करें।';
 
   @override
-  String get postDuplicate =>
-      'You already posted this request in the last 24 hours.';
+  String get postDuplicate => 'आप पिछले 24 घंटों में यह रिक्वेस्ट पहले ही पोस्ट कर चुके हैं।';
 
   @override
-  String get postDescribeRequired => 'Tell sellers what you need';
+  String get postDescribeRequired => 'सेलर्स को बताइए आपको क्या चाहिए';
 
   @override
-  String get postCategoryRequired => 'Pick a category';
+  String get postCategoryRequired => 'कैटेगरी चुनें';
 
   @override
-  String get postLocationRequired => 'Add a location';
+  String get postLocationRequired => 'लोकेशन जोड़ें';
 
   @override
   String postCodeInvalid(String codeLabel) {
-    return 'Enter a valid $codeLabel';
+    return 'सही $codeLabel डालें';
   }
 
   @override
-  String get postalCodeLabelIndia => 'PIN code';
+  String get postalCodeLabelIndia => 'पिन कोड';
 
   @override
-  String get postalCodeLabelUsa => 'ZIP code';
+  String get postalCodeLabelUsa => 'ZIP कोड';
 
   @override
-  String get requestsOpen => 'Open';
+  String get requestsOpen => 'खुली';
 
   @override
-  String get requestsAwarded => 'Awarded';
+  String get requestsAwarded => 'तय हुई';
 
   @override
-  String get requestsPast => 'Past';
+  String get requestsPast => 'पुरानी';
 
   @override
-  String get requestsEmptyOpen =>
-      'No open requests. Post one and get quotes from local shops.';
+  String get requestsEmptyOpen => 'कोई खुली रिक्वेस्ट नहीं है। एक पोस्ट करें और आस-पास की दुकानों से कोटेशन पाएं।';
 
   @override
-  String get requestsEmptyAwarded =>
-      'Requests where you accepted a quote show up here.';
+  String get requestsEmptyAwarded => 'जिन रिक्वेस्ट पर आपने कोटेशन स्वीकार किया है, वे यहां दिखेंगी।';
 
   @override
-  String get requestsEmptyPast =>
-      'Expired and cancelled requests show up here.';
+  String get requestsEmptyPast => 'खत्म हुई और रद्द की गई रिक्वेस्ट यहां दिखेंगी।';
 
   @override
   String quotesCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count quotes',
-      one: '1 quote',
-      zero: 'No quotes yet',
+      other: '$count कोटेशन',
+      one: '1 कोटेशन',
+      zero: 'अभी कोई कोटेशन नहीं',
     );
     return '$_temp0';
   }
 
   @override
   String quotesOfMax(int count, int max) {
-    return '$count of $max quotes';
+    return '$max में से $count कोटेशन';
   }
 
   @override
   String closesIn(String time) {
-    return 'Closes in $time';
+    return '$time में बंद होगी';
   }
 
   @override
-  String get closed => 'Closed';
+  String get closed => 'बंद';
 
   @override
-  String get statusOpen => 'Open';
+  String get statusOpen => 'खुली';
 
   @override
-  String get statusAwarded => 'Awarded';
+  String get statusAwarded => 'तय हुई';
 
   @override
-  String get statusClosed => 'Closed';
+  String get statusClosed => 'बंद';
 
   @override
-  String get statusExpired => 'Expired';
+  String get statusExpired => 'समय खत्म';
 
   @override
-  String get statusCancelled => 'Cancelled';
+  String get statusCancelled => 'रद्द';
 
   @override
-  String get noQuotesYet =>
-      'No quotes yet. Sellers usually respond within 2 hours.';
+  String get noQuotesYet => 'अभी कोई कोटेशन नहीं आया। सेलर्स आमतौर पर 2 घंटे में जवाब देते हैं।';
 
   @override
-  String get cancelRequest => 'Cancel request';
+  String get cancelRequest => 'रिक्वेस्ट रद्द करें';
 
   @override
-  String get cancelRequestConfirm =>
-      'Cancel this request? Sellers won\'t be able to quote any more.';
+  String get cancelRequestConfirm => 'यह रिक्वेस्ट रद्द करें? इसके बाद सेलर्स कोटेशन नहीं भेज पाएंगे।';
 
   @override
-  String get shareRequest => 'Share request';
+  String get shareRequest => 'रिक्वेस्ट शेयर करें';
 
   @override
-  String get shareRequestWhatsapp => 'Ask friends on WhatsApp';
+  String get shareRequestWhatsapp => 'WhatsApp पर दोस्तों से पूछें';
 
   @override
   String shareRequestText(String link) {
-    return 'Which one should I pick? $link';
+    return 'मुझे कौन-सा चुनना चाहिए? $link';
   }
 
   @override
-  String get compare => 'Compare';
+  String get compare => 'तुलना करें';
 
   @override
-  String get compareSelect => 'Select up to 3 quotes to compare';
+  String get compareSelect => 'तुलना के लिए 3 तक कोटेशन चुनें';
 
   @override
-  String get sortBy => 'Sort by';
+  String get sortBy => 'इसके हिसाब से लगाएं';
 
   @override
-  String get sortPrice => 'Price';
+  String get sortPrice => 'दाम';
 
   @override
-  String get sortRating => 'Rating';
+  String get sortRating => 'रेटिंग';
 
   @override
-  String get sortDelivery => 'Delivery date';
+  String get sortDelivery => 'डिलीवरी की तारीख';
 
   @override
-  String get sortDistance => 'Distance';
+  String get sortDistance => 'दूरी';
 
   @override
-  String get quoteTotal => 'Total';
+  String get quoteTotal => 'कुल';
 
   @override
-  String get quoteSubtotal => 'Subtotal';
+  String get quoteSubtotal => 'उप-योग';
 
   @override
-  String get quoteTax => 'Tax';
+  String get quoteTax => 'टैक्स';
 
   @override
-  String get quoteDelivery => 'Delivery / installation';
+  String get quoteDelivery => 'डिलीवरी / इंस्टॉलेशन';
 
   @override
-  String get quoteFreeDelivery => 'Free';
+  String get quoteFreeDelivery => 'मुफ़्त';
 
   @override
-  String get quoteOffered => 'Offered';
+  String get quoteOffered => 'ऑफ़र किया गया';
 
   @override
-  String get quoteDeliveryDate => 'Delivery date';
+  String get quoteDeliveryDate => 'डिलीवरी की तारीख';
 
   @override
-  String get quoteWarranty => 'Warranty';
+  String get quoteWarranty => 'वारंटी';
 
   @override
   String quoteValidUntil(String date) {
-    return 'Valid until $date';
+    return '$date तक मान्य';
   }
 
   @override
-  String get quoteNotes => 'Notes';
+  String get quoteNotes => 'नोट्स';
 
   @override
   String quoteResponseTime(String time) {
-    return 'Replied in $time';
+    return '$time में जवाब दिया';
   }
 
   @override
-  String get quoteVerified => 'Verified';
+  String get quoteVerified => 'वेरिफ़ाइड';
 
   @override
-  String get quoteFoundingPartner => 'Founding partner';
+  String get quoteFoundingPartner => 'फ़ाउंडिंग पार्टनर';
 
   @override
-  String get quoteNew => 'New';
+  String get quoteNew => 'नया';
 
   @override
   String gstIntra(String rate) {
@@ -611,743 +596,724 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String salesTax(String rate) {
-    return 'Sales tax $rate%';
+    return 'सेल्स टैक्स $rate%';
   }
 
   @override
-  String get taxIncludedNote => 'Prices include GST';
+  String get taxIncludedNote => 'दामों में GST शामिल है';
 
   @override
-  String get salesTaxNote => 'Sales tax may apply';
+  String get salesTaxNote => 'सेल्स टैक्स लग सकता है';
 
   @override
-  String get accept => 'Accept';
+  String get accept => 'स्वीकार करें';
 
   @override
-  String get decline => 'Decline';
+  String get decline => 'मना करें';
 
   @override
-  String get shortlist => 'Shortlist';
+  String get shortlist => 'शॉर्टलिस्ट करें';
 
   @override
-  String get shortlisted => 'Shortlisted';
+  String get shortlisted => 'शॉर्टलिस्ट किया';
 
   @override
-  String get counterOffer => 'Ask for a better price';
+  String get counterOffer => 'कम दाम के लिए पूछें';
 
   @override
-  String get counterOfferTitle => 'Request a revised quote';
+  String get counterOfferTitle => 'नया कोटेशन मांगें';
 
   @override
-  String get counterOfferTarget => 'Your target price';
+  String get counterOfferTarget => 'आपका पसंदीदा दाम';
 
   @override
-  String get counterOfferNote => 'Message to the seller';
+  String get counterOfferNote => 'सेलर के लिए मैसेज';
 
   @override
-  String get counterOfferSent => 'Sent. The seller can revise the quote.';
+  String get counterOfferSent => 'भेज दिया। सेलर कोटेशन बदल सकता है।';
 
   @override
   String counterOfferFrom(String price) {
-    return 'Buyer asked for $price';
+    return 'खरीदार ने $price मांगा';
   }
 
   @override
-  String get acceptConfirmTitle => 'Accept this quote?';
+  String get acceptConfirmTitle => 'यह कोटेशन स्वीकार करें?';
 
   @override
   String acceptConfirmBody(String seller) {
-    return '$seller will get your contact details and address. Other sellers will be told politely that you chose another offer.';
+    return '$seller को आपका संपर्क और पता मिल जाएगा। बाकी सेलर्स को विनम्रता से बता दिया जाएगा कि आपने दूसरा ऑफ़र चुना है।';
   }
 
   @override
-  String get acceptedTitle => 'Quote accepted';
+  String get acceptedTitle => 'कोटेशन स्वीकार हो गया';
 
   @override
   String acceptedBody(String seller) {
-    return '$seller has been notified. You can call or chat with them now.';
+    return '$seller को बता दिया गया है। अब आप उनसे कॉल या चैट कर सकते हैं।';
   }
 
   @override
-  String get declineTitle => 'Decline quote';
+  String get declineTitle => 'कोटेशन मना करें';
 
   @override
-  String get declineReason => 'Reason (optional, shared with the seller)';
+  String get declineReason => 'वजह (वैकल्पिक, सेलर को दिखेगी)';
 
   @override
-  String get declineReasonPrice => 'Price too high';
+  String get declineReasonPrice => 'दाम बहुत ज़्यादा है';
 
   @override
-  String get declineReasonDelivery => 'Delivery too late';
+  String get declineReasonDelivery => 'डिलीवरी बहुत देर से है';
 
   @override
-  String get declineReasonOther => 'Chose another offer';
+  String get declineReasonOther => 'दूसरा ऑफ़र चुना';
 
   @override
-  String get quoteStatusSent => 'Sent';
+  String get quoteStatusSent => 'भेजा गया';
 
   @override
-  String get quoteStatusRevised => 'Revised';
+  String get quoteStatusRevised => 'बदला गया';
 
   @override
-  String get quoteStatusShortlisted => 'Shortlisted';
+  String get quoteStatusShortlisted => 'शॉर्टलिस्ट किया';
 
   @override
-  String get quoteStatusDeclined => 'Declined';
+  String get quoteStatusDeclined => 'मना किया';
 
   @override
-  String get quoteStatusAccepted => 'Accepted';
+  String get quoteStatusAccepted => 'स्वीकार किया';
 
   @override
-  String get quoteStatusWithdrawn => 'Withdrawn';
+  String get quoteStatusWithdrawn => 'वापस लिया';
 
   @override
-  String get quoteStatusExpired => 'Expired';
+  String get quoteStatusExpired => 'समय खत्म';
 
   @override
-  String get orderTitle => 'Order';
+  String get orderTitle => 'ऑर्डर';
 
   @override
-  String get ordersTitle => 'Orders';
+  String get ordersTitle => 'ऑर्डर';
 
   @override
-  String get orderTimeline => 'Progress';
+  String get orderTimeline => 'प्रगति';
 
   @override
-  String get orderStatusAccepted => 'Accepted';
+  String get orderStatusAccepted => 'स्वीकार किया';
 
   @override
-  String get orderStatusScheduled => 'Scheduled';
+  String get orderStatusScheduled => 'समय तय';
 
   @override
-  String get orderStatusDispatched => 'Dispatched';
+  String get orderStatusDispatched => 'भेज दिया गया';
 
   @override
-  String get orderStatusDelivered => 'Delivered';
+  String get orderStatusDelivered => 'डिलीवर हो गया';
 
   @override
-  String get orderStatusCompleted => 'Completed';
+  String get orderStatusCompleted => 'पूरा हुआ';
 
   @override
-  String get orderStatusCancelled => 'Cancelled';
+  String get orderStatusCancelled => 'रद्द';
 
   @override
   String orderMarkAs(String status) {
-    return 'Mark as $status';
+    return '$status मार्क करें';
   }
 
   @override
-  String get orderContact => 'Contact';
+  String get orderContact => 'संपर्क';
 
   @override
-  String get orderAddress => 'Address';
+  String get orderAddress => 'पता';
 
   @override
-  String get orderPayment => 'Payment';
+  String get orderPayment => 'पेमेंट';
 
   @override
-  String get orderPaymentOffPlatform =>
-      'Pay the seller directly. Record it here for your records.';
+  String get orderPaymentOffPlatform => 'सेलर को सीधे पेमेंट करें। अपने रिकॉर्ड के लिए इसे यहां दर्ज करें।';
 
   @override
-  String get orderRecordPayment => 'Record payment';
+  String get orderRecordPayment => 'पेमेंट दर्ज करें';
 
   @override
   String orderPaymentRecorded(String amount, String method) {
-    return '$amount paid by $method';
+    return '$method से $amount का पेमेंट हुआ';
   }
 
   @override
   String get paymentMethodUpi => 'UPI';
 
   @override
-  String get paymentMethodCash => 'Cash';
+  String get paymentMethodCash => 'कैश';
 
   @override
-  String get paymentMethodCard => 'Card';
+  String get paymentMethodCard => 'कार्ड';
 
   @override
-  String get paymentMethodBankTransfer => 'Bank transfer';
+  String get paymentMethodBankTransfer => 'बैंक ट्रांसफ़र';
 
   @override
-  String get paymentMethodSellerLink => 'Seller\'s payment link';
+  String get paymentMethodSellerLink => 'सेलर का पेमेंट लिंक';
 
   @override
   String get paymentMethodZelle => 'Zelle';
 
   @override
-  String get paymentMethodCheck => 'Check';
+  String get paymentMethodCheck => 'चेक';
 
   @override
-  String get rateSeller => 'Rate the seller';
+  String get rateSeller => 'सेलर को रेटिंग दें';
 
   @override
-  String get rateBuyer => 'Rate the buyer';
+  String get rateBuyer => 'खरीदार को रेटिंग दें';
 
   @override
-  String get reviewTitle => 'How did it go?';
+  String get reviewTitle => 'आपका अनुभव कैसा रहा?';
 
   @override
-  String get reviewTextHint => 'Tell others about your experience';
+  String get reviewTextHint => 'दूसरों को अपने अनुभव के बारे में बताएं';
 
   @override
-  String get reviewSubmit => 'Submit review';
+  String get reviewSubmit => 'रिव्यू भेजें';
 
   @override
-  String get reviewThanks => 'Thanks for your review!';
+  String get reviewThanks => 'आपके रिव्यू के लिए धन्यवाद!';
 
   @override
-  String get reviewTagOnTime => 'On time';
+  String get reviewTagOnTime => 'समय पर';
 
   @override
-  String get reviewTagGoodPrice => 'Good price';
+  String get reviewTagGoodPrice => 'अच्छा दाम';
 
   @override
-  String get reviewTagProfessional => 'Professional';
+  String get reviewTagProfessional => 'प्रोफ़ेशनल';
 
   @override
-  String get reviewTagQuality => 'Great quality';
+  String get reviewTagQuality => 'बढ़िया क्वालिटी';
 
   @override
-  String get reviewTagResponsive => 'Responsive';
+  String get reviewTagResponsive => 'जल्दी जवाब';
 
   @override
-  String get reviewReply => 'Reply publicly';
+  String get reviewReply => 'सबके सामने जवाब दें';
 
   @override
-  String get reviewSellerReply => 'Response from the seller';
+  String get reviewSellerReply => 'सेलर का जवाब';
 
   @override
-  String get reviewsTitle => 'Reviews';
+  String get reviewsTitle => 'रिव्यू';
 
   @override
-  String get reviewsEmpty => 'No reviews yet.';
+  String get reviewsEmpty => 'अभी तक कोई रिव्यू नहीं।';
 
   @override
-  String get chatsTitle => 'Chats';
+  String get chatsTitle => 'चैट';
 
   @override
-  String get chatsEmpty =>
-      'Chats with sellers about your requests show up here.';
+  String get chatsEmpty => 'आपकी रिक्वेस्ट के बारे में सेलर्स के साथ चैट यहां दिखेंगी।';
 
   @override
-  String get chatHint => 'Message';
+  String get chatHint => 'मैसेज';
 
   @override
-  String get chatContactWarning =>
-      'For your safety, keep contact details in the app until you accept a quote.';
+  String get chatContactWarning => 'आपकी सुरक्षा के लिए, कोटेशन स्वीकार करने तक संपर्क की बातें app में ही रखें।';
 
   @override
   String chatAboutRequest(String title) {
-    return 'About: $title';
+    return 'इसके बारे में: $title';
   }
 
   @override
-  String get chatRead => 'Read';
+  String get chatRead => 'पढ़ लिया';
 
   @override
-  String get chatTyping => 'typing…';
+  String get chatTyping => 'टाइप कर रहे हैं…';
 
   @override
-  String get chatFailed => 'Not sent. Tap to retry.';
+  String get chatFailed => 'नहीं भेजा गया। दोबारा भेजने के लिए टैप करें।';
 
   @override
-  String get chatPhoto => 'Photo';
+  String get chatPhoto => 'फ़ोटो';
 
   @override
-  String get notificationsTitle => 'Notifications';
+  String get notificationsTitle => 'नोटिफ़िकेशन';
 
   @override
-  String get notificationsEmpty => 'You\'re all caught up.';
+  String get notificationsEmpty => 'कोई नया नोटिफ़िकेशन नहीं है।';
 
   @override
-  String get markAllRead => 'Mark all read';
+  String get markAllRead => 'सभी को पढ़ा हुआ मार्क करें';
 
   @override
   String notifNewQuote(String seller) {
-    return 'New quote from $seller';
+    return '$seller से नया कोटेशन';
   }
 
   @override
-  String get notifQuoteRevised => 'A seller revised their quote';
+  String get notifQuoteRevised => 'एक सेलर ने अपना कोटेशन बदला';
 
   @override
-  String get notifMessage => 'New message';
+  String get notifMessage => 'नया मैसेज';
 
   @override
   String notifNewRequest(String title) {
-    return 'New request: $title';
+    return 'नई रिक्वेस्ट: $title';
   }
 
   @override
-  String get notifQuoteAccepted => 'Your quote was accepted!';
+  String get notifQuoteAccepted => 'आपका कोटेशन स्वीकार हो गया!';
 
   @override
-  String get notifQuoteDeclined => 'A buyer chose another offer';
+  String get notifQuoteDeclined => 'एक खरीदार ने दूसरा ऑफ़र चुना';
 
   @override
-  String get notifQuoteShortlisted => 'A buyer shortlisted your quote';
+  String get notifQuoteShortlisted => 'एक खरीदार ने आपका कोटेशन शॉर्टलिस्ट किया';
 
   @override
-  String get notifCounterOffer => 'A buyer asked for a better price';
+  String get notifCounterOffer => 'एक खरीदार ने कम दाम के लिए पूछा';
 
   @override
-  String get notifOrderStatus => 'Order update';
+  String get notifOrderStatus => 'ऑर्डर अपडेट';
 
   @override
-  String get notifGeneric => 'Update';
+  String get notifGeneric => 'अपडेट';
 
   @override
-  String get sellerOnboardingTitle => 'Set up your business';
+  String get sellerOnboardingTitle => 'अपना बिज़नेस सेट करें';
 
   @override
-  String get sellerStepBusiness => 'Business';
+  String get sellerStepBusiness => 'बिज़नेस';
 
   @override
-  String get sellerStepCategories => 'What you sell';
+  String get sellerStepCategories => 'आप क्या बेचते हैं';
 
   @override
-  String get sellerStepArea => 'Service area';
+  String get sellerStepArea => 'सर्विस एरिया';
 
   @override
-  String get sellerStepNotify => 'Alerts';
+  String get sellerStepNotify => 'अलर्ट';
 
   @override
-  String get businessName => 'Business name';
+  String get businessName => 'बिज़नेस का नाम';
 
   @override
-  String get businessDescription => 'About your business';
+  String get businessDescription => 'आपके बिज़नेस के बारे में';
 
   @override
-  String get yearsInBusiness => 'Years in business';
+  String get yearsInBusiness => 'बिज़नेस में कितने साल';
 
   @override
-  String get brandsCarried => 'Brands you carry (comma separated)';
+  String get brandsCarried => 'आपके पास कौन-से ब्रांड हैं (कॉमा से अलग करें)';
 
   @override
-  String get addLogo => 'Add logo';
+  String get addLogo => 'लोगो जोड़ें';
 
   @override
-  String get addShopPhotos => 'Add shop photos';
+  String get addShopPhotos => 'दुकान की फ़ोटो जोड़ें';
 
   @override
-  String get selectCategories => 'Select the categories you can quote for';
+  String get selectCategories => 'वे कैटेगरी चुनें जिनके लिए आप कोटेशन दे सकते हैं';
 
   @override
-  String get categoriesRequired => 'Select at least one category';
+  String get categoriesRequired => 'कम से कम एक कैटेगरी चुनें';
 
   @override
-  String get areaRadius => 'Radius around my shop';
+  String get areaRadius => 'मेरी दुकान के आस-पास की दूरी';
 
   @override
   String areaCodes(String codeLabel) {
-    return 'List of ${codeLabel}s';
+    return '$codeLabel की लिस्ट';
   }
 
   @override
-  String get areaNationwide => 'Ship nationwide';
+  String get areaNationwide => 'पूरे देश में डिलीवरी';
 
   @override
   String radiusValue(int value) {
-    return '$value km';
+    return '$value किमी';
   }
 
   @override
   String radiusValueMiles(int value) {
-    return '$value mi';
+    return '$value मील';
   }
 
   @override
-  String get shopLocation => 'Shop location';
+  String get shopLocation => 'दुकान की लोकेशन';
 
   @override
   String serviceCodesHint(String example) {
-    return 'Comma separated, e.g. $example';
+    return 'कॉमा से अलग करें, जैसे $example';
   }
 
   @override
-  String get sellerState => 'State';
+  String get sellerState => 'राज्य';
 
   @override
-  String get notifyInstant => 'Instant alerts';
+  String get notifyInstant => 'तुरंत अलर्ट';
 
   @override
-  String get notifyHourly => 'Hourly digest';
+  String get notifyHourly => 'हर घंटे का सारांश';
 
   @override
-  String get notifyQuiet => 'Quiet hours';
+  String get notifyQuiet => 'शांत समय';
 
   @override
   String quietHoursRange(String start, String end) {
-    return 'Quiet from $start to $end';
+    return '$start से $end तक शांत';
   }
 
   @override
-  String get sellerProfileSaved =>
-      'Your business is live. New leads will show up in your feed.';
+  String get sellerProfileSaved => 'आपका बिज़नेस लाइव हो गया है। नई लीड आपकी फ़ीड में दिखेंगी।';
 
   @override
   String foundingPartnerBadge(String date) {
-    return 'Founding partner: free until $date';
+    return 'फ़ाउंडिंग पार्टनर: $date तक मुफ़्त';
   }
 
   @override
-  String get verificationTitle => 'Get verified';
+  String get verificationTitle => 'वेरिफ़ाइड बनें';
 
   @override
-  String get verificationBody =>
-      'Verified sellers get a badge and see new requests first.';
+  String get verificationBody => 'वेरिफ़ाइड सेलर्स को बैज मिलता है और वे नई रिक्वेस्ट सबसे पहले देखते हैं।';
 
   @override
-  String get verificationStatusNone => 'Not verified';
+  String get verificationStatusNone => 'वेरिफ़ाइड नहीं';
 
   @override
-  String get verificationStatusPending => 'Under review';
+  String get verificationStatusPending => 'जांच चल रही है';
 
   @override
-  String get verificationStatusVerified => 'Verified';
+  String get verificationStatusVerified => 'वेरिफ़ाइड';
 
   @override
   String verificationStatusRejected(String reason) {
-    return 'Rejected: $reason';
+    return 'अस्वीकार: $reason';
   }
 
   @override
   String get docGstin => 'GSTIN';
 
   @override
-  String get docUdyam => 'Udyam registration number';
+  String get docUdyam => 'उद्यम रजिस्ट्रेशन नंबर';
 
   @override
-  String get docShopPhoto => 'Shop photo';
+  String get docShopPhoto => 'दुकान की फ़ोटो';
 
   @override
   String get docEin => 'EIN';
 
   @override
-  String get docStateLicence => 'State business licence number';
+  String get docStateLicence => 'राज्य बिज़नेस लाइसेंस नंबर';
 
   @override
-  String get docBusinessAddress => 'Business address';
+  String get docBusinessAddress => 'बिज़नेस का पता';
 
   @override
-  String get docWebsite => 'Website';
+  String get docWebsite => 'वेबसाइट';
 
   @override
-  String get docInvalid =>
-      'This number doesn\'t look right. Check it and try again.';
+  String get docInvalid => 'यह नंबर सही नहीं लग रहा। जांचकर फिर से कोशिश करें।';
 
   @override
-  String get uploadFile => 'Upload';
+  String get uploadFile => 'अपलोड करें';
 
   @override
-  String get submitForReview => 'Submit for review';
+  String get submitForReview => 'जांच के लिए भेजें';
 
   @override
-  String get submittedForReview => 'Submitted. We\'ll review it shortly.';
+  String get submittedForReview => 'भेज दिया। हम जल्द ही इसकी जांच करेंगे।';
 
   @override
-  String get licencesTitle => 'Licences';
+  String get licencesTitle => 'लाइसेंस';
 
   @override
-  String get licencesBody => 'Required to quote in restricted categories.';
+  String get licencesBody => 'पाबंदी वाली कैटेगरी में कोटेशन देने के लिए ज़रूरी।';
 
   @override
-  String get addLicence => 'Add licence';
+  String get addLicence => 'लाइसेंस जोड़ें';
 
   @override
-  String get licenceType => 'Licence type';
+  String get licenceType => 'लाइसेंस का प्रकार';
 
   @override
-  String get licenceNumber => 'Licence number';
+  String get licenceNumber => 'लाइसेंस नंबर';
 
   @override
-  String get licenceIssuer => 'Issuing body';
+  String get licenceIssuer => 'जारी करने वाली संस्था';
 
   @override
-  String get licenceExpiry => 'Expiry date';
+  String get licenceExpiry => 'खत्म होने की तारीख';
 
   @override
-  String get leadsTitle => 'Leads';
+  String get leadsTitle => 'लीड';
 
   @override
-  String get leadsEmpty =>
-      'No matching requests right now. We\'ll alert you when buyers near you post.';
+  String get leadsEmpty => 'अभी कोई मिलती-जुलती रिक्वेस्ट नहीं है। आपके पास के खरीदार पोस्ट करेंगे तो हम आपको बताएंगे।';
 
   @override
-  String get leadsNoSellerProfile =>
-      'Set up your business profile to start getting leads.';
+  String get leadsNoSellerProfile => 'लीड पाने के लिए अपनी बिज़नेस प्रोफ़ाइल सेट करें।';
 
   @override
-  String get leadFilters => 'Filters';
+  String get leadFilters => 'फ़िल्टर';
 
   @override
-  String get leadFilterCategory => 'Category';
+  String get leadFilterCategory => 'कैटेगरी';
 
   @override
-  String get leadFilterDistance => 'Within';
+  String get leadFilterDistance => 'दूरी के अंदर';
 
   @override
-  String get leadFilterAny => 'Any';
+  String get leadFilterAny => 'कोई भी';
 
   @override
   String leadAway(String distance) {
-    return '$distance away';
+    return '$distance दूर';
   }
 
   @override
   String leadQuotesSent(int count, int max) {
-    return '$count of $max quotes sent';
+    return '$max में से $count कोटेशन भेजे गए';
   }
 
   @override
-  String get leadFull => 'Quote limit reached';
+  String get leadFull => 'कोटेशन की सीमा पूरी';
 
   @override
   String leadNeededBy(String date) {
-    return 'Needed by $date';
+    return '$date तक चाहिए';
   }
 
   @override
   String leadBudget(String range) {
-    return 'Budget $range';
+    return 'बजट $range';
   }
 
   @override
-  String get leadBudgetHidden => 'Budget not shared';
+  String get leadBudgetHidden => 'बजट नहीं बताया गया';
 
   @override
-  String get leadDismiss => 'Not interested';
+  String get leadDismiss => 'दिलचस्पी नहीं';
 
   @override
-  String get leadSendQuote => 'Send quote';
+  String get leadSendQuote => 'कोटेशन भेजें';
 
   @override
-  String get leadAlreadyQuoted => 'You\'ve quoted';
+  String get leadAlreadyQuoted => 'आप कोटेशन भेज चुके हैं';
 
   @override
-  String get leadPriorityNote => 'Verified sellers see new requests first.';
+  String get leadPriorityNote => 'वेरिफ़ाइड सेलर्स नई रिक्वेस्ट सबसे पहले देखते हैं।';
 
   @override
-  String get leadLocalityOnly =>
-      'Exact address is shared after the buyer accepts your quote.';
+  String get leadLocalityOnly => 'खरीदार के आपका कोटेशन स्वीकार करने के बाद पूरा पता दिखेगा।';
 
   @override
-  String get quoteFormTitle => 'Your quote';
+  String get quoteFormTitle => 'आपका कोटेशन';
 
   @override
-  String get quoteItem => 'Item / service';
+  String get quoteItem => 'सामान / सर्विस';
 
   @override
-  String get quoteQty => 'Qty';
+  String get quoteQty => 'मात्रा';
 
   @override
-  String get quoteUnitPrice => 'Unit price';
+  String get quoteUnitPrice => 'एक यूनिट का दाम';
 
   @override
-  String get quoteAddLine => 'Add line';
+  String get quoteAddLine => 'लाइन जोड़ें';
 
   @override
-  String get quoteTaxRate => 'GST rate';
+  String get quoteTaxRate => 'GST दर';
 
   @override
-  String get quoteSalesTaxRate => 'Sales tax rate (%)';
+  String get quoteSalesTaxRate => 'सेल्स टैक्स दर (%)';
 
   @override
-  String get quoteBrandModel => 'Brand / model offered';
+  String get quoteBrandModel => 'ऑफ़र किया गया ब्रांड / मॉडल';
 
   @override
-  String get quoteValidity => 'Quote valid for';
+  String get quoteValidity => 'कोटेशन कितने दिन मान्य';
 
   @override
   String quoteValidityDays(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count days',
-      one: '1 day',
-    );
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count दिन', one: '1 दिन');
     return '$_temp0';
   }
 
   @override
-  String get quoteAttachments => 'Attachments';
+  String get quoteAttachments => 'अटैचमेंट';
 
   @override
-  String get quoteSaveTemplate => 'Save as template';
+  String get quoteSaveTemplate => 'टेम्पलेट के रूप में सेव करें';
 
   @override
-  String get quoteUseTemplate => 'Use template';
+  String get quoteUseTemplate => 'टेम्पलेट इस्तेमाल करें';
 
   @override
-  String get quoteTemplateName => 'Template name';
+  String get quoteTemplateName => 'टेम्पलेट का नाम';
 
   @override
-  String get quoteSubmit => 'Send quote';
+  String get quoteSubmit => 'कोटेशन भेजें';
 
   @override
-  String get quoteRevise => 'Send revised quote';
+  String get quoteRevise => 'बदला हुआ कोटेशन भेजें';
 
   @override
-  String get quoteWithdraw => 'Withdraw quote';
+  String get quoteWithdraw => 'कोटेशन वापस लें';
 
   @override
-  String get quoteSent => 'Quote sent';
+  String get quoteSent => 'कोटेशन भेज दिया';
 
   @override
-  String get quotePriceRequired => 'Enter a price';
+  String get quotePriceRequired => 'दाम डालें';
 
   @override
-  String get quoteCapReached =>
-      'This request already has the maximum number of quotes.';
+  String get quoteCapReached => 'इस रिक्वेस्ट पर पहले से ही ज़्यादा से ज़्यादा कोटेशन आ चुके हैं।';
 
   @override
-  String get quoteRequestClosed => 'This request is no longer open.';
+  String get quoteRequestClosed => 'यह रिक्वेस्ट अब खुली नहीं है।';
 
   @override
-  String get quoteNotAllowed => 'You can\'t quote on this request.';
+  String get quoteNotAllowed => 'आप इस रिक्वेस्ट पर कोटेशन नहीं भेज सकते।';
 
   @override
-  String get quoteLicenceRequired =>
-      'A valid licence is required for this category.';
+  String get quoteLicenceRequired => 'इस कैटेगरी के लिए मान्य लाइसेंस ज़रूरी है।';
 
   @override
-  String get quoteNoCredits =>
-      'You\'re out of free quotes this month. See plans.';
+  String get quoteNoCredits => 'इस महीने के आपके मुफ़्त कोटेशन खत्म हो गए। प्लान देखें।';
 
   @override
-  String get quotePriorityWindow =>
-      'Verified sellers get the first 15 minutes on new requests.';
+  String get quotePriorityWindow => 'नई रिक्वेस्ट पर पहले 15 मिनट सिर्फ़ वेरिफ़ाइड सेलर्स के लिए होते हैं।';
 
   @override
-  String get quoteAlreadySent => 'You\'ve already quoted on this request.';
+  String get quoteAlreadySent => 'आप इस रिक्वेस्ट पर पहले ही कोटेशन भेज चुके हैं।';
 
   @override
-  String get templatesTitle => 'Quote templates';
+  String get templatesTitle => 'कोटेशन टेम्पलेट';
 
   @override
-  String get templatesEmpty => 'Save a quote as a template to reuse it.';
+  String get templatesEmpty => 'किसी कोटेशन को दोबारा इस्तेमाल करने के लिए उसे टेम्पलेट के रूप में सेव करें।';
 
   @override
-  String get myQuotesActive => 'Active';
+  String get myQuotesActive => 'चालू';
 
   @override
-  String get myQuotesWon => 'Won';
+  String get myQuotesWon => 'जीते';
 
   @override
-  String get myQuotesLost => 'Lost';
+  String get myQuotesLost => 'हारे';
 
   @override
-  String get myQuotesEmpty => 'No quotes here yet.';
+  String get myQuotesEmpty => 'यहां अभी कोई कोटेशन नहीं है।';
 
   @override
-  String get dashboardTitle => 'Dashboard';
+  String get dashboardTitle => 'डैशबोर्ड';
 
   @override
-  String get dashActive => 'Active quotes';
+  String get dashActive => 'चालू कोटेशन';
 
   @override
-  String get dashWon => 'Won';
+  String get dashWon => 'जीते';
 
   @override
-  String get dashWinRate => 'Win rate';
+  String get dashWinRate => 'जीत की दर';
 
   @override
-  String get dashResponse => 'Avg. response';
+  String get dashResponse => 'औसत जवाब का समय';
 
   @override
-  String get dashRevenue => 'Revenue logged';
+  String get dashRevenue => 'दर्ज की गई कमाई';
 
   @override
-  String get dashRating => 'Rating';
+  String get dashRating => 'रेटिंग';
 
   @override
-  String get dashQuotesThisMonth => 'Quotes this month';
+  String get dashQuotesThisMonth => 'इस महीने के कोटेशन';
 
   @override
   String minutesShort(int count) {
-    return '$count min';
+    return '$count मिनट';
   }
 
   @override
   String hoursShort(int count) {
-    return '$count h';
+    return '$count घंटे';
   }
 
   @override
-  String get planTitle => 'Plan and billing';
+  String get planTitle => 'प्लान और बिलिंग';
 
   @override
-  String get planFreeLaunch => 'Everything is free during launch.';
+  String get planFreeLaunch => 'लॉन्च के दौरान सब कुछ मुफ़्त है।';
 
   @override
   String planFoundingPartner(String date) {
-    return 'As a founding partner you keep free access until $date.';
+    return 'फ़ाउंडिंग पार्टनर होने के नाते आपको $date तक मुफ़्त एक्सेस मिलता रहेगा।';
   }
 
   @override
   String planCurrent(String tier) {
-    return 'Current plan: $tier';
+    return 'मौजूदा प्लान: $tier';
   }
 
   @override
   String planFreeTier(int count) {
-    return 'Free: $count quotes a month';
+    return 'मुफ़्त: हर महीने $count कोटेशन';
   }
 
   @override
-  String get planMonthly => 'Monthly';
+  String get planMonthly => 'मासिक';
 
   @override
-  String get planAnnual => 'Annual';
+  String get planAnnual => 'सालाना';
 
   @override
-  String get planSubscribe => 'Subscribe';
+  String get planSubscribe => 'सब्सक्राइब करें';
 
   @override
-  String get planCredits => 'Quote credits';
+  String get planCredits => 'कोटेशन क्रेडिट';
 
   @override
   String planCreditsBalance(int count) {
-    return '$count credits left';
+    return '$count क्रेडिट बाकी';
   }
 
   @override
-  String get planBuyCredits => 'Buy credits';
+  String get planBuyCredits => 'क्रेडिट खरीदें';
 
   @override
-  String get planRestore => 'Restore purchases';
+  String get planRestore => 'पिछली खरीदारी वापस लाएं';
 
   @override
-  String get planManage => 'Manage subscription';
+  String get planManage => 'सब्सक्रिप्शन मैनेज करें';
 
   @override
-  String get planFixPayment =>
-      'There\'s a problem with your payment. Update it to keep your plan.';
+  String get planFixPayment => 'आपके पेमेंट में कोई समस्या है। अपना प्लान जारी रखने के लिए इसे अपडेट करें।';
 
   @override
   String planRenewal(String store) {
-    return 'Renews automatically. Cancel anytime in $store.';
+    return 'अपने-आप रिन्यू होता है। $store में कभी भी रद्द करें।';
   }
 
   @override
-  String get planBuyOnWeb => 'Buy on our website';
+  String get planBuyOnWeb => 'हमारी वेबसाइट पर खरीदें';
 
   @override
-  String get planNotAvailable => 'Plans aren\'t available in the app yet.';
+  String get planNotAvailable => 'प्लान अभी app में उपलब्ध नहीं हैं।';
 
   @override
-  String get sellerProfileTitle => 'Business profile';
+  String get sellerProfileTitle => 'बिज़नेस प्रोफ़ाइल';
 
   @override
-  String get sellerViewPublic => 'View as buyers see it';
+  String get sellerViewPublic => 'खरीदारों को कैसा दिखता है, देखें';
 
   @override
-  String get sellerShareShop => 'Share my shop';
+  String get sellerShareShop => 'मेरी दुकान शेयर करें';
 
   @override
   String sellerShareText(String shop, String app, String link) {
-    return 'Get quotes from $shop and other local shops on $app: $link';
+    return '$app पर $shop और दूसरी आस-पास की दुकानों से कोटेशन पाएं: $link';
   }
 
   @override
@@ -1355,8 +1321,8 @@ class AppLocalizationsHi extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count years in business',
-      one: '1 year in business',
+      other: 'बिज़नेस में $count साल',
+      one: 'बिज़नेस में 1 साल',
     );
     return '$_temp0';
   }
@@ -1368,201 +1334,196 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String sellerResponds(String time) {
-    return 'Usually replies in $time';
+    return 'आमतौर पर $time में जवाब देते हैं';
   }
 
   @override
-  String get accountTitle => 'Account';
+  String get accountTitle => 'अकाउंट';
 
   @override
-  String get settingsTitle => 'Settings';
+  String get settingsTitle => 'सेटिंग्स';
 
   @override
-  String get settingsLanguage => 'Language';
+  String get settingsLanguage => 'भाषा';
 
   @override
-  String get settingsNotifications => 'Notifications';
+  String get settingsNotifications => 'नोटिफ़िकेशन';
 
   @override
-  String get settingsPrivacy => 'Privacy';
+  String get settingsPrivacy => 'प्राइवेसी';
 
   @override
-  String get settingsHelp => 'Help and FAQ';
+  String get settingsHelp => 'मदद और FAQ';
 
   @override
-  String get settingsLegal => 'Legal';
+  String get settingsLegal => 'कानूनी जानकारी';
 
   @override
-  String get settingsLicenses => 'Open-source licences';
+  String get settingsLicenses => 'ओपन-सोर्स लाइसेंस';
 
   @override
-  String get settingsSignOut => 'Sign out';
+  String get settingsSignOut => 'साइन आउट करें';
 
   @override
-  String get settingsDeleteAccount => 'Delete account';
+  String get settingsDeleteAccount => 'अकाउंट डिलीट करें';
 
   @override
-  String get settingsBlocked => 'Blocked users';
+  String get settingsBlocked => 'ब्लॉक किए गए यूज़र';
 
   @override
   String settingsVersion(String version) {
-    return 'Version $version';
+    return 'वर्शन $version';
   }
 
   @override
-  String get settingsTheme => 'Theme';
+  String get settingsTheme => 'थीम';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'सिस्टम';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'लाइट';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'डार्क';
 
   @override
-  String get notifPrefNewQuotes => 'New quotes';
+  String get notifPrefNewQuotes => 'नए कोटेशन';
 
   @override
-  String get notifPrefMessages => 'Messages';
+  String get notifPrefMessages => 'मैसेज';
 
   @override
-  String get notifPrefLeads => 'New leads';
+  String get notifPrefLeads => 'नई लीड';
 
   @override
-  String get notifPrefMarketing => 'Offers and tips';
+  String get notifPrefMarketing => 'ऑफ़र और टिप्स';
 
   @override
-  String get privacyAnalytics => 'Share anonymous usage data';
+  String get privacyAnalytics => 'बिना पहचान वाला इस्तेमाल का डेटा शेयर करें';
 
   @override
-  String get privacyDoNotSell => 'Do Not Sell or Share My Personal Information';
+  String get privacyDoNotSell => 'मेरी निजी जानकारी न बेचें और न शेयर करें';
 
   @override
-  String get privacyDownload => 'Request a copy of my data';
+  String get privacyDownload => 'मेरे डेटा की कॉपी मांगें';
 
   @override
-  String get deleteTitle => 'Delete your account';
+  String get deleteTitle => 'अपना अकाउंट डिलीट करें';
 
   @override
   String get deleteBody =>
-      'This permanently deletes your profile, requests, quotes, chats and photos. Some records, such as completed orders and tax invoices, are kept as required by law and then deleted.';
+      'इससे आपकी प्रोफ़ाइल, रिक्वेस्ट, कोटेशन, चैट और फ़ोटो हमेशा के लिए डिलीट हो जाएंगी। कुछ रिकॉर्ड, जैसे पूरे हो चुके ऑर्डर और टैक्स इनवॉइस, कानून के अनुसार रखे जाते हैं और फिर डिलीट कर दिए जाते हैं।';
 
   @override
-  String get deleteConfirmLabel => 'Type DELETE to confirm';
+  String get deleteConfirmLabel => 'पुष्टि के लिए DELETE टाइप करें';
 
   @override
   String get deleteConfirmWord => 'DELETE';
 
   @override
-  String get deleteButton => 'Delete my account';
+  String get deleteButton => 'मेरा अकाउंट डिलीट करें';
 
   @override
-  String get deleteReauth =>
-      'For your security, sign in again before deleting.';
+  String get deleteReauth => 'आपकी सुरक्षा के लिए, डिलीट करने से पहले फिर से साइन इन करें।';
 
   @override
-  String get deleteDone => 'Your account has been deleted.';
+  String get deleteDone => 'आपका अकाउंट डिलीट कर दिया गया है।';
 
   @override
-  String get helpTitle => 'Help and FAQ';
+  String get helpTitle => 'मदद और FAQ';
 
   @override
-  String get faqQ1 => 'Is it free for buyers?';
+  String get faqQ1 => 'क्या खरीदारों के लिए यह मुफ़्त है?';
 
   @override
-  String get faqA1 =>
-      'Yes. Posting requests and receiving quotes is always free.';
+  String get faqA1 => 'हां। रिक्वेस्ट पोस्ट करना और कोटेशन पाना हमेशा मुफ़्त है।';
 
   @override
-  String get faqQ2 => 'How do I pay the seller?';
+  String get faqQ2 => 'मैं सेलर को पेमेंट कैसे करूं?';
 
   @override
   String get faqA2 =>
-      'You pay the seller directly, by the methods they accept. Record the payment in the order for your records.';
+      'आप सेलर को सीधे पेमेंट करते हैं, उन तरीकों से जो वे लेते हैं। अपने रिकॉर्ड के लिए ऑर्डर में पेमेंट दर्ज करें।';
 
   @override
-  String get faqQ3 => 'When does the seller see my phone and address?';
+  String get faqQ3 => 'सेलर को मेरा फ़ोन नंबर और पता कब दिखता है?';
 
   @override
-  String get faqA3 =>
-      'Only after you accept their quote. Before that, you can chat in the app.';
+  String get faqA3 => 'सिर्फ़ तब, जब आप उनका कोटेशन स्वीकार करते हैं। उससे पहले आप app में चैट कर सकते हैं।';
 
   @override
-  String get faqQ4 => 'How do sellers get verified?';
+  String get faqQ4 => 'सेलर्स वेरिफ़ाइड कैसे होते हैं?';
 
   @override
-  String get faqA4 => 'They submit business documents that our team reviews.';
+  String get faqA4 => 'वे बिज़नेस के दस्तावेज़ भेजते हैं, जिनकी हमारी टीम जांच करती है।';
 
   @override
-  String get faqQ5 => 'How do I report a problem?';
+  String get faqQ5 => 'मैं किसी समस्या की रिपोर्ट कैसे करूं?';
 
   @override
-  String get faqA5 =>
-      'Use Report on any chat, quote or profile, or contact support.';
+  String get faqA5 => 'किसी भी चैट, कोटेशन या प्रोफ़ाइल पर \'रिपोर्ट करें\' दबाएं, या सपोर्ट से संपर्क करें।';
 
   @override
-  String get contactSupport => 'Contact support';
+  String get contactSupport => 'सपोर्ट से संपर्क करें';
 
   @override
-  String get legalTitle => 'Legal';
+  String get legalTitle => 'कानूनी जानकारी';
 
   @override
-  String get reportTitle => 'Report';
+  String get reportTitle => 'रिपोर्ट करें';
 
   @override
-  String get reportReasonSpam => 'Spam or scam';
+  String get reportReasonSpam => 'स्पैम या धोखाधड़ी';
 
   @override
-  String get reportReasonAbuse => 'Abusive or offensive';
+  String get reportReasonAbuse => 'गाली-गलौज या आपत्तिजनक';
 
   @override
-  String get reportReasonFake => 'Fake business or request';
+  String get reportReasonFake => 'नकली बिज़नेस या रिक्वेस्ट';
 
   @override
-  String get reportReasonProhibited => 'Prohibited item';
+  String get reportReasonProhibited => 'प्रतिबंधित सामान';
 
   @override
-  String get reportReasonOther => 'Something else';
+  String get reportReasonOther => 'कुछ और';
 
   @override
-  String get reportDetails => 'Details (optional)';
+  String get reportDetails => 'जानकारी (वैकल्पिक)';
 
   @override
-  String get reportSent => 'Thanks. Our team will review it.';
+  String get reportSent => 'धन्यवाद। हमारी टीम इसकी जांच करेगी।';
 
   @override
   String blockConfirm(String name) {
-    return 'Block $name? You won\'t see their quotes or messages.';
+    return '$name को ब्लॉक करें? आपको उनके कोटेशन या मैसेज नहीं दिखेंगे।';
   }
 
   @override
-  String get blocked => 'Blocked';
+  String get blocked => 'ब्लॉक किया गया';
 
   @override
   String inAppReviewAsk(String app) {
-    return 'Enjoying $app?';
+    return 'क्या आपको $app पसंद आ रहा है?';
   }
 
   @override
-  String get updateRequired => 'Please update the app to continue.';
+  String get updateRequired => 'आगे बढ़ने के लिए कृपया app अपडेट करें।';
 
   @override
   String get permissionLocationRationale =>
-      'We use your location to find sellers near you. It is only shared as your area until you accept a quote.';
+      'हम आपके पास के सेलर्स ढूंढने के लिए आपकी लोकेशन का इस्तेमाल करते हैं। कोटेशन स्वीकार करने तक सिर्फ़ आपका इलाका ही दिखाया जाता है।';
 
   @override
   String get permissionNotificationsRationale =>
-      'Turn on notifications to hear about new quotes and messages right away.';
+      'नए कोटेशन और मैसेज की जानकारी तुरंत पाने के लिए नोटिफ़िकेशन चालू करें।';
 
   @override
-  String get permissionMicRationale =>
-      'Allow the microphone to describe your request by voice.';
+  String get permissionMicRationale => 'अपनी रिक्वेस्ट बोलकर बताने के लिए माइक्रोफ़ोन की अनुमति दें।';
 
   @override
-  String get allow => 'Allow';
+  String get allow => 'अनुमति दें';
 
   @override
-  String get notNow => 'Not now';
+  String get notNow => 'अभी नहीं';
 }

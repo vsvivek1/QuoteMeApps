@@ -53,14 +53,10 @@ abstract class Quote with _$Quote {
 
   const Quote._();
 
-  bool get isActive =>
-      status == QuoteStatus.sent ||
-      status == QuoteStatus.revised ||
-      status == QuoteStatus.shortlisted;
+  bool get isActive => status == QuoteStatus.sent || status == QuoteStatus.revised || status == QuoteStatus.shortlisted;
 
   /// Minutes between the request being posted and this quote, for display.
-  int responseMinutes(DateTime requestCreatedAt) =>
-      createdAt.difference(requestCreatedAt).inMinutes;
+  int responseMinutes(DateTime requestCreatedAt) => createdAt.difference(requestCreatedAt).inMinutes;
 }
 
 /// The seller's quote form output.
@@ -97,8 +93,7 @@ List<Quote> sortQuotes(List<Quote> quotes, QuoteSort sort) {
     case QuoteSort.deliveryDate:
       list.sort((a, b) => byDate(a.deliveryDate, b.deliveryDate));
     case QuoteSort.distance:
-      list.sort((a, b) => (a.seller.distanceKm ?? double.infinity)
-          .compareTo(b.seller.distanceKm ?? double.infinity));
+      list.sort((a, b) => (a.seller.distanceKm ?? double.infinity).compareTo(b.seller.distanceKm ?? double.infinity));
   }
   return list;
 }

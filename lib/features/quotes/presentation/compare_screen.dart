@@ -29,9 +29,7 @@ class CompareScreen extends ConsumerWidget {
           final list = (quoteIds == null ? all.where((q) => q.isActive) : all.where((q) => quoteIds!.contains(q.id)))
               .take(3)
               .toList();
-          final cheapest = list.isEmpty
-              ? null
-              : list.map((q) => q.total.minorUnits).reduce((a, b) => a < b ? a : b);
+          final cheapest = list.isEmpty ? null : list.map((q) => q.total.minorUnits).reduce((a, b) => a < b ? a : b);
           final actions = QuoteActions(context, ref);
           final rows = <(String, String Function(Quote))>[
             (l10n.quoteTotal, (q) => q.total.display),
@@ -41,7 +39,12 @@ class CompareScreen extends ConsumerWidget {
             (l10n.quoteOffered, (q) => q.offeredBrandModel ?? '—'),
             (l10n.quoteDeliveryDate, (q) => q.deliveryDate == null ? '—' : context.date(q.deliveryDate!)),
             (l10n.quoteWarranty, (q) => q.warranty ?? '—'),
-            (l10n.sortRating, (q) => q.seller.ratingCount == 0 ? '—' : '${q.seller.ratingAvg.toStringAsFixed(1)} ★ (${q.seller.ratingCount})'),
+            (
+              l10n.sortRating,
+              (q) => q.seller.ratingCount == 0
+                  ? '—'
+                  : '${q.seller.ratingAvg.toStringAsFixed(1)} ★ (${q.seller.ratingCount})',
+            ),
             (l10n.sortDistance, (q) => q.seller.distanceKm == null ? '—' : config.formatDistance(q.seller.distanceKm!)),
             (l10n.quoteVerified, (q) => q.seller.verified ? '✓' : '—'),
           ];
@@ -59,33 +62,45 @@ class CompareScreen extends ConsumerWidget {
                     DataColumn(
                       label: SizedBox(
                         width: 140,
-                        child: Text(q.seller.businessName,
-                            maxLines: 2, overflow: TextOverflow.ellipsis, style: context.text.titleSmall),
+                        child: Text(
+                          q.seller.businessName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.text.titleSmall,
+                        ),
                       ),
                     ),
                 ],
                 rows: [
                   for (final (label, value) in rows)
-                    DataRow(cells: [
-                      DataCell(Text(label, style: context.text.labelLarge)),
-                      for (final q in list)
-                        DataCell(SizedBox(
-                          width: 140,
-                          child: Text(
-                            value(q),
-                            style: label == l10n.quoteTotal && q.total.minorUnits == cheapest
-                                ? TextStyle(fontWeight: FontWeight.w800, color: Colors.green.shade700)
-                                : null,
+                    DataRow(
+                      cells: [
+                        DataCell(Text(label, style: context.text.labelLarge)),
+                        for (final q in list)
+                          DataCell(
+                            SizedBox(
+                              width: 140,
+                              child: Text(
+                                value(q),
+                                style: label == l10n.quoteTotal && q.total.minorUnits == cheapest
+                                    ? TextStyle(fontWeight: FontWeight.w800, color: Colors.green.shade700)
+                                    : null,
+                              ),
+                            ),
                           ),
-                        )),
-                    ]),
-                  DataRow(cells: [
-                    const DataCell(SizedBox.shrink()),
-                    for (final q in list)
-                      DataCell(q.isActive
-                          ? FilledButton(onPressed: () => actions.accept(q), child: Text(l10n.accept))
-                          : Text(quoteStatusLabel(context, q.status))),
-                  ]),
+                      ],
+                    ),
+                  DataRow(
+                    cells: [
+                      const DataCell(SizedBox.shrink()),
+                      for (final q in list)
+                        DataCell(
+                          q.isActive
+                              ? FilledButton(onPressed: () => actions.accept(q), child: Text(l10n.accept))
+                              : Text(quoteStatusLabel(context, q.status)),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),

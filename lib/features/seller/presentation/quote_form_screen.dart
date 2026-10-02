@@ -16,9 +16,9 @@ import '../domain/seller.dart';
 
 class _LineCtl {
   _LineCtl({String desc = '', String qty = '1', String price = ''})
-      : desc = TextEditingController(text: desc),
-        qty = TextEditingController(text: qty),
-        price = TextEditingController(text: price);
+    : desc = TextEditingController(text: desc),
+      qty = TextEditingController(text: qty),
+      price = TextEditingController(text: price);
   final TextEditingController desc;
   final TextEditingController qty;
   final TextEditingController price;
@@ -106,34 +106,34 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
   }
 
   List<QuoteLine> _quoteLines(String iso) => [
-        for (final l in _lines)
-          if (parseUserAmount(l.price.text, iso) != null)
-            QuoteLine(
-              description: l.desc.text.trim(),
-              qty: int.tryParse(l.qty.text) ?? 1,
-              unitPrice: parseUserAmount(l.price.text, iso)!,
-            ),
-      ];
+    for (final l in _lines)
+      if (parseUserAmount(l.price.text, iso) != null)
+        QuoteLine(
+          description: l.desc.text.trim(),
+          qty: int.tryParse(l.qty.text) ?? 1,
+          unitPrice: parseUserAmount(l.price.text, iso)!,
+        ),
+  ];
 
   QuoteTotals _totals(String iso, TaxRule rule, Seller? seller, String? buyerState) => rule.compute(
-        lines: _quoteLines(iso),
-        delivery: parseUserAmount(_delivery.text, iso) ?? zeroMoney(iso),
-        rateBp: _rateBp,
-        sellerState: seller?.state,
-        buyerState: buyerState,
-      );
+    lines: _quoteLines(iso),
+    delivery: parseUserAmount(_delivery.text, iso) ?? zeroMoney(iso),
+    rateBp: _rateBp,
+    sellerState: seller?.state,
+    buyerState: buyerState,
+  );
 
   QuoteDraft _draft(String iso) => QuoteDraft(
-        requestId: widget.requestId,
-        lines: _quoteLines(iso),
-        delivery: parseUserAmount(_delivery.text, iso) ?? zeroMoney(iso),
-        taxRateBp: _rateBp,
-        offeredBrandModel: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
-        deliveryDate: _deliveryDate,
-        warranty: _warranty.text.trim().isEmpty ? null : _warranty.text.trim(),
-        validDays: _validDays,
-        notes: _notes.text.trim().isEmpty ? null : _notes.text.trim(),
-      );
+    requestId: widget.requestId,
+    lines: _quoteLines(iso),
+    delivery: parseUserAmount(_delivery.text, iso) ?? zeroMoney(iso),
+    taxRateBp: _rateBp,
+    offeredBrandModel: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
+    deliveryDate: _deliveryDate,
+    warranty: _warranty.text.trim().isEmpty ? null : _warranty.text.trim(),
+    validDays: _validDays,
+    notes: _notes.text.trim().isEmpty ? null : _notes.text.trim(),
+  );
 
   Future<void> _submit() async {
     if (!_form.currentState!.validate()) return;
@@ -185,7 +185,11 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l10n.quoteSaveTemplate),
-        content: TextField(controller: name, autofocus: true, decoration: InputDecoration(labelText: l10n.quoteTemplateName)),
+        content: TextField(
+          controller: name,
+          autofocus: true,
+          decoration: InputDecoration(labelText: l10n.quoteTemplateName),
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
           FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.save)),
@@ -193,21 +197,25 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
       ),
     );
     if (ok != true || name.text.trim().isEmpty) return;
-    await ref.read(sellerRepositoryProvider).saveTemplate(QuoteTemplate(
-          id: DateTime.now().microsecondsSinceEpoch.toString(),
-          name: name.text.trim(),
-          payload: {
-            'lines': [
-              for (final l in _lines) {'description': l.desc.text, 'qty': l.qty.text, 'price': l.price.text},
-            ],
-            'delivery': _delivery.text,
-            'brand': _brand.text,
-            'warranty': _warranty.text,
-            'notes': _notes.text,
-            'rate_bp': _rateBp,
-            'valid_days': _validDays,
-          },
-        ));
+    await ref
+        .read(sellerRepositoryProvider)
+        .saveTemplate(
+          QuoteTemplate(
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            name: name.text.trim(),
+            payload: {
+              'lines': [
+                for (final l in _lines) {'description': l.desc.text, 'qty': l.qty.text, 'price': l.price.text},
+              ],
+              'delivery': _delivery.text,
+              'brand': _brand.text,
+              'warranty': _warranty.text,
+              'notes': _notes.text,
+              'rate_bp': _rateBp,
+              'valid_days': _validDays,
+            },
+          ),
+        );
     ref.invalidate(quoteTemplatesProvider);
   }
 
@@ -240,122 +248,155 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
               onSelected: _applyTemplate,
               itemBuilder: (_) => [for (final t in templates) PopupMenuItem(value: t, child: Text(t.name))],
             ),
-          IconButton(tooltip: l10n.quoteSaveTemplate, onPressed: _saveTemplate, icon: const Icon(Icons.bookmark_add_outlined)),
+          IconButton(
+            tooltip: l10n.quoteSaveTemplate,
+            onPressed: _saveTemplate,
+            icon: const Icon(Icons.bookmark_add_outlined),
+          ),
         ],
       ),
       body: Form(
         key: _form,
         onChanged: () => setState(() {}),
         child: MaxWidth(
-          child: ListView(padding: const EdgeInsets.all(16), children: [
-            if (lead != null) Text(lead.title, style: context.text.titleMedium),
-            const SizedBox(height: 12),
-            for (var i = 0; i < _lines.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Column(children: [
-                  TextFormField(
-                    controller: _lines[i].desc,
-                    decoration: InputDecoration(
-                      labelText: l10n.quoteItem,
-                      suffixIcon: _lines.length > 1
-                          ? IconButton(
-                              tooltip: l10n.delete,
-                              onPressed: () => setState(() => _lines.removeAt(i).dispose()),
-                              icon: const Icon(Icons.remove_circle_outline))
-                          : null,
-                    ),
-                    validator: (v) => (v ?? '').trim().isEmpty ? l10n.required : null,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    SizedBox(
-                      width: 88,
-                      child: TextFormField(
-                        controller: _lines[i].qty,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        decoration: InputDecoration(labelText: l10n.quoteQty),
-                        validator: (v) => (int.tryParse(v ?? '') ?? 0) < 1 ? l10n.required : null,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              if (lead != null) Text(lead.title, style: context.text.titleMedium),
+              const SizedBox(height: 12),
+              for (var i = 0; i < _lines.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _lines[i].desc,
+                        decoration: InputDecoration(
+                          labelText: l10n.quoteItem,
+                          suffixIcon: _lines.length > 1
+                              ? IconButton(
+                                  tooltip: l10n.delete,
+                                  onPressed: () => setState(() => _lines.removeAt(i).dispose()),
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                )
+                              : null,
+                        ),
+                        validator: (v) => (v ?? '').trim().isEmpty ? l10n.required : null,
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _lines[i].price,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        inputFormatters: [priceFormatter],
-                        decoration: InputDecoration(labelText: l10n.quoteUnitPrice, prefixText: symbol),
-                        validator: (v) => parseUserAmount(v ?? '', iso) == null ? l10n.quotePriceRequired : null,
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 88,
+                            child: TextFormField(
+                              controller: _lines[i].qty,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                              decoration: InputDecoration(labelText: l10n.quoteQty),
+                              validator: (v) => (int.tryParse(v ?? '') ?? 0) < 1 ? l10n.required : null,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _lines[i].price,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              inputFormatters: [priceFormatter],
+                              decoration: InputDecoration(labelText: l10n.quoteUnitPrice, prefixText: symbol),
+                              validator: (v) => parseUserAmount(v ?? '', iso) == null ? l10n.quotePriceRequired : null,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ]),
-                ]),
-              ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                onPressed: () => setState(() => _lines.add(_LineCtl())),
-                icon: const Icon(Icons.add_rounded),
-                label: Text(l10n.quoteAddLine),
-              ),
-            ),
-            const SizedBox(height: 8),
-            if (rule.rateOptionsBp.isNotEmpty) ...[
-              Text(l10n.quoteTaxRate, style: context.text.labelLarge),
-              const SizedBox(height: 4),
-              Wrap(spacing: 8, children: [
-                for (final bp in rule.rateOptionsBp)
-                  ChoiceChip(
-                    label: Text('${bpToPercent(bp)}%'),
-                    selected: _rateBp == bp,
-                    onSelected: (_) => setState(() => _rateBp = bp),
+                    ],
                   ),
-              ]),
-            ] else
+                ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () => setState(() => _lines.add(_LineCtl())),
+                  icon: const Icon(Icons.add_rounded),
+                  label: Text(l10n.quoteAddLine),
+                ),
+              ),
+              const SizedBox(height: 8),
+              if (rule.rateOptionsBp.isNotEmpty) ...[
+                Text(l10n.quoteTaxRate, style: context.text.labelLarge),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    for (final bp in rule.rateOptionsBp)
+                      ChoiceChip(
+                        label: Text('${bpToPercent(bp)}%'),
+                        selected: _rateBp == bp,
+                        onSelected: (_) => setState(() => _rateBp = bp),
+                      ),
+                  ],
+                ),
+              ] else
+                TextFormField(
+                  controller: _salesTax,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(labelText: l10n.quoteSalesTaxRate, suffixText: '%'),
+                  validator: (v) => (v ?? '').trim().isEmpty || percentToBp(v!) != null ? null : l10n.required,
+                  onChanged: (v) => setState(() => _rateBp = percentToBp(v) ?? 0),
+                ),
+              const SizedBox(height: 12),
               TextFormField(
-                controller: _salesTax,
+                controller: _delivery,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(labelText: l10n.quoteSalesTaxRate, suffixText: '%'),
-                validator: (v) => (v ?? '').trim().isEmpty || percentToBp(v!) != null ? null : l10n.required,
-                onChanged: (v) => setState(() => _rateBp = percentToBp(v) ?? 0),
+                inputFormatters: [priceFormatter],
+                decoration: InputDecoration(labelText: l10n.quoteDelivery, prefixText: symbol),
               ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _delivery,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [priceFormatter],
-              decoration: InputDecoration(labelText: l10n.quoteDelivery, prefixText: symbol),
-            ),
-            const SizedBox(height: 16),
-            _TotalsCard(totals: totals),
-            const SizedBox(height: 16),
-            TextFormField(controller: _brand, decoration: InputDecoration(labelText: l10n.quoteBrandModel)),
-            const SizedBox(height: 12),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.local_shipping_outlined),
-              title: Text(l10n.quoteDeliveryDate),
-              subtitle: Text(_deliveryDate == null ? l10n.postPickDate : context.date(_deliveryDate!)),
-              onTap: () async {
-                final now = DateTime.now();
-                final d = await showDatePicker(
-                    context: context, firstDate: now, lastDate: now.add(const Duration(days: 365)), initialDate: _deliveryDate ?? now);
-                if (d != null) setState(() => _deliveryDate = d);
-              },
-            ),
-            TextFormField(controller: _warranty, decoration: InputDecoration(labelText: l10n.quoteWarranty)),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<int>(
-              initialValue: _validDays,
-              decoration: InputDecoration(labelText: l10n.quoteValidity),
-              items: [for (final d in const [1, 3, 7, 14, 30]) DropdownMenuItem(value: d, child: Text(l10n.quoteValidityDays(d)))],
-              onChanged: (v) => setState(() => _validDays = v ?? 7),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(controller: _notes, minLines: 2, maxLines: 5, decoration: InputDecoration(labelText: l10n.quoteNotes)),
-            const SizedBox(height: 80),
-          ]),
+              const SizedBox(height: 16),
+              _TotalsCard(totals: totals),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _brand,
+                decoration: InputDecoration(labelText: l10n.quoteBrandModel),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.local_shipping_outlined),
+                title: Text(l10n.quoteDeliveryDate),
+                subtitle: Text(_deliveryDate == null ? l10n.postPickDate : context.date(_deliveryDate!)),
+                onTap: () async {
+                  final now = DateTime.now();
+                  final d = await showDatePicker(
+                    context: context,
+                    firstDate: now,
+                    lastDate: now.add(const Duration(days: 365)),
+                    initialDate: _deliveryDate ?? now,
+                  );
+                  if (d != null) setState(() => _deliveryDate = d);
+                },
+              ),
+              TextFormField(
+                controller: _warranty,
+                decoration: InputDecoration(labelText: l10n.quoteWarranty),
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<int>(
+                initialValue: _validDays,
+                decoration: InputDecoration(labelText: l10n.quoteValidity),
+                items: [
+                  for (final d in const [1, 3, 7, 14, 30])
+                    DropdownMenuItem(value: d, child: Text(l10n.quoteValidityDays(d))),
+                ],
+                onChanged: (v) => setState(() => _validDays = v ?? 7),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: _notes,
+                minLines: 2,
+                maxLines: 5,
+                decoration: InputDecoration(labelText: l10n.quoteNotes),
+              ),
+              const SizedBox(height: 80),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: SafeArea(
@@ -380,29 +421,33 @@ class _TotalsCard extends StatelessWidget {
     final l10n = context.l10n;
     final b = totals.breakdown;
     Widget row(String k, String v, {bool bold = false}) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3),
-          child: Row(children: [
-            Expanded(child: Text(k, style: bold ? context.text.titleMedium : null)),
-            Text(v, style: bold ? context.text.titleMedium?.copyWith(fontWeight: FontWeight.w800) : null),
-          ]),
-        );
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Expanded(child: Text(k, style: bold ? context.text.titleMedium : null)),
+          Text(v, style: bold ? context.text.titleMedium?.copyWith(fontWeight: FontWeight.w800) : null),
+        ],
+      ),
+    );
     return Card(
       color: context.colors.surfaceContainerLow,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(children: [
-          row(l10n.quoteSubtotal, totals.subtotal.display),
-          if (b is GstBreakdown && b.intraState) ...[
-            row('CGST ${bpToPercent(b.rateBp ~/ 2)}%', b.cgst.display),
-            row('SGST ${bpToPercent(b.rateBp ~/ 2)}%', b.sgst.display),
-          ] else if (b is GstBreakdown)
-            row('IGST ${bpToPercent(b.rateBp)}%', b.igst.display)
-          else if (b is SalesTaxBreakdown)
-            row(l10n.salesTax(bpToPercent(b.rateBp)), b.amount.display),
-          row(l10n.quoteDelivery, totals.delivery.display),
-          const Divider(),
-          row(l10n.quoteTotal, totals.total.display, bold: true),
-        ]),
+        child: Column(
+          children: [
+            row(l10n.quoteSubtotal, totals.subtotal.display),
+            if (b is GstBreakdown && b.intraState) ...[
+              row('CGST ${bpToPercent(b.rateBp ~/ 2)}%', b.cgst.display),
+              row('SGST ${bpToPercent(b.rateBp ~/ 2)}%', b.sgst.display),
+            ] else if (b is GstBreakdown)
+              row('IGST ${bpToPercent(b.rateBp)}%', b.igst.display)
+            else if (b is SalesTaxBreakdown)
+              row(l10n.salesTax(bpToPercent(b.rateBp)), b.amount.display),
+            row(l10n.quoteDelivery, totals.delivery.display),
+            const Divider(),
+            row(l10n.quoteTotal, totals.total.display, bold: true),
+          ],
+        ),
       ),
     );
   }

@@ -14,11 +14,7 @@ final _tenK = BigInt.from(10000);
 final _twentyK = BigInt.from(20000);
 
 class QuoteLine {
-  const QuoteLine({
-    required this.description,
-    required this.qty,
-    required this.unitPrice,
-  });
+  const QuoteLine({required this.description, required this.qty, required this.unitPrice});
 
   final String description;
   final int qty;
@@ -78,13 +74,13 @@ class GstBreakdown extends TaxBreakdown {
 
   @override
   Map<String, Object?> toJson() => {
-        'kind': 'gst',
-        'mode': intraState ? 'intra' : 'inter',
-        'rate_bp': rateBp,
-        'cgst': cgst.minorInt,
-        'sgst': sgst.minorInt,
-        'igst': igst.minorInt,
-      };
+    'kind': 'gst',
+    'mode': intraState ? 'intra' : 'inter',
+    'rate_bp': rateBp,
+    'cgst': cgst.minorInt,
+    'sgst': sgst.minorInt,
+    'igst': igst.minorInt,
+  };
 }
 
 class SalesTaxBreakdown extends TaxBreakdown {
@@ -94,8 +90,7 @@ class SalesTaxBreakdown extends TaxBreakdown {
   final Money amount;
 
   @override
-  Map<String, Object?> toJson() =>
-      {'kind': 'sales_tax', 'rate_bp': rateBp, 'amount': amount.minorInt};
+  Map<String, Object?> toJson() => {'kind': 'sales_tax', 'rate_bp': rateBp, 'amount': amount.minorInt};
 }
 
 class QuoteTotals {
@@ -134,10 +129,7 @@ abstract class TaxRule {
 /// India GST: computed per line, rounded to the paisa, split into CGST+SGST
 /// (same state) or IGST (inter-state).
 class GstTaxRule extends TaxRule {
-  const GstTaxRule({
-    this.rateOptionsBp = const [0, 500, 1800, 4000],
-    this.defaultRateBp = 1800,
-  });
+  const GstTaxRule({this.rateOptionsBp = const [0, 500, 1800, 4000], this.defaultRateBp = 1800});
 
   @override
   final List<int> rateOptionsBp;
@@ -211,8 +203,7 @@ class SalesTaxRule extends TaxRule {
   }) {
     final iso = delivery.isoCode;
     final subtotal = MoneyX.sum(lines.map((l) => l.lineTotal), iso);
-    final taxMinor =
-        roundHalfUp(subtotal.minorUnits * BigInt.from(rateBp), _tenK);
+    final taxMinor = roundHalfUp(subtotal.minorUnits * BigInt.from(rateBp), _tenK);
     final tax = moneyFromBigMinor(taxMinor, iso);
     return QuoteTotals(
       subtotal: subtotal,
@@ -238,7 +229,6 @@ String bpToPercent(int bp) {
 int? percentToBp(String input) {
   final m = RegExp(r'^\s*(\d{1,3})(?:\.(\d{1,2}))?\s*$').firstMatch(input);
   if (m == null) return null;
-  final bp = int.parse(m.group(1)!) * 100 +
-      int.parse((m.group(2) ?? '').padRight(2, '0'));
+  final bp = int.parse(m.group(1)!) * 100 + int.parse((m.group(2) ?? '').padRight(2, '0'));
   return bp > 10000 ? null : bp;
 }

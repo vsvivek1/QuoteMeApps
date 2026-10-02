@@ -25,11 +25,13 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
 
   Future<void> _accept() async {
     final flags = await ref.read(appFlagsProvider.future);
-    await ref.read(profileRepositoryProvider).recordConsents(
-      {'terms': flags.termsVersion, 'privacy': flags.privacyVersion},
-      marketing: _marketing,
-      analytics: _analytics,
-    );
+    await ref
+        .read(profileRepositoryProvider)
+        .recordConsents(
+          {'terms': flags.termsVersion, 'privacy': flags.privacyVersion},
+          marketing: _marketing,
+          analytics: _analytics,
+        );
     await ref.read(analyticsProvider).setCollectionEnabled(_analytics);
     ref.invalidate(consentAcceptedProvider);
   }
@@ -54,10 +56,13 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 56),
-                child: Wrap(spacing: 8, children: [
-                  TextButton(onPressed: () => context.push('/legal/terms'), child: Text(terms)),
-                  TextButton(onPressed: () => context.push('/legal/privacy'), child: Text(privacy)),
-                ]),
+                child: Wrap(
+                  spacing: 8,
+                  children: [
+                    TextButton(onPressed: () => context.push('/legal/terms'), child: Text(terms)),
+                    TextButton(onPressed: () => context.push('/legal/privacy'), child: Text(privacy)),
+                  ],
+                ),
               ),
               CheckboxListTile(
                 value: _age,
@@ -77,10 +82,7 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
                 title: Text(l10n.consentAnalytics),
               ),
               const SizedBox(height: 24),
-              BusyButton(
-                label: l10n.continueLabel,
-                onPressed: _terms && _age ? _accept : null,
-              ),
+              BusyButton(label: l10n.continueLabel, onPressed: _terms && _age ? _accept : null),
             ],
           ),
         ),

@@ -20,7 +20,13 @@ void main() {
     final zero = zeroMoney('INR');
 
     test('intra-state 99999 @18% -> CGST 9000 + SGST 9000', () {
-      final t = gst.compute(lines: [line(1, 99999, 'INR')], delivery: zero, rateBp: 1800, sellerState: 'Karnataka', buyerState: 'Karnataka');
+      final t = gst.compute(
+        lines: [line(1, 99999, 'INR')],
+        delivery: zero,
+        rateBp: 1800,
+        sellerState: 'Karnataka',
+        buyerState: 'Karnataka',
+      );
       final b = t.breakdown as GstBreakdown;
       expect(b.intraState, isTrue);
       expect(b.cgst.minorInt, 9000);
@@ -30,7 +36,13 @@ void main() {
     });
 
     test('inter-state 99999 @18% -> IGST 18000', () {
-      final t = gst.compute(lines: [line(1, 99999, 'INR')], delivery: zero, rateBp: 1800, sellerState: 'Karnataka', buyerState: 'Kerala');
+      final t = gst.compute(
+        lines: [line(1, 99999, 'INR')],
+        delivery: zero,
+        rateBp: 1800,
+        sellerState: 'Karnataka',
+        buyerState: 'Kerala',
+      );
       final b = t.breakdown as GstBreakdown;
       expect(b.intraState, isFalse);
       expect(b.igst.minorInt, 18000);

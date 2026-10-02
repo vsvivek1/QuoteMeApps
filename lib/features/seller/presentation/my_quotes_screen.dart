@@ -22,20 +22,28 @@ class MyQuotesScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text(l10n.tabMyQuotes),
           actions: [
-            IconButton(tooltip: l10n.templatesTitle, onPressed: () => context.push('/seller/templates'), icon: const Icon(Icons.bookmarks_outlined)),
+            IconButton(
+              tooltip: l10n.templatesTitle,
+              onPressed: () => context.push('/seller/templates'),
+              icon: const Icon(Icons.bookmarks_outlined),
+            ),
             const NotificationsBell(),
           ],
-          bottom: TabBar(tabs: [
-            Tab(text: l10n.myQuotesActive),
-            Tab(text: l10n.myQuotesWon),
-            Tab(text: l10n.myQuotesLost),
-          ]),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: l10n.myQuotesActive),
+              Tab(text: l10n.myQuotesWon),
+              Tab(text: l10n.myQuotesLost),
+            ],
+          ),
         ),
-        body: const TabBarView(children: [
-          _QuoteList(bucket: 'active'),
-          _QuoteList(bucket: 'won'),
-          _QuoteList(bucket: 'lost'),
-        ]),
+        body: const TabBarView(
+          children: [
+            _QuoteList(bucket: 'active'),
+            _QuoteList(bucket: 'won'),
+            _QuoteList(bucket: 'lost'),
+          ],
+        ),
       ),
     );
   }
@@ -61,7 +69,11 @@ class _QuoteList extends ConsumerWidget {
                 final q = list[i];
                 return Card(
                   child: ListTile(
-                    title: Text(q.lines.isEmpty ? '' : q.lines.first.description, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    title: Text(
+                      q.lines.isEmpty ? '' : q.lines.first.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     subtitle: Text('${quoteStatusLabel(context, q.status)} · ${context.date(q.createdAt)}'),
                     trailing: Text(q.total.displayCompact, style: context.text.titleMedium),
                     onTap: () => context.push('/seller/leads/${q.requestId}'),
@@ -78,10 +90,21 @@ class _QuoteList extends ConsumerWidget {
     final v = await showModalBottomSheet<String>(
       context: context,
       builder: (ctx) => SafeArea(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          ListTile(leading: const Icon(Icons.edit_outlined), title: Text(l10n.quoteRevise), onTap: () => Navigator.pop(ctx, 'revise')),
-          ListTile(leading: const Icon(Icons.undo_rounded), title: Text(l10n.quoteWithdraw), onTap: () => Navigator.pop(ctx, 'withdraw')),
-        ]),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: Text(l10n.quoteRevise),
+              onTap: () => Navigator.pop(ctx, 'revise'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.undo_rounded),
+              title: Text(l10n.quoteWithdraw),
+              onTap: () => Navigator.pop(ctx, 'withdraw'),
+            ),
+          ],
+        ),
       ),
     );
     if (!context.mounted) return;

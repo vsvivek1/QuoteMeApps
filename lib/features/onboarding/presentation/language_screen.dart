@@ -6,11 +6,7 @@ import '../../../core/providers.dart';
 import '../../../core/state/app_state.dart';
 import '../../../core/utils/context_x.dart';
 
-const _languageNames = {
-  'en': 'English',
-  'hi': 'हिन्दी',
-  'es': 'Español',
-};
+const _languageNames = {'en': 'English', 'hi': 'हिन्दी', 'es': 'Español'};
 
 class LanguageScreen extends ConsumerWidget {
   const LanguageScreen({super.key, this.fromSettings = false});
@@ -53,8 +49,7 @@ class LanguageScreen extends ConsumerWidget {
                     Card(
                       child: RadioListTile<String>(
                         value: l.languageCode,
-                        title: Text(_languageNames[l.languageCode] ?? l.languageCode,
-                            style: context.text.titleMedium),
+                        title: Text(_languageNames[l.languageCode] ?? l.languageCode, style: context.text.titleMedium),
                       ),
                     ),
                 ],

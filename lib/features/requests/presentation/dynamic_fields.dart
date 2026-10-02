@@ -7,12 +7,7 @@ import '../domain/category.dart';
 /// Renders a category's `field_schema` as form fields. Used by both the
 /// request wizard and the quote form.
 class DynamicFields extends StatelessWidget {
-  const DynamicFields({
-    super.key,
-    required this.fields,
-    required this.values,
-    required this.onChanged,
-  });
+  const DynamicFields({super.key, required this.fields, required this.values, required this.onChanged});
 
   final List<FieldDef> fields;
   final Map<String, Object?> values;
@@ -23,11 +18,7 @@ class DynamicFields extends StatelessWidget {
     final lang = context.lang;
     return Column(
       children: [
-        for (final f in fields)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _field(context, f, lang),
-          ),
+        for (final f in fields) Padding(padding: const EdgeInsets.only(bottom: 12), child: _field(context, f, lang)),
       ],
     );
   }
@@ -42,9 +33,7 @@ class DynamicFields extends StatelessWidget {
           initialValue: values[f.key]?.toString(),
           isExpanded: true,
           decoration: InputDecoration(labelText: label),
-          items: [
-            for (final o in f.options) DropdownMenuItem(value: o.value, child: Text(o.label(lang))),
-          ],
+          items: [for (final o in f.options) DropdownMenuItem(value: o.value, child: Text(o.label(lang)))],
           validator: requiredValidator,
           onChanged: (v) => onChanged(f.key, v),
         );
@@ -52,17 +41,18 @@ class DynamicFields extends StatelessWidget {
         final selected = (values[f.key] as List?)?.cast<String>() ?? const <String>[];
         return InputDecorator(
           decoration: InputDecoration(labelText: label, border: InputBorder.none),
-          child: Wrap(spacing: 8, children: [
-            for (final o in f.options)
-              FilterChip(
-                label: Text(o.label(lang)),
-                selected: selected.contains(o.value),
-                onSelected: (on) => onChanged(
-                  f.key,
-                  on ? [...selected, o.value] : selected.where((s) => s != o.value).toList(),
+          child: Wrap(
+            spacing: 8,
+            children: [
+              for (final o in f.options)
+                FilterChip(
+                  label: Text(o.label(lang)),
+                  selected: selected.contains(o.value),
+                  onSelected: (on) =>
+                      onChanged(f.key, on ? [...selected, o.value] : selected.where((s) => s != o.value).toList()),
                 ),
-              ),
-          ]),
+            ],
+          ),
         );
       case FieldType.boolean:
         return SwitchListTile(
@@ -89,7 +79,11 @@ class DynamicFields extends StatelessWidget {
           onTap: () async {
             final now = DateTime.now();
             final picked = await showDatePicker(
-                context: context, firstDate: now, lastDate: now.add(const Duration(days: 730)), initialDate: v ?? now);
+              context: context,
+              firstDate: now,
+              lastDate: now.add(const Duration(days: 730)),
+              initialDate: v ?? now,
+            );
             if (picked != null) onChanged(f.key, picked.toIso8601String());
           },
         );
@@ -135,10 +129,15 @@ class FieldSummary extends StatelessWidget {
         for (final (k, v) in rows)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(width: 140, child: Text(k, style: context.text.bodySmall)),
-              Expanded(child: Text(v, style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w500))),
-            ]),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 140, child: Text(k, style: context.text.bodySmall)),
+                Expanded(
+                  child: Text(v, style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+                ),
+              ],
+            ),
           ),
       ],
     );

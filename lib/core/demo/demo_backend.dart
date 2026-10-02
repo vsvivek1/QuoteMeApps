@@ -22,8 +22,7 @@ import 'demo_seed.dart';
 /// that matter to the UI: quote cap, accept closes the request, contact
 /// details unlock after acceptance, reviews only after completion.
 class DemoBackend {
-  DemoBackend(this.config, {this.simulateMarket = true, Random? random})
-      : _random = random ?? Random(7) {
+  DemoBackend(this.config, {this.simulateMarket = true, Random? random}) : _random = random ?? Random(7) {
     categories = demoCategories(config.country);
     _seed();
   }
@@ -96,8 +95,7 @@ class DemoBackend {
   String signInWithPhone(String e164) {
     final existing = profiles.values.where((p) => p.phone == e164).firstOrNull;
     final id = existing?.id ?? newId();
-    profiles.putIfAbsent(
-        id, () => Profile(id: id, phone: e164, phoneVerified: true, createdAt: DateTime.now()));
+    profiles.putIfAbsent(id, () => Profile(id: id, phone: e164, phoneVerified: true, createdAt: DateTime.now()));
     signInAs(id);
     return id;
   }
@@ -124,14 +122,33 @@ class DemoBackend {
       createdAt: DateTime.now().subtract(const Duration(days: 30)),
     );
     final names = config.country == Country.india
-        ? ['Sharma Electronics', 'Cool Air Services', 'Mehta Home Appliances', 'QuickFix Repairs', 'Bharat Movers', 'Kumar Furnishings']
-        : ['Lone Star Appliances', 'Big Apple HVAC', 'Metro Movers', 'Handy Pros', 'Empire Electronics', 'Brooklyn Furniture Co'];
+        ? [
+            'Sharma Electronics',
+            'Cool Air Services',
+            'Mehta Home Appliances',
+            'QuickFix Repairs',
+            'Bharat Movers',
+            'Kumar Furnishings',
+          ]
+        : [
+            'Lone Star Appliances',
+            'Big Apple HVAC',
+            'Metro Movers',
+            'Handy Pros',
+            'Empire Electronics',
+            'Brooklyn Furniture Co',
+          ];
     final leafIds = categories.where((c) => c.isLeaf && !c.isBlocked).map((c) => c.id).toList();
     _demoSellerIds = [];
     for (var i = 0; i < names.length; i++) {
       final id = 'demo-seller-$i';
       _demoSellerIds.add(id);
-      profiles[id] = Profile(id: id, name: names[i], roles: const [UserRole.buyer, UserRole.seller], activeMode: AppMode.seller);
+      profiles[id] = Profile(
+        id: id,
+        name: names[i],
+        roles: const [UserRole.buyer, UserRole.seller],
+        activeMode: AppMode.seller,
+      );
       sellers[id] = Seller(
         id: id,
         businessName: names[i],
@@ -162,11 +179,13 @@ class DemoBackend {
         .where((r) => r.buyerId == buyerId && DateTime.now().difference(r.createdAt).inHours < 24)
         .length;
     if (todayCount >= 10) throw StateError('rate_limited');
-    final dup = requests.values.any((r) =>
-        r.buyerId == buyerId &&
-        r.categoryId == d.categoryId &&
-        r.description.trim().toLowerCase() == d.text.trim().toLowerCase() &&
-        DateTime.now().difference(r.createdAt).inHours < 24);
+    final dup = requests.values.any(
+      (r) =>
+          r.buyerId == buyerId &&
+          r.categoryId == d.categoryId &&
+          r.description.trim().toLowerCase() == d.text.trim().toLowerCase() &&
+          DateTime.now().difference(r.createdAt).inHours < 24,
+    );
     if (dup) throw StateError('duplicate');
     final cat = categories.firstWhere((c) => c.id == d.categoryId);
     if (cat.isBlocked) throw StateError('blocked_category');
@@ -219,8 +238,7 @@ class DemoBackend {
       Timer(Duration(seconds: 3 + i * 4), () {
         final current = requests[r.id];
         if (current == null || !current.isOpen) return;
-        final base = (r.budgetMax ?? r.budgetMin)?.minorInt ??
-            (config.country == Country.india ? 2500000 : 89900);
+        final base = (r.budgetMax ?? r.budgetMin)?.minorInt ?? (config.country == Country.india ? 2500000 : 89900);
         final price = (base * (85 + _random.nextInt(25)) ~/ 100) ~/ 100 * 100;
         try {
           submitQuote(
@@ -291,23 +309,23 @@ class DemoBackend {
   }
 
   SellerSummary _summary(Seller s, BuyerRequest r) => SellerSummary(
-        id: s.id,
-        businessName: s.businessName,
-        logoUrl: s.logoUrl,
-        ratingAvg: s.ratingAvg,
-        ratingCount: s.ratingCount,
-        verified: s.isVerified,
-        avgResponseMins: s.avgResponseMins,
-        distanceKm: (r.lat != null && s.lat != null) ? _km(r.lat!, r.lng!, s.lat!, s.lng!) : null,
-        earlyPartner: s.earlyPartner,
-      );
+    id: s.id,
+    businessName: s.businessName,
+    logoUrl: s.logoUrl,
+    ratingAvg: s.ratingAvg,
+    ratingCount: s.ratingCount,
+    verified: s.isVerified,
+    avgResponseMins: s.avgResponseMins,
+    distanceKm: (r.lat != null && s.lat != null) ? _km(r.lat!, r.lng!, s.lat!, s.lng!) : null,
+    earlyPartner: s.earlyPartner,
+  );
 
   static double _km(double lat1, double lng1, double lat2, double lng2) {
     const r = 6371.0;
     final dLat = (lat2 - lat1) * pi / 180;
     final dLng = (lng2 - lng1) * pi / 180;
-    final a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1 * pi / 180) * cos(lat2 * pi / 180) * sin(dLng / 2) * sin(dLng / 2);
+    final a =
+        sin(dLat / 2) * sin(dLat / 2) + cos(lat1 * pi / 180) * cos(lat2 * pi / 180) * sin(dLng / 2) * sin(dLng / 2);
     return 2 * r * asin(sqrt(a));
   }
 
@@ -380,7 +398,13 @@ class DemoBackend {
     return id;
   }
 
-  void sendMessage(String chatId, String senderId, String body, {MessageType type = MessageType.text, String? attachment}) {
+  void sendMessage(
+    String chatId,
+    String senderId,
+    String body, {
+    MessageType type = MessageType.text,
+    String? attachment,
+  }) {
     final msg = ChatMessage(
       id: newId(),
       chatId: chatId,
@@ -399,9 +423,13 @@ class DemoBackend {
     notify();
     if (simulateMarket && senderId == c.buyerId && _demoSellerIds.contains(c.sellerId)) {
       Timer(const Duration(seconds: 2), () {
-        sendMessage(chatId, c.sellerId, config.country == Country.india
-            ? 'Namaste! Yes, this is available. Delivery and installation are included.'
-            : 'Hi! Yes, this is in stock. Delivery and installation are included.');
+        sendMessage(
+          chatId,
+          c.sellerId,
+          config.country == Country.india
+              ? 'Namaste! Yes, this is available. Delivery and installation are included.'
+              : 'Hi! Yes, this is in stock. Delivery and installation are included.',
+        );
       });
     }
   }
@@ -409,10 +437,9 @@ class DemoBackend {
   // -------------------------------------------------------- notifications
 
   void _notify(String userId, String type, Map<String, Object?> payload) {
-    notifications.putIfAbsent(userId, () => []).insert(
-          0,
-          AppNotification(id: newId(), type: type, payload: payload, createdAt: DateTime.now()),
-        );
+    notifications
+        .putIfAbsent(userId, () => [])
+        .insert(0, AppNotification(id: newId(), type: type, payload: payload, createdAt: DateTime.now()));
   }
 
   void addNotification(String userId, String type, Map<String, Object?> payload) {

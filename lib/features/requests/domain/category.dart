@@ -24,33 +24,24 @@ abstract class FieldDef with _$FieldDef {
   String label(String lang) => labels[lang] ?? labels['en'] ?? key;
 
   static FieldDef fromJson(Map<String, dynamic> j) => FieldDef(
-        key: j['key'] as String,
-        type: FieldType.values.firstWhere(
-          (t) => t.name == j['type'],
-          orElse: () => FieldType.text,
-        ),
-        labels: _strMap(j['labels'] ?? j['label']),
-        options: [
-          for (final o in (j['options'] as List? ?? const []))
-            o is String
-                ? FieldOption(value: o, labels: {'en': o})
-                : FieldOption(
-                    value: (o as Map)['value'].toString(),
-                    labels: _strMap(o['labels'] ?? o['label']),
-                  ),
-        ],
-        required: j['required'] == true,
-        unit: j['unit'] as String?,
-        quoteField: j['quote_field'] as bool?,
-      );
+    key: j['key'] as String,
+    type: FieldType.values.firstWhere((t) => t.name == j['type'], orElse: () => FieldType.text),
+    labels: _strMap(j['labels'] ?? j['label']),
+    options: [
+      for (final o in (j['options'] as List? ?? const []))
+        o is String
+            ? FieldOption(value: o, labels: {'en': o})
+            : FieldOption(value: (o as Map)['value'].toString(), labels: _strMap(o['labels'] ?? o['label'])),
+    ],
+    required: j['required'] == true,
+    unit: j['unit'] as String?,
+    quoteField: j['quote_field'] as bool?,
+  );
 }
 
 @freezed
 abstract class FieldOption with _$FieldOption {
-  const factory FieldOption({
-    required String value,
-    required Map<String, String> labels,
-  }) = _FieldOption;
+  const factory FieldOption({required String value, required Map<String, String> labels}) = _FieldOption;
 
   const FieldOption._();
 

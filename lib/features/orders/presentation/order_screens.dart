@@ -81,7 +81,13 @@ class OrderDetailScreen extends ConsumerWidget {
   const OrderDetailScreen({super.key, required this.orderId});
   final String orderId;
 
-  static const _flow = [OrderStatus.accepted, OrderStatus.scheduled, OrderStatus.dispatched, OrderStatus.delivered, OrderStatus.completed];
+  static const _flow = [
+    OrderStatus.accepted,
+    OrderStatus.scheduled,
+    OrderStatus.dispatched,
+    OrderStatus.delivered,
+    OrderStatus.completed,
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -102,78 +108,92 @@ class OrderDetailScreen extends ConsumerWidget {
         return Scaffold(
           appBar: AppBar(title: Text(l10n.orderTitle)),
           body: MaxWidth(
-            child: ListView(padding: const EdgeInsets.all(16), children: [
-              Text(o.title, style: context.text.titleLarge),
-              Text('${isBuyer ? o.sellerName : (o.buyerName ?? '')} · ${o.total.display}'),
-              const SizedBox(height: 16),
-              Text(l10n.orderTimeline, style: context.text.titleMedium),
-              for (final s in _flow)
-                ListTile(
-                  dense: true,
-                  leading: Icon(
-                    reached.containsKey(s) ? Icons.check_circle_rounded : Icons.radio_button_unchecked,
-                    color: reached.containsKey(s) ? Colors.green.shade600 : context.colors.outline,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Text(o.title, style: context.text.titleLarge),
+                Text('${isBuyer ? o.sellerName : (o.buyerName ?? '')} · ${o.total.display}'),
+                const SizedBox(height: 16),
+                Text(l10n.orderTimeline, style: context.text.titleMedium),
+                for (final s in _flow)
+                  ListTile(
+                    dense: true,
+                    leading: Icon(
+                      reached.containsKey(s) ? Icons.check_circle_rounded : Icons.radio_button_unchecked,
+                      color: reached.containsKey(s) ? Colors.green.shade600 : context.colors.outline,
+                    ),
+                    title: Text(orderStatusLabel(context, s)),
+                    subtitle: reached[s] == null ? null : Text(context.dateTime(reached[s]!.at)),
                   ),
-                  title: Text(orderStatusLabel(context, s)),
-                  subtitle: reached[s] == null ? null : Text(context.dateTime(reached[s]!.at)),
-                ),
-              if (next != null && o.status != OrderStatus.cancelled)
-                OutlinedButton(
-                  onPressed: () => ref.read(orderRepositoryProvider).updateStatus(o.id, next),
-                  child: Text(l10n.orderMarkAs(orderStatusLabel(context, next))),
-                ),
-              const Divider(height: 32),
-              Text(l10n.orderContact, style: context.text.titleMedium),
-              if (phone != null)
+                if (next != null && o.status != OrderStatus.cancelled)
+                  OutlinedButton(
+                    onPressed: () => ref.read(orderRepositoryProvider).updateStatus(o.id, next),
+                    child: Text(l10n.orderMarkAs(orderStatusLabel(context, next))),
+                  ),
+                const Divider(height: 32),
+                Text(l10n.orderContact, style: context.text.titleMedium),
+                if (phone != null)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.phone_outlined),
+                    title: Text(phone),
+                    trailing: IconButton.filledTonal(
+                      tooltip: l10n.call,
+                      onPressed: () => launchUrl(Uri(scheme: 'tel', path: phone)),
+                      icon: const Icon(Icons.call_rounded),
+                    ),
+                  ),
+                if (o.fullAddress != null)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.place_outlined),
+                    title: Text(o.fullAddress!),
+                  ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.phone_outlined),
-                  title: Text(phone),
-                  trailing: IconButton.filledTonal(
-                    tooltip: l10n.call,
-                    onPressed: () => launchUrl(Uri(scheme: 'tel', path: phone)),
-                    icon: const Icon(Icons.call_rounded),
+                  leading: const Icon(Icons.chat_bubble_outline_rounded),
+                  title: Text(l10n.chat),
+                  onTap: () async {
+                    final id = await ref
+                        .read(chatRepositoryProvider)
+                        .openChat(requestId: o.requestId, sellerId: o.sellerId);
+                    if (context.mounted) context.push('/chats/$id');
+                  },
+                ),
+                const Divider(height: 32),
+                Text(l10n.orderPayment, style: context.text.titleMedium),
+                if (o.paymentRecordedAt != null)
+                  Text(
+                    l10n.orderPaymentRecorded(o.paymentAmount!.display, paymentMethodLabel(context, o.paymentMethod!)),
+                  )
+                else ...[
+                  Text(l10n.orderPaymentOffPlatform, style: context.text.bodySmall),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final m in config.offPlatformPaymentMethods)
+                        ActionChip(
+                          label: Text(paymentMethodLabel(context, m)),
+                          onPressed: () => ref.read(orderRepositoryProvider).recordPayment(o.id, m, o.total),
+                        ),
+                    ],
                   ),
-                ),
-              if (o.fullAddress != null)
-                ListTile(contentPadding: EdgeInsets.zero, leading: const Icon(Icons.place_outlined), title: Text(o.fullAddress!)),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.chat_bubble_outline_rounded),
-                title: Text(l10n.chat),
-                onTap: () async {
-                  final id = await ref.read(chatRepositoryProvider).openChat(requestId: o.requestId, sellerId: o.sellerId);
-                  if (context.mounted) context.push('/chats/$id');
-                },
-              ),
-              const Divider(height: 32),
-              Text(l10n.orderPayment, style: context.text.titleMedium),
-              if (o.paymentRecordedAt != null)
-                Text(l10n.orderPaymentRecorded(o.paymentAmount!.display, paymentMethodLabel(context, o.paymentMethod!)))
-              else ...[
-                Text(l10n.orderPaymentOffPlatform, style: context.text.bodySmall),
-                const SizedBox(height: 8),
-                Wrap(spacing: 8, runSpacing: 8, children: [
-                  for (final m in config.offPlatformPaymentMethods)
-                    ActionChip(
-                      label: Text(paymentMethodLabel(context, m)),
-                      onPressed: () => ref.read(orderRepositoryProvider).recordPayment(o.id, m, o.total),
-                    ),
-                ]),
+                ],
+                if (o.isCompleted && !reviewed) ...[
+                  const SizedBox(height: 24),
+                  FilledButton.icon(
+                    onPressed: () => context.push('/orders/${o.id}/review'),
+                    icon: const Icon(Icons.star_outline_rounded),
+                    label: Text(isBuyer ? l10n.rateSeller : l10n.rateBuyer),
+                  ),
+                ],
               ],
-              if (o.isCompleted && !reviewed) ...[
-                const SizedBox(height: 24),
-                FilledButton.icon(
-                  onPressed: () => context.push('/orders/${o.id}/review'),
-                  icon: const Icon(Icons.star_outline_rounded),
-                  label: Text(isBuyer ? l10n.rateSeller : l10n.rateBuyer),
-                ),
-              ],
-            ]),
+            ),
           ),
         );
       },
     );
   }
 }
-

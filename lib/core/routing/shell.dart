@@ -19,11 +19,7 @@ class AppShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final unreadChats = ref.watch(unreadChatsCountProvider);
-    Widget chatIcon(IconData i) => Badge(
-          isLabelVisible: unreadChats > 0,
-          label: Text('$unreadChats'),
-          child: Icon(i),
-        );
+    Widget chatIcon(IconData i) => Badge(isLabelVisible: unreadChats > 0, label: Text('$unreadChats'), child: Icon(i));
     final destinations = mode == AppMode.buyer
         ? [
             (const Icon(Icons.home_outlined), const Icon(Icons.home_rounded), l10n.tabHome),
@@ -45,9 +41,7 @@ class AppShell extends ConsumerWidget {
       children: [
         if (isDemo) const SafeArea(bottom: false, child: DemoBanner()),
         Expanded(
-          child: isDemo
-              ? MediaQuery.removePadding(context: context, removeTop: true, child: shell)
-              : shell,
+          child: isDemo ? MediaQuery.removePadding(context: context, removeTop: true, child: shell) : shell,
         ),
       ],
     );
@@ -77,8 +71,7 @@ class AppShell extends ConsumerWidget {
         selectedIndex: shell.currentIndex,
         onDestinationSelected: onTap,
         destinations: [
-          for (final d in destinations)
-            NavigationDestination(icon: d.$1, selectedIcon: d.$2, label: d.$3),
+          for (final d in destinations) NavigationDestination(icon: d.$1, selectedIcon: d.$2, label: d.$3),
         ],
       ),
     );

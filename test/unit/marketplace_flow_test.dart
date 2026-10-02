@@ -43,25 +43,27 @@ void main() {
 
     Future<BuyerRequest> post() async {
       b.signInAs(b.demoBuyerId);
-      return requests.createRequest(RequestDraft(
-        text: 'Samsung 300L double door fridge',
-        categoryId: fridgeId(),
-        lat: 12.9716,
-        lng: 77.5946,
-        locationCode: '560034',
-        state: 'Karnataka',
-        fullAddress: '12 MG Road',
-        budgetMax: indiaConfig.money(3000000),
-      ));
+      return requests.createRequest(
+        RequestDraft(
+          text: 'Samsung 300L double door fridge',
+          categoryId: fridgeId(),
+          lat: 12.9716,
+          lng: 77.5946,
+          locationCode: '560034',
+          state: 'Karnataka',
+          fullAddress: '12 MG Road',
+          budgetMax: indiaConfig.money(3000000),
+        ),
+      );
     }
 
     QuoteDraft draft(String requestId, int price) => QuoteDraft(
-          requestId: requestId,
-          lines: [QuoteLine(description: 'Fridge', qty: 1, unitPrice: indiaConfig.money(price))],
-          delivery: indiaConfig.zero,
-          taxRateBp: 1800,
-          validDays: 7,
-        );
+      requestId: requestId,
+      lines: [QuoteLine(description: 'Fridge', qty: 1, unitPrice: indiaConfig.money(price))],
+      delivery: indiaConfig.zero,
+      taxRateBp: 1800,
+      validDays: 7,
+    );
 
     test('request appears in matching sellers\' lead feed without private details', () async {
       final r = await post();
@@ -85,8 +87,10 @@ void main() {
       b.signInAs('demo-seller-1');
       await quotes.submitQuote(draft(r.id, 2400000));
       b.signInAs('demo-seller-2');
-      expect(() => quotes.submitQuote(draft(r.id, 2300000)),
-          throwsA(isA<QuoteFailure>().having((e) => e.code, 'code', 'cap_reached')));
+      expect(
+        () => quotes.submitQuote(draft(r.id, 2300000)),
+        throwsA(isA<QuoteFailure>().having((e) => e.code, 'code', 'cap_reached')),
+      );
     });
 
     test('accepting closes the request, declines others, unlocks contact, allows review after completion', () async {
@@ -113,8 +117,10 @@ void main() {
       expect(b.sellers['demo-seller-0']!.ratingCount, before + 1);
 
       b.signInAs('demo-seller-2');
-      expect(() => quotes.submitQuote(draft(r.id, 1)),
-          throwsA(isA<QuoteFailure>().having((e) => e.code, 'code', 'request_closed')));
+      expect(
+        () => quotes.submitQuote(draft(r.id, 1)),
+        throwsA(isA<QuoteFailure>().having((e) => e.code, 'code', 'request_closed')),
+      );
     });
 
     test('blocked categories and duplicate requests are refused', () async {
@@ -148,16 +154,19 @@ void main() {
     addTearDown(b.dispose);
     b.signInAs(b.demoBuyerId);
     final cat = b.categories.firstWhere((c) => c.names['en'] == 'TVs');
-    final r = await DemoRequestRepository(b).createRequest(RequestDraft(text: '65 inch TV', categoryId: cat.id, state: 'Texas'));
+    final r = await DemoRequestRepository(b)
+        .createRequest(RequestDraft(text: '65 inch TV', categoryId: cat.id, state: 'Texas'));
     b.requests[r.id] = b.requests[r.id]!.copyWith(priorityUntil: DateTime(2000));
     b.signInAs('demo-seller-1');
-    final q = await DemoQuoteRepository(b).submitQuote(QuoteDraft(
-      requestId: r.id,
-      lines: [QuoteLine(description: 'TV', qty: 1, unitPrice: usaConfig.money(89999))],
-      delivery: usaConfig.money(4900),
-      taxRateBp: 825,
-      validDays: 7,
-    ));
+    final q = await DemoQuoteRepository(b).submitQuote(
+      QuoteDraft(
+        requestId: r.id,
+        lines: [QuoteLine(description: 'TV', qty: 1, unitPrice: usaConfig.money(89999))],
+        delivery: usaConfig.money(4900),
+        taxRateBp: 825,
+        validDays: 7,
+      ),
+    );
     expect(q.tax.minorInt, 7425); // 89999 x 8.25% = 7424.9175 cents
     expect(q.total.minorInt, 89999 + 7425 + 4900);
   });

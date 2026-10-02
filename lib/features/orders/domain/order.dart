@@ -8,11 +8,7 @@ enum OrderStatus { accepted, scheduled, dispatched, delivered, completed, cancel
 
 @freezed
 abstract class OrderEvent with _$OrderEvent {
-  const factory OrderEvent({
-    required OrderStatus status,
-    required DateTime at,
-    String? note,
-  }) = _OrderEvent;
+  const factory OrderEvent({required OrderStatus status, required DateTime at, String? note}) = _OrderEvent;
 }
 
 @freezed
@@ -42,6 +38,5 @@ abstract class Order with _$Order {
 
   const Order._();
 
-  bool get isCompleted =>
-      status == OrderStatus.completed || status == OrderStatus.delivered;
+  bool get isCompleted => status == OrderStatus.completed || status == OrderStatus.delivered;
 }

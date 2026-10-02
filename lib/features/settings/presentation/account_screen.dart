@@ -28,68 +28,120 @@ class AccountScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.accountTitle),
-        actions: [IconButton(tooltip: l10n.settingsTitle, onPressed: () => context.push('/settings'), icon: const Icon(Icons.settings_outlined))],
+        actions: [
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            onPressed: () => context.push('/settings'),
+            icon: const Icon(Icons.settings_outlined),
+          ),
+        ],
       ),
       body: MaxWidth(
-        child: ListView(children: [
-          ListTile(
-            leading: CircleAvatar(radius: 28, child: Text((profile?.name ?? '?').characters.first.toUpperCase())),
-            title: Text(profile?.name ?? '', style: context.text.titleLarge),
-            subtitle: Text(profile?.phone ?? profile?.email ?? ''),
-            trailing: profile?.phone == null
-                ? TextButton(onPressed: () => context.push('/auth/link-phone'), child: Text(l10n.addPhoneTitle))
-                : null,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: SegmentedButton<AppMode>(
-              segments: [
-                ButtonSegment(value: AppMode.buyer, icon: const Icon(Icons.shopping_bag_outlined), label: Text(l10n.modeBuyer)),
-                ButtonSegment(value: AppMode.seller, icon: const Icon(Icons.storefront_outlined), label: Text(l10n.modeSeller)),
-              ],
-              selected: {mode},
-              onSelectionChanged: (s) {
-                if (s.first == AppMode.seller && !isSeller) {
-                  context.push('/seller/onboarding');
-                } else {
-                  _switch(context, ref, s.first);
-                }
-              },
+        child: ListView(
+          children: [
+            ListTile(
+              leading: CircleAvatar(radius: 28, child: Text((profile?.name ?? '?').characters.first.toUpperCase())),
+              title: Text(profile?.name ?? '', style: context.text.titleLarge),
+              subtitle: Text(profile?.phone ?? profile?.email ?? ''),
+              trailing: profile?.phone == null
+                  ? TextButton(onPressed: () => context.push('/auth/link-phone'), child: Text(l10n.addPhoneTitle))
+                  : null,
             ),
-          ),
-          if (!isSeller)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Card(
-                color: context.colors.secondaryContainer,
-                child: ListTile(
-                  leading: const Icon(Icons.storefront_rounded),
-                  title: Text(l10n.becomeSeller),
-                  subtitle: Text(l10n.becomeSellerBody),
-                  onTap: () => context.push('/seller/onboarding'),
-                ),
+              padding: const EdgeInsets.all(16),
+              child: SegmentedButton<AppMode>(
+                segments: [
+                  ButtonSegment(
+                    value: AppMode.buyer,
+                    icon: const Icon(Icons.shopping_bag_outlined),
+                    label: Text(l10n.modeBuyer),
+                  ),
+                  ButtonSegment(
+                    value: AppMode.seller,
+                    icon: const Icon(Icons.storefront_outlined),
+                    label: Text(l10n.modeSeller),
+                  ),
+                ],
+                selected: {mode},
+                onSelectionChanged: (s) {
+                  if (s.first == AppMode.seller && !isSeller) {
+                    context.push('/seller/onboarding');
+                  } else {
+                    _switch(context, ref, s.first);
+                  }
+                },
               ),
             ),
-          if (mode == AppMode.seller && seller != null) ...[
-            SectionHeader(seller.businessName),
-            ListTile(leading: const Icon(Icons.storefront_outlined), title: Text(l10n.sellerViewPublic), onTap: () => context.push('/s/${seller.id}')),
-            ListTile(leading: const Icon(Icons.edit_outlined), title: Text(l10n.sellerProfileTitle), onTap: () => context.push('/seller/onboarding')),
+            if (!isSeller)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  color: context.colors.secondaryContainer,
+                  child: ListTile(
+                    leading: const Icon(Icons.storefront_rounded),
+                    title: Text(l10n.becomeSeller),
+                    subtitle: Text(l10n.becomeSellerBody),
+                    onTap: () => context.push('/seller/onboarding'),
+                  ),
+                ),
+              ),
+            if (mode == AppMode.seller && seller != null) ...[
+              SectionHeader(seller.businessName),
+              ListTile(
+                leading: const Icon(Icons.storefront_outlined),
+                title: Text(l10n.sellerViewPublic),
+                onTap: () => context.push('/s/${seller.id}'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: Text(l10n.sellerProfileTitle),
+                onTap: () => context.push('/seller/onboarding'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.verified_outlined),
+                title: Text(l10n.verificationTitle),
+                trailing: seller.isVerified ? const VerifiedBadge(compact: true) : null,
+                onTap: () => context.push('/seller/verification'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.insights_outlined),
+                title: Text(l10n.dashboardTitle),
+                onTap: () => context.push('/seller/dashboard'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.bookmarks_outlined),
+                title: Text(l10n.templatesTitle),
+                onTap: () => context.push('/seller/templates'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.workspace_premium_outlined),
+                title: Text(l10n.planTitle),
+                onTap: () => context.push('/seller/plan'),
+              ),
+            ],
+            const Divider(),
             ListTile(
-              leading: const Icon(Icons.verified_outlined),
-              title: Text(l10n.verificationTitle),
-              trailing: seller.isVerified ? const VerifiedBadge(compact: true) : null,
-              onTap: () => context.push('/seller/verification'),
+              leading: const Icon(Icons.local_shipping_outlined),
+              title: Text(l10n.ordersTitle),
+              onTap: () => context.push('/orders'),
             ),
-            ListTile(leading: const Icon(Icons.insights_outlined), title: Text(l10n.dashboardTitle), onTap: () => context.push('/seller/dashboard')),
-            ListTile(leading: const Icon(Icons.bookmarks_outlined), title: Text(l10n.templatesTitle), onTap: () => context.push('/seller/templates')),
-            ListTile(leading: const Icon(Icons.workspace_premium_outlined), title: Text(l10n.planTitle), onTap: () => context.push('/seller/plan')),
+            ListTile(
+              leading: const Icon(Icons.notifications_none_rounded),
+              title: Text(l10n.notificationsTitle),
+              onTap: () => context.push('/notifications'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.help_outline_rounded),
+              title: Text(l10n.settingsHelp),
+              onTap: () => context.push('/help'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings_outlined),
+              title: Text(l10n.settingsTitle),
+              onTap: () => context.push('/settings'),
+            ),
           ],
-          const Divider(),
-          ListTile(leading: const Icon(Icons.local_shipping_outlined), title: Text(l10n.ordersTitle), onTap: () => context.push('/orders')),
-          ListTile(leading: const Icon(Icons.notifications_none_rounded), title: Text(l10n.notificationsTitle), onTap: () => context.push('/notifications')),
-          ListTile(leading: const Icon(Icons.help_outline_rounded), title: Text(l10n.settingsHelp), onTap: () => context.push('/help')),
-          ListTile(leading: const Icon(Icons.settings_outlined), title: Text(l10n.settingsTitle), onTap: () => context.push('/settings')),
-        ]),
+        ),
       ),
     );
   }

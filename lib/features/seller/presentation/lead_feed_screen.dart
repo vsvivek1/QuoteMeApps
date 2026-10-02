@@ -47,39 +47,44 @@ class LeadFeedScreen extends ConsumerWidget {
               ),
             );
           }
-          return Column(children: [
-            _FilterBar(filters: filters),
-            if (!s.isVerified)
-              ListTile(
-                dense: true,
-                leading: const Icon(Icons.verified_outlined),
-                title: Text(l10n.leadPriorityNote),
-                trailing: TextButton(onPressed: () => context.push('/seller/verification'), child: Text(l10n.verificationTitle)),
-              ),
-            Expanded(
-              child: AsyncView(
-                value: feed,
-                onRetry: () => ref.invalidate(leadFeedProvider),
-                data: (leads) => leads.isEmpty
-                    ? EmptyState(icon: Icons.inbox_outlined, message: l10n.leadsEmpty)
-                    : RefreshIndicator(
-                        onRefresh: () async => ref.invalidate(leadFeedProvider),
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (n) {
-                            if (n.metrics.extentAfter < 400) ref.read(leadFeedProvider.notifier).loadMore();
-                            return false;
-                          },
-                          child: ListView.separated(
-                            padding: const EdgeInsets.all(16),
-                            itemCount: leads.length,
-                            separatorBuilder: (_, _) => const SizedBox(height: 12),
-                            itemBuilder: (_, i) => MaxWidth(child: LeadCard(lead: leads[i])),
+          return Column(
+            children: [
+              _FilterBar(filters: filters),
+              if (!s.isVerified)
+                ListTile(
+                  dense: true,
+                  leading: const Icon(Icons.verified_outlined),
+                  title: Text(l10n.leadPriorityNote),
+                  trailing: TextButton(
+                    onPressed: () => context.push('/seller/verification'),
+                    child: Text(l10n.verificationTitle),
+                  ),
+                ),
+              Expanded(
+                child: AsyncView(
+                  value: feed,
+                  onRetry: () => ref.invalidate(leadFeedProvider),
+                  data: (leads) => leads.isEmpty
+                      ? EmptyState(icon: Icons.inbox_outlined, message: l10n.leadsEmpty)
+                      : RefreshIndicator(
+                          onRefresh: () async => ref.invalidate(leadFeedProvider),
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (n) {
+                              if (n.metrics.extentAfter < 400) ref.read(leadFeedProvider.notifier).loadMore();
+                              return false;
+                            },
+                            child: ListView.separated(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: leads.length,
+                              separatorBuilder: (_, _) => const SizedBox(height: 12),
+                              itemBuilder: (_, i) => MaxWidth(child: LeadCard(lead: leads[i])),
+                            ),
                           ),
                         ),
-                      ),
+                ),
               ),
-            ),
-          ]);
+            ],
+          );
         },
       ),
     );
@@ -100,36 +105,40 @@ class _FilterBar extends ConsumerWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(children: [
-        FilterChip(
-          avatar: const Icon(Icons.category_outlined, size: 18),
-          label: Text(filters.categoryId == null
-              ? '${l10n.leadFilterCategory}: ${l10n.leadFilterAny}'
-              : cats[filters.categoryId]?.name(context.lang) ?? ''),
-          selected: filters.categoryId != null,
-          onSelected: (_) async {
-            if (filters.categoryId != null) {
-              notifier.set(filters.copyWith(categoryId: null));
-              return;
-            }
-            final mine = cats.values
-                .where((c) => c.parentId == null || (seller?.categoryIds.contains(c.id) ?? false))
-                .toList();
-            final picked = await showCategoryPicker(context, mine);
-            if (picked != null) notifier.set(filters.copyWith(categoryId: picked.id));
-          },
-        ),
-        const SizedBox(width: 8),
-        for (final km in const [5, 10, 25, 50])
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text('${l10n.leadFilterDistance} ${config.formatDistance(km.toDouble())}'),
-              selected: filters.maxDistanceKm == km,
-              onSelected: (on) => notifier.set(filters.copyWith(maxDistanceKm: on ? km : null)),
+      child: Row(
+        children: [
+          FilterChip(
+            avatar: const Icon(Icons.category_outlined, size: 18),
+            label: Text(
+              filters.categoryId == null
+                  ? '${l10n.leadFilterCategory}: ${l10n.leadFilterAny}'
+                  : cats[filters.categoryId]?.name(context.lang) ?? '',
             ),
+            selected: filters.categoryId != null,
+            onSelected: (_) async {
+              if (filters.categoryId != null) {
+                notifier.set(filters.copyWith(categoryId: null));
+                return;
+              }
+              final mine = cats.values
+                  .where((c) => c.parentId == null || (seller?.categoryIds.contains(c.id) ?? false))
+                  .toList();
+              final picked = await showCategoryPicker(context, mine);
+              if (picked != null) notifier.set(filters.copyWith(categoryId: picked.id));
+            },
           ),
-      ]),
+          const SizedBox(width: 8),
+          for (final km in const [5, 10, 25, 50])
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                label: Text('${l10n.leadFilterDistance} ${config.formatDistance(km.toDouble())}'),
+                selected: filters.maxDistanceKm == km,
+                onSelected: (on) => notifier.set(filters.copyWith(maxDistanceKm: on ? km : null)),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -163,55 +172,77 @@ class LeadCard extends ConsumerWidget {
           onTap: () => context.push('/seller/leads/${l.requestId}'),
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                if (!l.seen)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: CircleAvatar(radius: 4, backgroundColor: context.colors.primary),
-                  ),
-                Expanded(
-                  child: Text(cats[l.categoryId]?.name(context.lang) ?? '',
-                      style: context.text.labelLarge?.copyWith(color: context.colors.primary)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    if (!l.seen)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: CircleAvatar(radius: 4, backgroundColor: context.colors.primary),
+                      ),
+                    Expanded(
+                      child: Text(
+                        cats[l.categoryId]?.name(context.lang) ?? '',
+                        style: context.text.labelLarge?.copyWith(color: context.colors.primary),
+                      ),
+                    ),
+                    Text(context.shortDuration(DateTime.now().difference(l.createdAt)), style: context.text.labelSmall),
+                  ],
                 ),
-                Text(context.shortDuration(DateTime.now().difference(l.createdAt)), style: context.text.labelSmall),
-              ]),
-              const SizedBox(height: 4),
-              Text(l.title,
+                const SizedBox(height: 4),
+                Text(
+                  l.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-              const SizedBox(height: 8),
-              Wrap(spacing: 12, runSpacing: 4, children: [
-                Text(budget, style: context.text.bodySmall),
-                if (l.distanceKm != null) Text(l10n.leadAway(config.formatDistance(l.distanceKm!)), style: context.text.bodySmall),
-                if (l.locality != null) Text(l.locality!, style: context.text.bodySmall),
-                if (l.neededBy != null) Text(l10n.leadNeededBy(context.date(l.neededBy!)), style: context.text.bodySmall),
-              ]),
-              const SizedBox(height: 10),
-              Row(children: [
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(l.isFull ? l10n.leadFull : l10n.leadQuotesSent(l.quoteCount, l.maxQuotes),
-                        style: context.text.labelMedium),
-                    const SizedBox(height: 4),
-                    LinearProgressIndicator(
-                      value: l.maxQuotes == 0 ? 0 : l.quoteCount / l.maxQuotes,
-                      minHeight: 4,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ]),
+                  style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                const SizedBox(width: 16),
-                if (l.alreadyQuoted)
-                  StatusChip(l10n.leadAlreadyQuoted, color: Colors.green.shade700)
-                else
-                  FilledButton.tonal(
-                    onPressed: l.isFull ? null : () => context.push('/seller/leads/${l.requestId}/quote'),
-                    child: Text(l10n.leadSendQuote),
-                  ),
-              ]),
-            ]),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
+                  children: [
+                    Text(budget, style: context.text.bodySmall),
+                    if (l.distanceKm != null)
+                      Text(l10n.leadAway(config.formatDistance(l.distanceKm!)), style: context.text.bodySmall),
+                    if (l.locality != null) Text(l.locality!, style: context.text.bodySmall),
+                    if (l.neededBy != null)
+                      Text(l10n.leadNeededBy(context.date(l.neededBy!)), style: context.text.bodySmall),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l.isFull ? l10n.leadFull : l10n.leadQuotesSent(l.quoteCount, l.maxQuotes),
+                            style: context.text.labelMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          LinearProgressIndicator(
+                            value: l.maxQuotes == 0 ? 0 : l.quoteCount / l.maxQuotes,
+                            minHeight: 4,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    if (l.alreadyQuoted)
+                      StatusChip(l10n.leadAlreadyQuoted, color: Colors.green.shade700)
+                    else
+                      FilledButton.tonal(
+                        onPressed: l.isFull ? null : () => context.push('/seller/leads/${l.requestId}/quote'),
+                        child: Text(l10n.leadSendQuote),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

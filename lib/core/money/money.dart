@@ -24,11 +24,9 @@ Currency currencyFor(String isoCode) {
   return c;
 }
 
-Money moneyFromMinor(int minor, String isoCode) =>
-    Money.fromIntWithCurrency(minor, currencyFor(isoCode));
+Money moneyFromMinor(int minor, String isoCode) => Money.fromIntWithCurrency(minor, currencyFor(isoCode));
 
-Money moneyFromBigMinor(BigInt minor, String isoCode) =>
-    Money.fromBigIntWithCurrency(minor, currencyFor(isoCode));
+Money moneyFromBigMinor(BigInt minor, String isoCode) => Money.fromBigIntWithCurrency(minor, currencyFor(isoCode));
 
 Money zeroMoney(String isoCode) => moneyFromMinor(0, isoCode);
 
@@ -41,8 +39,7 @@ extension MoneyX on Money {
   bool get isZeroAmount => minorUnits == BigInt.zero;
 
   /// Sum a list of money values in one currency.
-  static Money sum(Iterable<Money> values, String isoCode) =>
-      values.fold(zeroMoney(isoCode), (a, b) => a + b);
+  static Money sum(Iterable<Money> values, String isoCode) => values.fold(zeroMoney(isoCode), (a, b) => a + b);
 }
 
 /// Parses user-typed amounts such as "1,299.50" or "1299" into [Money].

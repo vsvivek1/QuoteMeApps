@@ -68,7 +68,10 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
       loading: const Scaffold(body: SkeletonList()),
       data: (r) {
         if (r == null) {
-          return Scaffold(appBar: AppBar(), body: ErrorView(onRetry: () => ref.invalidate(requestProvider(widget.requestId))));
+          return Scaffold(
+            appBar: AppBar(),
+            body: ErrorView(onRetry: () => ref.invalidate(requestProvider(widget.requestId))),
+          );
         }
         final cat = cats[r.categoryId];
         final list = sortQuotes(quotes.value ?? const [], _sort);
@@ -76,7 +79,11 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
           appBar: AppBar(
             title: Text(r.title, overflow: TextOverflow.ellipsis),
             actions: [
-              IconButton(tooltip: l10n.shareRequest, onPressed: () => _share(r), icon: const Icon(Icons.share_outlined)),
+              IconButton(
+                tooltip: l10n.shareRequest,
+                onPressed: () => _share(r),
+                icon: const Icon(Icons.share_outlined),
+              ),
               PopupMenuButton<String>(
                 onSelected: (v) => switch (v) {
                   'whatsapp' => _share(r, whatsapp: true),
@@ -108,33 +115,37 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
                 children: [
                   _Header(request: r, category: cat),
                   const SizedBox(height: 16),
-                  Row(children: [
-                    Expanded(
-                      child: Text(l10n.quotesOfMax(r.quoteCount, r.maxQuotes),
-                          style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                    ),
-                    if (list.length >= 2)
-                      TextButton.icon(
-                        onPressed: () => setState(() {
-                          _selecting = !_selecting;
-                          _selected.clear();
-                        }),
-                        icon: Icon(_selecting ? Icons.close_rounded : Icons.compare_arrows_rounded),
-                        label: Text(_selecting ? l10n.cancel : l10n.compare),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l10n.quotesOfMax(r.quoteCount, r.maxQuotes),
+                          style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                        ),
                       ),
-                    PopupMenuButton<QuoteSort>(
-                      tooltip: l10n.sortBy,
-                      icon: const Icon(Icons.sort_rounded),
-                      initialValue: _sort,
-                      onSelected: (v) => setState(() => _sort = v),
-                      itemBuilder: (_) => [
-                        PopupMenuItem(value: QuoteSort.price, child: Text(l10n.sortPrice)),
-                        PopupMenuItem(value: QuoteSort.rating, child: Text(l10n.sortRating)),
-                        PopupMenuItem(value: QuoteSort.deliveryDate, child: Text(l10n.sortDelivery)),
-                        PopupMenuItem(value: QuoteSort.distance, child: Text(l10n.sortDistance)),
-                      ],
-                    ),
-                  ]),
+                      if (list.length >= 2)
+                        TextButton.icon(
+                          onPressed: () => setState(() {
+                            _selecting = !_selecting;
+                            _selected.clear();
+                          }),
+                          icon: Icon(_selecting ? Icons.close_rounded : Icons.compare_arrows_rounded),
+                          label: Text(_selecting ? l10n.cancel : l10n.compare),
+                        ),
+                      PopupMenuButton<QuoteSort>(
+                        tooltip: l10n.sortBy,
+                        icon: const Icon(Icons.sort_rounded),
+                        initialValue: _sort,
+                        onSelected: (v) => setState(() => _sort = v),
+                        itemBuilder: (_) => [
+                          PopupMenuItem(value: QuoteSort.price, child: Text(l10n.sortPrice)),
+                          PopupMenuItem(value: QuoteSort.rating, child: Text(l10n.sortRating)),
+                          PopupMenuItem(value: QuoteSort.deliveryDate, child: Text(l10n.sortDelivery)),
+                          PopupMenuItem(value: QuoteSort.distance, child: Text(l10n.sortDistance)),
+                        ],
+                      ),
+                    ],
+                  ),
                   if (_selecting) Text(l10n.compareSelect, style: context.text.bodySmall),
                   const SizedBox(height: 8),
                   if (quotes.isLoading && !quotes.hasValue)
@@ -187,33 +198,45 @@ class _Header extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            StatusChip(requestStatusLabel(context, r.status), color: requestStatusColor(context, r.status)),
-            const SizedBox(width: 8),
-            if (category != null) Expanded(child: Text(category!.name(context.lang), style: context.text.labelLarge)),
-          ]),
-          if (r.description.isNotEmpty && r.description != r.title) ...[
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                StatusChip(requestStatusLabel(context, r.status), color: requestStatusColor(context, r.status)),
+                const SizedBox(width: 8),
+                if (category != null)
+                  Expanded(child: Text(category!.name(context.lang), style: context.text.labelLarge)),
+              ],
+            ),
+            if (r.description.isNotEmpty && r.description != r.title) ...[
+              const SizedBox(height: 8),
+              Text(r.description),
+            ],
+            if (category != null && r.fields.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              FieldSummary(fields: category!.fields, values: r.fields),
+            ],
             const SizedBox(height: 8),
-            Text(r.description),
+            Wrap(
+              spacing: 16,
+              runSpacing: 4,
+              children: [
+                if (r.budgetMin != null || r.budgetMax != null)
+                  Text('${l10n.postBudget}: ${moneyRange(r.budgetMin, r.budgetMax)}'),
+                if (r.neededBy != null) Text(l10n.leadNeededBy(context.date(r.neededBy!))),
+                if (r.locality != null || r.locationCode != null)
+                  Text([r.locality, r.locationCode].whereType<String>().where((s) => s.isNotEmpty).join(', ')),
+                if (r.isOpen && ends != null)
+                  Text(
+                    ends.isAfter(DateTime.now())
+                        ? l10n.closesIn(context.shortDuration(ends.difference(DateTime.now())))
+                        : l10n.closed,
+                  ),
+              ],
+            ),
           ],
-          if (category != null && r.fields.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            FieldSummary(fields: category!.fields, values: r.fields),
-          ],
-          const SizedBox(height: 8),
-          Wrap(spacing: 16, runSpacing: 4, children: [
-            if (r.budgetMin != null || r.budgetMax != null)
-              Text('${l10n.postBudget}: ${moneyRange(r.budgetMin, r.budgetMax)}'),
-            if (r.neededBy != null) Text(l10n.leadNeededBy(context.date(r.neededBy!))),
-            if (r.locality != null || r.locationCode != null)
-              Text([r.locality, r.locationCode].whereType<String>().where((s) => s.isNotEmpty).join(', ')),
-            if (r.isOpen && ends != null)
-              Text(ends.isAfter(DateTime.now())
-                  ? l10n.closesIn(context.shortDuration(ends.difference(DateTime.now())))
-                  : l10n.closed),
-          ]),
-        ]),
+        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-
 import '../money/money.dart';
 import '../money/money_formatter.dart';
 import '../money/tax.dart';
@@ -124,8 +123,7 @@ class CountryConfig {
 
   Money get zero => zeroMoney(currencyCode);
 
-  MoneyFormatter formatter(Locale locale) =>
-      MoneyFormatter(locale.toLanguageTag().replaceAll('-', '_'));
+  MoneyFormatter formatter(Locale locale) => MoneyFormatter(locale.toLanguageTag().replaceAll('-', '_'));
 
   Uri legalUrl(String slug) => Uri.https(webDomain, '/legal/$slug');
 
@@ -143,6 +141,5 @@ class CountryConfig {
     return km < 10 ? '${km.toStringAsFixed(1)} km' : '${km.round()} km';
   }
 
-  String e164(String national) =>
-      '$phoneDialCode${national.replaceAll(RegExp(r'\D'), '')}';
+  String e164(String national) => '$phoneDialCode${national.replaceAll(RegExp(r'\D'), '')}';
 }

@@ -56,12 +56,14 @@ Future<void> bootstrap(CountryConfig config) async {
 
   final prefs = await SharedPreferences.getInstance();
 
-  runApp(ProviderScope(
-    overrides: [
-      countryConfigProvider.overrideWithValue(config),
-      appEnvProvider.overrideWithValue(env),
-      sharedPreferencesProvider.overrideWithValue(prefs),
-    ],
-    child: const IWantApp(),
-  ));
+  runApp(
+    ProviderScope(
+      overrides: [
+        countryConfigProvider.overrideWithValue(config),
+        appEnvProvider.overrideWithValue(env),
+        sharedPreferencesProvider.overrideWithValue(prefs),
+      ],
+      child: const IWantApp(),
+    ),
+  );
 }

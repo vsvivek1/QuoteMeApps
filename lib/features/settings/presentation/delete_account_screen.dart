@@ -45,23 +45,29 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.deleteTitle)),
       body: MaxWidth(
-        child: ListView(padding: const EdgeInsets.all(16), children: [
-          Icon(Icons.warning_amber_rounded, size: 48, color: context.colors.error),
-          const SizedBox(height: 12),
-          Text(l10n.deleteBody),
-          const SizedBox(height: 24),
-          TextField(
-            controller: _confirm,
-            decoration: InputDecoration(labelText: l10n.deleteConfirmLabel),
-            onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: 24),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: context.colors.error, foregroundColor: context.colors.onError),
-            onPressed: _confirm.text.trim().toUpperCase() == l10n.deleteConfirmWord ? _delete : null,
-            child: Text(l10n.deleteButton),
-          ),
-        ]),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Icon(Icons.warning_amber_rounded, size: 48, color: context.colors.error),
+            const SizedBox(height: 12),
+            Text(l10n.deleteBody),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _confirm,
+              decoration: InputDecoration(labelText: l10n.deleteConfirmLabel),
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: context.colors.error,
+                foregroundColor: context.colors.onError,
+              ),
+              onPressed: _confirm.text.trim().toUpperCase() == l10n.deleteConfirmWord ? _delete : null,
+              child: Text(l10n.deleteButton),
+            ),
+          ],
+        ),
       ),
     );
   }

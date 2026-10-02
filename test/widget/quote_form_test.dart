@@ -12,7 +12,11 @@ void main() {
   Future<String> seedRequest(dynamic demo, String state) async {
     demo.signInAs(demo.demoBuyerId);
     final cat = demo.categories.firstWhere((c) => c.names['en'] == 'TVs');
-    final r = demo.createRequest(demo.demoBuyerId, RequestDraft(text: 'TV', categoryId: cat.id, state: state), title: '55 inch TV');
+    final r = demo.createRequest(
+      demo.demoBuyerId,
+      RequestDraft(text: 'TV', categoryId: cat.id, state: state),
+      title: '55 inch TV',
+    );
     demo.requests[r.id] = r.copyWith(priorityUntil: DateTime(2000));
     return r.id as String;
   }

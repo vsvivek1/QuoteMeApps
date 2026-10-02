@@ -19,11 +19,7 @@ enum QuoteWindow {
 
 @freezed
 abstract class RequestMedia with _$RequestMedia {
-  const factory RequestMedia({
-    required String path,
-    @Default('image') String type,
-    String? url,
-  }) = _RequestMedia;
+  const factory RequestMedia({required String path, @Default('image') String type, String? url}) = _RequestMedia;
 }
 
 /// Row in `requests` as the buyer sees it.
@@ -63,9 +59,7 @@ abstract class BuyerRequest with _$BuyerRequest {
 
   bool get isOpen => status == RequestStatus.open;
   bool get isPast =>
-      status == RequestStatus.expired ||
-      status == RequestStatus.cancelled ||
-      status == RequestStatus.closed;
+      status == RequestStatus.expired || status == RequestStatus.cancelled || status == RequestStatus.closed;
 }
 
 /// What the post-request wizard produces.

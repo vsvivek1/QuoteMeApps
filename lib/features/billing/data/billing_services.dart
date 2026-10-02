@@ -58,12 +58,16 @@ class StoreBillingService implements BillingService {
             kind: p.id == ProductIds.monthly
                 ? PlanKind.monthly
                 : p.id == ProductIds.annual
-                    ? PlanKind.annual
-                    : PlanKind.credits,
+                ? PlanKind.annual
+                : PlanKind.credits,
             title: p.title,
             price: _config.money((p.rawPrice * 100).round()),
             priceText: p.price,
-            credits: p.id == ProductIds.credits10 ? 10 : p.id == ProductIds.credits50 ? 50 : null,
+            credits: p.id == ProductIds.credits10
+                ? 10
+                : p.id == ProductIds.credits50
+                ? 50
+                : null,
           );
         }(),
     ];
@@ -117,8 +121,10 @@ class StoreBillingService implements BillingService {
   @override
   Uri? manageSubscriptionsUrl(String? productId) => store == 'apple'
       ? Uri.parse('https://apps.apple.com/account/subscriptions')
-      : Uri.parse('https://play.google.com/store/account/subscriptions'
-          '${productId == null ? '' : '?sku=$productId&package=com.calecute.iwant.${_config.country.name}'}');
+      : Uri.parse(
+          'https://play.google.com/store/account/subscriptions'
+          '${productId == null ? '' : '?sku=$productId&package=com.calecute.iwant.${_config.country.name}'}',
+        );
 
   void dispose() => _sub.cancel();
 }
@@ -182,9 +188,26 @@ class DemoBillingService implements BillingService {
   Future<List<PlanProduct>> products() async {
     final india = _config.country == Country.india;
     return [
-      PlanProduct(id: ProductIds.monthly, kind: PlanKind.monthly, title: 'Pro', price: _config.money(india ? 19900 : 1999), trialDays: 14),
-      PlanProduct(id: ProductIds.annual, kind: PlanKind.annual, title: 'Pro', price: _config.money(india ? 199900 : 19900)),
-      PlanProduct(id: ProductIds.credits10, kind: PlanKind.credits, title: '10 credits', price: _config.money(india ? 9900 : 999), credits: 10),
+      PlanProduct(
+        id: ProductIds.monthly,
+        kind: PlanKind.monthly,
+        title: 'Pro',
+        price: _config.money(india ? 19900 : 1999),
+        trialDays: 14,
+      ),
+      PlanProduct(
+        id: ProductIds.annual,
+        kind: PlanKind.annual,
+        title: 'Pro',
+        price: _config.money(india ? 199900 : 19900),
+      ),
+      PlanProduct(
+        id: ProductIds.credits10,
+        kind: PlanKind.credits,
+        title: '10 credits',
+        price: _config.money(india ? 9900 : 999),
+        credits: 10,
+      ),
     ];
   }
 

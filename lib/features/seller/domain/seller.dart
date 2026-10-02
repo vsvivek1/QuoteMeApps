@@ -77,11 +77,8 @@ abstract class SellerLicence with _$SellerLicence {
 
 @freezed
 abstract class QuoteTemplate with _$QuoteTemplate {
-  const factory QuoteTemplate({
-    required String id,
-    required String name,
-    required Map<String, Object?> payload,
-  }) = _QuoteTemplate;
+  const factory QuoteTemplate({required String id, required String name, required Map<String, Object?> payload}) =
+      _QuoteTemplate;
 }
 
 @freezed

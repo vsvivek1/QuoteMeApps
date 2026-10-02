@@ -14,8 +14,7 @@ SharedPreferences sharedPreferences(Ref ref) =>
     throw UnimplementedError('sharedPreferencesProvider must be overridden');
 
 @Riverpod(keepAlive: true)
-Stream<AuthSession?> authSession(Ref ref) =>
-    ref.watch(authRepositoryProvider).sessionChanges();
+Stream<AuthSession?> authSession(Ref ref) => ref.watch(authRepositoryProvider).sessionChanges();
 
 @Riverpod(keepAlive: true)
 Stream<Profile?> myProfile(Ref ref) {
@@ -25,8 +24,7 @@ Stream<Profile?> myProfile(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-AppMode appMode(Ref ref) =>
-    ref.watch(myProfileProvider).value?.activeMode ?? AppMode.buyer;
+AppMode appMode(Ref ref) => ref.watch(myProfileProvider).value?.activeMode ?? AppMode.buyer;
 
 @Riverpod(keepAlive: true)
 Future<AppFlags> appFlags(Ref ref) => ref.watch(flagsRepositoryProvider).load();
@@ -39,9 +37,7 @@ Future<bool> consentAccepted(Ref ref) async {
   final flags = await ref.watch(appFlagsProvider.future);
   // Re-check when the profile changes (consents are recorded through it).
   ref.watch(myProfileProvider);
-  return ref
-      .watch(profileRepositoryProvider)
-      .hasAcceptedCurrentTerms(flags.termsVersion, flags.privacyVersion);
+  return ref.watch(profileRepositoryProvider).hasAcceptedCurrentTerms(flags.termsVersion, flags.privacyVersion);
 }
 
 const _localeKey = 'locale';
@@ -58,8 +54,9 @@ class LocaleController extends _$LocaleController {
   }
 
   Future<void> set(Locale locale) async {
-    await ref.read(sharedPreferencesProvider).setString(
-        _localeKey, [locale.languageCode, if (locale.countryCode != null) locale.countryCode].join('_'));
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(_localeKey, [locale.languageCode, if (locale.countryCode != null) locale.countryCode].join('_'));
     state = locale;
     final session = ref.read(authSessionProvider).value;
     if (session != null) {

@@ -6,13 +6,7 @@ import '../../core/utils/context_x.dart';
 /// Renders loading / error / data for an [AsyncValue] with skeletons and a
 /// retry button.
 class AsyncView<T> extends StatelessWidget {
-  const AsyncView({
-    super.key,
-    required this.value,
-    required this.data,
-    this.onRetry,
-    this.loading,
-  });
+  const AsyncView({super.key, required this.value, required this.data, this.onRetry, this.loading});
 
   final AsyncValue<T> value;
   final Widget Function(T data) data;
@@ -57,12 +51,7 @@ class ErrorView extends StatelessWidget {
 }
 
 class EmptyState extends StatelessWidget {
-  const EmptyState({
-    super.key,
-    required this.icon,
-    required this.message,
-    this.action,
-  });
+  const EmptyState({super.key, required this.icon, required this.message, this.action});
 
   final IconData icon;
   final String message;
@@ -122,7 +111,9 @@ class SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 20, 8, 8),
       child: Row(
         children: [
-          Expanded(child: Text(title, style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700))),
+          Expanded(
+            child: Text(title, style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          ),
           ?trailing,
         ],
       ),
@@ -140,11 +131,11 @@ class StatusChip extends StatelessWidget {
     final c = color ?? context.colors.primary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: c.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
+      decoration: BoxDecoration(color: c.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
+      child: Text(
+        label,
+        style: context.text.labelMedium?.copyWith(color: c, fontWeight: FontWeight.w600),
       ),
-      child: Text(label, style: context.text.labelMedium?.copyWith(color: c, fontWeight: FontWeight.w600)),
     );
   }
 }
@@ -187,8 +178,7 @@ class VerifiedBadge extends StatelessWidget {
           Icon(Icons.verified_rounded, size: 16, color: context.colors.primary),
           if (!compact) ...[
             const SizedBox(width: 2),
-            Text(context.l10n.quoteVerified,
-                style: context.text.labelSmall?.copyWith(color: context.colors.primary)),
+            Text(context.l10n.quoteVerified, style: context.text.labelSmall?.copyWith(color: context.colors.primary)),
           ],
         ],
       ),
@@ -204,9 +194,12 @@ class MaxWidth extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(constraints: BoxConstraints(maxWidth: maxWidth), child: child),
-      );
+    alignment: Alignment.topCenter,
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: maxWidth),
+      child: child,
+    ),
+  );
 }
 
 /// Primary button that shows a spinner while [onPressed] runs.

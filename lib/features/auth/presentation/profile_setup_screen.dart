@@ -24,10 +24,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
 
   Future<void> _save() async {
     if (!_form.currentState!.validate()) return;
-    await ref.read(profileRepositoryProvider).updateProfile(
-          name: _name.text.trim(),
-          language: Localizations.localeOf(context).languageCode,
-        );
+    await ref
+        .read(profileRepositoryProvider)
+        .updateProfile(name: _name.text.trim(), language: Localizations.localeOf(context).languageCode);
   }
 
   @override

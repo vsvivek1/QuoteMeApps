@@ -27,13 +27,13 @@ String notificationTitle(BuildContext context, AppNotification n) {
 }
 
 IconData _icon(String type) => switch (type) {
-      'new_quote' || 'quote_revised' => Icons.request_quote_outlined,
-      'message' => Icons.chat_bubble_outline_rounded,
-      'new_request' => Icons.inbox_outlined,
-      'quote_accepted' => Icons.celebration_outlined,
-      'order_status' => Icons.local_shipping_outlined,
-      _ => Icons.notifications_none_rounded,
-    };
+  'new_quote' || 'quote_revised' => Icons.request_quote_outlined,
+  'message' => Icons.chat_bubble_outline_rounded,
+  'new_request' => Icons.inbox_outlined,
+  'quote_accepted' => Icons.celebration_outlined,
+  'order_status' => Icons.local_shipping_outlined,
+  _ => Icons.notifications_none_rounded,
+};
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -59,8 +59,10 @@ class NotificationsScreen extends ConsumerWidget {
                   return ListTile(
                     tileColor: n.isRead ? null : context.colors.primaryContainer.withValues(alpha: 0.25),
                     leading: Icon(_icon(n.type)),
-                    title: Text(notificationTitle(context, n),
-                        style: TextStyle(fontWeight: n.isRead ? FontWeight.normal : FontWeight.w600)),
+                    title: Text(
+                      notificationTitle(context, n),
+                      style: TextStyle(fontWeight: n.isRead ? FontWeight.normal : FontWeight.w600),
+                    ),
                     subtitle: Text(timeago.format(n.createdAt, locale: context.lang)),
                     onTap: () {
                       repo.markRead(n.id);

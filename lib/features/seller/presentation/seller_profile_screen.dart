@@ -37,12 +37,17 @@ class SellerProfileScreen extends ConsumerWidget {
             actions: [
               IconButton(
                 tooltip: l10n.sellerShareShop,
-                onPressed: () => SharePlus.instance.share(ShareParams(
-                    text: l10n.sellerShareText(s.businessName, config.appName, link))),
+                onPressed: () => SharePlus.instance.share(
+                  ShareParams(text: l10n.sellerShareText(s.businessName, config.appName, link)),
+                ),
                 icon: const Icon(Icons.share_outlined),
               ),
               if (isMe)
-                IconButton(tooltip: l10n.edit, onPressed: () => context.push('/seller/onboarding'), icon: const Icon(Icons.edit_outlined))
+                IconButton(
+                  tooltip: l10n.edit,
+                  onPressed: () => context.push('/seller/onboarding'),
+                  icon: const Icon(Icons.edit_outlined),
+                )
               else
                 PopupMenuButton<String>(
                   onSelected: (v) => v == 'report'
@@ -56,53 +61,74 @@ class SellerProfileScreen extends ConsumerWidget {
             ],
           ),
           body: MaxWidth(
-            child: ListView(padding: const EdgeInsets.all(16), children: [
-              Row(children: [
-                CircleAvatar(radius: 36, child: Text(s.businessName.characters.first, style: context.text.headlineMedium)),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(s.businessName, style: context.text.titleLarge),
-                    if (s.isVerified) const VerifiedBadge(),
-                    if (s.ratingCount > 0) RatingStars(rating: s.ratingAvg, count: s.ratingCount),
-                  ]),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 36,
+                      child: Text(s.businessName.characters.first, style: context.text.headlineMedium),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(s.businessName, style: context.text.titleLarge),
+                          if (s.isVerified) const VerifiedBadge(),
+                          if (s.ratingCount > 0) RatingStars(rating: s.ratingAvg, count: s.ratingCount),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ]),
-              const SizedBox(height: 16),
-              if (s.description.isNotEmpty) Text(s.description),
-              const SizedBox(height: 12),
-              Wrap(spacing: 16, runSpacing: 8, children: [
-                if (s.yearsInBusiness != null) Text(l10n.sellerYears(s.yearsInBusiness!)),
-                if (s.avgResponseMins != null) Text(l10n.sellerResponds(context.shortDuration(Duration(minutes: s.avgResponseMins!)))),
-                if (s.locality != null) Text(s.locality!),
-              ]),
-              if (s.brands.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                if (s.description.isNotEmpty) Text(s.description),
                 const SizedBox(height: 12),
-                Wrap(spacing: 8, runSpacing: 8, children: [for (final b in s.brands) Chip(label: Text(b))]),
-              ],
-              const SizedBox(height: 12),
-              Wrap(spacing: 8, runSpacing: 8, children: [
-                for (final id in s.categoryIds.take(12))
-                  if (cats[id] != null) Chip(label: Text(cats[id]!.name(context.lang)), visualDensity: VisualDensity.compact),
-              ]),
-              const Divider(height: 32),
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.reviews_outlined),
-                title: Text(l10n.reviewsTitle),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => context.push('/s/${s.id}/reviews'),
-              ),
-              if (isMe) ...[
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 8,
+                  children: [
+                    if (s.yearsInBusiness != null) Text(l10n.sellerYears(s.yearsInBusiness!)),
+                    if (s.avgResponseMins != null)
+                      Text(l10n.sellerResponds(context.shortDuration(Duration(minutes: s.avgResponseMins!)))),
+                    if (s.locality != null) Text(s.locality!),
+                  ],
+                ),
+                if (s.brands.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Wrap(spacing: 8, runSpacing: 8, children: [for (final b in s.brands) Chip(label: Text(b))]),
+                ],
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final id in s.categoryIds.take(12))
+                      if (cats[id] != null)
+                        Chip(label: Text(cats[id]!.name(context.lang)), visualDensity: VisualDensity.compact),
+                  ],
+                ),
+                const Divider(height: 32),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.verified_outlined),
-                  title: Text(l10n.verificationTitle),
+                  leading: const Icon(Icons.reviews_outlined),
+                  title: Text(l10n.reviewsTitle),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => context.push('/seller/verification'),
+                  onTap: () => context.push('/s/${s.id}/reviews'),
                 ),
+                if (isMe) ...[
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.verified_outlined),
+                    title: Text(l10n.verificationTitle),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => context.push('/seller/verification'),
+                  ),
+                ],
               ],
-            ]),
+            ),
           ),
         );
       },

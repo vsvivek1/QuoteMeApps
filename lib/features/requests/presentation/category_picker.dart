@@ -6,8 +6,12 @@ import 'widgets.dart';
 
 /// Two-level category picker in a bottom sheet. Blocked categories are shown
 /// disabled so buyers learn what isn't allowed.
-Future<Category?> showCategoryPicker(BuildContext context, List<Category> all,
-    {bool allowBlocked = false, Set<int> selected = const {}}) {
+Future<Category?> showCategoryPicker(
+  BuildContext context,
+  List<Category> all, {
+  bool allowBlocked = false,
+  Set<int> selected = const {},
+}) {
   return showModalBottomSheet<Category>(
     context: context,
     isScrollControlled: true,
@@ -33,10 +37,10 @@ Future<Category?> showCategoryPicker(BuildContext context, List<Category> all,
                       trailing: c.isBlocked
                           ? const Icon(Icons.block_rounded, size: 18)
                           : c.isRestricted
-                              ? const Icon(Icons.verified_user_outlined, size: 18)
-                              : selected.contains(c.id)
-                                  ? const Icon(Icons.check_rounded)
-                                  : null,
+                          ? const Icon(Icons.verified_user_outlined, size: 18)
+                          : selected.contains(c.id)
+                          ? const Icon(Icons.check_rounded)
+                          : null,
                       onTap: () => Navigator.pop(ctx, c),
                     ),
                 ],
