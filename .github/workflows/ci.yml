@@ -15,6 +15,21 @@ env:
   FLUTTER_VERSION: "3.47.6"
 
 jobs:
+  detect:
+    # hashFiles() is not allowed in job-level `if`, so detect optional parts here.
+    runs-on: ubuntu-latest
+    outputs:
+      admin: ${{ steps.d.outputs.admin }}
+      web: ${{ steps.d.outputs.web }}
+      supabase: ${{ steps.d.outputs.supabase }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: d
+        run: |
+          echo "admin=$([ -f admin/pubspec.yaml ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "web=$([ -f web/app_site/package.json ] && [ -f web/trends_site/package.json ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "supabase=$([ -f supabase/config.toml ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
   flutter:
     name: Analyze and test (app)
     runs-on: ubuntu-latest
@@ -73,8 +88,9 @@ jobs:
 
   admin:
     name: Admin panel
+    needs: detect
+    if: needs.detect.outputs.admin == 'true'
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('admin/pubspec.yaml') != '' }}
     defaults:
       run:
         working-directory: admin
@@ -92,6 +108,8 @@ jobs:
 
   database:
     name: Database (pgTAP) and Edge Functions (deno test)
+    needs: detect
+    if: needs.detect.outputs.supabase == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -113,8 +131,9 @@ jobs:
 
   websites:
     name: Website builds (${{ matrix.site }}, ${{ matrix.country }})
+    needs: detect
+    if: needs.detect.outputs.web == 'true'
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('web/**/package.json') != '' }}
     strategy:
       fail-fast: false
       matrix:
