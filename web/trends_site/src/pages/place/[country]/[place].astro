@@ -12,8 +12,10 @@ const { p } = Astro.props as { p: ReturnType<typeof placesIndex>[number] };
 const items = p.items.filter((b) => b.indexable || b.article.fixture);
 const indexable = p.items.some((b) => b.indexable);
 ---
-<Base title={`Trending in ${p.name}`} description={`What is trending in ${p.name}${p.state ? `, ${p.state}` : ''} right now.`} path={`/place/${p.country}/${p.slug}`} noindex={!indexable}>
-  <p class="meta"><a href={`/${p.country}`}>{COUNTRY_LABEL[p.country]}</a> /</p>
-  <h1>Trending in {p.name}</h1>
+<Base title={`Trending in ${p.name}`} description={`What is trending in ${p.name}${p.state ? `, ${p.state}` : ''} right now.`} path={`/place/${p.country}/${p.slug}`} noindex={!indexable} wide>
+  <header class="page-intro">
+    <p class="breadcrumbs"><a href={`/${p.country}`}>{COUNTRY_LABEL[p.country]}</a> /</p>
+    <h1>Trending in {p.name}</h1>
+  </header>
   {items.length ? <ArticleList items={items} /> : <p class="notice">No current stories for {p.name}.</p>}
 </Base>

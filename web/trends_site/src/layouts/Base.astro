@@ -11,8 +11,10 @@ interface Props {
   noindex?: boolean;
   ogType?: 'website' | 'article';
   jsonLd?: object[];
+  /** Full-width listing page; otherwise a single reading column. */
+  wide?: boolean;
 }
-const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [] } = Astro.props;
+const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [], wide = false } = Astro.props;
 const fullTitle = title === site.name ? title : `${title} | ${site.name}`;
 const canonicalUrl = abs(canonical ?? path);
 const ogImage = abs(ogImageFor(path));
@@ -28,6 +30,9 @@ const year = new Date().getFullYear();
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#0f766e" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
@@ -46,7 +51,7 @@ const year = new Date().getFullYear();
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap header-inner">
-        <a href="/" class="logo">{site.name}</a>
+        <a href="/" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#0f766e" /><circle cx="16" cy="16" r="5" fill="#fff" /><circle cx="16" cy="16" r="10" fill="none" stroke="#fff" stroke-width="2" opacity=".6" /></svg>{site.name}</a>
         <nav aria-label="Main">
           <ul>
             <li><a href="/india">India</a></li>
@@ -56,17 +61,18 @@ const year = new Date().getFullYear();
         </nav>
       </div>
     </header>
-    <main id="main" class="wrap">
+    <main id="main" class={wide ? 'wrap' : 'wrap measure'}>
       <slot />
     </main>
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <div>
           <p class="footer-brand">{site.name}</p>
-          <p>What people near you are talking about, explained from two sides, with every source linked.</p>
+          <p class="muted">What people near you are talking about, explained from two sides, with every source linked.</p>
           <p class="muted small">&copy; {year}. US edition: {site.publishers.usa}. India edition: {site.publishers.india}.</p>
         </div>
-        <nav aria-label="Policies">
+        <nav aria-labelledby="footer-policies">
+          <h2 class="footer-title" id="footer-policies">Policies</h2>
           <ul>
             <li><a href="/about">About</a></li>
             <li><a href="/editorial-policy">Editorial policy</a></li>

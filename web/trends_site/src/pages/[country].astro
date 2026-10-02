@@ -13,8 +13,10 @@ const items = built.filter((b) => b.article.country === country && (b.indexable 
 const places = placesIndex(built).filter((p) => p.country === country && p.items.some((i) => i.indexable || i.article.fixture));
 const label = COUNTRY_LABEL[country];
 ---
-<Base title={`Trending in ${label}`} description={`Local stories trending in ${label}, explained from two sides.`} path={`/${country}`} noindex={items.filter((b) => b.indexable).length === 0}>
-  <h1>Trending in {label}</h1>
-  {places.length > 0 && <ul class="tags">{places.map((p) => <li><a href={`/place/${p.country}/${p.slug}`}>{p.name}</a></li>)}</ul>}
-  {items.length ? <ArticleList items={items} /> : <p class="notice">No stories for {label} yet.</p>}
+<Base title={`Trending in ${label}`} description={`Local stories trending in ${label}, explained from two sides.`} path={`/${country}`} noindex={items.filter((b) => b.indexable).length === 0} wide>
+  <header class="page-intro">
+    <h1>Trending in {label}</h1>
+    {places.length > 0 && <ul class="tags">{places.map((p) => <li><a href={`/place/${p.country}/${p.slug}`}>{p.name}</a></li>)}</ul>}
+  </header>
+  {items.length ? <ArticleList items={items} lead /> : <p class="notice">No stories for {label} yet.</p>}
 </Base>

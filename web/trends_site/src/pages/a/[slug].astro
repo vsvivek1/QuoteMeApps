@@ -37,6 +37,7 @@ const jsonLd = [
 ---
 <Base title={a.headline} description={a.summary.join(' ').slice(0, 300)} path={`/a/${a.slug}`} canonical={b.canonical} noindex={!b.indexable} ogType="article" jsonLd={jsonLd}>
   <article>
+    <header class="article-head">
     <ul class="tags">
       {a.places.map((p) => <li><a href={`/place/${a.country}/${p.slug}`}>{p.name}</a></li>)}
       <li><a href={`/${a.country}`}>{COUNTRY_LABEL[a.country]}</a></li>
@@ -48,8 +49,9 @@ const jsonLd = [
       Published <time datetime={a.published_at}>{when(a.published_at)}</time>
       {updated !== a.published_at && <> · Updated <time datetime={updated}>{when(updated)}</time></>}
     </p>
+    </header>
     <p class="notice small">
-      <strong>AI-assisted, automatically published.</strong> This article was written with AI from the sources listed below and checked automatically for originality, factual consistency and balance.
+      <strong>AI-assisted, automatically published.</strong> This article was written with AI from the sources listed below and checked automatically for originality, factual consistency and balance.{' '}
       <a href="/ai-policy">How this works</a> · <a href={reportHref}>Report an error</a>
     </p>
 
@@ -98,11 +100,11 @@ const jsonLd = [
     )}
 
     <h2>Sources</h2>
-    <ol>
+    <ol class="sources">
       {a.sources.map((s) => (
         <li><a href={s.url} rel="noopener nofollow">{s.title ?? s.url}</a> <span class="muted">({s.publisher || hostOf(s.url)})</span></li>
       ))}
     </ol>
-    <p class="meta">Editor responsible: {site.editorName}. Published by {site.publishers[a.country]}. <a href="/corrections-policy">Corrections policy</a> · <a href={reportHref}>Report an error</a></p>
+    <p class="meta article-foot">Editor responsible: {site.editorName}. Published by {site.publishers[a.country]}. <a href="/corrections-policy">Corrections policy</a> · <a href={reportHref}>Report an error</a></p>
   </article>
 </Base>
