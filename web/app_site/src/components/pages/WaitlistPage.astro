@@ -18,8 +18,13 @@ const postal = fact<string>('postalLabel');
 const postalLabel = postal.charAt(0).toUpperCase() + postal.slice(1);
 ---
 <Base title={t('waitlist.title')} description={t('waitlist.description')} path={localePath(locale, '/waitlist')}>
-  <h1>{t('waitlist.h1')}</h1>
-  <p>{t('waitlist.intro')}</p>
+  <div class="narrow">
+  <div class="page-head">
+    <p class="eyebrow">{t('waitlist.og.kicker')}</p>
+    <h1>{t('waitlist.h1')}</h1>
+    <p class="lead">{t('waitlist.intro')}</p>
+  </div>
+  <div class="panel form-panel">
   <p class="small muted">{t('waitlist.doubleOptIn')}</p>
   <Form kind="waitlist" submitLabel={t('waitlist.submit')} successMessage={t('waitlist.success')} locale={locale}>
     <label>{t('form.email')}<input name="email" type="email" required maxlength="160" autocomplete="email" /></label>
@@ -35,4 +40,6 @@ const postalLabel = postal.charAt(0).toUpperCase() + postal.slice(1);
     )}
     <p class="small muted" set:html={rich('form.privacyLink')} />
   </Form>
+  </div>
+  </div>
 </Base>

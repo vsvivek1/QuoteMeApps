@@ -17,7 +17,7 @@ const deletionConsent = `I confirm I want ${site.appName} to delete my account a
   <p class="breadcrumbs"><a href="/legal">Legal</a> /</p>
   <article class="prose" set:html={html} />
   {isDeletion && (
-    <section class="prose" id="request-deletion">
+    <section class="prose panel form-panel" id="request-deletion">
       <h2>Request deletion without the app</h2>
       <p>Enter the email and/or phone number on your account (at least one). To protect you, we confirm the request by sending a one-time code to the phone number registered on the account before anything is deleted.</p>
       <Form kind="account_deletion" requireOne="email,phone" submitLabel="Request account deletion" successMessage="Request received. If the account has a phone number, enter the code we sent below; otherwise we will contact you to confirm it is you.">

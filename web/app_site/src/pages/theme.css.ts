@@ -10,6 +10,8 @@ const vars = (c: Record<string, string>) =>
 
 export const GET: APIRoute = () => {
   const { light, dark } = brandColors();
-  const css = `:root {\n${vars(light)}\n  color-scheme: light dark;\n}\n@media (prefers-color-scheme: dark) {\n  :root {\n${vars(dark)}\n  }\n}\n`;
+  // The seller band and CTA band are dark in both schemes, so they always use the dark-scheme accent.
+  const band = vars({ bandAccent: dark.primary, bandAccentFg: dark.onPrimary });
+  const css = `:root {\n${vars(light)}\n${band}\n  color-scheme: light dark;\n}\n@media (prefers-color-scheme: dark) {\n  :root {\n${vars(dark)}\n  }\n}\n`;
   return new Response(css, { headers: { 'Content-Type': 'text/css; charset=utf-8' } });
 };

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { abs, site } from '../lib/site';
 import { alternates, localePath, splitLocale, translator } from '../lib/i18n';
 import { ogImageFor } from '../lib/og';
+import Globe from '../components/icons/Globe.astro';
 
 interface Props {
   title: string;
@@ -14,9 +15,11 @@ interface Props {
   ogType?: 'website' | 'article';
   jsonLd?: object[];
   smartBanner?: boolean;
+  /** Full-width page: sections bring their own .wrap (home page). */
+  wide?: boolean;
 }
 
-const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [], smartBanner = false } = Astro.props;
+const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [], smartBanner = false, wide = false } = Astro.props;
 const { locale } = splitLocale(path);
 const tr = translator(locale);
 const t = tr.t;
@@ -55,6 +58,8 @@ const year = new Date().getFullYear();
     <link rel="icon" href="/brand/favicon_32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/brand/apple_touch_icon_180.png" />
     <link rel="stylesheet" href="/theme.css" />
+    <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <meta property="og:site_name" content={site.appName} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={fullTitle} />
@@ -77,47 +82,73 @@ const year = new Date().getFullYear();
     <header class="site-header">
       <div class="wrap header-inner">
         <a href={href('/')} class="logo" aria-label={t('layout.homeLabel')}>
-          <img src="/brand/logo_mark.svg" alt="" width="36" height="36" />
+          <img src="/brand/logo_mark.svg" alt="" width="34" height="34" />
           <span>{site.appName}</span>
         </a>
-        <nav aria-label={t('layout.navMain')}>
+        <nav class="nav-desktop" aria-label={t('layout.navMain')}>
           <ul>
             {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
-            {others.map((a) => <li><a class="lang-switch" href={a.path} hreflang={a.hreflang} lang={a.hreflang}>{a.locale.name}</a></li>)}
+            {others.map((a) => <li><a class="lang-switch" href={a.path} hreflang={a.hreflang} lang={a.hreflang}><Globe />{a.locale.name}</a></li>)}
           </ul>
         </nav>
+        <div class="header-actions">
+          <a class="btn sm header-cta" href={href('/#get-app')}>{t('layout.getApp')}</a>
+          <details class="menu">
+            <summary>
+              <span class="sr-only">{t('layout.menu')}</span>
+              <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+              <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+            </summary>
+            <nav class="menu-panel" aria-label={t('layout.navMain')}>
+              <ul>
+                {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+                {others.map((a) => <li><a class="lang-switch" href={a.path} hreflang={a.hreflang} lang={a.hreflang}><Globe />{a.locale.name}</a></li>)}
+              </ul>
+              <a class="btn" href={href('/#get-app')}>{t('layout.getApp')}</a>
+            </nav>
+          </details>
+        </div>
       </div>
     </header>
-    <main id="main" class="wrap">
+    <main id="main" class={wide ? undefined : 'wrap'}>
       <slot />
     </main>
     <footer class="site-footer">
-      <div class="wrap footer-inner">
-        <div>
-          <p class="footer-brand">{site.appName}</p>
-          <p>{t('layout.tagline')}</p>
-          <p class="muted">&copy; {year} {site.company}</p>
-          {englishOnly && <p class="muted small">{englishOnly}</p>}
+      <div class="wrap">
+        <div class="footer-inner">
+          <div>
+            <p class="footer-brand"><img src="/brand/logo_mark.svg" alt="" width="28" height="28" loading="lazy" />{site.appName}</p>
+            <p class="muted">{t('layout.tagline')}</p>
+            {englishOnly && <p class="muted small">{englishOnly}</p>}
+          </div>
+          <nav aria-labelledby="footer-company">
+            <h2 class="footer-title" id="footer-company">{t('layout.navCompany')}</h2>
+            <ul>
+              <li><a href={href('/about')}>{t('layout.about')}</a></li>
+              <li><a href="/editorial-policy">{t('layout.editorial')}</a></li>
+              <li><a href={href('/sellers')}>{t('layout.becomeSeller')}</a></li>
+              <li><a href={href('/waitlist')}>{t('layout.waitlist')}</a></li>
+              <li><a href="/contact">{t('layout.contact')}</a></li>
+            </ul>
+          </nav>
+          <nav aria-labelledby="footer-legal">
+            <h2 class="footer-title" id="footer-legal">{t('layout.navLegal')}</h2>
+            <ul>
+              <li><a href="/legal/terms-of-service">{t('layout.terms')}</a></li>
+              <li><a href="/legal/privacy-policy">{t('layout.privacy')}</a></li>
+              {site.country === 'usa' && <li><a href="/legal/ccpa-notice">{t('layout.ccpa')}</a></li>}
+              {site.country === 'india' && <li><a href="/legal/grievance-officer">{t('layout.grievance')}</a></li>}
+              <li><a href="/legal/account-deletion">{t('layout.deleteAccount')}</a></li>
+              <li><a href="/legal">{t('layout.allLegal')}</a></li>
+            </ul>
+          </nav>
         </div>
-        <nav aria-label={t('layout.navCompany')}>
-          <ul>
-            <li><a href={href('/about')}>{t('layout.about')}</a></li>
-            <li><a href="/editorial-policy">{t('layout.editorial')}</a></li>
-            <li><a href={href('/sellers')}>{t('layout.becomeSeller')}</a></li>
-            <li><a href={href('/waitlist')}>{t('layout.waitlist')}</a></li>
-            <li><a href="/contact">{t('layout.contact')}</a></li>
-          </ul>
-        </nav>
-        <nav aria-label={t('layout.navLegal')}>
-          <ul>
-            <li><a href="/legal/terms-of-service">{t('layout.terms')}</a></li>
-            <li><a href="/legal/privacy-policy">{t('layout.privacy')}</a></li>
-            {site.country === 'usa' && <li><a href="/legal/ccpa-notice">{t('layout.ccpa')}</a></li>}
-            {site.country === 'india' && <li><a href="/legal/grievance-officer">{t('layout.grievance')}</a></li>}
-            <li><a href="/legal/account-deletion">{t('layout.deleteAccount')}</a></li>
-            <li><a href="/legal">{t('layout.allLegal')}</a></li>
-          </ul>
-        </nav>
+        <div class="footer-meta">
+          <p class="muted">&copy; {year} {site.company}</p>
+          {others.length > 0 && (
+            <p>{alternates(path).filter((a) => a.hreflang !== 'x-default').map((a, i) => <>{i > 0 && ' · '}{a.locale.code === locale.code ? <span aria-current="true">{a.locale.name}</span> : <a href={a.path} hreflang={a.hreflang} lang={a.hreflang}>{a.locale.name}</a>}</>)}</p>
+          )}
+        </div>
       </div>
     </footer>
   </body>

@@ -36,7 +36,9 @@
     "allLegal": "Todas las páginas legales",
     "englishOnly": "Por ahora, las páginas legales, de precios locales y de contacto solo están en inglés.",
     "languages": "Idiomas",
-    "ogCta": "Recibe cotizaciones de vendedores locales"
+    "ogCta": "Recibe cotizaciones de vendedores locales",
+    "menu": "Menú",
+    "getApp": "Descarga la app"
   },
   "badges": {
     "playLive": "DISPONIBLE EN",
@@ -99,6 +101,31 @@
     "sellCta": "Hazte vendedor",
     "dataTitle": "Tus datos se quedan en Estados Unidos",
     "dataText": "{appName} es operado por {company}. Los datos de tu cuenta se guardan en un centro de datos en Estados Unidos y se manejan conforme a la CCPA/CPRA. Lee nuestra [Política de privacidad](/legal/privacy-policy) (en inglés) o [elimina tu cuenta](/legal/account-deletion) cuando quieras.",
+    "mock": {
+      "request": "Tu solicitud",
+      "quotes": "{n} cotizaciones",
+      "accept": "Aceptar cotización",
+      "best": "Precio más bajo"
+    },
+    "faqTitle": "Preguntas frecuentes",
+    "faq": [
+      {
+        "q": "¿{appName} es gratis para compradores?",
+        "a": "Sí. Publicar una solicitud, recibir cotizaciones y chatear con vendedores es gratis para compradores."
+      },
+      {
+        "q": "¿Quién me puede enviar una cotización?",
+        "a": "Solo los vendedores que venden o dan servicio en esa categoría cerca de ti. Cada solicitud tiene un límite de cotizaciones para que no te saturen."
+      },
+      {
+        "q": "¿Cuándo ve un vendedor mi número de teléfono?",
+        "a": "Solo después de que aceptas su cotización. Antes de eso, hablan por el chat de la app."
+      },
+      {
+        "q": "¿Cómo pago?",
+        "a": "Le pagas directamente al vendedor como lo acuerden. Compara precio, impuestos, tiempo de entrega y garantía antes de aceptar."
+      }
+    ],
     "og": {
       "kicker": "Gratis para compradores",
       "detail": "Compara cotizaciones de vendedores locales y en línea lado a lado, chatea y elige la mejor oferta."

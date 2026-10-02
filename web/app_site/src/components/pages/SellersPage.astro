@@ -21,13 +21,20 @@ const postal = fact<string>('postalLabel');
 const postalLabel = postal.charAt(0).toUpperCase() + postal.slice(1);
 ---
 <Base title={t('sellers.title')} description={t('sellers.description')} path={localePath(locale, '/sellers')}>
-  <h1>{t('sellers.h1')}</h1>
-  <p class="lead muted">{t('sellers.lead')}</p>
-  <ol class="steps">
-    {raw<string[]>('sellers.steps').map((_, i) => <li set:html={rich(`sellers.steps.${i}`)} />)}
-  </ol>
-  <p set:html={rich('sellers.terms')} />
+  <div class="split">
+    <div class="sticky">
+      <div class="page-head">
+        <p class="eyebrow">{t('sellers.og.kicker')}</p>
+        <h1>{t('sellers.h1')}</h1>
+        <p class="lead">{t('sellers.lead')}</p>
+      </div>
+      <ol class="steps">
+        {raw<string[]>('sellers.steps').map((_, i) => <li set:html={rich(`sellers.steps.${i}`)} />)}
+      </ol>
+      <p class="muted" set:html={rich('sellers.terms')} />
+    </div>
 
+    <div class="panel form-panel">
   <h2>{t('sellers.formTitle')}</h2>
   <Form kind="seller_signup" submitLabel={t('sellers.submit')} successMessage={t('sellers.success')} locale={locale}>
     <label>{t('sellers.businessName')}<input name="business_name" required maxlength="120" autocomplete="organization" /></label>
@@ -50,4 +57,6 @@ const postalLabel = postal.charAt(0).toUpperCase() + postal.slice(1);
     )}
     <p class="small muted" set:html={rich('sellers.privacy')} />
   </Form>
+    </div>
+  </div>
 </Base>

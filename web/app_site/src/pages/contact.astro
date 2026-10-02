@@ -4,11 +4,17 @@ import Form from '../components/Form.astro';
 import { site } from '../lib/site';
 ---
 <Base title="Contact us" description={`Contact ${site.appName} support (${site.company}).`} path="/contact">
-  <h1>Contact us</h1>
-  <p>Questions, feedback, a problem with a seller or buyer, or a press enquiry? Send us a message and we will reply by email.</p>
+  <div class="split">
+  <div class="sticky">
+  <div class="page-head">
+    <h1>Contact us</h1>
+  </div>
+  <p class="lead">Questions, feedback, a problem with a seller or buyer, or a press enquiry? Send us a message and we will reply by email.</p>
   <p>For support hours, phone and postal address see <a href="/legal/contact-support">Contact and Support</a>.
     {site.country === 'india' && <> Complaints under the IT Rules 2021 go to our <a href="/legal/grievance-officer">Grievance Officer</a>.</>}
     To delete your account use the <a href="/legal/account-deletion">account deletion page</a>.</p>
+  </div>
+  <div class="panel form-panel">
   <Form kind="contact" submitLabel="Send message" successMessage="Thanks, your message has been sent. We usually reply within 2 working days.">
     <label>Your name<input name="name" required maxlength="80" autocomplete="name" /></label>
     <label>Email<input name="email" type="email" required maxlength="160" autocomplete="email" /></label>
@@ -26,4 +32,6 @@ import { site } from '../lib/site';
     <label>Message<textarea name="message" required maxlength="4000"></textarea></label>
     <p class="small muted">We use your details only to answer you. See our <a href="/legal/privacy-policy">Privacy Policy</a>.</p>
   </Form>
+  </div>
+  </div>
 </Base>

@@ -39,7 +39,9 @@
     "allLegal": "All legal pages",
     "englishOnly": "",
     "languages": "Languages",
-    "ogCta": "Get quotes from local sellers"
+    "ogCta": "Get quotes from local sellers",
+    "menu": "Menu",
+    "getApp": "Get the app"
   },
   "badges": {
     "playLive": "GET IT ON",
@@ -102,6 +104,31 @@
     "sellCta": "Become a seller",
     "dataTitle": "Your data stays in {countryName}",
     "dataText": "{appName} is run by {company}. Your account data is stored in a {dataCentre} data centre and handled under {privacyLaw}. Read our [Privacy Policy](/legal/privacy-policy), or [delete your account](/legal/account-deletion) at any time.",
+    "mock": {
+      "request": "Your request",
+      "quotes": "{n} quotes",
+      "accept": "Accept quote",
+      "best": "Lowest price"
+    },
+    "faqTitle": "Frequently asked questions",
+    "faq": [
+      {
+        "q": "Is {appName} free for buyers?",
+        "a": "Yes. Posting a request, getting quotes and chatting with sellers is free for buyers."
+      },
+      {
+        "q": "Who can send me a quote?",
+        "a": "Only sellers who sell or service that category near you. Each request is capped, so you are not flooded with quotes."
+      },
+      {
+        "q": "When does a seller see my phone number?",
+        "a": "Only after you accept their quote. Until then you talk in the in-app chat."
+      },
+      {
+        "q": "How do I pay?",
+        "a": "You pay the seller directly, the way you both agree. Compare price, taxes, delivery time and warranty before you accept."
+      }
+    ],
     "og": {
       "kicker": "Free for buyers",
       "detail": "Compare quotes from local and online sellers side by side, chat, and pick the best offer."
