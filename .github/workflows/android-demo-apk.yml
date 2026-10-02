@@ -1,0 +1,75 @@
+# Installable demo APKs for testing on a phone before the Play listing exists.
+# Builds both countries in demo mode (in-memory backend, OTP 123456), signed with
+# the debug key, and publishes them to the "demo-apk" pre-release so they can be
+# downloaded straight from GitHub and sideloaded.
+name: Android demo APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/iwant-build-ij91c3, main]
+    paths: [lib/**, android/**, assets/**, pubspec.yaml, pubspec.lock, .github/workflows/android-demo-apk.yml]
+
+concurrency:
+  group: android-demo-apk
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.47.6
+
+jobs:
+  build:
+    name: Demo APK (${{ matrix.flavor }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { flavor: usaProd, country: usa }
+          - { flavor: indiaProd, country: india }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Build release APK (demo mode)
+        run: >
+          flutter build apk --release
+          --flavor ${{ matrix.flavor }} -t lib/main_${{ matrix.country }}.dart
+          --dart-define-from-file=config/${{ matrix.country }}.prod.json
+          --dart-define=DEMO_MODE=true
+      - name: Rename
+        run: cp build/app/outputs/flutter-apk/app-${{ matrix.flavor }}-release.apk iwant-${{ matrix.country }}-demo.apk
+      - uses: actions/upload-artifact@v5
+        with:
+          name: apk-${{ matrix.country }}
+          path: iwant-${{ matrix.country }}-demo.apk
+          retention-days: 7
+
+  publish:
+    name: Publish to the demo-apk pre-release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          pattern: apk-*
+          merge-multiple: true
+      - name: Replace the demo-apk release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release delete demo-apk --yes --cleanup-tag || true
+          gh release create demo-apk iwant-usa-demo.apk iwant-india-demo.apk \
+            --prerelease --target "${{ github.sha }}" --title "Demo APKs (sideload for testing)" \
+            --notes "Demo mode: no real backend, data resets on restart. Sign in with any phone number and code 123456. Built from ${{ github.sha }}."
