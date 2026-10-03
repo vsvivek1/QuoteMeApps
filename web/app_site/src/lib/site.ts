@@ -136,9 +136,14 @@ export const site = {
   turnstileSiteKey: env('PUBLIC_TURNSTILE_SITE_KEY'),
   formsEndpoint: env('FORMS_ENDPOINT'),
   supportEmail: env('SUPPORT_EMAIL'),
+  // Community feed (public, read-only RPCs; the anon / publishable key is public by design)
+  supabaseUrl: env('PUBLIC_SUPABASE_URL').replace(/\/+$/, ''),
+  supabaseAnonKey: env('PUBLIC_SUPABASE_ANON_KEY'),
   legalStrict: env('LEGAL_STRICT') === '1',
   buildTime: new Date(),
 };
+
+export const communityEnabled = /^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(site.supabaseUrl) && Boolean(site.supabaseAnonKey);
 
 export const formsEnabled = Boolean(site.turnstileSiteKey && /^https:\/\//.test(site.formsEndpoint));
 
