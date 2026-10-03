@@ -6,13 +6,17 @@
       "countryName": "the United States",
       "dataCentre": "US",
       "sisterApp": "India is I Want India",
-      "postalLabels": "ZIP codes"
+      "postalLabels": "ZIP codes",
+      "countryShort": "United States",
+      "districtWord": "county"
     },
     "india": {
       "countryName": "India",
       "dataCentre": "Mumbai, India",
       "sisterApp": "the United States is I Want USA",
-      "postalLabels": "PIN codes"
+      "postalLabels": "PIN codes",
+      "countryShort": "India",
+      "districtWord": "district"
     }
   },
   "layout": {
@@ -222,6 +226,90 @@
     "mapError": "The map could not be loaded. Use the list instead.",
     "distanceKm": "about {n} km",
     "distanceMi": "about {n} miles",
-    "allTowns": "See all towns"
+    "allTowns": "See all towns",
+    "loadingList": "Loading towns…",
+    "listError": "The town list could not be loaded.",
+    "moreResults": "Showing the first {n} matches. Type more to narrow them down."
+  },
+  "townPage": {
+    "title": "Post what you want in {town}, get quotes from local sellers",
+    "description": "Post what you want in {town}, {state}: local businesses send you quotes on {appName}. Free for buyers.",
+    "descriptionAreas": "Post what you want in {town}, {state}: businesses serving {areas} and more send you quotes on {appName}. Free for buyers.",
+    "h1": "Post what you want in {town}.",
+    "h1Accent": "Local sellers send you quotes.",
+    "lead": "Tell {appName} what you need and businesses that serve {town} send you their prices. Compare quotes, chat, and accept the one you like.",
+    "leadAreas": "Tell {appName} what you need, whether you are in {areas}, and businesses that serve your part of {town} send you their prices. Compare quotes, chat, and accept the one you like.",
+    "notIn": "Not in {town}?",
+    "breadcrumb": "Breadcrumb",
+    "district": "{district} district",
+    "population": "Population {band} (GeoNames estimate)",
+    "bandRange": "{from} to {to}",
+    "bandOver": "over {from}",
+    "recentTitle": "Recent requests in {town}",
+    "recentNote": "Live from the app. Buyer names and contact details are never shown.",
+    "categoriesTitle": "What you can ask for in {town}",
+    "categoriesNote": "Categories {appName} takes requests for in {country}.",
+    "pricesTitle": "Prices quoted in {town}",
+    "pricesNote": "Medians of real quotes on {appName}, shown only with enough quotes from enough sellers. Open a category for the typical range.",
+    "pricesMedian": "median quote",
+    "pricesAll": "All prices in {town}",
+    "sellersLink": "Local sellers in {town}",
+    "areasTitle": "Areas and {postalLabels} in {town}",
+    "postalTitle": "{postalLabels} in {town}",
+    "areasHeading": "Areas",
+    "postalNear": "Nearest {postalLabel} to the town centre (post office within 5 km): {code}.",
+    "areasNote": "Add your {postalLabel} when you post. Sellers choose the areas they serve by {postalLabel} or by distance from their shop, so your request reaches the businesses that cover where you are.",
+    "howTitle": "How it works in {town}",
+    "steps": [
+      "**Post what you need.** Describe it in a line, add photos, your {postalLabel} in {town} and when you need it.",
+      "**Sellers near you quote.** Shops and service providers that cover {town} send their price, delivery time and warranty.",
+      "**Compare and accept.** Chat with sellers, accept the quote you like and pay the seller directly."
+    ],
+    "sellerTitle": "Run a shop in {town}?",
+    "sellerBody": "Get requests from buyers in and around {town} and send quotes from your phone.",
+    "sellerCta": "Become a seller",
+    "nearbyTitle": "Nearby towns",
+    "nearbyNote": "Straight-line distances between town centres.",
+    "nearbyMap": "Map of {town} and nearby towns",
+    "away": "{distance} away",
+    "faqTitle": "Questions about {town}",
+    "faq": [
+      {
+        "q": "Is {appName} free for buyers in {town}?",
+        "a": "Yes. Posting a request and getting quotes is free. You pay the seller you choose, directly."
+      },
+      {
+        "q": "Which parts of {town} do sellers cover?",
+        "a": "Each seller chooses the areas they serve by {postalLabel} or by distance from their shop. Add your {postalLabel} and your request goes to the sellers who cover it."
+      },
+      {
+        "q": "Is my phone number shared with sellers in {town}?",
+        "a": "Only after you accept a quote, and only with that seller. Before that you talk in the in-app chat."
+      }
+    ],
+    "newsTitle": "What's happening",
+    "newsNote": "Two sides of each story, from our separate news site. Read the full article there.",
+    "newsTown": "In {town}",
+    "newsState": "In {state}",
+    "newsCountry": "In {country}",
+    "newsWorld": "Around the world",
+    "newsRead": "Read the full story",
+    "moreState": "All towns in {state}",
+    "allTowns": "All towns in {country}",
+    "listOr": "or"
+  },
+  "statePage": {
+    "title": "Towns in {state}: get quotes from local sellers",
+    "description": "{count} towns in {state} on {appName}, with their areas, {postalLabels} and nearby towns. Post what you want and local sellers send you quotes.",
+    "h1": "Towns in {state}",
+    "lead": "Pick your town to see its areas, {postalLabels} and nearby towns, and get quotes from sellers near you.",
+    "major": "Larger towns",
+    "byDistrict": "All towns by district",
+    "byCounty": "All towns by county",
+    "other": "Other towns",
+    "countryLink": "All states"
+  },
+  "credits": {
+    "geonames": "Town, district, county, population and postal-code data: GeoNames (geonames.org), CC BY 4.0."
   }
 }

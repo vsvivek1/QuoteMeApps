@@ -30,3 +30,6 @@ function xml(s: string): Response {
     headers: { 'Content-Type': 'application/xml; charset=utf-8' },
   });
 }
+
+/** URLs per town sitemap file (the protocol allows 50,000; smaller files stay well under 50 MB with hreflang links). */
+export const TOWN_SITEMAP_SIZE = 10_000;

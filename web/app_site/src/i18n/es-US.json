@@ -10,7 +10,10 @@
         "Refrigerador Samsung French door de 28 pies cúbicos, entregado en el 75201 antes del viernes",
         "Mantenimiento de aire acondicionado para 2 equipos en Dallas esta semana",
         "100 camisetas estampadas para un evento de la empresa"
-      ]
+      ],
+      "countryName": "Estados Unidos",
+      "countryShort": "Estados Unidos",
+      "districtWord": "condado"
     }
   },
   "layout": {
@@ -216,6 +219,107 @@
     "mapError": "No se pudo cargar el mapa. Usa la lista.",
     "distanceKm": "unos {n} km",
     "distanceMi": "unas {n} millas",
-    "allTowns": "Ver todas las ciudades"
+    "allTowns": "Ver todas las ciudades",
+    "loadingList": "Cargando ciudades…",
+    "listError": "No se pudo cargar la lista de ciudades.",
+    "moreResults": "Se muestran las primeras {n} coincidencias. Escribe más para afinar la búsqueda."
+  },
+  "townPage": {
+    "title": "Publica lo que quieres en {town} y recibe cotizaciones de vendedores locales",
+    "description": "Publica lo que quieres en {town}, {state}: los negocios locales te envían cotizaciones en {appName}. Gratis para compradores.",
+    "descriptionAreas": "Publica lo que quieres en {town}, {state}: negocios que atienden {areas} y más te envían cotizaciones en {appName}. Gratis para compradores.",
+    "h1": "Publica lo que quieres en {town}.",
+    "h1Accent": "Los vendedores locales te envían cotizaciones.",
+    "lead": "Dile a {appName} lo que necesitas y los negocios que atienden {town} te envían sus precios. Compara cotizaciones, chatea y acepta la que más te guste.",
+    "leadAreas": "Dile a {appName} lo que necesitas, ya sea en {areas}, y los negocios que atienden tu zona de {town} te envían sus precios. Compara cotizaciones, chatea y acepta la que más te guste.",
+    "notIn": "¿No estás en {town}?",
+    "breadcrumb": "Ruta de navegación",
+    "district": "{district}",
+    "population": "Población: {band} (estimación de GeoNames)",
+    "bandRange": "de {from} a {to}",
+    "bandOver": "más de {from}",
+    "recentTitle": "Solicitudes recientes en {town}",
+    "recentNote": "En vivo desde la app. Nunca mostramos nombres ni datos de contacto de los compradores.",
+    "categoriesTitle": "Qué puedes pedir en {town}",
+    "categoriesNote": "Categorías en las que {appName} acepta solicitudes en {country}.",
+    "pricesTitle": "Precios cotizados en {town}",
+    "pricesNote": "Medianas de cotizaciones reales en {appName}; solo se muestran con suficientes cotizaciones de suficientes vendedores. Abre una categoría para ver el rango típico (en inglés).",
+    "pricesMedian": "cotización mediana",
+    "pricesAll": "Todos los precios en {town}",
+    "sellersLink": "Vendedores locales en {town}",
+    "areasTitle": "Zonas y {postalLabels} de {town}",
+    "postalTitle": "{postalLabels} de {town}",
+    "areasHeading": "Zonas",
+    "postalNear": "{postalLabel} más cercano al centro (oficina postal a menos de 5 km): {code}.",
+    "areasNote": "Agrega tu {postalLabel} al publicar. Los vendedores eligen las zonas que atienden por {postalLabel} o por distancia desde su negocio, así tu solicitud llega a quienes cubren tu zona.",
+    "howTitle": "Cómo funciona en {town}",
+    "steps": [
+      "**Publica lo que necesitas.** Descríbelo en una línea, agrega fotos, tu {postalLabel} en {town} y para cuándo lo necesitas.",
+      "**Los vendedores cercanos cotizan.** Tiendas y proveedores de servicios que cubren {town} envían su precio, plazo de entrega y garantía.",
+      "**Compara y acepta.** Chatea con los vendedores, acepta la cotización que te guste y paga directamente al vendedor."
+    ],
+    "sellerTitle": "¿Tienes un negocio en {town}?",
+    "sellerBody": "Recibe solicitudes de compradores en {town} y alrededores, y envía cotizaciones desde tu teléfono.",
+    "sellerCta": "Hazte vendedor",
+    "nearbyTitle": "Pueblos y ciudades cercanos",
+    "nearbyNote": "Distancias en línea recta entre los centros.",
+    "nearbyMap": "Mapa de {town} y alrededores",
+    "away": "a {distance}",
+    "faqTitle": "Preguntas sobre {town}",
+    "faq": [
+      {
+        "q": "¿{appName} es gratis para compradores en {town}?",
+        "a": "Sí. Publicar una solicitud y recibir cotizaciones es gratis. Le pagas directamente al vendedor que elijas."
+      },
+      {
+        "q": "¿Qué partes de {town} cubren los vendedores?",
+        "a": "Cada vendedor elige las zonas que atiende por {postalLabel} o por distancia desde su negocio. Agrega tu {postalLabel} y tu solicitud llegará a los vendedores que lo cubren."
+      },
+      {
+        "q": "¿Se comparte mi número de teléfono con vendedores de {town}?",
+        "a": "Solo después de aceptar una cotización, y solo con ese vendedor. Antes de eso hablan por el chat de la app."
+      }
+    ],
+    "newsTitle": "Qué está pasando",
+    "newsNote": "Dos puntos de vista de cada noticia, de nuestro sitio de noticias independiente. Lee el artículo completo allí (en inglés).",
+    "newsTown": "En {town}",
+    "newsState": "En {state}",
+    "newsCountry": "En {country}",
+    "newsWorld": "En el mundo",
+    "newsRead": "Leer la noticia completa",
+    "moreState": "Todas las ciudades de {state}",
+    "allTowns": "Todas las ciudades de {country}",
+    "listOr": "o"
+  },
+  "statePage": {
+    "title": "Ciudades de {state}: recibe cotizaciones de vendedores locales",
+    "description": "{count} ciudades y pueblos de {state} en {appName}, con sus zonas, {postalLabels} y lugares cercanos. Publica lo que quieres y los vendedores locales te envían cotizaciones.",
+    "h1": "Ciudades y pueblos de {state}",
+    "lead": "Elige tu ciudad para ver sus zonas, {postalLabels} y lugares cercanos, y recibe cotizaciones de vendedores cerca de ti.",
+    "major": "Ciudades más grandes",
+    "byDistrict": "Todas por distrito",
+    "byCounty": "Todas por condado",
+    "other": "Otras",
+    "countryLink": "Todos los estados"
+  },
+  "states": {
+    "new-york": "Nueva York",
+    "north-carolina": "Carolina del Norte",
+    "south-carolina": "Carolina del Sur",
+    "new-mexico": "Nuevo México",
+    "pennsylvania": "Pensilvania",
+    "louisiana": "Luisiana",
+    "hawaii": "Hawái",
+    "mississippi": "Misisipi",
+    "north-dakota": "Dakota del Norte",
+    "south-dakota": "Dakota del Sur",
+    "west-virginia": "Virginia Occidental",
+    "new-jersey": "Nueva Jersey",
+    "new-hampshire": "Nuevo Hampshire",
+    "district-of-columbia": "Distrito de Columbia",
+    "missouri": "Misuri",
+    "oregon": "Oregón",
+    "michigan": "Míchigan",
+    "kansas": "Kansas"
   }
 }

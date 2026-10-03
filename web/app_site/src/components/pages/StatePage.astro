@@ -1,0 +1,91 @@
+---
+// State index page for both languages: /<state> (English) and /<lang>/<state>. Lists the
+// state's larger towns first, then every town grouped by district (India) or county (USA).
+import Base from '../../layouts/Base.astro';
+import { abs, site } from '../../lib/site';
+import { LOCALES, translator, type Locale } from '../../lib/i18n';
+import { TOWNS_INDEX_PATH, isMajor, statePath, townPath, townPages, townsInState, type StateInfo, type Town } from '../../lib/towns';
+
+interface Props {
+  state: StateInfo;
+  locale: Locale;
+}
+const { state, locale } = Astro.props;
+const english = LOCALES[0];
+const isLocal = locale.code !== english.code;
+const tr = translator(locale);
+const { t, raw } = tr;
+const names = (() => {
+  try {
+    return raw<Record<string, string>>('states');
+  } catch {
+    return {} as Record<string, string>;
+  }
+})();
+const stateName = (isLocal && names[state.slug]) || state.name;
+const countryName = tr.fact<string>('countryShort');
+const pages = await townPages();
+const list = townsInState(state);
+const name = (x: Town) => (isLocal && x.native ? x.native : x.name);
+const href = (x: Town) => townPath(x, isLocal ? locale : null);
+const indexable = (x: Town) => pages.get(`${x.state.slug}/${x.slug}`)?.indexable ?? false;
+const byName = (a: Town, b: Town) => a.name.localeCompare(b.name, 'en');
+const major = list.filter(isMajor).sort((a, b) => (b.population ?? 0) - (a.population ?? 0)).slice(0, 40);
+const other = t('statePage.other');
+const groups = [...new Set(list.map((x) => x.district ?? ''))]
+  .sort((a, b) => (a === '' ? 1 : b === '' ? -1 : a.localeCompare(b, 'en')))
+  .map((d) => ({ name: d || other, towns: list.filter((x) => (x.district ?? '') === d).sort(byName) }));
+const vars = { state: stateName, count: list.length, country: countryName };
+const thisPath = statePath(state, isLocal ? locale : null);
+const alternates = state.locale
+  ? [
+      { hreflang: english.hreflang, path: statePath(state), locale: english },
+      { hreflang: state.locale.hreflang, path: statePath(state, state.locale), locale: state.locale },
+      { hreflang: 'x-default', path: statePath(state), locale: english },
+    ]
+  : undefined;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: countryName, item: abs(TOWNS_INDEX_PATH) },
+      { '@type': 'ListItem', position: 2, name: stateName, item: abs(thisPath) },
+    ],
+  },
+];
+const enLang = isLocal ? 'en' : undefined;
+---
+<Base title={t('statePage.title', vars)} description={t('statePage.description', vars)} path={thisPath} locale={locale} alternates={alternates} ogPath={statePath(state)} jsonLd={jsonLd}>
+  <div class="page-head">
+    <nav aria-label={t('townPage.breadcrumb')}>
+      <ol class="breadcrumbs crumbs">
+        <li><a href={TOWNS_INDEX_PATH}>{countryName}</a></li>
+        <li aria-current="page">{stateName}</li>
+      </ol>
+    </nav>
+    <h1>{t('statePage.h1', vars)}</h1>
+    <p class="lead">{t('statePage.lead', vars)}</p>
+    <p><a class="btn sm secondary" href={TOWNS_INDEX_PATH} data-town-open>{t('town.choose')}</a></p>
+  </div>
+  {major.length > 0 && (
+    <section>
+      <h2>{t('statePage.major')}</h2>
+      <ul class="chips">{major.map((x) => <li><a href={href(x)} lang={isLocal && !x.native ? 'en' : undefined}>{name(x)}</a></li>)}</ul>
+    </section>
+  )}
+  <section>
+    <h2>{t(site.country === 'usa' ? 'statePage.byCounty' : 'statePage.byDistrict')}</h2>
+    {groups.map((g) => (
+      <section class="state-group">
+        <h3 lang={enLang}>{g.name}</h3>
+        <ul class="town-index">
+          {g.towns.map((x) => (
+            <li><a href={href(x)} rel={indexable(x) ? undefined : 'nofollow'} lang={isLocal && !x.native ? 'en' : undefined}>{name(x)}</a></li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </section>
+  <p class="town-up"><a href={TOWNS_INDEX_PATH}>{t('statePage.countryLink')}</a></p>
+</Base>

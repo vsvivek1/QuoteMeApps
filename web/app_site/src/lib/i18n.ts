@@ -4,13 +4,30 @@
  * (es-US) for the static pages in TRANSLATED only; price pages, guides, seller
  * profiles and legal pages stay English (no machine-translated thin pages).
  * Strings live in src/i18n/<locale>.json; missing keys fall back to en.json.
+ *
+ * Town and state pages (lib/towns.ts) also come in the state's main language on
+ * the India site (Malayalam for Kerala, Tamil for Tamil Nadu, ...; Hindi for the
+ * Hindi-speaking states) and in Spanish on the USA site. Those extra languages
+ * (TOWN_LOCALES) have only the fixed template strings of those pages, the site
+ * chrome and the town picker; their pages link to English everywhere else.
  */
 import en from '../i18n/en.json';
 import hi from '../i18n/hi-IN.json';
 import es from '../i18n/es-US.json';
+import ml from '../i18n/ml.json';
+import ta from '../i18n/ta.json';
+import te from '../i18n/te.json';
+import kn from '../i18n/kn.json';
+import mr from '../i18n/mr.json';
+import bn from '../i18n/bn.json';
+import gu from '../i18n/gu.json';
+import pa from '../i18n/pa.json';
+import or from '../i18n/or.json';
+import as from '../i18n/as.json';
+import ne from '../i18n/ne.json';
 import { site } from './site';
 
-export type LocaleCode = 'en' | 'hi-IN' | 'es-US';
+export type LocaleCode = 'en' | 'hi-IN' | 'es-US' | 'ml' | 'ta' | 'te' | 'kn' | 'mr' | 'bn' | 'gu' | 'pa' | 'or' | 'as' | 'ne';
 
 export interface Locale {
   code: LocaleCode;
@@ -22,32 +39,57 @@ export interface Locale {
   segment: string;
   /** Language name in that language, for the switcher. */
   name: string;
+  /** Has the translated marketing pages (TRANSLATED); false for town-page-only languages. */
+  pages: boolean;
 }
 
 type Dict = Record<string, unknown>;
 
-const DICTS: Record<LocaleCode, Dict> = { en, 'hi-IN': hi, 'es-US': es };
+const DICTS: Record<LocaleCode, Dict> = { en, 'hi-IN': hi, 'es-US': es, ml, ta, te, kn, mr, bn, gu, pa, or, as, ne };
 
 /** Static marketing pages that have translations (English paths). */
 export const TRANSLATED = ['/', '/sellers', '/waitlist', '/about'] as const;
 
-const ENGLISH: Locale = { code: 'en', hreflang: site.locale, prefix: '', segment: '', name: en.language };
+const ENGLISH: Locale = { code: 'en', hreflang: site.locale, prefix: '', segment: '', name: en.language, pages: true };
 const SECOND: Locale =
   site.country === 'india'
-    ? { code: 'hi-IN', hreflang: 'hi-IN', prefix: '/hi', segment: 'hi', name: hi.language }
-    : { code: 'es-US', hreflang: 'es-US', prefix: '/es', segment: 'es', name: es.language };
+    ? { code: 'hi-IN', hreflang: 'hi-IN', prefix: '/hi', segment: 'hi', name: hi.language, pages: true }
+    : { code: 'es-US', hreflang: 'es-US', prefix: '/es', segment: 'es', name: es.language, pages: true };
 
 /** Locales of this country's site: English first. */
 export const LOCALES: Locale[] = [ENGLISH, SECOND];
 export const SECOND_LOCALE = SECOND;
 
+/** India: the other state languages of town pages, keyed by URL segment (= ISO 639-1 code). */
+const INDIC: Record<string, Dict> = { ml, ta, te, kn, mr, bn, gu, pa, or, as, ne };
+export const TOWN_LOCALES: Locale[] =
+  site.country === 'india'
+    ? [
+        SECOND,
+        ...Object.entries(INDIC).map(([code, d]) => ({
+          code: code as LocaleCode,
+          hreflang: `${code}-IN`,
+          prefix: `/${code}`,
+          segment: code,
+          name: String(d.language),
+          pages: false,
+        })),
+      ]
+    : [SECOND];
+
+/** Second language of a state's town pages: 'hi', 'ml', ... (India) or 'es' (USA); null for English only. */
+export function townLocale(segment: string | undefined | null): Locale | null {
+  if (!segment) return null;
+  return TOWN_LOCALES.find((l) => l.segment === segment) ?? null;
+}
+
 export function localeBySegment(segment: string | undefined): Locale {
   return LOCALES.find((l) => l.segment === (segment ?? '')) ?? ENGLISH;
 }
 
-/** URL of an English path in a locale ('/' -> '/hi', '/sellers' -> '/hi/sellers'). */
+/** URL of an English path in a locale ('/' -> '/hi', '/sellers' -> '/hi/sellers'). Town-only languages keep English paths. */
 export function localePath(locale: Locale, p: string): string {
-  if (!locale.prefix) return p;
+  if (!locale.prefix || !locale.pages) return p;
   return p === '/' ? locale.prefix : `${locale.prefix}${p}`;
 }
 
@@ -130,7 +172,7 @@ export function translator(locale: Locale): Translator {
   const t = (key: string, extra: Record<string, unknown> = {}) => fill(raw<string>(key), { ...vars, ...extra });
   // Links inside translated text point at English paths; keep them on translated pages when one exists.
   const localise = (html: string) =>
-    html.replace(/href="(\/[^"]*)"/g, (m, p: string) => (isTranslated(p) ? `href="${localePath(locale, p)}"` : m));
+    html.replace(/href="(\/[^"]*)"/g, (m, p: string) => (isTranslated(p) && locale.pages ? `href="${localePath(locale, p)}"` : m));
   return {
     locale,
     fact: <T,>(key: string) => vars[key] as T,

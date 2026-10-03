@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/fetch-trends.mjs",
     "build": "astro build",
     "build:usa": "SITE_COUNTRY=usa astro build",
     "build:india": "SITE_COUNTRY=india astro build",

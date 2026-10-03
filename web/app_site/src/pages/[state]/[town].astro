@@ -1,0 +1,12 @@
+---
+import type { GetStaticPaths } from 'astro';
+import TownPage from '../../components/pages/TownPage.astro';
+import { LOCALES } from '../../lib/i18n';
+import { townPages, type TownPage as Page } from '../../lib/towns';
+
+// /<state>/<town> in English: one page per town in data/towns/generated/<country>.json.gz.
+export const getStaticPaths = (async () =>
+  [...(await townPages()).values()].map((page) => ({ params: { state: page.town.state.slug, town: page.town.slug }, props: { page } }))) satisfies GetStaticPaths;
+const { page } = Astro.props as { page: Page };
+---
+<TownPage page={page} locale={LOCALES[0]} />

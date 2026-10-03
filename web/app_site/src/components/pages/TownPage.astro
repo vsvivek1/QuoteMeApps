@@ -1,0 +1,349 @@
+---
+// Town page body for both languages: /<state>/<town> (English) and /<lang>/<state>/<town>
+// (the state's language in India, Spanish in the USA). Same facts in both; only the fixed
+// template strings are translated (src/i18n/*.json, townPage.*). Every section that would
+// be empty for a town is left out.
+import Base from '../../layouts/Base.astro';
+import StoreBadges from '../StoreBadges.astro';
+import { abs, money, site } from '../../lib/site';
+import { loadSeo } from '../../lib/seo';
+import { LOCALES, translator, type Locale } from '../../lib/i18n';
+import { TOWNS_INDEX_PATH, joinList, populationBand, roundedDistance, distanceUnit, statePath, townPath, type TownPage } from '../../lib/towns';
+import { hasNews, townNews } from '../../lib/trends';
+
+interface Props {
+  page: TownPage;
+  locale: Locale;
+}
+const { page, locale } = Astro.props;
+const { town, nearby, hub, sellers } = page;
+const english = LOCALES[0];
+const isLocal = locale.code !== english.code;
+const tr = translator(locale);
+const { t, rich, raw } = tr;
+const states = (() => {
+  try {
+    return raw<Record<string, string>>('states');
+  } catch {
+    return {} as Record<string, string>;
+  }
+})();
+const isUsa = site.country === 'usa';
+
+// Names: the native-script name on local-language pages when the data has one.
+const townName = isLocal && town.native ? town.native : town.name;
+const stateName = (isLocal && states[town.state.slug]) || town.state.name;
+const countryName = tr.fact<string>('countryShort');
+const vars = { town: townName, state: stateName, country: countryName };
+const nf = new Intl.NumberFormat(locale.hreflang, { numberingSystem: 'latn' } as Intl.NumberFormatOptions);
+
+const thisPath = isLocal ? page.localPath! : page.path;
+const statePagePath = statePath(town.state, isLocal ? locale : null);
+const nearPath = (o: (typeof nearby)[number]['town']) => (isLocal && o.state.locale?.code === locale.code ? townPath(o, locale) : townPath(o));
+
+// Hero facts.
+const areas = town.areas;
+const leadAreas = joinList(areas.slice(0, 3), t('townPage.listOr'));
+const district = town.district ? (isUsa ? town.district : t('townPage.district', { district: town.district })) : null;
+const band = populationBand(town.population);
+const bandText = band ? (band.to ? t('townPage.bandRange', { from: nf.format(band.from), to: nf.format(band.to) }) : t('townPage.bandOver', { from: nf.format(band.from) })) : null;
+
+// Categories the app takes requests for (allowed policy); linked to this town's price page when it shows prices.
+const { data } = await loadSeo();
+const pricedPages = (hub?.pages ?? []).filter((p) => p.showPrices && p.data.price && (p.status === 'indexable' || data.fixture));
+const priced = new Map(pricedPages.map((p) => [p.category.slug, p.path]));
+const allowed = data.categories.filter((c) => c.policy === 'allowed');
+const groups = [...new Set(allowed.map((c) => c.group))].map((g) => ({ name: g, cats: allowed.filter((c) => c.group === g) }));
+
+// Postal codes: real codes from the data; "near" means nearest post office within 5 km of the centre.
+const postal = town.postal;
+const showPostalSection = postal.length > 0 || areas.length > 0;
+
+// Recent requests: live feed (public JSON), only when the site is built with REQUESTS_FEED_URL.
+const feedBase = (process.env.REQUESTS_FEED_URL ?? '').trim().replace(/\/+$/, '');
+const feedUrl = /^https:\/\//.test(feedBase) ? `${feedBase}/${town.state.slug}/${town.slug}.json` : '';
+
+// Nearby towns map: this town plus its neighbours, equirectangular around the town.
+const pts = [town, ...nearby.map((n) => n.town)];
+const kx = Math.cos((town.lat * Math.PI) / 180);
+const xs = pts.map((p) => p.lng * kx);
+const ys = pts.map((p) => -p.lat);
+const [minX, maxX, minY, maxY] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+const W = 320;
+const H = 220;
+const pad = 28;
+const scale = Math.min((W - 2 * pad) / Math.max(maxX - minX, 1e-6), (H - 2 * pad) / Math.max(maxY - minY, 1e-6));
+const ox = (W - (maxX - minX) * scale) / 2;
+const oy = (H - (maxY - minY) * scale) / 2;
+const pt = (lat: number, lng: number) => ({ x: ox + (lng * kx - minX) * scale, y: oy + (-lat - minY) * scale });
+const here = pt(town.lat, town.lng);
+const dist = (km: number) => t(distanceUnit === 'mi' ? 'town.distanceMi' : 'town.distanceKm', { n: nf.format(roundedDistance(km)) });
+
+const news = townNews(town);
+const newsLevels = [
+  { key: 'town', label: t('townPage.newsTown', vars), items: news.town },
+  { key: 'state', label: t('townPage.newsState', vars), items: news.state },
+  { key: 'country', label: t('townPage.newsCountry', vars), items: news.country },
+  { key: 'world', label: t('townPage.newsWorld', vars), items: news.world },
+].filter((l) => l.items.length > 0);
+
+const title = t('townPage.title', vars);
+const description = areas.length >= 3 ? t('townPage.descriptionAreas', { ...vars, areas: areas.slice(0, 3).join(', ') }) : t('townPage.description', vars);
+const crumbs = [
+  { name: countryName, path: TOWNS_INDEX_PATH },
+  { name: stateName, path: statePagePath },
+  { name: townName, path: thisPath },
+];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.path) })),
+  },
+];
+const alternates =
+  page.localPath
+    ? [
+        { hreflang: english.hreflang, path: page.path, locale: english },
+        { hreflang: town.state.locale!.hreflang, path: page.localPath, locale: town.state.locale! },
+        { hreflang: 'x-default', path: page.path, locale: english },
+      ]
+    : undefined;
+const ogPath = town.curated && !isLocal ? page.path : statePath(town.state);
+const svg = (paths: string) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+const stepIcons = [
+  '<path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />',
+  '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />',
+  '<path d="M20 6 9 17l-5-5" />',
+];
+const steps = raw<string[]>('townPage.steps');
+const faq = raw<{ q: string; a: string }[]>('townPage.faq');
+---
+<Base title={title} description={description} path={thisPath} locale={locale} alternates={alternates} ogPath={ogPath} noindex={!page.indexable} jsonLd={jsonLd} smartBanner wide>
+  <section class="home-hero town-hero" aria-labelledby="town-title">
+    <div class="wrap">
+      <nav aria-label={t('townPage.breadcrumb')}>
+        <ol class="breadcrumbs crumbs">
+          <li><a href={TOWNS_INDEX_PATH}>{countryName}</a></li>
+          <li><a href={statePagePath}>{stateName}</a></li>
+          {district && <li>{district}</li>}
+          <li aria-current="page">{townName}</li>
+        </ol>
+      </nav>
+      <h1 id="town-title">{t('townPage.h1', vars)} <span class="accent">{t('townPage.h1Accent', vars)}</span></h1>
+      <p class="lead">{areas.length >= 2 ? t('townPage.leadAreas', { ...vars, areas: leadAreas }) : t('townPage.lead', vars)}</p>
+      <StoreBadges campaign={`town_${town.slug}`} medium="town_page" locale={locale} />
+      <ul class="town-facts small muted">
+        {isLocal && town.native && <li lang="en">{town.name}</li>}
+        {district && <li>{district}, {stateName}</li>}
+        {bandText && <li>{t('townPage.population', { band: bandText })}</li>}
+      </ul>
+      <p class="town-switch-note small muted">
+        {t('townPage.notIn', vars)} <a href={TOWNS_INDEX_PATH} data-town-open>{t('town.choose')}</a>
+      </p>
+    </div>
+  </section>
+
+  {feedUrl && (
+    <section class="section town-recent" aria-labelledby="recent-title" hidden data-requests-feed={feedUrl}>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="recent-title">{t('townPage.recentTitle', vars)}</h2>
+          <p class="small muted">{t('townPage.recentNote', vars)}</p>
+        </div>
+        <ul class="ask-grid town-recent-list" data-requests-list></ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section section-tint" aria-labelledby="ask-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="ask-title">{t('townPage.categoriesTitle', vars)}</h2>
+        <p>{t('townPage.categoriesNote', vars)}</p>
+      </div>
+      <div class="town-groups">
+        {groups.map((g) => (
+          <div>
+            <h3 class="town-group-name" lang={isLocal ? 'en' : undefined}>{g.name}</h3>
+            <ul class="chips" lang={isLocal ? 'en' : undefined}>
+              {g.cats.map((c) => <li>{priced.has(c.slug) ? <a href={priced.get(c.slug)}>{c.name}</a> : <span>{c.name}</span>}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {pricedPages.length > 0 && (
+    <section class="section" aria-labelledby="prices-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="prices-title">{t('townPage.pricesTitle', vars)}</h2>
+          <p class="small muted">{t('townPage.pricesNote', vars)}</p>
+        </div>
+        <ul class="town-prices">
+          {pricedPages.map((p) => (
+            <li>
+              <a href={p.path}>
+                <span lang={isLocal ? 'en' : undefined}>{p.category.name}</span>
+                <strong>{money(p.data.price!.median)}{p.category.unit ? ` ${p.category.unit}` : ''}</strong>
+                <small>{t('townPage.pricesMedian')}</small>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="actions">
+          <a class="btn secondary" href={`/quotes/${hub!.city.slug}`}>{t('townPage.pricesAll', vars)}</a>
+          {sellers && <a class="btn ghost" href={sellers.path}>{t('townPage.sellersLink', vars)}</a>}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {showPostalSection && (
+    <section class="section" aria-labelledby="areas-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="areas-title">{t(areas.length ? 'townPage.areasTitle' : 'townPage.postalTitle', vars)}</h2>
+          <p>{t('townPage.areasNote', vars)}</p>
+        </div>
+        {areas.length > 0 && (
+          <>
+            <h3 class="sub-head">{t('townPage.areasHeading')}</h3>
+            <ul class="chips town-areas">{areas.map((a) => <li><span>{a}</span></li>)}</ul>
+          </>
+        )}
+        {postal.length > 0 && (
+          town.postalMode === 'near'
+            ? <p class="town-postal-near">{t('townPage.postalNear', { ...vars, code: postal[0] })}</p>
+            : (
+              <>
+                {areas.length > 0 && <h3 class="sub-head">{tr.fact<string>('postalLabels')}</h3>}
+                <ul class="town-postal" aria-label={tr.fact<string>('postalLabels')}>{postal.map((z) => <li>{z}</li>)}</ul>
+              </>
+            )
+        )}
+        <p class="small muted"><a href="/legal/open-source#data">GeoNames</a> (CC BY 4.0)</p>
+      </div>
+    </section>
+  )}
+
+  <section class="section section-tint" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="how-title">{t('townPage.howTitle', vars)}</h2>
+      </div>
+      <ol class="step-grid">
+        {steps.map((_, i) => (
+          <li class="step-card">
+            <span class="icon"><Fragment set:html={svg(stepIcons[i])} /></span>
+            <p set:html={rich(`townPage.steps.${i}`, vars)} />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="seller-title">
+    <div class="wrap">
+      <div class="cta-band band town-seller">
+        <h2 id="seller-title">{t('townPage.sellerTitle', vars)}</h2>
+        <p class="muted">{t('townPage.sellerBody', vars)}</p>
+        <div class="actions"><a class="btn" href={tr.locale.pages ? (tr.locale.prefix ? `${tr.locale.prefix}/sellers` : '/sellers') : '/sellers'}>{t('townPage.sellerCta')}</a></div>
+      </div>
+    </div>
+  </section>
+
+  {nearby.length > 0 && (
+    <section class="section" aria-labelledby="nearby-title">
+      <div class="wrap town-nearby-grid">
+        <div>
+          <div class="section-head">
+            <h2 id="nearby-title">{t('townPage.nearbyTitle', vars)}</h2>
+            <p class="small muted">{t('townPage.nearbyNote')}</p>
+          </div>
+          <ul class="town-nearby">
+            {nearby.map((n) => (
+              <li>
+                <a href={nearPath(n.town)}><strong>{isLocal && n.town.native && n.town.state === town.state ? n.town.native : n.town.name}</strong><span>{n.town.state !== town.state ? `${(isLocal && states[n.town.state.slug]) || n.town.state.name} · ` : ''}{t('townPage.away', { distance: dist(n.km) })}</span></a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <figure class="town-locator">
+          <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={t('townPage.nearbyMap', vars)}>
+            {nearby.map((n) => {
+              const p = pt(n.town.lat, n.town.lng);
+              return <line x1={here.x} y1={here.y} x2={p.x} y2={p.y} class="loc-line" />;
+            })}
+            {nearby.map((n) => {
+              const p = pt(n.town.lat, n.town.lng);
+              return <circle cx={p.x} cy={p.y} r="5" class="loc-dot near" />;
+            })}
+            <circle cx={here.x} cy={here.y} r="14" class="loc-halo" />
+            <circle cx={here.x} cy={here.y} r="7" class="loc-here" />
+          </svg>
+          <figcaption class="small muted">{t('townPage.nearbyMap', vars)}</figcaption>
+        </figure>
+      </div>
+    </section>
+  )}
+
+  {hasNews(news) && (
+    <section class="section section-tint" aria-labelledby="news-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="news-title">{t('townPage.newsTitle', vars)}</h2>
+          <p class="small muted">{t('townPage.newsNote', vars)}</p>
+        </div>
+        <div class="town-news">
+          {newsLevels.map((l) => (
+            <div class="town-news-level">
+              <h3>{l.label}</h3>
+              <ul>
+                {l.items.map((it) => (
+                  <li class="card" lang={isLocal ? 'en' : undefined}>
+                    <h4><a href={it.url}>{it.headline}</a></h4>
+                    <dl>
+                      {it.sides.map((s) => (
+                        <div><dt>{s.label}</dt><dd>{s.line}</dd></div>
+                      ))}
+                    </dl>
+                    <a class="small" href={it.url} lang={isLocal ? locale.hreflang : undefined}>{t('townPage.newsRead')}<span class="sr-only">: {it.headline}</span></a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="faq-title">{t('townPage.faqTitle', vars)}</h2>
+      </div>
+      <div class="faq">
+        {faq.map((_, i) => (
+          <details>
+            <summary>{t(`townPage.faq.${i}.q`, vars)}</summary>
+            <p>{t(`townPage.faq.${i}.a`, vars)}</p>
+          </details>
+        ))}
+      </div>
+      <p class="town-up">
+        <a href={statePagePath}>{t('townPage.moreState', vars)}</a>
+        <a href={TOWNS_INDEX_PATH}>{t('townPage.allTowns', vars)}</a>
+      </p>
+    </div>
+  </section>
+</Base>
+{feedUrl && (
+  <script>
+    import '../../scripts/town-requests';
+  </script>
+)}

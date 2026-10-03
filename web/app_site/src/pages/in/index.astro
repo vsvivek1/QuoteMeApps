@@ -2,25 +2,32 @@
 import Base from '../../layouts/Base.astro';
 import { site } from '../../lib/site';
 import { LOCALES, translator } from '../../lib/i18n';
-import { townPages } from '../../lib/towns';
+import { isMajor, statePath, statesWithTowns, townPath, towns, townsInState } from '../../lib/towns';
 
-// Every town page, grouped by state. Also the no-JavaScript fallback of the town picker.
+// Country index of the town pages: every state with its town count, and the largest towns.
+// Also the no-JavaScript fallback of the town picker (every trigger links here).
 const { t } = translator(LOCALES[0]);
-const pages = await townPages();
-const states = [...new Set(pages.map((p) => p.town.state))].sort((a, b) => a.localeCompare(b));
+const states = statesWithTowns().sort((a, b) => a.name.localeCompare(b.name, 'en'));
+const major = towns.filter(isMajor).sort((a, b) => (b.population ?? 0) - (a.population ?? 0)).slice(0, 60);
+const nf = new Intl.NumberFormat('en');
+const region = site.country === 'usa' ? 'state' : 'state or territory';
 ---
-<Base title={`Choose your town`} description={`${site.appName} town pages: areas, ${site.postalLabel}s and categories for ${pages.length} towns. Post what you want and local sellers send you quotes.`} path="/in">
+<Base title="Choose your town" description={`${site.appName} town pages: areas, ${site.postalLabel}s and categories for ${nf.format(towns.length)} towns in every ${region}. Post what you want and local sellers send you quotes.`} path="/in">
   <div class="page-head">
     <h1>{t('town.choose')}</h1>
-    <p class="lead">Pick your town to see its areas and {site.postalLabel}s, what people ask for, and how to get quotes from sellers near you.</p>
-    <p><a class="btn sm secondary" href="/in" data-town-open>{t('town.useLocation')} / {t('town.showMap').toLowerCase()}</a></p>
+    <p class="lead">Pick your {region}, then your town, to see its areas and {site.postalLabel}s, what people ask for, and how to get quotes from sellers near you.</p>
+    <p><a class="btn sm secondary" href="/in" data-town-open>{t('town.useLocation')} / {t('town.search').toLowerCase()}</a></p>
   </div>
-  {states.map((state) => (
-    <section>
-      <h2>{state}</h2>
-      <ul class="chips">
-        {pages.filter((p) => p.town.state === state).map((p) => <li><a href={p.path}>{p.town.name}</a></li>)}
-      </ul>
-    </section>
-  ))}
+  <section>
+    <h2>{site.country === 'usa' ? 'States' : 'States and union territories'}</h2>
+    <ul class="state-index">
+      {states.map((s) => (
+        <li><a href={statePath(s)}><strong>{s.name}</strong><span>{nf.format(townsInState(s).length)} towns</span></a></li>
+      ))}
+    </ul>
+  </section>
+  <section>
+    <h2>Larger towns</h2>
+    <ul class="chips">{major.map((x) => <li><a href={townPath(x)}>{x.name}</a></li>)}</ul>
+  </section>
 </Base>

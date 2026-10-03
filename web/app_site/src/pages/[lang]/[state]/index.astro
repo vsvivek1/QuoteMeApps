@@ -1,0 +1,13 @@
+---
+import type { GetStaticPaths } from 'astro';
+import StatePage from '../../../components/pages/StatePage.astro';
+import { statesWithTowns, type StateInfo } from '../../../lib/towns';
+
+// /<lang>/<state>: the state page in its town-page language (Malayalam for Kerala, Spanish in the USA, ...).
+export const getStaticPaths = (() =>
+  statesWithTowns()
+    .filter((s) => s.locale)
+    .map((state) => ({ params: { lang: state.locale!.segment, state: state.slug }, props: { state } }))) satisfies GetStaticPaths;
+const { state } = Astro.props as { state: StateInfo };
+---
+<StatePage state={state} locale={state.locale!} />

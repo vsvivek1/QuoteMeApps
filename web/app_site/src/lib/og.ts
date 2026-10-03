@@ -18,7 +18,7 @@ import { createOgRenderer } from '../../../shared/og.mjs';
 import { REPO_ROOT, WEB_ROOT, brandColors, country, money, site } from './site';
 import { cityHubs, loadGuides, loadSellers, loadSeo, responseTimeText, sellerCities } from './seo';
 import { LOCALES, TRANSLATED, localePath, translator } from './i18n';
-import { joinList, townPages } from './towns';
+import { joinList, statePath, statesWithTowns, townPages, townsInState } from './towns';
 
 export interface OgSpec {
   kicker?: string;
@@ -57,13 +57,26 @@ export function ogEntries(): Promise<Map<string, OgSpec>> {
       page('/about', 'about', tr.t('about.h1'));
     }
 
-    // Town pages (committed data, so not tied to the SEO export): indexable ones only.
-    for (const tp of await townPages()) {
-      if (!tp.indexable) continue;
+    // Town pages: one image per state (shared by its town pages and its state page), plus
+    // their own image for the hand-curated towns. Not one per town: ~24,000 PNGs would not fit the build.
+    const pages = await townPages();
+    for (const st of statesWithTowns()) {
+      const n = townsInState(st).length;
+      add(statePath(st), {
+        kicker: `${st.name}, ${en.fact<string>('countryShort')}`,
+        title: `Post what you want in ${st.name}`,
+        detail: `Local sellers in ${plural(n, 'town', 'towns')} send you quotes. Free for buyers.`,
+        footerRight: cta,
+      });
+    }
+    for (const tp of pages.values()) {
+      if (!tp.town.curated || !tp.indexable) continue;
       add(tp.path, {
-        kicker: `${tp.town.name}, ${tp.town.state}`,
+        kicker: `${tp.town.name}, ${tp.town.state.name}`,
         title: `Post what you want in ${tp.town.name}`,
-        detail: `Local sellers in ${joinList(tp.town.areas.slice(0, 3))} and more send you quotes. Free for buyers.`,
+        detail: tp.town.areas.length >= 3
+          ? `Local sellers in ${joinList(tp.town.areas.slice(0, 3))} and more send you quotes. Free for buyers.`
+          : `Local sellers in ${tp.town.name} send you quotes. Free for buyers.`,
         footerRight: cta,
       });
     }

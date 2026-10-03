@@ -1,9 +1,10 @@
 ---
 // "Choose your town" dialog (scripts/town-picker.ts). Closed by default; every
 // trigger is a plain link to /in, so without JavaScript people get the town list.
-// The map (Leaflet + OpenStreetMap tiles) is only downloaded when "Pick on a map" is pressed.
+// The town list (/towns-index.json, ~20,000 towns) is fetched only when the dialog opens,
+// PIN/ZIP lookups (/towns-postal.json) only when digits are typed, and the map (Leaflet +
+// OpenStreetMap tiles) only when "Pick on a map" is pressed.
 import { site } from '../lib/site';
-import { townsByName } from '../lib/towns';
 import type { Translator } from '../lib/i18n';
 
 interface Props {
@@ -11,11 +12,9 @@ interface Props {
 }
 const { tr } = Astro.props;
 const { t } = tr;
-const keys = ['current', 'change', 'locating', 'locationDenied', 'locationError', 'nearest', 'far', 'go', 'showMap', 'hideMap', 'mapLoading', 'mapError', 'distanceKm', 'distanceMi', 'noResults', 'short', 'choose'];
+const keys = ['current', 'change', 'locating', 'locationDenied', 'locationError', 'nearest', 'far', 'go', 'showMap', 'hideMap', 'mapLoading', 'mapError', 'distanceKm', 'distanceMi', 'noResults', 'short', 'choose', 'loadingList', 'listError', 'moreResults'];
 const strings = Object.fromEntries(keys.map((k) => [k, t(`town.${k}`)]));
-const config = { strings, unit: site.country === 'usa' ? 'mi' : 'km', country: site.country };
-const lang = tr.locale.segment ? 'en' : undefined;
-const search = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const config = { strings, unit: site.country === 'usa' ? 'mi' : 'km', country: site.country, lang: tr.locale.segment };
 const pin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" /><circle cx="12" cy="10" r="2.5" /></svg>';
 ---
 <dialog id="town-picker" class="town-dialog" aria-labelledby="town-picker-title" data-config={JSON.stringify(config)}>
@@ -45,15 +44,8 @@ const pin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
   <div class="town-result" data-town-result role="status" aria-live="polite"></div>
   <label class="town-search-label" for="town-search">{t('town.search')}</label>
   <input id="town-search" class="town-search" type="search" autocomplete="off" placeholder={t('town.searchHint')} aria-controls="town-list" data-town-search />
-  <ul id="town-list" class="town-list" data-town-list>
-    {townsByName().map((town) => (
-      <li data-search={search([town.name, ...town.aka, town.state, ...town.areas, ...town.postal_prefixes].join(' '))}>
-        <a href={`/in/${town.slug}`} data-town={town.slug} data-name={town.name} data-lat={town.lat} data-lng={town.lng} lang={lang}>
-          <span>{town.name}</span><small>{town.state}</small>
-        </a>
-      </li>
-    ))}
-  </ul>
+  <ul id="town-list" class="town-list" data-town-list aria-busy="true"></ul>
+  <p class="town-more small muted" hidden data-town-more></p>
   <p class="town-empty small muted" hidden data-town-empty>{t('town.noResults')}</p>
   <p class="small town-all"><a href="/in">{t('town.allTowns')}</a></p>
 </dialog>

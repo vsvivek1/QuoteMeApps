@@ -14,10 +14,11 @@
 const country = (process.env.SITE_COUNTRY || '').trim();
 if (country !== 'usa' && country !== 'india') throw new Error('lighthouserc: set SITE_COUNTRY=usa|india');
 
-// Indexable static pages: whole SEO category is asserted.
+// Indexable static pages: whole SEO category is asserted. Town pages: per country a large city,
+// a small town (postal codes only, no areas) and a local-language page; plus a state page (USA).
 const indexable = {
-  usa: ['/index.html', '/es.html', '/legal/privacy-policy.html', '/sellers.html', '/in/dallas.html', '/in.html'],
-  india: ['/index.html', '/hi.html', '/legal/privacy-policy.html', '/sellers.html', '/in/kochi.html', '/in/thiruvananthapuram.html'],
+  usa: ['/index.html', '/es.html', '/legal/privacy-policy.html', '/sellers.html', '/in.html', '/texas.html', '/texas/dallas.html', '/alabama/hartselle.html', '/es/texas/dallas.html'],
+  india: ['/index.html', '/hi.html', '/legal/privacy-policy.html', '/sellers.html', '/in.html', '/kerala/kochi.html', '/karnataka/ankola.html', '/ml/kerala/kochi.html'],
 }[country];
 // Pages built from data/seo/fixtures/<country>.json (noindex in fixture builds).
 const fixtures = {

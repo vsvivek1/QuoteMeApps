@@ -2,7 +2,8 @@
 // at module level, so both can import it.
 
 export interface PickTown {
-  slug: string;
+  /** "<state>/<town>". */
+  path: string;
   name: string;
   lat: number;
   lng: number;
@@ -38,19 +39,27 @@ export function nearestTown<T extends PickTown>(towns: T[], lat: number, lng: nu
   return { town: best, km: bestKm };
 }
 
-/** The remembered town, or null (private mode, blocked storage, nothing chosen yet). */
-export function readTown(): { slug: string; name: string } | null {
+/**
+ * The remembered town, or null (private mode, blocked storage, nothing chosen yet).
+ * `path` is "<state>/<town>". Towns remembered before state paths existed have only a slug;
+ * their link goes to /in/<slug>, which redirects (vercel.json) to the new page.
+ */
+export function readTown(): { path: string; name: string } | null {
   try {
     const v = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
-    return v && typeof v.slug === 'string' && /^[a-z0-9-]{1,64}$/.test(v.slug) && typeof v.name === 'string' ? { slug: v.slug, name: v.name.slice(0, 64) } : null;
+    if (!v || typeof v.name !== 'string') return null;
+    const name = v.name.slice(0, 64);
+    if (typeof v.path === 'string' && /^[a-z0-9-]{1,64}\/[a-z0-9-]{1,64}$/.test(v.path)) return { path: v.path, name };
+    if (typeof v.slug === 'string' && /^[a-z0-9-]{1,64}$/.test(v.slug)) return { path: `in/${v.slug}`, name };
+    return null;
   } catch {
     return null;
   }
 }
 
-export function saveTown(town: { slug: string; name: string }): void {
+export function saveTown(town: { path: string; name: string }): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ slug: town.slug, name: town.name }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ path: town.path, name: town.name }));
   } catch {
     // Storage unavailable: the choice just is not remembered.
   }

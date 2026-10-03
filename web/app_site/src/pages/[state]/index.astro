@@ -1,0 +1,12 @@
+---
+import type { GetStaticPaths } from 'astro';
+import StatePage from '../../components/pages/StatePage.astro';
+import { LOCALES } from '../../lib/i18n';
+import { statesWithTowns, type StateInfo } from '../../lib/towns';
+
+// /<state>: every state with at least one town page. State slugs never equal a language
+// segment (/hi, /es, /ml, ...), so these share the one-segment pattern with [lang]/index.
+export const getStaticPaths = (() => statesWithTowns().map((state) => ({ params: { state: state.slug }, props: { state } }))) satisfies GetStaticPaths;
+const { state } = Astro.props as { state: StateInfo };
+---
+<StatePage state={state} locale={LOCALES[0]} />

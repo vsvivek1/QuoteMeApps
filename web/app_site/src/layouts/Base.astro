@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { abs, site } from '../lib/site';
-import { alternates, localePath, splitLocale, translator } from '../lib/i18n';
+import { alternates, localePath, splitLocale, translator, type Locale } from '../lib/i18n';
 import { ogImageFor } from '../lib/og';
 import Globe from '../components/icons/Globe.astro';
 import TownPicker from '../components/TownPicker.astro';
@@ -18,10 +18,16 @@ interface Props {
   smartBanner?: boolean;
   /** Full-width page: sections bring their own .wrap (home page). */
   wide?: boolean;
+  /** Language of the page when the path prefix does not say it (town pages: /ml/kerala/kochi). */
+  locale?: Locale;
+  /** hreflang set for pages outside TRANSLATED (town and state pages): every version plus x-default. */
+  alternates?: { hreflang: string; path: string; locale: Locale }[];
+  /** Page path whose og:image to use (town pages share their state's image). Defaults to path. */
+  ogPath?: string;
 }
 
 const { title, description, path, canonical, noindex = false, ogType = 'website', jsonLd = [], smartBanner = false, wide = false } = Astro.props;
-const { locale } = splitLocale(path);
+const locale = Astro.props.locale ?? splitLocale(path).locale;
 const tr = translator(locale);
 const t = tr.t;
 // Links to pages that have a translation stay in the reader's language.
@@ -31,9 +37,10 @@ const href = (p: string) => {
 };
 const fullTitle = title.includes(site.appName) ? title : `${title} | ${site.appName}`;
 const canonicalUrl = canonical ?? abs(path === '/' ? '/' : path);
-const alts = noindex ? [] : alternates(path);
-const others = alternates(path).filter((a) => a.hreflang !== 'x-default' && a.locale.code !== locale.code);
-const og = await ogImageFor(path);
+const allAlts = Astro.props.alternates ?? alternates(path);
+const alts = noindex ? [] : allAlts;
+const others = allAlts.filter((a) => a.hreflang !== 'x-default' && a.locale.code !== locale.code);
+const og = await ogImageFor(Astro.props.ogPath ?? path);
 const ogLocale = (tag: string) => tag.replace('-', '_');
 const nav = [
   { href: href('/#how-it-works'), label: t('layout.navHow') },
@@ -152,7 +159,7 @@ const year = new Date().getFullYear();
         <div class="footer-meta">
           <p class="muted">&copy; {year} {site.company}</p>
           {others.length > 0 && (
-            <p>{alternates(path).filter((a) => a.hreflang !== 'x-default').map((a, i) => <>{i > 0 && ' · '}{a.locale.code === locale.code ? <span aria-current="true">{a.locale.name}</span> : <a href={a.path} hreflang={a.hreflang} lang={a.hreflang}>{a.locale.name}</a>}</>)}</p>
+            <p>{allAlts.filter((a) => a.hreflang !== 'x-default').map((a, i) => <>{i > 0 && ' · '}{a.locale.code === locale.code ? <span aria-current="true">{a.locale.name}</span> : <a href={a.path} hreflang={a.hreflang} lang={a.hreflang}>{a.locale.name}</a>}</>)}</p>
           )}
         </div>
       </div>
