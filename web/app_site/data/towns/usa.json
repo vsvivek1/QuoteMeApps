@@ -1,5 +1,5 @@
 {
-  "_comment": "Curated towns for the USA site's town pages (/in/<slug>) and the town picker. Hand-maintained: only well-known facts (state, approximate city-centre coordinates, well-known neighborhoods, first three digits of the ZIP codes). No seller counts, prices or other stats here; those come only from the nightly SEO export. Slugs match data/seo city slugs where a city exists there, so town pages can link to its price pages.",
+  "_comment": "Curated towns, merged into the generated town data by tool/data/build_towns.py (they keep their slug, areas and aliases). Hand-maintained: only well-known facts (state, approximate city-centre coordinates, well-known neighborhoods, first three digits of the ZIP codes). No seller counts, prices or other stats here; those come only from the nightly SEO export. Slugs match data/seo city slugs where a city exists there, so town pages can link to its price pages.",
   "country": "usa",
   "towns": [
     { "slug": "new-york", "name": "New York", "aka": ["NYC", "Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"], "state": "New York", "lat": 40.7128, "lng": -74.006, "areas": ["Upper West Side", "Harlem", "Midtown", "Chelsea", "Williamsburg", "Park Slope", "Astoria", "Flushing", "Long Island City", "Riverdale"], "postal_prefixes": ["100", "103", "104", "110", "111", "112", "113", "114", "116"] },

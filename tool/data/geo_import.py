@@ -34,7 +34,7 @@ from typing import Iterable, Iterator
 # --- state names <-> codes ----------------------------------------------------------------------
 
 IN_STATES = {
-    "andaman and nicobar islands": "AN", "andhra pradesh": "AP", "arunachal pradesh": "AR", "assam": "AS",
+    "andaman and nicobar islands": "AN", "andaman and nicobar": "AN", "andhra pradesh": "AP", "arunachal pradesh": "AR", "assam": "AS",
     "bihar": "BR", "chandigarh": "CH", "chhattisgarh": "CT", "dadra and nagar haveli and daman and diu": "DH",
     "dadra and nagar haveli": "DH", "daman and diu": "DH", "delhi": "DL", "nct of delhi": "DL", "goa": "GA",
     "gujarat": "GJ", "haryana": "HR", "himachal pradesh": "HP", "jammu and kashmir": "JK", "jharkhand": "JH",
