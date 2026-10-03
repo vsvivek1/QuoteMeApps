@@ -58,7 +58,8 @@ select is(
     where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')
       and p.proname not in ('money_round_half_up','gst_line_tax','us_sales_tax','compute_quote_totals',
                             'normalize_postal_code','is_valid_gstin','is_valid_ein','get_app_settings',
-                            'classify_request_text')),
+                            'classify_request_text','get_community_feed','get_feed_post',
+                            'get_feed_comments','get_group_buy')),
   null, 'anon can execute only the public allow-list');
 
 select ok(not has_function_privilege('authenticated', 'public.match_sellers_for_request(uuid,int)', 'execute'),
