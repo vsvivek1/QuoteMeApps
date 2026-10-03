@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../features/auth/domain/app_user.dart';
 import '../../features/chat/domain/chat.dart';
+import '../../features/community/domain/community.dart';
 import '../../features/notifications/domain/app_notification.dart';
 import '../../features/orders/domain/order.dart';
 import '../../features/quotes/domain/quote.dart';
@@ -55,6 +56,13 @@ class DemoBackend {
   final reports = <Map<String, String>>[];
   final consents = <String, Map<String, String>>{};
   int quoteCap = 10;
+
+  // Community feed (demo_community.dart).
+  final comments = <String, List<FeedComment>>{}; // request id -> comments, oldest first
+  final likes = <String, Set<String>>{}; // request id -> user ids
+  final groupMembers = <String, Map<String, num>>{}; // request id -> user id -> qty
+  final groupUnits = <String, String>{};
+  final quoteTiers = <String, List<PriceTier>>{}; // quote id -> tiers, qty ascending
 
   String? currentUserId;
   final _changes = StreamController<void>.broadcast();
@@ -172,6 +180,138 @@ class DemoBackend {
     }
   }
 
+  var _communitySeeded = false;
+
+  /// Public posts by neighbours so the community feed is not empty: a group
+  /// buy with tiered offers and comments, and a plain request. Seeded the
+  /// first time the feed is opened, so flows that never open it (and their
+  /// tests) see only their own requests.
+  void seedCommunity() {
+    if (_communitySeeded) return;
+    _communitySeeded = true;
+    final india = config.country == Country.india;
+    final city = config.demoCities.first;
+    final leaves = categories.where((c) => c.isLeaf && !c.isBlocked).toList();
+    if (leaves.length < 2) return;
+    final now = DateTime.now();
+    final neighbours = india
+        ? ['Anil Menon', 'Divya Nair', 'Farhan Ali']
+        : ['Jordan Miller', 'Maria Garcia', 'Sam Lee'];
+    for (final (i, name) in neighbours.indexed) {
+      profiles['demo-neighbour-$i'] = Profile(id: 'demo-neighbour-$i', name: name, phoneVerified: true);
+    }
+
+    BuyerRequest post(String id, String buyer, int cat, String title, String desc, Duration ago, {bool group = false}) {
+      final r = BuyerRequest(
+        id: id,
+        buyerId: buyer,
+        categoryId: cat,
+        title: title,
+        description: desc,
+        locality: city.name,
+        state: city.state,
+        lat: city.center.lat,
+        lng: city.center.lng,
+        maxQuotes: quoteCap,
+        quoteWindowEndsAt: now.add(const Duration(days: 5)),
+        priorityUntil: now.subtract(ago),
+        createdAt: now.subtract(ago),
+        isPublic: true,
+        groupBuy: group,
+      );
+      requests[id] = r;
+      return r;
+    }
+
+    void tieredQuote(String id, BuyerRequest r, String sellerId, List<(num, int)> tiers) {
+      final seller = sellers[sellerId]!;
+      final unit = m(tiers.first.$2);
+      quotes[id] = Quote(
+        id: id,
+        requestId: r.id,
+        seller: _summary(seller, r),
+        lines: [QuoteLine(description: r.title, qty: 1, unitPrice: unit)],
+        subtotal: unit,
+        tax: m(0),
+        delivery: m(0),
+        total: unit,
+        validUntil: now.add(const Duration(days: 7)),
+        createdAt: r.createdAt.add(const Duration(hours: 2)),
+      );
+      quoteSellerIds[id] = sellerId;
+      quoteTiers[id] = [for (final t in tiers) PriceTier(minQty: t.$1, unitPrice: m(t.$2))];
+      requests[r.id] = requests[r.id]!.copyWith(quoteCount: requests[r.id]!.quoteCount + 1);
+    }
+
+    final fans = post(
+      'demo-post-group',
+      'demo-neighbour-0',
+      leaves.first.id,
+      india ? 'Ceiling fans for our apartment block' : 'Window AC units for our building',
+      india
+          ? 'BLDC 1200 mm fans, white. I need 6; neighbours are welcome to join so we get a bulk price.'
+          : '8,000 BTU window units. I need 2; join in and we all get the bulk price.',
+      const Duration(hours: 20),
+      group: true,
+    );
+    groupUnits[fans.id] = india ? 'fans' : 'units';
+    groupMembers[fans.id] = {'demo-neighbour-0': india ? 6 : 2, 'demo-neighbour-1': india ? 4 : 3};
+    tieredQuote(
+      'demo-quote-g1',
+      fans,
+      _demoSellerIds[0],
+      india ? [(1, 320000), (10, 290000), (25, 265000)] : [(1, 32900), (5, 29900), (10, 27500)],
+    );
+    tieredQuote(
+      'demo-quote-g2',
+      fans,
+      _demoSellerIds[2],
+      india ? [(1, 310000), (20, 275000)] : [(1, 31900), (8, 28500)],
+    );
+    comments[fans.id] = [
+      FeedComment(
+        id: 'demo-c1',
+        requestId: fans.id,
+        body: india ? 'Count me in for 4, we are in B block.' : 'In for 3, we are on the 4th floor.',
+        authorName: neighbours[1].split(' ').first,
+        createdAt: now.subtract(const Duration(hours: 18)),
+      ),
+      FeedComment(
+        id: 'demo-c2',
+        requestId: fans.id,
+        parentId: 'demo-c1',
+        body: india
+            ? 'At 25 fans we can include free installation for everyone.'
+            : 'At 10 units we include free installation for everyone.',
+        authorName: sellers[_demoSellerIds[0]]!.businessName,
+        asSeller: true,
+        sellerId: _demoSellerIds[0],
+        sellerVerified: sellers[_demoSellerIds[0]]!.isVerified,
+        createdAt: now.subtract(const Duration(hours: 16)),
+      ),
+    ];
+    likes[fans.id] = {'demo-neighbour-1', 'demo-neighbour-2'};
+
+    final tap = post(
+      'demo-post-plain',
+      'demo-neighbour-2',
+      leaves[1].id,
+      india ? 'Plumber for a leaking kitchen tap' : 'Plumber for a leaking kitchen faucet',
+      india ? 'Dripping all night. Can anyone recommend someone reliable?' : 'Dripping all night. Any recommendations?',
+      const Duration(hours: 3),
+    );
+    comments[tap.id] = [
+      FeedComment(
+        id: 'demo-c3',
+        requestId: tap.id,
+        body: india ? 'QuickFix fixed ours in an hour last month.' : 'Handy Pros fixed ours in an hour last month.',
+        authorName: neighbours[0].split(' ').first,
+        createdAt: now.subtract(const Duration(hours: 2)),
+      ),
+    ];
+    likes[tap.id] = {'demo-neighbour-0'};
+  }
+
   // ------------------------------------------------------------ requests
 
   BuyerRequest createRequest(String buyerId, RequestDraft d, {required String title}) {
@@ -215,8 +355,14 @@ class DemoBackend {
       media: [for (final p in d.localMediaPaths) RequestMedia(path: p, url: p)],
       createdAt: now,
       notifiedSellers: _matchingSellers(d.categoryId!).length,
+      isPublic: d.postToFeed || d.groupBuy,
+      groupBuy: d.groupBuy,
     );
     requests[id] = r;
+    if (d.groupBuy) {
+      groupMembers[id] = {buyerId: d.groupQty};
+      groupUnits[id] = (d.groupUnit ?? '').trim().isEmpty ? 'units' : d.groupUnit!.trim();
+    }
     requestPrivate[id] = {'full_address': d.fullAddress, 'buyer_phone': profiles[buyerId]?.phone};
     for (final s in _matchingSellers(d.categoryId!)) {
       _notify(s, 'new_request', {'request_id': id, 'title': title});
@@ -241,7 +387,7 @@ class DemoBackend {
         final base = (r.budgetMax ?? r.budgetMin)?.minorInt ?? (config.country == Country.india ? 2500000 : 89900);
         final price = (base * (85 + _random.nextInt(25)) ~/ 100) ~/ 100 * 100;
         try {
-          submitQuote(
+          final q = submitQuote(
             ids[i],
             QuoteDraft(
               requestId: r.id,
@@ -257,6 +403,14 @@ class DemoBackend {
               notes: 'Free installation included.',
             ),
           );
+          if (current.groupBuy) {
+            quoteTiers[q.id] = [
+              PriceTier(minQty: 1, unitPrice: m(price)),
+              PriceTier(minQty: 10, unitPrice: m(price * 92 ~/ 10000 * 100)),
+              PriceTier(minQty: 25, unitPrice: m(price * 85 ~/ 10000 * 100)),
+            ];
+            notify();
+          }
         } on StateError {
           // Cap reached or request closed while simulating; ignore.
         }

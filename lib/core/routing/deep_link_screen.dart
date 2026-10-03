@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/domain/app_user.dart';
 import '../providers.dart';
 import '../state/app_state.dart';
 
 /// Resolves `https://<domain>/r/<id>`: the buyer who owns the request sees
-/// its quotes; anyone else in seller mode sees it as a lead.
+/// its quotes; anyone in seller mode sees it as a lead; a buyer sees the
+/// community post when the request is on the feed.
 class DeepLinkScreen extends ConsumerStatefulWidget {
   const DeepLinkScreen.request(this.requestId, {super.key});
   final String requestId;
@@ -28,10 +30,14 @@ class _DeepLinkScreenState extends ConsumerState<DeepLinkScreen> {
     if (!mounted) return;
     if (request != null && request.buyerId == me) {
       context.go('/requests/${widget.requestId}');
-    } else if (ref.read(myProfileProvider).value?.isSeller ?? false) {
+    } else if (ref.read(appModeProvider) == AppMode.seller) {
       context.go('/seller/leads/${widget.requestId}');
+    } else if (await ref.read(communityRepositoryProvider).watchPost(widget.requestId).first != null) {
+      if (mounted) context.go('/feed/${widget.requestId}');
+    } else if (ref.read(myProfileProvider).value?.isSeller ?? false) {
+      if (mounted) context.go('/seller/leads/${widget.requestId}');
     } else {
-      context.go('/home');
+      if (mounted) context.go('/home');
     }
   }
 

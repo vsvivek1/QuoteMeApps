@@ -8,6 +8,7 @@ import '../backend.dart';
 import 'edge_functions.dart';
 import 'supabase_auth_repository.dart';
 import 'supabase_chat_repository.dart';
+import 'supabase_community_repository.dart';
 import 'supabase_context.dart';
 import 'supabase_misc_repositories.dart';
 import 'supabase_quote_repository.dart';
@@ -53,6 +54,7 @@ Backend createSupabaseBackend(
     notifications: SupabaseNotificationRepository(ctx),
     safety: SupabaseSafetyRepository(ctx),
     flags: SupabaseFlagsRepository(ctx),
+    community: SupabaseCommunityRepository(ctx),
     onDispose: ctx.dispose,
   );
 }

@@ -8,6 +8,7 @@ import '../../../core/analytics/analytics.dart';
 import '../../../core/providers.dart';
 import '../../../core/utils/context_x.dart';
 import '../../../shared/widgets/common.dart';
+import '../../community/presentation/community_widgets.dart';
 import '../../quotes/domain/quote.dart';
 import '../../quotes/presentation/quote_card.dart';
 import '../application/request_providers.dart';
@@ -56,6 +57,15 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
     if (ok == true) await ref.read(requestRepositoryProvider).cancelRequest(r.id);
   }
 
+  Future<void> _setPublic(BuyerRequest r, bool public) async {
+    final l10n = context.l10n;
+    final done = await runCommunityAction(context, () async {
+      await ref.read(communityRepositoryProvider).publish(r.id, public: public);
+      return true;
+    });
+    if (done != null && mounted) context.toast(public ? l10n.feedPublished : l10n.feedUnpublished);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -88,10 +98,16 @@ class _RequestDetailScreenState extends ConsumerState<RequestDetailScreen> {
                 onSelected: (v) => switch (v) {
                   'whatsapp' => _share(r, whatsapp: true),
                   'cancel' => _cancel(r),
+                  'feed' => context.push('/feed/${r.id}'),
+                  'publish' => _setPublic(r, true),
+                  'unpublish' => _setPublic(r, false),
                   _ => null,
                 },
                 itemBuilder: (_) => [
                   PopupMenuItem(value: 'whatsapp', child: Text(l10n.shareRequestWhatsapp)),
+                  if (r.isPublic) PopupMenuItem(value: 'feed', child: Text(l10n.feedOpenPost)),
+                  if (r.isOpen && !r.isPublic) PopupMenuItem(value: 'publish', child: Text(l10n.feedPublish)),
+                  if (r.isPublic && !r.groupBuy) PopupMenuItem(value: 'unpublish', child: Text(l10n.feedUnpublish)),
                   if (r.isOpen) PopupMenuItem(value: 'cancel', child: Text(l10n.cancelRequest)),
                 ],
               ),
@@ -209,6 +225,19 @@ class _Header extends StatelessWidget {
                   Expanded(child: Text(category!.name(context.lang), style: context.text.labelLarge)),
               ],
             ),
+            if (r.isPublic) ...[
+              const SizedBox(height: 8),
+              ActionChip(
+                avatar: Icon(r.groupBuy ? Icons.groups_rounded : Icons.forum_outlined, size: 18),
+                label: Text(
+                  [
+                    r.groupBuy ? l10n.groupBuyBadge : l10n.feedOnFeed,
+                    if (r.commentCount > 0) l10n.feedCommentsCount(r.commentCount),
+                  ].join(' · '),
+                ),
+                onPressed: () => context.push('/feed/${r.id}'),
+              ),
+            ],
             if (r.description.isNotEmpty && r.description != r.title) ...[
               const SizedBox(height: 8),
               Text(r.description),

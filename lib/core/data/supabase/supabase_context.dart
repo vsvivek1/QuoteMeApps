@@ -33,6 +33,7 @@ abstract final class Topics {
   static const requests = 'requests';
   static const quotes = 'quotes';
   static const notifications = 'notifications';
+  static const community = 'community';
 }
 
 /// Shared plumbing for every Supabase repository: client, cache, outbox,

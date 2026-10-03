@@ -22,6 +22,13 @@ String notificationTitle(BuildContext context, AppNotification n) {
     'quote_shortlisted' => l10n.notifQuoteShortlisted,
     'counter_offer' => l10n.notifCounterOffer,
     'order_status' => l10n.notifOrderStatus,
+    'feed_comment' => l10n.notifFeedComment('${p['title'] ?? ''}'),
+    'feed_reply' => l10n.notifFeedReply('${p['title'] ?? ''}'),
+    'group_joined' => l10n.notifGroupJoined('${p['title'] ?? ''}'),
+    'group_grew' => l10n.notifGroupGrew('${p['title'] ?? ''}'),
+    'group_price_drop' => l10n.notifGroupPriceDrop('${p['title'] ?? ''}'),
+    'group_awarded' => l10n.notifGroupAwarded('${p['title'] ?? ''}'),
+    'quote_tiers' => l10n.notifQuoteTiers,
     _ => l10n.notifGeneric,
   };
 }
@@ -32,6 +39,9 @@ IconData _icon(String type) => switch (type) {
   'new_request' => Icons.inbox_outlined,
   'quote_accepted' => Icons.celebration_outlined,
   'order_status' => Icons.local_shipping_outlined,
+  'feed_comment' || 'feed_reply' => Icons.mode_comment_outlined,
+  'group_joined' || 'group_grew' || 'group_awarded' => Icons.groups_outlined,
+  'group_price_drop' || 'quote_tiers' => Icons.trending_down_rounded,
   _ => Icons.notifications_none_rounded,
 };
 

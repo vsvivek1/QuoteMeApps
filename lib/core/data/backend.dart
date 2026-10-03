@@ -1,5 +1,6 @@
 import '../../features/auth/domain/auth_repository.dart';
 import '../../features/chat/domain/chat_repository.dart';
+import '../../features/community/domain/community_repository.dart';
 import '../../features/notifications/domain/notification_repository.dart';
 import '../../features/orders/domain/order_repository.dart';
 import '../../features/quotes/domain/quote_repository.dart';
@@ -12,6 +13,7 @@ import '../cache/app_cache.dart';
 import '../cache/outbox.dart';
 import '../config/country_config.dart';
 import '../demo/demo_backend.dart';
+import '../demo/demo_community.dart';
 import '../demo/demo_repositories.dart';
 import '../services/device_services.dart';
 import 'supabase/edge_functions.dart';
@@ -34,6 +36,7 @@ class Backend {
     required this.notifications,
     required this.safety,
     required this.flags,
+    required this.community,
     this.demo,
     void Function()? onDispose,
   }) : _onDispose = onDispose; // ignore: prefer_initializing_formals
@@ -52,6 +55,7 @@ class Backend {
     notifications: DemoNotificationRepository(b),
     safety: DemoSafetyRepository(b),
     flags: DemoFlagsRepository(),
+    community: DemoCommunityRepository(b),
     demo: b,
     onDispose: b.dispose,
   );
@@ -77,6 +81,7 @@ class Backend {
   final NotificationRepository notifications;
   final SafetyRepository safety;
   final FlagsRepository flags;
+  final CommunityRepository community;
 
   /// Non-null in demo mode.
   final DemoBackend? demo;

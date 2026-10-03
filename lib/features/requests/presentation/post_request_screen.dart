@@ -38,6 +38,8 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
   final _code = TextEditingController();
   final _locality = TextEditingController();
   final _address = TextEditingController();
+  final _groupUnit = TextEditingController();
+  final _groupQty = TextEditingController(text: '1');
   final _detailsForm = GlobalKey<FormState>();
   final _whereForm = GlobalKey<FormState>();
   Timer? _debounce;
@@ -59,7 +61,7 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
   @override
   void dispose() {
     _debounce?.cancel();
-    for (final c in [_text, _link, _budgetMin, _budgetMax, _code, _locality, _address]) {
+    for (final c in [_text, _link, _budgetMin, _budgetMax, _code, _locality, _address, _groupUnit, _groupQty]) {
       c.dispose();
     }
     super.dispose();
@@ -132,6 +134,8 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             locationCode: _code.text.trim(),
             locality: _locality.text.trim(),
             fullAddress: _address.text.trim().isEmpty ? null : _address.text.trim(),
+            groupUnit: _groupUnit.text.trim().isEmpty ? null : _groupUnit.text.trim(),
+            groupQty: num.tryParse(_groupQty.text.trim()) ?? 1,
           ),
         );
         _submit();
@@ -477,6 +481,71 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
         : context.l10n.quotePriceRequired,
   );
 
+  /// Community feed and group-buy opt-ins (both off by default).
+  Widget _communityOptions(BuildContext context, PostRequestState s) {
+    final l10n = context.l10n;
+    final d = s.draft;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Column(
+          children: [
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              secondary: const Icon(Icons.forum_outlined),
+              value: d.postToFeed || d.groupBuy,
+              onChanged: (v) => _c.update((d) => d.copyWith(postToFeed: v, groupBuy: v && d.groupBuy)),
+              title: Text(l10n.postToFeed),
+              subtitle: Text(l10n.postToFeedHint),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              secondary: const Icon(Icons.groups_outlined),
+              value: d.groupBuy,
+              onChanged: (v) => _c.update((d) => d.copyWith(groupBuy: v, postToFeed: v || d.postToFeed)),
+              title: Text(l10n.postGroupBuy),
+              subtitle: Text(l10n.postGroupBuyHint),
+            ),
+            if (d.groupBuy)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        key: const Key('group-qty'),
+                        controller: _groupQty,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d{0,4}(\.\d{0,3})?'))],
+                        decoration: InputDecoration(labelText: l10n.postGroupMyQty),
+                        validator: (v) {
+                          final n = num.tryParse((v ?? '').trim());
+                          return n == null || n <= 0 || n > 1000 ? l10n.groupInvalidQty : null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextFormField(
+                        key: const Key('group-unit'),
+                        controller: _groupUnit,
+                        maxLength: 24,
+                        decoration: InputDecoration(
+                          labelText: l10n.postGroupUnit,
+                          hintText: l10n.postGroupUnitHint,
+                          counterText: '',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _whereStep(BuildContext context, PostRequestState s, Category? category, CountryConfig config) {
     final l10n = context.l10n;
     final codeLabel = config.country == Country.india ? l10n.postalCodeLabelIndia : l10n.postalCodeLabelUsa;
@@ -572,6 +641,8 @@ class _PostRequestScreenState extends ConsumerState<PostRequestScreen> {
             selected: {s.draft.audience},
             onSelectionChanged: (v) => _c.update((d) => d.copyWith(audience: v.first)),
           ),
+          const SizedBox(height: 20),
+          _communityOptions(context, s),
           const SizedBox(height: 24),
           if (category != null)
             Card(

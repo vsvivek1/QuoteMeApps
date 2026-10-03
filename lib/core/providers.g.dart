@@ -524,6 +524,43 @@ final class NotificationRepositoryProvider
 
 String _$notificationRepositoryHash() => r'90f552d27241d733158d8980abba9e74d0eb531f';
 
+@ProviderFor(communityRepository)
+final communityRepositoryProvider = CommunityRepositoryProvider._();
+
+final class CommunityRepositoryProvider
+    extends $FunctionalProvider<CommunityRepository, CommunityRepository, CommunityRepository>
+    with $Provider<CommunityRepository> {
+  CommunityRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'communityRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$communityRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<CommunityRepository> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
+
+  @override
+  CommunityRepository create(Ref ref) {
+    return communityRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CommunityRepository value) {
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<CommunityRepository>(value));
+  }
+}
+
+String _$communityRepositoryHash() => r'4c192529790514103d323c068e07f4ed7fe35d03';
+
 @ProviderFor(safetyRepository)
 final safetyRepositoryProvider = SafetyRepositoryProvider._();
 
