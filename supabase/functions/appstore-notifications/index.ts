@@ -62,7 +62,7 @@ async function applyTransaction(tx: TransactionInfo, status: string, expectedUse
   if (!sellerId) throw new HttpError(422, "missing_app_account_token");
   if (expectedUser && sellerId !== expectedUser) throw new HttpError(403, "purchase_belongs_to_another_user");
   const product = productInfo(tx.productId);
-  if (!product) throw new HttpError(422, "unknown_product");
+  if (!product || product.tier === "onboarding") throw new HttpError(422, "unknown_product");
   if (product.tier === "pro") {
     await applyEntitlement({
       p_seller_id: sellerId,

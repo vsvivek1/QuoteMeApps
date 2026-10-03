@@ -659,6 +659,7 @@
   "quoteNotAllowed": "You can't quote on this request.",
   "quoteLicenceRequired": "A valid licence is required for this category.",
   "quoteNoCredits": "You're out of free quotes this month. See plans.",
+  "quoteOnboardingFee": "Pay the one-time onboarding fee to start quoting. See plans.",
   "quotePriorityWindow": "Verified sellers get the first 15 minutes on new requests.",
   "quoteAlreadySent": "You've already quoted on this request.",
   "templatesTitle": "Quote templates",
@@ -730,6 +731,17 @@
     }
   },
   "planBuyCredits": "Buy credits",
+  "onboardingFeeTitle": "One-time onboarding fee",
+  "onboardingFeeBody": "Pay once to start sending quotes. Founding partners don't pay this.",
+  "onboardingFeePay": "Pay {amount}",
+  "@onboardingFeePay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingFeePaid": "Onboarding fee paid. Thank you!",
   "planRestore": "Restore purchases",
   "planManage": "Manage subscription",
   "planFixPayment": "There's a problem with your payment. Update it to keep your plan.",

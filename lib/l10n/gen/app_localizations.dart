@@ -2247,6 +2247,12 @@ abstract class AppLocalizations {
   /// **'You\'re out of free quotes this month. See plans.'**
   String get quoteNoCredits;
 
+  /// No description provided for @quoteOnboardingFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the one-time onboarding fee to start quoting. See plans.'**
+  String get quoteOnboardingFee;
+
   /// No description provided for @quotePriorityWindow.
   ///
   /// In en, this message translates to:
@@ -2420,6 +2426,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Buy credits'**
   String get planBuyCredits;
+
+  /// No description provided for @onboardingFeeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One-time onboarding fee'**
+  String get onboardingFeeTitle;
+
+  /// No description provided for @onboardingFeeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay once to start sending quotes. Founding partners don\'t pay this.'**
+  String get onboardingFeeBody;
+
+  /// No description provided for @onboardingFeePay.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay {amount}'**
+  String onboardingFeePay(String amount);
+
+  /// No description provided for @onboardingFeePaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding fee paid. Thank you!'**
+  String get onboardingFeePaid;
 
   /// No description provided for @planRestore.
   ///

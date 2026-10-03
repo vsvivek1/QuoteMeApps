@@ -146,6 +146,7 @@ String quoteFailureText(BuildContext context, String code) {
     'request_closed' => l10n.quoteRequestClosed,
     'licence_required' => l10n.quoteLicenceRequired,
     'no_credits' => l10n.quoteNoCredits,
+    'onboarding_fee' => l10n.quoteOnboardingFee,
     'priority_window' => l10n.quotePriorityWindow,
     'already_quoted' => l10n.quoteAlreadySent,
     'not_allowed' => l10n.quoteNotAllowed,

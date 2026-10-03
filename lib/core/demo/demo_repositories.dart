@@ -360,6 +360,9 @@ class DemoSellerRepository implements SellerRepository {
   Future<Seller?> getSeller(String id) async => b.sellers[id];
 
   @override
+  Future<OnboardingFee?> onboardingFee() async => null;
+
+  @override
   Future<void> setDirectoryOptIn(bool optIn) async {
     final id = _uid(b);
     final s = b.sellers[id];

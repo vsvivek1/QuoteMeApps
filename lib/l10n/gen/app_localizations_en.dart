@@ -1182,6 +1182,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quoteNoCredits => 'You\'re out of free quotes this month. See plans.';
 
   @override
+  String get quoteOnboardingFee => 'Pay the one-time onboarding fee to start quoting. See plans.';
+
+  @override
   String get quotePriorityWindow => 'Verified sellers get the first 15 minutes on new requests.';
 
   @override
@@ -1279,6 +1282,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planBuyCredits => 'Buy credits';
+
+  @override
+  String get onboardingFeeTitle => 'One-time onboarding fee';
+
+  @override
+  String get onboardingFeeBody => 'Pay once to start sending quotes. Founding partners don\'t pay this.';
+
+  @override
+  String onboardingFeePay(String amount) {
+    return 'Pay $amount';
+  }
+
+  @override
+  String get onboardingFeePaid => 'Onboarding fee paid. Thank you!';
 
   @override
   String get planRestore => 'Restore purchases';

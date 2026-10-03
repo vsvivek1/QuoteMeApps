@@ -4,7 +4,7 @@
 // Seller id + product id travel in metadata set by create-checkout:
 //   checkout session metadata, subscription_data.metadata, payment_intent_data.metadata.
 // Handled: checkout.session.completed, customer.subscription.created|updated|deleted|paused|resumed,
-//          invoice.paid (renewal date), charge.refunded (credit packs).
+//          invoice.paid (renewal date), charge.refunded (credit packs, onboarding fee).
 import { HttpError, json, requireMethod, serve } from "../_shared/http.ts";
 import { requireEnv } from "../_shared/env.ts";
 import { productInfo, stripeSubscriptionStatus } from "../_shared/products.ts";
@@ -57,6 +57,14 @@ async function handle(type: string, obj: any, sellerId?: string): Promise<boolea
         });
         return true;
       }
+      if (obj.mode === "payment" && obj.payment_status === "paid" && product.tier === "onboarding") {
+        await apply({
+          p_seller_id: sellerId, p_store: "web", p_provider: "stripe", p_product_id: product.productId,
+          p_tier: "onboarding", p_status: "active", p_original_transaction_id: `stripe:${obj.payment_intent ?? obj.id}`,
+          p_external_customer_id: obj.customer ?? null, p_raw: { checkout_session: obj.id },
+        });
+        return true;
+      }
       return false;
     }
     case "customer.subscription.created":
@@ -79,7 +87,15 @@ async function handle(type: string, obj: any, sellerId?: string): Promise<boolea
     case "charge.refunded": {
       const sid = obj.metadata?.seller_id;
       const product = productInfo(obj.metadata?.product_id ?? "");
-      if (!sid || !product || product.tier !== "credits" || !obj.refunded) return false;
+      if (!sid || !product || product.tier === "pro" || !obj.refunded) return false;
+      if (product.tier === "onboarding") {
+        await apply({
+          p_seller_id: sid, p_store: "web", p_provider: "stripe", p_product_id: product.productId,
+          p_tier: "onboarding", p_status: "refunded", p_original_transaction_id: `stripe:${obj.payment_intent}`,
+          p_raw: { charge: obj.id },
+        });
+        return true;
+      }
       await apply({
         p_seller_id: sid, p_store: "web", p_provider: "stripe", p_product_id: product.productId, p_tier: "credits",
         p_status: "refunded", p_original_transaction_id: `stripe:${obj.payment_intent}`,

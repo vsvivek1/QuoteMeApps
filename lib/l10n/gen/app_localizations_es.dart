@@ -1189,6 +1189,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get quoteNoCredits => 'Ya usaste tus cotizaciones gratis de este mes. Consulta los planes.';
 
   @override
+  String get quoteOnboardingFee => 'Paga la cuota única de alta para empezar a cotizar. Consulta los planes.';
+
+  @override
   String get quotePriorityWindow =>
       'Los vendedores verificados tienen los primeros 15 minutos en las nuevas solicitudes.';
 
@@ -1287,6 +1290,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get planBuyCredits => 'Comprar créditos';
+
+  @override
+  String get onboardingFeeTitle => 'Cuota única de alta';
+
+  @override
+  String get onboardingFeeBody =>
+      'Paga una sola vez para empezar a enviar cotizaciones. Los socios fundadores no la pagan.';
+
+  @override
+  String onboardingFeePay(String amount) {
+    return 'Pagar $amount';
+  }
+
+  @override
+  String get onboardingFeePaid => 'Cuota de alta pagada. ¡Gracias!';
 
   @override
   String get planRestore => 'Restaurar compras';

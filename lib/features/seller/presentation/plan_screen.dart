@@ -4,15 +4,22 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/analytics/analytics.dart';
+import '../../../core/data/supabase/edge_functions.dart';
+import '../../../core/providers.dart';
 import '../../../core/state/app_state.dart';
 import '../../../core/utils/context_x.dart';
 import '../../../shared/widgets/common.dart';
 import '../../billing/data/billing_services.dart';
 import '../../billing/domain/billing_service.dart';
 import '../application/seller_providers.dart';
+import '../domain/seller_repository.dart';
 
 final _productsProvider = FutureProvider.autoDispose<List<PlanProduct>>(
   (ref) => ref.watch(billingServiceProvider).products(),
+);
+
+final _onboardingFeeProvider = FutureProvider.autoDispose<OnboardingFee?>(
+  (ref) => ref.watch(sellerRepositoryProvider).onboardingFee(),
 );
 
 /// Plan and billing. While `monetization_enabled` is off everything is free
@@ -46,6 +53,7 @@ class PlanScreen extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: 12),
+            ..._onboardingFee(context, ref),
             if (flags == null || !flags.monetizationEnabled)
               EmptyState(icon: Icons.celebration_outlined, message: l10n.planFreeLaunch)
             else
@@ -54,6 +62,42 @@ class PlanScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// I Want USA one-time fee, paid by Stripe Checkout in the browser.
+  List<Widget> _onboardingFee(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final fee = ref.watch(_onboardingFeeProvider).value;
+    if (fee == null || !(fee.due || fee.paid)) return const [];
+    if (fee.paid) {
+      return [
+        Card(child: ListTile(leading: const Icon(Icons.verified_outlined), title: Text(l10n.onboardingFeePaid))),
+        const SizedBox(height: 12),
+      ];
+    }
+    final amount = ref.watch(countryConfigProvider).money(fee.amountMinor).display;
+    return [
+      Card(
+        color: context.colors.secondaryContainer,
+        child: ListTile(
+          leading: const Icon(Icons.storefront_outlined),
+          title: Text(l10n.onboardingFeeTitle),
+          subtitle: Text(l10n.onboardingFeeBody),
+          trailing: FilledButton(
+            onPressed: () async {
+              final res = await ref.read(edgeFunctionsProvider).invoke('create-checkout', {
+                'product_id': 'seller_onboarding',
+              });
+              final url = res['url'];
+              if (url is String) await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              ref.invalidate(_onboardingFeeProvider);
+            },
+            child: Text(l10n.onboardingFeePay(amount)),
+          ),
+        ),
+      ),
+      const SizedBox(height: 12),
+    ];
   }
 
   List<Widget> _paywall(BuildContext context, WidgetRef ref, BillingService billing) {

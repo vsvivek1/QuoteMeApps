@@ -1184,6 +1184,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get quoteNoCredits => 'इस महीने के आपके मुफ़्त कोटेशन खत्म हो गए। प्लान देखें।';
 
   @override
+  String get quoteOnboardingFee => 'Pay the one-time onboarding fee to start quoting. See plans.';
+
+  @override
   String get quotePriorityWindow => 'नई रिक्वेस्ट पर पहले 15 मिनट सिर्फ़ वेरिफ़ाइड सेलर्स के लिए होते हैं।';
 
   @override
@@ -1281,6 +1284,20 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get planBuyCredits => 'क्रेडिट खरीदें';
+
+  @override
+  String get onboardingFeeTitle => 'One-time onboarding fee';
+
+  @override
+  String get onboardingFeeBody => 'Pay once to start sending quotes. Founding partners don\'t pay this.';
+
+  @override
+  String onboardingFeePay(String amount) {
+    return 'Pay $amount';
+  }
+
+  @override
+  String get onboardingFeePaid => 'Onboarding fee paid. Thank you!';
 
   @override
   String get planRestore => 'पिछली खरीदारी वापस लाएं';
