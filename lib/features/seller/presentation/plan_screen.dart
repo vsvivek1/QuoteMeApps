@@ -71,7 +71,9 @@ class PlanScreen extends ConsumerWidget {
     if (fee == null || !(fee.due || fee.paid)) return const [];
     if (fee.paid) {
       return [
-        Card(child: ListTile(leading: const Icon(Icons.verified_outlined), title: Text(l10n.onboardingFeePaid))),
+        Card(
+          child: ListTile(leading: const Icon(Icons.verified_outlined), title: Text(l10n.onboardingFeePaid)),
+        ),
         const SizedBox(height: 12),
       ];
     }
