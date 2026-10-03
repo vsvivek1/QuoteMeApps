@@ -177,6 +177,7 @@ Arguments are named. `=x` is the default. `→` is the result: `table` means a r
 | `submit_verification(p_doc_type, p_doc_number=null, p_file_path=null)` | `seller_documents` | `doc_type`: gstin, udyam, pan, shop_photo, ein, state_license, business_address, website, other; file in `verification-docs/{seller_id}/...` |
 | `submit_licence(p_licence_type, p_number, p_issuer=null, p_state=null, p_category_ids bigint[]='{}', p_expires_at=null, p_file_path=null)` | `seller_licences` | needed for restricted categories |
 | `get_my_entitlement()` | `jsonb {is_seller, monetization_enabled, early_partner, free_until, subscription{store, product_id, status, renews_at, expires_at}, payment_issue, free_quotes_per_month, free_quotes_used, credits_balance, has_priority, can_quote, next_quote_billing_source}` | drives the paywall, "Founding partner until …" badge and "fix your payment" banner |
+| `get_my_onboarding_fee()` | `jsonb {due, paid, amount_minor, currency}` or null (not a seller) | I Want USA one-time onboarding fee. `due` only while `monetization_enabled` and `onboarding_fee_enabled` are on, the country is US, the seller is not an early partner and has not paid. While due, quoting fails with `onboarding_fee_required` (402) |
 
 ### Requests (buyer)
 | RPC | → | notes |
@@ -396,7 +397,7 @@ also send `X-Firebase-AppCheck` (enforced when `APP_CHECK_ENFORCE=true`).
 | Function | Caller / auth | Request | Response |
 |---|---|---|---|
 | `delete-account` | user JWT (+ App Check) | `{apple_authorization_code?, apple_refresh_token?, apple_client_id?}`. Re-run Sign in with Apple on the confirm screen and send the fresh authorization code | `{deleted: true, apple_revoked: bool\|null, summary}` |
-| `create-checkout` | seller JWT | `{product_id: seller_pro_monthly\|seller_pro_annual\|credits_10\|credits_50, success_url?, cancel_url?}` or `{action: "portal", return_url?}` (USA) | `{url, provider: stripe\|razorpay, product_id}`. Open `url` in the browser. Entitlements arrive by webhook; refresh with `get_my_entitlement` |
+| `create-checkout` | seller JWT | `{product_id: seller_pro_monthly\|seller_pro_annual\|credits_10\|credits_50\|seller_onboarding, success_url?, cancel_url?}` (`seller_onboarding`: USA only, charges `app_settings.onboarding_fee_minor`, 409 `onboarding_fee_not_due` when nothing is owed) or `{action: "portal", return_url?}` (USA) | `{url, provider: stripe\|razorpay, product_id}`. Open `url` in the browser. Entitlements arrive by webhook; refresh with `get_my_entitlement` |
 | `play-rtdn` | Pub/Sub push (OIDC) **or** user JWT with `{action: "verify", product_id, purchase_token, kind: "subs"\|"inapp"}` | | `{seller_id}` or `{sellerId, granted}`. Set `obfuscatedAccountId = user id` when purchasing. The server acknowledges or consumes the purchase |
 | `appstore-notifications` | App Store (`{signedPayload}`) **or** user JWT with `{action: "verify", signed_transaction}` (StoreKit 2 `jwsRepresentation`) | | `{seller_id}`. Set `appAccountToken = user id` when purchasing. Chain verification is still a TODO (see section 11) |
 | `stripe-webhook` | Stripe signature | Stripe event | `{received, applied}` |

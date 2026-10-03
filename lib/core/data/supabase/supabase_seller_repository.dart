@@ -102,6 +102,17 @@ class SupabaseSellerRepository implements SellerRepository {
   });
 
   @override
+  Future<OnboardingFee?> onboardingFee() async {
+    final res = await ctx.client.rpc<dynamic>('get_my_onboarding_fee');
+    if (res is! Map) return null;
+    return OnboardingFee(
+      due: res['due'] == true,
+      paid: res['paid'] == true,
+      amountMinor: (res['amount_minor'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  @override
   Future<SellerStats> stats() async {
     final uid = ctx.uid;
     final quotes = await ctx.client.from('quotes').select('status, created_at').eq('seller_id', uid);

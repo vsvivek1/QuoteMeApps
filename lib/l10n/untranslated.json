@@ -1,1 +1,9 @@
-{}
+{
+  "hi": [
+    "quoteOnboardingFee",
+    "onboardingFeeTitle",
+    "onboardingFeeBody",
+    "onboardingFeePay",
+    "onboardingFeePaid"
+  ]
+}

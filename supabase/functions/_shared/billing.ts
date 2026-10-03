@@ -41,7 +41,7 @@ export async function applyEntitlement(args: {
   p_store: "play" | "apple" | "web" | "manual";
   p_provider: "google_play" | "app_store" | "stripe" | "razorpay" | "admin";
   p_product_id: string;
-  p_tier: "pro" | "credits";
+  p_tier: "pro" | "credits" | "onboarding";
   p_status: string;
   p_original_transaction_id: string | null;
   p_credits_delta?: number;

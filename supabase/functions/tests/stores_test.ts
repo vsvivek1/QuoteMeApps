@@ -14,6 +14,7 @@ Deno.test("product ids", () => {
   assertEquals(productInfo("seller_pro_annual")?.interval, "year");
   assertEquals(productInfo("credits_10"), { productId: "credits_10", tier: "credits", credits: 10 });
   assertEquals(productInfo("credits_50")?.credits, 50);
+  assertEquals(productInfo("seller_onboarding"), { productId: "seller_onboarding", tier: "onboarding", credits: 0 });
   assertEquals(productInfo("something_else"), null);
   assertEquals(envKeyFor("STRIPE_PRICE", "seller_pro_monthly"), "STRIPE_PRICE_SELLER_PRO_MONTHLY");
 });

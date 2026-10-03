@@ -78,13 +78,14 @@ RequestFailure toRequestFailure(Object e) {
 // ---------------------------------------------------------------- quotes
 
 /// `cap_reached | request_closed | not_allowed | licence_required |
-/// no_credits | priority_window | rate_limited | already_quoted | network`
+/// no_credits | onboarding_fee | priority_window | rate_limited | already_quoted | network`
 /// (+ pass-through server codes).
 String quoteFailureCode(String server) => switch (server) {
   'quote_cap_reached' => 'cap_reached',
   'request_not_open' || 'quote_window_closed' || 'request_not_found' => 'request_closed',
   'licence_required' || 'licence_expired' => 'licence_required',
   'quota_exhausted' => 'no_credits',
+  'onboarding_fee_required' => 'onboarding_fee',
   'priority_window' => 'priority_window',
   'rate_limited' => 'rate_limited',
   'already_quoted' => 'already_quoted',

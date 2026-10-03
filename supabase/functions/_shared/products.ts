@@ -2,22 +2,31 @@
 // so every store feeds the same `entitlements` rows (Sections 7 and 12).
 //   seller_pro_monthly / seller_pro_annual  -> tier "pro" (subscription)
 //   credits_10 / credits_50                 -> tier "credits" (consumable pack)
+//   seller_onboarding                       -> tier "onboarding" (one-time fee, USA web checkout only;
+//                                              amount from app_settings.onboarding_fee_minor)
 // Store-specific price ids come from env (see .env.example):
 //   STRIPE_PRICE_<PRODUCT_ID_UPPER>, RAZORPAY_PLAN_<PRODUCT_ID_UPPER>, RAZORPAY_AMOUNT_<PRODUCT_ID_UPPER>
 import { env } from "./env.ts";
 
 export interface ProductInfo {
   productId: string;
-  tier: "pro" | "credits";
+  tier: "pro" | "credits" | "onboarding";
   credits: number;
   interval?: "month" | "year";
 }
 
-export const KNOWN_PRODUCTS = ["seller_pro_monthly", "seller_pro_annual", "credits_10", "credits_50"] as const;
+export const KNOWN_PRODUCTS = [
+  "seller_pro_monthly",
+  "seller_pro_annual",
+  "credits_10",
+  "credits_50",
+  "seller_onboarding",
+] as const;
 
 /** Classifies any product id (store ids may carry a base-plan suffix, e.g. "seller_pro:monthly"). */
 export function productInfo(productId: string): ProductInfo | null {
   const id = productId.trim().toLowerCase();
+  if (id === "seller_onboarding") return { productId: id, tier: "onboarding", credits: 0 };
   const credits = /(?:^|[._:-])credits?[._:-]?(\d{1,4})(?:$|[._:-])/.exec(id);
   if (credits) return { productId: id, tier: "credits", credits: Number(credits[1]) };
   if (/(^|[._:-])(seller_)?pro($|[._:-])/.test(id) || id.startsWith("seller_pro")) {

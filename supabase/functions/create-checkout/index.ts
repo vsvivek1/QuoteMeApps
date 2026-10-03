@@ -1,11 +1,12 @@
 // create-checkout: web purchase links for seller plans and credit packs.
 //   USA   -> Stripe Checkout (subscription or one-time payment) / Customer Portal
+//            seller_onboarding: one-time fee, amount from app_settings.onboarding_fee_minor
 //   India -> Razorpay Subscription (short_url) or Payment Link (credit packs)
 // The store webhooks (stripe-webhook / razorpay-webhook) grant the entitlement;
 // this function never does.
 //
 // POST (seller JWT) body:
-//   { product_id: "seller_pro_monthly" | "seller_pro_annual" | "credits_10" | "credits_50",
+//   { product_id: "seller_pro_monthly" | "seller_pro_annual" | "credits_10" | "credits_50" | "seller_onboarding",
 //     success_url?, cancel_url? }            -> { url, provider, product_id }
 //   { action: "portal", return_url? }        -> { url }  (Stripe only)
 import { appCountry, env } from "../_shared/env.ts";
@@ -56,6 +57,36 @@ serve(async (req) => {
   const product = productInfo(productId);
   if (!product || !(KNOWN_PRODUCTS as readonly string[]).includes(productId)) throw new HttpError(400, "unknown_product");
   const meta = { seller_id: user.id, product_id: productId };
+
+  if (product.tier === "onboarding") {
+    if (country !== "US") throw new HttpError(400, "product_not_available");
+    const fee = unwrap(await db.rpc("onboarding_fee_status", { p_seller_id: user.id })) as {
+      due: boolean;
+      amount_minor: number;
+      currency: string;
+    };
+    if (!fee?.due) throw new HttpError(409, "onboarding_fee_not_due");
+    const session = await stripeRequest("POST", "checkout/sessions", {
+      mode: "payment",
+      line_items: [{
+        quantity: 1,
+        price_data: {
+          currency: (fee.currency || "USD").toLowerCase(),
+          unit_amount: fee.amount_minor,
+          product_data: { name: "I Want seller onboarding (one-time)" },
+        },
+      }],
+      client_reference_id: user.id,
+      customer_email: user.email || undefined,
+      customer_creation: "always",
+      metadata: meta,
+      payment_intent_data: { metadata: meta },
+      automatic_tax: { enabled: env("STRIPE_AUTOMATIC_TAX") === "true" },
+      success_url: safeReturnUrl(body.success_url, "?status=success&session_id={CHECKOUT_SESSION_ID}"),
+      cancel_url: safeReturnUrl(body.cancel_url, "?status=cancelled"),
+    }, `checkout:${user.id}:${productId}:${Math.floor(Date.now() / 60000)}`);
+    return json({ url: session.url, provider: "stripe", product_id: productId });
+  }
 
   if (country === "US") {
     const price = stripePriceFor(productId);
