@@ -1,0 +1,80 @@
+# One-time (re-runnable) setup of a hosted Supabase project for one country:
+# migrations, base + country seed (no demo data), Edge Functions, the webhook secret
+# shared by pg_net/pg_cron and the functions, edge_functions_url and the custom
+# access token hook. Run it from the Actions tab after creating the GitHub
+# environment production-<country> (secrets SUPABASE_PROJECT_REF, SUPABASE_DB_PASSWORD)
+# and the repository secret SUPABASE_ACCESS_TOKEN. See supabase/README.md.
+name: Supabase bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      country:
+        description: "india or usa"
+        required: true
+        default: india
+        type: choice
+        options: [india, usa]
+
+concurrency:
+  group: supabase-bootstrap-${{ inputs.country }}
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    environment: production-${{ inputs.country }}
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      API: https://api.supabase.com/v1/projects/${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - name: Check secrets
+        run: |
+          for v in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD PROJECT_REF; do
+            if [ -z "${!v}" ]; then echo "::error::$v is not set for production-${{ inputs.country }}"; exit 1; fi
+          done
+      - uses: actions/checkout@v5
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.119.0
+      - name: Project region
+        run: |
+          curl -fsS -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" "$API" | jq '{name, region, status}'
+      - run: supabase link --project-ref "$PROJECT_REF"
+      - name: Migrations
+        run: supabase db push --include-all
+      - name: Seed (base + ${{ inputs.country }}, no demo data)
+        run: |
+          sql() { jq -Rs '{query: .}' | curl -fsS -X POST "$API/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @- ; echo; }
+          cat supabase/seed.sql supabase/seed/${{ inputs.country }}.sql | sql
+          echo "select key, value from public.app_settings where key in ('country','currency','languages');" | sql
+      - name: Webhook secret, functions URL and auth hook
+        run: |
+          sql() { jq -Rs '{query: .}' | curl -fsS -X POST "$API/database/query" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @- ; echo; }
+          SECRET=$(openssl rand -hex 32)
+          echo "::add-mask::$SECRET"
+          # Create or rotate the Vault secret, then give the functions the same value.
+          printf "%s" "do \$\$ begin
+            if exists (select 1 from vault.secrets where name = 'edge_webhook_secret') then
+              perform vault.update_secret((select id from vault.secrets where name = 'edge_webhook_secret'), '$SECRET');
+            else
+              perform vault.create_secret('$SECRET', 'edge_webhook_secret');
+            end if;
+          end \$\$;
+          update public.app_settings set value = to_jsonb('https://$PROJECT_REF.supabase.co/functions/v1'::text)
+           where key = 'edge_functions_url';" | sql > /dev/null
+          supabase secrets set --project-ref "$PROJECT_REF" EDGE_WEBHOOK_SECRET="$SECRET" > /dev/null
+          curl -fsS -X PATCH "$API/config/auth" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" \
+            --data '{"hook_custom_access_token_enabled": true, "hook_custom_access_token_uri": "pg-functions://postgres/public/custom_access_token_hook"}' \
+            | jq '{hook_custom_access_token_enabled}'
+      - name: Edge Functions
+        run: supabase functions deploy --project-ref "$PROJECT_REF"
+      - name: Summary
+        run: |
+          echo "### Supabase ${{ inputs.country }} is set up" >> "$GITHUB_STEP_SUMMARY"
+          echo "Project URL: https://$PROJECT_REF.supabase.co" >> "$GITHUB_STEP_SUMMARY"

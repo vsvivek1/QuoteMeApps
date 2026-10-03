@@ -91,6 +91,8 @@ the other country's seed into a project.
 
 ## Linking and migrating hosted projects
 
+Fastest path for a new hosted project: create the GitHub environment `production-<country>` with the secrets `SUPABASE_PROJECT_REF` and `SUPABASE_DB_PASSWORD`, add the repository secret `SUPABASE_ACCESS_TOKEN`, then run **Actions → Supabase bootstrap** for that country. It pushes the migrations, loads `seed.sql` + `seed/<country>.sql` (no demo data), creates the webhook secret in Vault and as the `EDGE_WEBHOOK_SECRET` function secret, sets `edge_functions_url`, turns on the custom access token hook and deploys the Edge Functions. Re-running it is safe (it rotates the webhook secret). The manual steps below remain the reference.
+
 ```bash
 supabase login
 supabase link --project-ref <iwant-india-staging-ref>    # one project at a time
