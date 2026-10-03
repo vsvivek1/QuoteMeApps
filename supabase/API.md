@@ -677,6 +677,16 @@ india}}, articles: [{slug, path: "articles/<slug>.json", country, published_at, 
 noindex}]}`. The site build reads it through `TRENDS_DATA_URL` (`web/README.md`) and re-runs all
 of its gates; the index can only tighten the kill switch and caps of the site's `config.json`.
 
+**Optional article field `scope`** (`"local" | "state" | "country" | "world"`): how wide the story
+is, for readers outside the trends site. Absent means "decide from `places`". The pipeline does not
+have to write it and the trends site ignores it (it neither gates nor changes the page). The main
+site (`web/app_site`, town pages, "What's happening") reads the same articles at build time
+through the trends site's loader and gates, and files them as: town (`places[].level` `metro`
+matching the town), state (`level` `state`), country (`scope: "country"` or a `country`-level
+place) and world (`scope: "world"`, the only way to reach that level). `country`/`world` articles
+are kept out of the town and state levels. Unknown values are ignored. Town pages show only the
+headline, the first sentence of each perspective and a link to the article.
+
 **Admin RPCs** (admin JWT + `profiles.roles`; reads are not logged, every change writes
 `admin_audit_log` and, for publish decisions, `trends.trend_publish_log`). Details and payloads:
 `admin/TRENDS_ADMIN_NEEDS.md`.

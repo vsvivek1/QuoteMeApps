@@ -42,6 +42,11 @@ export interface Article {
   slug: string;
   country: Country;
   places: { slug: string; name: string; state?: string; level: 'country' | 'state' | 'metro' }[];
+  /**
+   * Optional widest level the story is about, for "What's happening" on the app sites' town pages:
+   * 'local' (a town; the default when absent), 'state', 'country' or 'world'. Not used by any gate.
+   */
+  scope?: 'local' | 'state' | 'country' | 'world';
   headline: string;
   summary: string[];
   perspectives: { framing: string; a: { label: string; body: string }; b: { label: string; body: string } };
@@ -244,16 +249,39 @@ const localDay = (iso: string, tz: string) =>
 
 let cache: { built: Built[]; rejected: GateResult[]; config: Config } | null = null;
 
+/**
+ * Where to read articles from and the build clock. Defaults come from site.ts (this site's build);
+ * the app sites pass their own paths to show headlines on their town pages with the same gates.
+ */
+export interface LoadOptions {
+  dataDir: string;
+  remoteDataUrl: string;
+  remoteDir: string;
+  configFile: string;
+  now: Date;
+  /** Prefix for the build log lines. */
+  log: string;
+}
+
+const defaults = (): LoadOptions => ({
+  dataDir: site.dataDir,
+  remoteDataUrl: site.remoteDataUrl,
+  remoteDir: site.remoteDir,
+  configFile: site.configFile,
+  now: site.now,
+  log: '[trends_site]',
+});
+
 /** Article sources: local files first (they win on duplicate slugs), then the remote bucket copy. */
-function articleFiles(): { file: string; full: string }[] {
+function articleFiles(o: LoadOptions): { file: string; full: string }[] {
   const list = (dir: string, prefix: string) =>
     fs.existsSync(dir)
       ? fs.readdirSync(dir).filter((f) => f.endsWith('.json')).sort().map((f) => ({ file: `${prefix}${f}`, full: path.join(dir, f) }))
       : [];
-  const out = list(site.dataDir, '');
-  if (site.remoteDataUrl) {
-    const dir = path.join(site.remoteDir, 'articles');
-    if (!fs.existsSync(path.join(site.remoteDir, 'settings.json'))) {
+  const out = list(o.dataDir, '');
+  if (o.remoteDataUrl) {
+    const dir = path.join(o.remoteDir, 'articles');
+    if (!fs.existsSync(path.join(o.remoteDir, 'settings.json'))) {
       throw new Error('TRENDS_DATA_URL is set but .trends-remote/ is missing: build with `npm run build` (its prebuild step downloads the data)');
     }
     out.push(...list(dir, 'remote:'));
@@ -262,34 +290,35 @@ function articleFiles(): { file: string; full: string }[] {
 }
 
 /** The remote index can pause publishing or lower a daily cap (to another ramp level), never the reverse. */
-function applyRemoteSettings(config: Config): void {
-  if (!site.remoteDataUrl) return;
-  const f = path.join(site.remoteDir, 'settings.json');
+function applyRemoteSettings(config: Config, o: LoadOptions): void {
+  if (!o.remoteDataUrl) return;
+  const f = path.join(o.remoteDir, 'settings.json');
   if (!fs.existsSync(f)) return;
   const r = JSON.parse(fs.readFileSync(f, 'utf8')) as { paused?: boolean; paused_at?: string | null; per_day?: Partial<Record<Country, number | null>> };
   if (r.paused === true) {
-    const at = r.paused_at && !Number.isNaN(Date.parse(r.paused_at)) ? r.paused_at : site.now.toISOString();
+    const at = r.paused_at && !Number.isNaN(Date.parse(r.paused_at)) ? r.paused_at : o.now.toISOString();
     const localAt = config.publishing.paused ? Date.parse(config.publishing.paused_at ?? '') : Infinity;
     if (!(Date.parse(at) >= localAt)) config.publishing = { paused: true, paused_at: at };
-    console.log(`[trends_site] remote kill switch: publishing paused at ${config.publishing.paused_at}`);
+    console.log(`${o.log} remote kill switch: publishing paused at ${config.publishing.paused_at}`);
   }
   for (const country of ['usa', 'india'] as const) {
     const n = r.per_day?.[country];
     if (typeof n === 'number' && config.caps.ramp_levels.includes(n) && n < config.caps.per_day[country]) {
-      console.log(`[trends_site] remote ramp: ${country} daily cap ${config.caps.per_day[country]} -> ${n}`);
+      console.log(`${o.log} remote ramp: ${country} daily cap ${config.caps.per_day[country]} -> ${n}`);
       config.caps.per_day[country] = n;
     }
   }
 }
 
-export function loadArticles() {
-  if (cache) return cache;
-  const config = JSON.parse(fs.readFileSync(site.configFile, 'utf8')) as Config;
-  applyRemoteSettings(config);
+export function loadArticles(options?: Partial<LoadOptions>) {
+  if (cache && !options) return cache;
+  const o = { ...defaults(), ...options };
+  const config = JSON.parse(fs.readFileSync(o.configFile, 'utf8')) as Config;
+  applyRemoteSettings(config, o);
   validateConfig(config);
   const rejected: GateResult[] = [];
   const passed: { file: string; a: Article }[] = [];
-  const files = articleFiles();
+  const files = articleFiles(o);
   const slugs = new Set<string>();
 
   for (const { file, full } of files) {
@@ -329,7 +358,7 @@ export function loadArticles() {
       rejected.push({ file, slug: a.slug, gate: 'caps', reason: 'publishing paused (kill switch)' });
       continue;
     }
-    if (t > site.now.getTime() + 5 * 60_000) {
+    if (t > o.now.getTime() + 5 * 60_000) {
       rejected.push({ file, slug: a.slug, gate: 'caps', reason: 'published_at is in the future' });
       continue;
     }
@@ -359,7 +388,7 @@ export function loadArticles() {
     }
     const ended = a.trend_ended_at ? Date.parse(a.trend_ended_at) : NaN;
     const visits = a.traffic?.visits_14d_after_end;
-    if (!Number.isNaN(ended) && site.now.getTime() - ended >= 14 * 86_400_000 && typeof visits === 'number' && visits < config.gates.noindex_min_visits_14d) {
+    if (!Number.isNaN(ended) && o.now.getTime() - ended >= 14 * 86_400_000 && typeof visits === 'number' && visits < config.gates.noindex_min_visits_14d) {
       reasons.push(`traffic died (${visits} visits in 14 days after the trend)`);
     }
     let appLink: Built['appLink'] = null;
@@ -380,12 +409,13 @@ export function loadArticles() {
   });
   built.sort((x, y) => Date.parse(y.article.published_at) - Date.parse(x.article.published_at));
 
-  console.log(`[trends_site] ${files.length} article file(s): ${built.length} built (${built.filter((b) => b.indexable).length} indexable), ${rejected.length} not built`);
-  for (const r of rejected) console.log(`[trends_site]   not built: ${r.file} [${r.gate}] ${r.reason}`);
-  for (const b of built.filter((x) => !x.indexable)) console.log(`[trends_site]   noindex: ${b.article.slug} (${b.noindexReasons.join(', ')})`);
+  console.log(`${o.log} ${files.length} article file(s): ${built.length} built (${built.filter((b) => b.indexable).length} indexable), ${rejected.length} not built`);
+  for (const r of rejected) console.log(`${o.log}   not built: ${r.file} [${r.gate}] ${r.reason}`);
+  for (const b of built.filter((x) => !x.indexable)) console.log(`${o.log}   noindex: ${b.article.slug} (${b.noindexReasons.join(', ')})`);
 
-  cache = { built, rejected, config };
-  return cache;
+  const result = { built, rejected, config };
+  if (!options) cache = result;
+  return result;
 }
 
 export function placesIndex(built: Built[]) {
