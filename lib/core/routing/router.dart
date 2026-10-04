@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/domain/app_user.dart';
 import '../../features/auth/presentation/account_blocked_screen.dart';
 import '../../features/auth/presentation/consent_screen.dart';
+import '../../features/auth/presentation/email_screen.dart';
 import '../../features/auth/presentation/phone_screen.dart';
 import '../../features/auth/presentation/profile_setup_screen.dart';
 import '../../features/auth/presentation/welcome_screen.dart';
@@ -51,6 +52,7 @@ const _onboardingPaths = [
   '/welcome',
   '/auth/phone',
   '/auth/otp',
+  '/auth/email',
   '/consent',
   '/profile-setup',
 ];
@@ -112,6 +114,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/language', builder: (_, _) => const LanguageScreen()),
       GoRoute(path: '/welcome', builder: (_, _) => const WelcomeScreen()),
       GoRoute(path: '/auth/phone', builder: (_, _) => const PhoneScreen()),
+      GoRoute(path: '/auth/email', builder: (_, _) => const EmailScreen()),
       GoRoute(path: '/auth/link-phone', builder: (_, _) => const PhoneScreen(link: true)),
       GoRoute(
         path: '/auth/otp',

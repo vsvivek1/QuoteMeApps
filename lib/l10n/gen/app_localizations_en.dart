@@ -118,6 +118,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInGoogle => 'Continue with Google';
 
   @override
+  String get signInEmail => 'Continue with email';
+
+  @override
   String get signInApple => 'Sign in with Apple';
 
   @override
@@ -144,6 +147,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phoneInvalid => 'Enter a valid mobile number';
 
   @override
+  String get emailTitle => 'Your email address';
+
+  @override
+  String get emailSubtitle => 'We\'ll email you a 6-digit sign-in code.';
+
+  @override
+  String get emailLabel => 'Email address';
+
+  @override
+  String get emailInvalid => 'Enter a valid email address';
+
+  @override
   String get sendCode => 'Send code';
 
   @override
@@ -152,6 +167,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String otpSubtitle(String phone) {
     return 'Sent to $phone';
+  }
+
+  @override
+  String emailOtpSubtitle(String email) {
+    return 'We sent a 6-digit code to $email';
   }
 
   @override

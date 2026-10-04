@@ -309,6 +309,12 @@ abstract class AppLocalizations {
   /// **'Continue with Google'**
   String get signInGoogle;
 
+  /// No description provided for @signInEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with email'**
+  String get signInEmail;
+
   /// No description provided for @signInApple.
   ///
   /// In en, this message translates to:
@@ -357,6 +363,30 @@ abstract class AppLocalizations {
   /// **'Enter a valid mobile number'**
   String get phoneInvalid;
 
+  /// No description provided for @emailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email address'**
+  String get emailTitle;
+
+  /// No description provided for @emailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll email you a 6-digit sign-in code.'**
+  String get emailSubtitle;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get emailLabel;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get emailInvalid;
+
   /// No description provided for @sendCode.
   ///
   /// In en, this message translates to:
@@ -374,6 +404,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sent to {phone}'**
   String otpSubtitle(String phone);
+
+  /// No description provided for @emailOtpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}'**
+  String emailOtpSubtitle(String email);
 
   /// No description provided for @otpLabel.
   ///

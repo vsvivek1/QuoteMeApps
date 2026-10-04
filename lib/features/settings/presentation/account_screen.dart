@@ -44,7 +44,7 @@ class AccountScreen extends ConsumerWidget {
               leading: CircleAvatar(radius: 28, child: Text((profile?.name ?? '?').characters.first.toUpperCase())),
               title: Text(profile?.name ?? '', style: context.text.titleLarge),
               subtitle: Text(profile?.phone ?? profile?.email ?? ''),
-              trailing: profile?.phone == null
+              trailing: profile?.phone == null && ref.watch(appEnvProvider).phoneAuthEnabled
                   ? TextButton(onPressed: () => context.push('/auth/link-phone'), child: Text(l10n.addPhoneTitle))
                   : null,
             ),

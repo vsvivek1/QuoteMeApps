@@ -5,5 +5,6 @@
   "GOOGLE_IOS_CLIENT_ID": "",
   "TURNSTILE_SITE_KEY": "",
   "FIREBASE_ENABLED": false,
-  "DEMO_MODE": false
+  "DEMO_MODE": false,
+  "PHONE_AUTH_ENABLED": false
 }

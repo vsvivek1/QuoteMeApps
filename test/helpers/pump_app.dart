@@ -10,13 +10,16 @@ import 'package:iwant/l10n/gen/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Builds a ProviderContainer on the in-memory demo backend.
-Future<ProviderContainer> demoContainer(CountryConfig config) async {
+Future<ProviderContainer> demoContainer(
+  CountryConfig config, {
+  AppEnv env = const AppEnv(env: Env.dev, forceDemo: true),
+}) async {
   SharedPreferences.setMockInitialValues({'locale': config.defaultLocale.languageCode});
   final prefs = await SharedPreferences.getInstance();
   final c = ProviderContainer(
     overrides: [
       countryConfigProvider.overrideWithValue(config),
-      appEnvProvider.overrideWithValue(const AppEnv(env: Env.dev, forceDemo: true)),
+      appEnvProvider.overrideWithValue(env),
       sharedPreferencesProvider.overrideWithValue(prefs),
     ],
   );

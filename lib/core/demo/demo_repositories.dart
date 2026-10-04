@@ -58,6 +58,19 @@ class DemoAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> sendEmailOtp(String email, {String? captchaToken}) async {
+    _pending.add(email.toLowerCase());
+  }
+
+  @override
+  Future<void> verifyEmailOtp(String email, String code) async {
+    if (!_pending.contains(email.toLowerCase()) || code != DemoBackend.demoOtp) {
+      throw const AuthFailure('invalid_otp');
+    }
+    b.signInWithEmail(email);
+  }
+
+  @override
   Future<void> signInWithGoogle() async {
     final id = 'google-user';
     b.profiles.putIfAbsent(id, () => Profile(id: id, email: 'demo@example.com', name: 'Demo User'));

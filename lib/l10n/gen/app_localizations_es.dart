@@ -118,6 +118,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signInGoogle => 'Continuar con Google';
 
   @override
+  String get signInEmail => 'Continuar con correo electrónico';
+
+  @override
   String get signInApple => 'Iniciar sesión con Apple';
 
   @override
@@ -144,6 +147,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get phoneInvalid => 'Ingresa un número de celular válido';
 
   @override
+  String get emailTitle => 'Tu correo electrónico';
+
+  @override
+  String get emailSubtitle => 'Te enviaremos un código de 6 dígitos para iniciar sesión.';
+
+  @override
+  String get emailLabel => 'Correo electrónico';
+
+  @override
+  String get emailInvalid => 'Ingresa un correo electrónico válido';
+
+  @override
   String get sendCode => 'Enviar código';
 
   @override
@@ -152,6 +167,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String otpSubtitle(String phone) {
     return 'Enviado a $phone';
+  }
+
+  @override
+  String emailOtpSubtitle(String email) {
+    return 'Enviamos un código de 6 dígitos a $email';
   }
 
   @override

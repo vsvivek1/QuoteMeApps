@@ -108,6 +108,15 @@ class DemoBackend {
     return id;
   }
 
+  String signInWithEmail(String email) {
+    final normalized = email.trim().toLowerCase();
+    final existing = profiles.values.where((p) => p.email?.toLowerCase() == normalized).firstOrNull;
+    final id = existing?.id ?? newId();
+    profiles.putIfAbsent(id, () => Profile(id: id, email: normalized, createdAt: DateTime.now()));
+    signInAs(id);
+    return id;
+  }
+
   void signOut() {
     currentUserId = null;
     _sessionChanges.add(null);

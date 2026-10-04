@@ -17,6 +17,7 @@ class AppEnv {
     this.turnstileSiteKey = '',
     this.firebaseEnabled = false,
     this.forceDemo = false,
+    this.phoneAuthEnabled = true,
   });
 
   factory AppEnv.fromEnvironment() => AppEnv(
@@ -28,6 +29,7 @@ class AppEnv {
     turnstileSiteKey: const String.fromEnvironment('TURNSTILE_SITE_KEY'),
     firebaseEnabled: const bool.fromEnvironment('FIREBASE_ENABLED'),
     forceDemo: const bool.fromEnvironment('DEMO_MODE'),
+    phoneAuthEnabled: const bool.fromEnvironment('PHONE_AUTH_ENABLED', defaultValue: true),
   );
 
   final Env env;
@@ -38,6 +40,9 @@ class AppEnv {
   final String turnstileSiteKey;
   final bool firebaseEnabled;
   final bool forceDemo;
+
+  /// False hides phone sign-in and phone linking (no SMS provider configured).
+  final bool phoneAuthEnabled;
 
   bool get isDemo => forceDemo || supabaseUrl.isEmpty || supabaseAnonKey.isEmpty;
   bool get isProd => env == Env.prod;

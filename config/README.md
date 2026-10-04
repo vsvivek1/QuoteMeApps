@@ -20,3 +20,4 @@ Never the service role key. Files named `*.local.json` are gitignored.
 | `TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key for OTP CAPTCHA. |
 | `FIREBASE_ENABLED` | `true` once `flutterfire configure` has added the Firebase files for this flavor. |
 | `DEMO_MODE` | `true` forces demo mode. |
+| `PHONE_AUTH_ENABLED` | `false` hides phone sign-in and phone linking (no SMS provider yet). Defaults to `true`. |

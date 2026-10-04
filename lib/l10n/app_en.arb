@@ -35,6 +35,7 @@
   "welcomeBody3": "Compare, chat and pick the best deal.",
   "signInPhone": "Continue with phone",
   "signInGoogle": "Continue with Google",
+  "signInEmail": "Continue with email",
   "signInApple": "Sign in with Apple",
   "signInLegal": "By continuing you agree to our {terms} and {privacy}.",
   "@signInLegal": {
@@ -53,12 +54,24 @@
   "phoneSubtitle": "We'll send a one-time code by SMS.",
   "phoneLabel": "Mobile number",
   "phoneInvalid": "Enter a valid mobile number",
+  "emailTitle": "Your email address",
+  "emailSubtitle": "We'll email you a 6-digit sign-in code.",
+  "emailLabel": "Email address",
+  "emailInvalid": "Enter a valid email address",
   "sendCode": "Send code",
   "otpTitle": "Enter the code",
   "otpSubtitle": "Sent to {phone}",
   "@otpSubtitle": {
     "placeholders": {
       "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "emailOtpSubtitle": "We sent a 6-digit code to {email}",
+  "@emailOtpSubtitle": {
+    "placeholders": {
+      "email": {
         "type": "String"
       }
     }

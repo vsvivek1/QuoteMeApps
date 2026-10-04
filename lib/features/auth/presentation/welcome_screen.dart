@@ -39,6 +39,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   Widget build(BuildContext context) {
     final config = ref.watch(countryConfigProvider);
     final auth = ref.watch(authRepositoryProvider);
+    final phoneEnabled = ref.watch(appEnvProvider).phoneAuthEnabled;
     final l10n = context.l10n;
     final showApple = kIsWeb || Platform.isIOS || Platform.isMacOS || Platform.isAndroid;
     return Scaffold(
@@ -76,17 +77,26 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       title: Text(text),
                     ),
                   const SizedBox(height: 32),
-                  FilledButton.icon(
-                    onPressed: _busy ? null : () => context.push('/auth/phone'),
-                    icon: const Icon(Icons.phone_iphone_rounded),
-                    label: Text(l10n.signInPhone),
-                  ),
-                  const SizedBox(height: 12),
+                  // PHONE_AUTH_ENABLED=false (no SMS provider) leaves Google on top.
+                  if (phoneEnabled) ...[
+                    FilledButton.icon(
+                      onPressed: _busy ? null : () => context.push('/auth/phone'),
+                      icon: const Icon(Icons.phone_iphone_rounded),
+                      label: Text(l10n.signInPhone),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                   // Google branding: white button, Google "G", "Continue with Google".
                   OutlinedButton.icon(
                     onPressed: _busy ? null : () => _run(auth.signInWithGoogle),
                     icon: const _GoogleG(),
                     label: Text(l10n.signInGoogle),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: _busy ? null : () => context.push('/auth/email'),
+                    icon: const Icon(Icons.mail_outline_rounded),
+                    label: Text(l10n.signInEmail),
                   ),
                   if (showApple) ...[
                     const SizedBox(height: 12),

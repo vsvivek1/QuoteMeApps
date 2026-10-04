@@ -16,6 +16,10 @@ abstract interface class AuthRepository {
   Future<void> sendPhoneOtp(String e164, {String? captchaToken});
   Future<void> verifyPhoneOtp(String e164, String code);
 
+  /// Emails a 6-digit sign-in code; creates the user on first sign-in.
+  Future<void> sendEmailOtp(String email, {String? captchaToken});
+  Future<void> verifyEmailOtp(String email, String code);
+
   /// Native Google sign-in followed by signInWithIdToken.
   Future<void> signInWithGoogle();
 

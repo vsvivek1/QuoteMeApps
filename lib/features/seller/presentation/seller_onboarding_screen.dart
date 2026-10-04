@@ -110,7 +110,8 @@ class _SellerOnboardingScreenState extends ConsumerState<SellerOnboardingScreen>
     if (!mounted) return;
     context.toast(context.l10n.sellerProfileSaved);
     final profile = ref.read(myProfileProvider).value;
-    if (profile?.phone == null) {
+    // Without SMS (PHONE_AUTH_ENABLED=false) sellers stay reachable by chat only.
+    if (profile?.phone == null && ref.read(appEnvProvider).phoneAuthEnabled) {
       context.go('/auth/link-phone');
     } else {
       context.go('/seller/leads');

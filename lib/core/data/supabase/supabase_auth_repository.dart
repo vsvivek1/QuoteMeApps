@@ -69,6 +69,16 @@ class SupabaseAuthRepository implements AuthRepository {
   Future<void> verifyPhoneOtp(String e164, String code) =>
       _guard(() => _auth.verifyOTP(phone: e164, token: code, type: OtpType.sms));
 
+  // ------------------------------------------------------------- email
+
+  @override
+  Future<void> sendEmailOtp(String email, {String? captchaToken}) =>
+      _guard(() => _auth.signInWithOtp(email: email, shouldCreateUser: true, captchaToken: captchaToken));
+
+  @override
+  Future<void> verifyEmailOtp(String email, String code) =>
+      _guard(() => _auth.verifyOTP(email: email, token: code, type: OtpType.email));
+
   /// Adds a phone to the signed-in (Google / Apple) user; Supabase sends the
   /// OTP to the new number and links it on verification.
   @override

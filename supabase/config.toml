@@ -97,6 +97,11 @@ max_frequency = "1m0s"
 otp_length = 6
 otp_expiry = 3600
 
+# Email sign-in sends the 6-digit {{ .Token }} through the magic-link template.
+[auth.email.template.magic_link]
+subject = "Your I Want sign-in code"
+content_path = "./supabase/templates/magic_link.html"
+
 [auth.sms]
 enable_signup = true
 enable_confirmations = true

@@ -118,6 +118,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get signInGoogle => 'Google से आगे बढ़ें';
 
   @override
+  String get signInEmail => 'ईमेल से आगे बढ़ें';
+
+  @override
   String get signInApple => 'Apple से साइन इन करें';
 
   @override
@@ -144,6 +147,18 @@ class AppLocalizationsHi extends AppLocalizations {
   String get phoneInvalid => 'सही मोबाइल नंबर डालें';
 
   @override
+  String get emailTitle => 'आपका ईमेल पता';
+
+  @override
+  String get emailSubtitle => 'हम आपको साइन इन के लिए 6 अंकों का कोड ईमेल करेंगे।';
+
+  @override
+  String get emailLabel => 'ईमेल पता';
+
+  @override
+  String get emailInvalid => 'सही ईमेल पता डालें';
+
+  @override
   String get sendCode => 'कोड भेजें';
 
   @override
@@ -152,6 +167,11 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String otpSubtitle(String phone) {
     return '$phone पर भेजा गया';
+  }
+
+  @override
+  String emailOtpSubtitle(String email) {
+    return 'हमने $email पर 6 अंकों का कोड भेजा है';
   }
 
   @override
