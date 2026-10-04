@@ -310,6 +310,17 @@ class DemoStore {
         targetOwnerId: 'u-3',
         createdAt: now.subtract(const Duration(days: 2)),
       ),
+      ReportItem(
+        id: 'rep-5',
+        targetType: 'comment',
+        targetId: 'c-4',
+        reason: 'spam',
+        details: 'Posts the same link on every community post.',
+        targetPreview: 'Cheapest fans anywhere, DM me on WhatsApp',
+        targetOwnerId: 'u-3',
+        reportCount: 2,
+        createdAt: now.subtract(const Duration(hours: 1)),
+      ),
     ]);
   }
 

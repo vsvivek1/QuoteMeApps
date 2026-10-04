@@ -1,0 +1,69 @@
+---
+// Community feed: public requests, comments and group buys, read in the browser through
+// read-only Supabase RPCs (get_community_feed, get_feed_comments). Liking, commenting and
+// joining a group buy happen in the app; every post links to it through /r/<id>.
+import Base from '../layouts/Base.astro';
+import StoreBadges from '../components/StoreBadges.astro';
+import { communityEnabled, site } from '../lib/site';
+
+const title = 'Community: what people need near you';
+const description = `See what people on ${site.appName} are asking for, read the conversation, and team up in group buys so sellers offer a lower price per unit.`;
+---
+<Base title={title} description={description} path="/community" noindex={!communityEnabled}>
+  <div class="page-head">
+    <p class="eyebrow">Community</p>
+    <h1>What people near you need</h1>
+    <p class="lead">Buyers share their requests here so neighbours can comment, recommend a business, or join in.
+      In a <strong>group buy</strong>, everyone who joins adds to one bigger order, so sellers offer a lower price per unit.</p>
+  </div>
+  {communityEnabled ? (
+    <section
+      class="community"
+      data-community
+      data-supabase-url={site.supabaseUrl}
+      data-anon-key={site.supabaseAnonKey}
+      data-currency={site.currency}
+      data-locale={site.locale}
+    >
+      <div class="chips" role="group" aria-label="Filter posts">
+        <button type="button" class="chip-btn" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="chip-btn" data-filter="group" aria-pressed="false">Group buys</button>
+        <button type="button" class="chip-btn" data-filter="open" aria-pressed="false">Open</button>
+      </div>
+      <p class="muted" data-status role="status">Loading posts…</p>
+      <ol class="feed" data-feed></ol>
+      <p><button type="button" class="btn secondary" data-more hidden>Show more</button></p>
+      <template data-post-template>
+        <li class="card post">
+          <p class="post-meta"><strong data-author></strong> <span class="muted" data-meta></span><span class="tag" data-group-tag hidden>Group buy</span></p>
+          <h2 class="post-title" data-title></h2>
+          <p data-desc></p>
+          <p class="small muted" data-budget hidden></p>
+          <div class="group" data-group hidden>
+            <p class="group-line"><span data-group-summary></span> <strong class="group-price" data-group-price></strong></p>
+            <div class="meter" data-meter hidden><span data-meter-fill></span></div>
+            <p class="small" data-group-next></p>
+            <ol class="ladder" data-ladder></ol>
+          </div>
+          <p class="post-stats small muted" data-stats></p>
+          <div class="post-actions">
+            <button type="button" class="btn ghost sm" data-show-comments>Show comments</button>
+            <a class="btn sm" data-open>Comment or join in the app</a>
+          </div>
+          <ol class="comments" data-comments hidden></ol>
+        </li>
+      </template>
+    </section>
+  ) : (
+    <div class="panel">
+      <p>The community feed opens with the app. Get the app to post what you need, comment and join group buys.</p>
+    </div>
+  )}
+  <h2 class="sub-head">Join the conversation in the app</h2>
+  <StoreBadges campaign="community" />
+</Base>
+{communityEnabled && (
+  <script>
+    import '../scripts/community-feed';
+  </script>
+)}

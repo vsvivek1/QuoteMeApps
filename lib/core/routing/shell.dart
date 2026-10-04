@@ -23,12 +23,14 @@ class AppShell extends ConsumerWidget {
     final destinations = mode == AppMode.buyer
         ? [
             (const Icon(Icons.home_outlined), const Icon(Icons.home_rounded), l10n.tabHome),
+            (const Icon(Icons.forum_outlined), const Icon(Icons.forum_rounded), l10n.tabCommunity),
             (const Icon(Icons.receipt_long_outlined), const Icon(Icons.receipt_long_rounded), l10n.tabRequests),
             (chatIcon(Icons.chat_bubble_outline_rounded), chatIcon(Icons.chat_bubble_rounded), l10n.tabChats),
             (const Icon(Icons.person_outline_rounded), const Icon(Icons.person_rounded), l10n.tabAccount),
           ]
         : [
             (const Icon(Icons.inbox_outlined), const Icon(Icons.inbox_rounded), l10n.tabLeads),
+            (const Icon(Icons.forum_outlined), const Icon(Icons.forum_rounded), l10n.tabCommunity),
             (const Icon(Icons.request_quote_outlined), const Icon(Icons.request_quote_rounded), l10n.tabMyQuotes),
             (chatIcon(Icons.chat_bubble_outline_rounded), chatIcon(Icons.chat_bubble_rounded), l10n.tabChats),
             (const Icon(Icons.storefront_outlined), const Icon(Icons.storefront_rounded), l10n.tabAccount),

@@ -53,6 +53,11 @@ abstract class BuyerRequest with _$BuyerRequest {
     required DateTime createdAt,
     @Default(0) int notifiedSellers,
     @Default(0) int unreadQuotes,
+
+    /// On the community feed (anyone can read it and comment).
+    @Default(false) bool isPublic,
+    @Default(false) bool groupBuy,
+    @Default(0) int commentCount,
   }) = _BuyerRequest;
 
   const BuyerRequest._();
@@ -84,5 +89,13 @@ abstract class RequestDraft with _$RequestDraft {
     @Default(QuoteWindow.h48) QuoteWindow quoteWindow,
     @Default(Audience.both) Audience audience,
     String? invitedBySellerId,
+
+    /// Publish to the community feed after posting.
+    @Default(false) bool postToFeed,
+
+    /// Group buy (implies [postToFeed]): others join with a quantity.
+    @Default(false) bool groupBuy,
+    String? groupUnit,
+    @Default(1) num groupQty,
   }) = _RequestDraft;
 }

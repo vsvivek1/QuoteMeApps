@@ -301,6 +301,9 @@ BuyerRequest mapRequest(JsonRow row, {required String fallbackCurrency, int noti
     media: [for (final m in media) mapRequestMedia(m)],
     createdAt: parseTimestamp(row['created_at']) ?? DateTime.now(),
     notifiedSellers: notifiedSellers,
+    isPublic: asBool(row['is_public']),
+    groupBuy: asBool(row['group_buy']),
+    commentCount: asInt(row['comment_count']) ?? 0,
   );
 }
 

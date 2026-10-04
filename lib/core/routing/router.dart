@@ -10,6 +10,8 @@ import '../../features/auth/presentation/profile_setup_screen.dart';
 import '../../features/auth/presentation/welcome_screen.dart';
 import '../../features/chat/presentation/chat_list_screen.dart';
 import '../../features/chat/presentation/chat_screen.dart';
+import '../../features/community/presentation/community_screen.dart';
+import '../../features/community/presentation/feed_post_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
 import '../../features/onboarding/presentation/language_screen.dart';
 import '../../features/orders/presentation/order_screens.dart';
@@ -130,6 +132,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [GoRoute(path: '/home', builder: (_, _) => const HomeScreen())],
           ),
           StatefulShellBranch(
+            routes: [GoRoute(path: '/community', builder: (_, _) => const CommunityScreen())],
+          ),
+          StatefulShellBranch(
             routes: [GoRoute(path: '/requests', builder: (_, _) => const MyRequestsScreen())],
           ),
           StatefulShellBranch(
@@ -146,6 +151,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(
             routes: [GoRoute(path: '/seller/leads', builder: (_, _) => const LeadFeedScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/seller/community', builder: (_, _) => const CommunityScreen())],
           ),
           StatefulShellBranch(
             routes: [GoRoute(path: '/seller/quotes', builder: (_, _) => const MyQuotesScreen())],
@@ -199,6 +207,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (_, s) => fullscreen(ReviewFormScreen(orderId: s.pathParameters['id']!), s),
       ),
       GoRoute(path: '/notifications', pageBuilder: (_, s) => fullscreen(const NotificationsScreen(), s)),
+      GoRoute(
+        path: '/feed/:id',
+        pageBuilder: (_, s) => fullscreen(
+          FeedPostScreen(requestId: s.pathParameters['id']!, focusComment: s.uri.queryParameters['comment'] == '1'),
+          s,
+        ),
+      ),
 
       // Seller screens.
       GoRoute(path: '/seller/onboarding', pageBuilder: (_, s) => fullscreen(const SellerOnboardingScreen(), s)),

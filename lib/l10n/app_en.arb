@@ -902,5 +902,235 @@
   },
   "accountSuspendedBodyNoDate": "Your account is suspended. You can still read our policies or contact support.",
   "accountBannedBody": "Your account has been closed for breaking our rules. If you think this is a mistake, contact support.",
-  "accountDeletedBody": "This account has been deleted."
+  "accountDeletedBody": "This account has been deleted.",
+  "tabCommunity": "Community",
+  "communityTitle": "Community",
+  "communitySubtitle": "See what people nearby need, comment, and team up for bulk prices.",
+  "feedFilterAll": "All",
+  "feedFilterGroupBuys": "Group buys",
+  "feedFilterOpen": "Open",
+  "feedFilterMine": "Mine",
+  "feedEmpty": "Nothing here yet. Post what you need and share it on the feed.",
+  "feedPostTitle": "Post",
+  "feedPostGone": "This post is no longer on the feed.",
+  "feedLike": "Like",
+  "feedComment": "Comment",
+  "feedLikes": "{count, plural, =0{No likes} =1{1 like} other{{count} likes}}",
+  "@feedLikes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedCommentsCount": "{count, plural, =0{No comments} =1{1 comment} other{{count} comments}}",
+  "@feedCommentsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedQuotesCount": "{count, plural, =0{No quotes yet} =1{1 quote} other{{count} quotes}}",
+  "@feedQuotesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedYou": "You",
+  "feedOnFeed": "On community feed",
+  "feedPublish": "Share on community feed",
+  "feedUnpublish": "Remove from community feed",
+  "feedOpenPost": "View community post",
+  "feedPublished": "Shared on the community feed",
+  "feedUnpublished": "Removed from the community feed",
+  "commentsTitle": "Comments",
+  "commentsEmpty": "No comments yet. Start the conversation.",
+  "commentHint": "Write a comment…",
+  "commentReply": "Reply",
+  "commentReplyingTo": "Replying to {name}",
+  "@commentReplyingTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "commentAsBusiness": "Post as my business",
+  "commentSend": "Send",
+  "commentAuthor": "Author",
+  "commentDeleteConfirm": "Delete this comment?",
+  "commentBlockedContent": "That mentions something that is not allowed here.",
+  "commentTooLong": "That comment is too long.",
+  "communityRateLimited": "You are doing that too often. Try again in a few minutes.",
+  "groupBuyBadge": "Group buy",
+  "groupBuyTitle": "Group buy",
+  "groupBuyExplainer": "More people joining means a bigger order, so sellers offer a lower price per unit.",
+  "groupJoinedSummary": "{members, plural, =1{1 person} other{{members} people}} · {qty} {unit}",
+  "@groupJoinedSummary": {
+    "placeholders": {
+      "members": {
+        "type": "int"
+      },
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "groupPriceEach": "{price} each",
+  "@groupPriceEach": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "groupBestNow": "Best price now",
+  "groupNextTier": "{qty} more {unit} unlocks {price} each",
+  "@groupNextTier": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "groupNoOffers": "Waiting for sellers' bulk offers",
+  "groupLadderTitle": "Price as the group grows",
+  "groupTierFrom": "{qty}+ {unit}",
+  "@groupTierFrom": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "groupCurrentTier": "Now",
+  "groupJoin": "Join group buy",
+  "groupChangeQty": "Change quantity",
+  "groupLeave": "Leave",
+  "groupJoinTitle": "How many {unit} do you need?",
+  "@groupJoinTitle": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "groupQtyLabel": "Quantity",
+  "groupNoteLabel": "Note for the group (optional)",
+  "groupJoinPrivacy": "If the organiser accepts an offer, that seller gets your name and phone number to arrange your order.",
+  "groupYouJoined": "You're in for {qty} {unit}",
+  "@groupYouJoined": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "groupJoinedToast": "You joined the group buy",
+  "groupLeftToast": "You left the group buy",
+  "groupClosed": "This group buy is closed",
+  "groupWinner": "Accepted offer: {seller}",
+  "@groupWinner": {
+    "placeholders": {
+      "seller": {
+        "type": "String"
+      }
+    }
+  },
+  "groupWinnerContact": "The seller will contact you to arrange your order.",
+  "groupMembersTitle": "Members",
+  "groupOrganiser": "Organiser",
+  "groupHasMembers": "People have joined this group buy, so it has to stay on the feed.",
+  "groupInvalidQty": "Enter a quantity between 1 and 1000",
+  "postToFeed": "Share on the community feed",
+  "postToFeedHint": "Anyone can see it and comment. Your phone number and address stay private.",
+  "postGroupBuy": "Make it a group buy",
+  "postGroupBuyHint": "Others can join with their quantity, and sellers offer lower prices for bigger orders.",
+  "postGroupUnit": "Unit",
+  "postGroupUnitHint": "fans, kg, boxes…",
+  "postGroupMyQty": "How many do you need?",
+  "quoteTiersTitle": "Group price tiers",
+  "quoteTiersHint": "This is a group buy. Offer a lower price per unit as the group grows (before tax).",
+  "quoteTiersGroupNow": "Group so far: {qty} {unit}",
+  "@quoteTiersGroupNow": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "quoteTierMinQty": "From qty",
+  "quoteTierUnitPrice": "Price each",
+  "quoteTierAdd": "Add tier",
+  "quoteTiersInvalid": "Each tier needs a bigger quantity and a lower price than the one before.",
+  "notifFeedComment": "New comment on \"{title}\"",
+  "@notifFeedComment": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifFeedReply": "New reply on \"{title}\"",
+  "@notifFeedReply": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifGroupJoined": "Someone joined your group buy \"{title}\"",
+  "@notifGroupJoined": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifGroupGrew": "The group buy \"{title}\" grew",
+  "@notifGroupGrew": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifGroupPriceDrop": "Price dropped on \"{title}\"",
+  "@notifGroupPriceDrop": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifGroupAwarded": "The organiser picked a seller for \"{title}\"",
+  "@notifGroupAwarded": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notifQuoteTiers": "A seller added group prices"
 }

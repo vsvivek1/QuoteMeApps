@@ -711,3 +711,39 @@ headline, the first sentence of each perspective and a link to the article.
 | `admin_trends_record_traffic(p_slug, p_visits_14d) → jsonb` | visits in the 14 days after the trend ended (drives the traffic noindex rule) |
 | `admin_trends_publish_log(p_limit = 100, p_draft_id?) → jsonb[]` | publish decision log |
 | `admin_trends_upsert_source(p_source jsonb) → jsonb` | add / edit / enable / disable a polled source (`400 invalid_source`, `409 source_exists`) |
+
+## 14. Community feed and group buy (migrations 3400, 3401)
+
+Buyers can put a request on the public community feed (opt-in, `requests.is_public`). The public
+projection never carries the buyer id, phone, address, media or a hidden budget. A feed post can be
+a **group buy**: other people join with their own quantity, sellers quote price tiers by quantity,
+and everyone sees the current price for the group's total quantity and how much more is needed for
+the next step down. Settings: `community_feed_enabled`, `comments_per_10_min`, `comment_max_length`.
+
+Tables: `request_comments` (one level of replies via `parent_id`, `as_seller` posts as the caller's
+business), `request_likes`, `group_buy_members` (`qty`, `note`), `quote_price_tiers`
+(`min_qty`, `unit_price_minor`). Comments can be reported (`report_content('comment', id, ...)`),
+are auto-hidden after three reports and are moderated in the admin panel like other content.
+
+| RPC | Purpose |
+|---|---|
+| `get_community_feed(p_filters jsonb = '{}', p_cursor jsonb?, p_limit = 20) → setof jsonb` | anon allowed. Filters `category_id`, `state`, `city`, `q`, `group_buy_only`, `open_only`, `mine`; cursor `{published_at, id}` of the last row |
+| `get_feed_post(p_request_id) → jsonb` | anon allowed; `404 post_not_found` when not public or hidden |
+| `get_feed_comments(p_request_id, p_limit = 100) → setof jsonb` | anon allowed; oldest first, hidden and blocked authors left out |
+| `post_comment(p_request_id, p_body, p_parent_id?, p_as_seller = false) → jsonb` | signed in; `400 comment_empty` / `comment_too_long`, `422 blocked_content`, `429 rate_limited`, `403 blocked` |
+| `delete_comment(p_comment_id)` | author or admin |
+| `toggle_request_like(p_request_id) → jsonb {liked, like_count}` | signed in |
+| `publish_request(p_request_id, p_public bool)` | owner; unpublishing a group buy with other members is `409 group_has_members` |
+| `set_group_buy(p_request_id, p_enabled, p_unit?, p_my_qty = 1)` | owner; turns the request into a group buy (also publishes it) |
+| `join_group_buy(p_request_id, p_qty, p_note?) → jsonb group` | join or change quantity; `409 group_closed`, `400 invalid_qty`, `400 not_a_group_buy` |
+| `leave_group_buy(p_request_id) → jsonb group` | members; the organiser cannot leave (`409 organiser_cannot_leave`) |
+| `get_group_buy(p_request_id) → jsonb` | anon allowed: `unit, total_qty, members, my_qty, ladder[], current_unit_price_minor, next_min_qty, next_unit_price_minor, qty_to_next, offers, accepted` (`accepted` only for members and the organiser) |
+| `get_group_members(p_request_id) → setof jsonb` | organiser, winning seller or admin; phone numbers only for the winning seller or an admin |
+| `set_quote_tiers(p_quote_id, p_tiers jsonb)` | quote's seller; up to 6 tiers, `min_qty` increasing and price strictly decreasing (`400 invalid_tiers`) |
+
+Notification types: `feed_comment`, `feed_reply`, `group_joined`, `group_grew`,
+`group_price_drop`, `group_awarded`, `quote_tiers`.
+
+The public website (`web/app_site/community`) reads the same anon RPCs when
+`PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY` are set; it is read-only and sends people to
+the app to comment or join.

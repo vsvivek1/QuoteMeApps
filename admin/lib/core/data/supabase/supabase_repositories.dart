@@ -361,6 +361,7 @@ class SupabaseModerationRepository implements ModerationRepository {
     'review': ('reviews', 'text', 'from_id'),
     'seller': ('sellers', 'business_name', 'id'),
     'user': ('profiles', 'name', 'id'),
+    'comment': ('request_comments', 'body', 'author_id'), // community feed
   };
 
   @override

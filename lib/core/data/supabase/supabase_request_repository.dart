@@ -174,6 +174,21 @@ class SupabaseRequestRepository implements RequestRepository {
     if (id == null) throw const RequestFailure('unknown', 'create_request returned no id');
     _notified[id] = asInt(created!['matched_sellers']) ?? 0;
 
+    // Community feed / group buy are opt-in extras: the request exists either way.
+    try {
+      if (draft.groupBuy) {
+        await ctx.client.rpc<dynamic>(
+          'set_group_buy',
+          params: {'p_request_id': id, 'p_enabled': true, 'p_unit': draft.groupUnit, 'p_my_qty': draft.groupQty},
+        );
+      } else if (draft.postToFeed) {
+        await ctx.client.rpc<dynamic>('publish_request', params: {'p_request_id': id, 'p_public': true});
+      }
+      if (draft.groupBuy || draft.postToFeed) ctx.changed(Topics.community);
+    } catch (e) {
+      debugPrint('publish request failed: $e');
+    }
+
     // Media goes to request-media/{request_id}/{uuid}.{ext}, then a row.
     var sort = 0;
     for (final local in draft.localMediaPaths) {

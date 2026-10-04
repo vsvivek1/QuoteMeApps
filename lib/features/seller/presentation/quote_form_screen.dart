@@ -8,11 +8,27 @@ import '../../../core/money/tax.dart';
 import '../../../core/providers.dart';
 import '../../../core/utils/context_x.dart';
 import '../../../shared/widgets/common.dart';
+import '../../community/application/community_providers.dart';
+import '../../community/domain/community.dart';
+import '../../community/presentation/community_widgets.dart';
 import '../../quotes/application/quote_actions.dart';
 import '../../quotes/domain/quote.dart';
 import '../../quotes/domain/quote_repository.dart';
 import '../application/seller_providers.dart';
 import '../domain/seller.dart';
+
+class _TierCtl {
+  _TierCtl({String qty = '', String price = ''})
+    : qty = TextEditingController(text: qty),
+      price = TextEditingController(text: price);
+  final TextEditingController qty;
+  final TextEditingController price;
+
+  void dispose() {
+    qty.dispose();
+    price.dispose();
+  }
+}
 
 class _LineCtl {
   _LineCtl({String desc = '', String qty = '1', String price = ''})
@@ -44,6 +60,7 @@ class QuoteFormScreen extends ConsumerStatefulWidget {
 class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
   final _form = GlobalKey<FormState>();
   final _lines = <_LineCtl>[_LineCtl()];
+  final _tiers = <_TierCtl>[];
   final _delivery = TextEditingController();
   final _brand = TextEditingController();
   final _warranty = TextEditingController();
@@ -60,6 +77,34 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
     super.initState();
     _rateBp = ref.read(countryConfigProvider).taxRule.defaultRateBp;
     if (widget.reviseQuoteId != null) _loadExisting();
+  }
+
+  Future<void> _loadTiers() async {
+    final tiers = await ref.read(communityRepositoryProvider).quoteTiers(widget.reviseQuoteId!);
+    if (!mounted || tiers.isEmpty) return;
+    setState(() {
+      for (final t in _tiers) {
+        t.dispose();
+      }
+      _tiers
+        ..clear()
+        ..addAll(tiers.map((t) => _TierCtl(qty: formatQty(t.minQty), price: _plain(t.unitPrice))));
+    });
+  }
+
+  /// Valid tiers in entry order, or null when they do not step up in
+  /// quantity and down in price.
+  List<PriceTier>? _parsedTiers(String iso) {
+    final out = <PriceTier>[];
+    for (final t in _tiers) {
+      final qty = num.tryParse(t.qty.text.trim());
+      final price = parseUserAmount(t.price.text, iso);
+      if (qty == null && price == null) continue;
+      if (qty == null || qty <= 0 || price == null) return null;
+      if (out.isNotEmpty && (qty <= out.last.minQty || price >= out.last.unitPrice)) return null;
+      out.add(PriceTier(minQty: qty, unitPrice: price));
+    }
+    return out;
   }
 
   Future<void> _loadExisting() async {
@@ -99,6 +144,9 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
   void dispose() {
     for (final l in _lines) {
       l.dispose();
+    }
+    for (final t in _tiers) {
+      t.dispose();
     }
     for (final c in [_delivery, _brand, _warranty, _notes, _salesTax]) {
       c.dispose();
@@ -142,12 +190,25 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
     if (!_form.currentState!.validate()) return;
     final iso = ref.read(countryConfigProvider).currencyCode;
     final repo = ref.read(quoteRepositoryProvider);
+    final group = ref.read(groupBuyProvider(widget.requestId)).value;
+    final tiers = group == null ? const <PriceTier>[] : _parsedTiers(iso);
+    if (tiers == null) {
+      context.toast(context.l10n.quoteTiersInvalid);
+      return;
+    }
     try {
+      final Quote quote;
       if (widget.reviseQuoteId != null) {
-        await repo.reviseQuote(widget.reviseQuoteId!, _draft(iso));
+        quote = await repo.reviseQuote(widget.reviseQuoteId!, _draft(iso));
       } else {
-        await repo.submitQuote(_draft(iso));
+        quote = await repo.submitQuote(_draft(iso));
         await ref.read(analyticsProvider).log(AnalyticsEvent.quoteSent, {'request_id': widget.requestId});
+      }
+      if (group != null && (tiers.isNotEmpty || widget.reviseQuoteId != null) && mounted) {
+        await runCommunityAction(context, () async {
+          await ref.read(communityRepositoryProvider).setQuoteTiers(quote.id, tiers);
+          return true;
+        });
       }
       if (!mounted) return;
       context.toast(context.l10n.quoteSent);
@@ -226,6 +287,72 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
     ref.invalidate(quoteTemplatesProvider);
   }
 
+  /// Per-unit prices by quantity for group buys.
+  Widget _tiersCard(BuildContext context, GroupBuy group, String symbol, TextInputFormatter priceFormatter) {
+    final l10n = context.l10n;
+    return Card(
+      key: const Key('quote-tiers'),
+      color: context.colors.primaryContainer.withValues(alpha: 0.35),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.groups_rounded, color: context.colors.primary),
+                const SizedBox(width: 8),
+                Text(l10n.quoteTiersTitle, style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(l10n.quoteTiersHint, style: context.text.bodySmall),
+            const SizedBox(height: 4),
+            Text(l10n.quoteTiersGroupNow(formatQty(group.totalQty), group.unit), style: context.text.labelLarge),
+            const SizedBox(height: 8),
+            for (var i = 0; i < _tiers.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 104,
+                      child: TextFormField(
+                        controller: _tiers[i].qty,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d{0,5}(\.\d{0,3})?'))],
+                        decoration: InputDecoration(labelText: l10n.quoteTierMinQty, suffixText: '+'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _tiers[i].price,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [priceFormatter],
+                        decoration: InputDecoration(labelText: l10n.quoteTierUnitPrice, prefixText: symbol),
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: l10n.delete,
+                      onPressed: () => setState(() => _tiers.removeAt(i).dispose()),
+                      icon: const Icon(Icons.remove_circle_outline),
+                    ),
+                  ],
+                ),
+              ),
+            if (_tiers.length < 6)
+              TextButton.icon(
+                onPressed: () => setState(() => _tiers.add(_TierCtl())),
+                icon: const Icon(Icons.add_rounded),
+                label: Text(l10n.quoteTierAdd),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -235,6 +362,11 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
     final seller = ref.watch(mySellerProvider).value;
     final lead = ref.watch(leadProvider(widget.requestId)).value;
     final templates = ref.watch(quoteTemplatesProvider).value ?? const [];
+    final group = ref.watch(groupBuyProvider(widget.requestId)).value;
+    if (group != null && _tiers.isEmpty) {
+      _tiers.addAll([_TierCtl(qty: '1'), _TierCtl()]);
+      if (widget.reviseQuoteId != null) _loadTiers();
+    }
     if (!_initialised && lead != null) {
       _initialised = true;
       if (_lines.first.desc.text.isEmpty) _lines.first.desc.text = lead.title;
@@ -360,6 +492,7 @@ class _QuoteFormScreenState extends ConsumerState<QuoteFormScreen> {
               ),
               const SizedBox(height: 16),
               _TotalsCard(totals: totals),
+              if (group != null) ...[const SizedBox(height: 16), _tiersCard(context, group, symbol, priceFormatter)],
               const SizedBox(height: 16),
               TextFormField(
                 controller: _brand,

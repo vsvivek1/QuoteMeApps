@@ -2006,3 +2006,116 @@ main.wrap > section > p {
 .town-more {
   margin: var(--space-3) 0 0;
 }
+
+/* ---------- Community feed (pages/community.astro) ---------- */
+.chip-btn {
+  min-height: 36px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--on-surface);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+.chip-btn[aria-pressed='true'] {
+  border-color: var(--primary);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+.feed {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 44rem;
+  padding: 0;
+  margin: var(--space-4) 0;
+  list-style: none;
+}
+.post-meta {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+.post-meta .tag {
+  margin-left: var(--space-2);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+.post-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+}
+.post .group {
+  margin: var(--space-3) 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+.group-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: 0;
+}
+.post .group p {
+  margin: var(--space-2) 0 0;
+}
+.meter {
+  height: 8px;
+  margin-top: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--on-primary-container) 15%, transparent);
+  overflow: hidden;
+}
+.meter span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+}
+.ladder {
+  display: grid;
+  gap: 2px;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+.ladder li {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+.ladder li.current {
+  background: var(--surface);
+  color: var(--on-surface);
+  font-weight: 700;
+}
+.post-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.comments {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  list-style: none;
+}
+.comments li p {
+  margin: 2px 0 0;
+}
+.comments li.reply {
+  margin-left: var(--space-5);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--line);
+}

@@ -1577,4 +1577,313 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get accountDeletedBody => 'यह अकाउंट डिलीट कर दिया गया है।';
+
+  @override
+  String get tabCommunity => 'कम्युनिटी';
+
+  @override
+  String get communityTitle => 'कम्युनिटी';
+
+  @override
+  String get communitySubtitle => 'देखें आस-पास लोगों को क्या चाहिए, कमेंट करें और थोक दाम के लिए साथ जुड़ें।';
+
+  @override
+  String get feedFilterAll => 'सभी';
+
+  @override
+  String get feedFilterGroupBuys => 'ग्रुप खरीद';
+
+  @override
+  String get feedFilterOpen => 'खुले';
+
+  @override
+  String get feedFilterMine => 'मेरे';
+
+  @override
+  String get feedEmpty => 'अभी यहाँ कुछ नहीं है। अपनी ज़रूरत पोस्ट करें और फ़ीड पर शेयर करें।';
+
+  @override
+  String get feedPostTitle => 'पोस्ट';
+
+  @override
+  String get feedPostGone => 'यह पोस्ट अब फ़ीड पर नहीं है।';
+
+  @override
+  String get feedLike => 'पसंद';
+
+  @override
+  String get feedComment => 'कमेंट';
+
+  @override
+  String feedLikes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count पसंद',
+      one: '1 पसंद',
+      zero: 'कोई पसंद नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String feedCommentsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count कमेंट',
+      one: '1 कमेंट',
+      zero: 'कोई कमेंट नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String feedQuotesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count कोट',
+      one: '1 कोट',
+      zero: 'अभी कोई कोट नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get feedYou => 'आप';
+
+  @override
+  String get feedOnFeed => 'कम्युनिटी फ़ीड पर';
+
+  @override
+  String get feedPublish => 'कम्युनिटी फ़ीड पर शेयर करें';
+
+  @override
+  String get feedUnpublish => 'कम्युनिटी फ़ीड से हटाएँ';
+
+  @override
+  String get feedOpenPost => 'कम्युनिटी पोस्ट देखें';
+
+  @override
+  String get feedPublished => 'कम्युनिटी फ़ीड पर शेयर हो गया';
+
+  @override
+  String get feedUnpublished => 'कम्युनिटी फ़ीड से हटा दिया गया';
+
+  @override
+  String get commentsTitle => 'कमेंट';
+
+  @override
+  String get commentsEmpty => 'अभी कोई कमेंट नहीं। बातचीत शुरू करें।';
+
+  @override
+  String get commentHint => 'कमेंट लिखें…';
+
+  @override
+  String get commentReply => 'जवाब दें';
+
+  @override
+  String commentReplyingTo(String name) {
+    return '$name को जवाब';
+  }
+
+  @override
+  String get commentAsBusiness => 'मेरे बिज़नेस के नाम से पोस्ट करें';
+
+  @override
+  String get commentSend => 'भेजें';
+
+  @override
+  String get commentAuthor => 'लेखक';
+
+  @override
+  String get commentDeleteConfirm => 'यह कमेंट हटाएँ?';
+
+  @override
+  String get commentBlockedContent => 'इसमें ऐसी चीज़ है जिसकी यहाँ अनुमति नहीं है।';
+
+  @override
+  String get commentTooLong => 'यह कमेंट बहुत लंबा है।';
+
+  @override
+  String get communityRateLimited => 'आप यह बहुत बार कर रहे हैं। कुछ मिनट बाद कोशिश करें।';
+
+  @override
+  String get groupBuyBadge => 'ग्रुप खरीद';
+
+  @override
+  String get groupBuyTitle => 'ग्रुप खरीद';
+
+  @override
+  String get groupBuyExplainer =>
+      'जितने ज़्यादा लोग जुड़ेंगे, ऑर्डर उतना बड़ा होगा, इसलिए विक्रेता प्रति यूनिट कम दाम देते हैं।';
+
+  @override
+  String groupJoinedSummary(int members, String qty, String unit) {
+    String _temp0 = intl.Intl.pluralLogic(members, locale: localeName, other: '$members लोग', one: '1 व्यक्ति');
+    return '$_temp0 · $qty $unit';
+  }
+
+  @override
+  String groupPriceEach(String price) {
+    return '$price प्रति यूनिट';
+  }
+
+  @override
+  String get groupBestNow => 'अभी सबसे अच्छा दाम';
+
+  @override
+  String groupNextTier(String qty, String unit, String price) {
+    return '$qty और $unit पर $price प्रति यूनिट';
+  }
+
+  @override
+  String get groupNoOffers => 'विक्रेताओं के थोक ऑफ़र का इंतज़ार';
+
+  @override
+  String get groupLadderTitle => 'ग्रुप बढ़ने पर दाम';
+
+  @override
+  String groupTierFrom(String qty, String unit) {
+    return '$qty+ $unit';
+  }
+
+  @override
+  String get groupCurrentTier => 'अभी';
+
+  @override
+  String get groupJoin => 'ग्रुप खरीद में जुड़ें';
+
+  @override
+  String get groupChangeQty => 'मात्रा बदलें';
+
+  @override
+  String get groupLeave => 'छोड़ें';
+
+  @override
+  String groupJoinTitle(String unit) {
+    return 'आपको कितने $unit चाहिए?';
+  }
+
+  @override
+  String get groupQtyLabel => 'मात्रा';
+
+  @override
+  String get groupNoteLabel => 'ग्रुप के लिए नोट (वैकल्पिक)';
+
+  @override
+  String get groupJoinPrivacy =>
+      'अगर आयोजक कोई ऑफ़र स्वीकार करता है, तो उस विक्रेता को आपका ऑर्डर तय करने के लिए आपका नाम और फ़ोन नंबर मिलेगा।';
+
+  @override
+  String groupYouJoined(String qty, String unit) {
+    return 'आप $qty $unit के लिए जुड़े हैं';
+  }
+
+  @override
+  String get groupJoinedToast => 'आप ग्रुप खरीद में जुड़ गए';
+
+  @override
+  String get groupLeftToast => 'आपने ग्रुप खरीद छोड़ दी';
+
+  @override
+  String get groupClosed => 'यह ग्रुप खरीद बंद हो गई है';
+
+  @override
+  String groupWinner(String seller) {
+    return 'स्वीकृत ऑफ़र: $seller';
+  }
+
+  @override
+  String get groupWinnerContact => 'विक्रेता आपका ऑर्डर तय करने के लिए आपसे संपर्क करेगा।';
+
+  @override
+  String get groupMembersTitle => 'सदस्य';
+
+  @override
+  String get groupOrganiser => 'आयोजक';
+
+  @override
+  String get groupHasMembers => 'लोग इस ग्रुप खरीद में जुड़ चुके हैं, इसलिए इसे फ़ीड पर रहना होगा।';
+
+  @override
+  String get groupInvalidQty => '1 से 1000 के बीच मात्रा डालें';
+
+  @override
+  String get postToFeed => 'कम्युनिटी फ़ीड पर शेयर करें';
+
+  @override
+  String get postToFeedHint => 'कोई भी इसे देख और कमेंट कर सकता है। आपका फ़ोन नंबर और पता निजी रहते हैं।';
+
+  @override
+  String get postGroupBuy => 'इसे ग्रुप खरीद बनाएँ';
+
+  @override
+  String get postGroupBuyHint => 'दूसरे अपनी मात्रा के साथ जुड़ सकते हैं, और बड़े ऑर्डर पर विक्रेता कम दाम देते हैं।';
+
+  @override
+  String get postGroupUnit => 'यूनिट';
+
+  @override
+  String get postGroupUnitHint => 'पंखे, किलो, डिब्बे…';
+
+  @override
+  String get postGroupMyQty => 'आपको कितने चाहिए?';
+
+  @override
+  String get quoteTiersTitle => 'ग्रुप दाम के स्तर';
+
+  @override
+  String get quoteTiersHint => 'यह ग्रुप खरीद है। ग्रुप बढ़ने पर प्रति यूनिट कम दाम दें (टैक्स से पहले)।';
+
+  @override
+  String quoteTiersGroupNow(String qty, String unit) {
+    return 'अब तक ग्रुप: $qty $unit';
+  }
+
+  @override
+  String get quoteTierMinQty => 'मात्रा से';
+
+  @override
+  String get quoteTierUnitPrice => 'प्रति यूनिट दाम';
+
+  @override
+  String get quoteTierAdd => 'स्तर जोड़ें';
+
+  @override
+  String get quoteTiersInvalid => 'हर स्तर में पिछले से ज़्यादा मात्रा और कम दाम होना चाहिए।';
+
+  @override
+  String notifFeedComment(String title) {
+    return '\"$title\" पर नया कमेंट';
+  }
+
+  @override
+  String notifFeedReply(String title) {
+    return '\"$title\" पर नया जवाब';
+  }
+
+  @override
+  String notifGroupJoined(String title) {
+    return 'किसी ने आपकी ग्रुप खरीद \"$title\" जॉइन की';
+  }
+
+  @override
+  String notifGroupGrew(String title) {
+    return 'ग्रुप खरीद \"$title\" बढ़ गई';
+  }
+
+  @override
+  String notifGroupPriceDrop(String title) {
+    return '\"$title\" पर दाम घटा';
+  }
+
+  @override
+  String notifGroupAwarded(String title) {
+    return 'आयोजक ने \"$title\" के लिए विक्रेता चुन लिया';
+  }
+
+  @override
+  String get notifQuoteTiers => 'एक विक्रेता ने ग्रुप दाम जोड़े';
 }

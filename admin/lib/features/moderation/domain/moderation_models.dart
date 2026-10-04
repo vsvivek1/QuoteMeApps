@@ -14,7 +14,7 @@ class ReportItem {
 
   final String id;
 
-  /// request | quote | message | review | seller | user
+  /// request | quote | message | review | seller | user | comment
   final String targetType;
   final String targetId;
   final String reason;

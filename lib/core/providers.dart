@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../features/auth/domain/auth_repository.dart';
 import '../features/chat/domain/chat_repository.dart';
+import '../features/community/domain/community_repository.dart';
 import '../features/notifications/domain/notification_repository.dart';
 import '../features/orders/domain/order_repository.dart';
 import '../features/quotes/domain/quote_repository.dart';
@@ -77,6 +78,9 @@ ReviewRepository reviewRepository(Ref ref) => ref.watch(backendProvider).reviews
 
 @Riverpod(keepAlive: true)
 NotificationRepository notificationRepository(Ref ref) => ref.watch(backendProvider).notifications;
+
+@Riverpod(keepAlive: true)
+CommunityRepository communityRepository(Ref ref) => ref.watch(backendProvider).community;
 
 @Riverpod(keepAlive: true)
 SafetyRepository safetyRepository(Ref ref) => ref.watch(backendProvider).safety;

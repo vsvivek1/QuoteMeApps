@@ -2942,6 +2942,504 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This account has been deleted.'**
   String get accountDeletedBody;
+
+  /// No description provided for @tabCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get tabCommunity;
+
+  /// No description provided for @communityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get communityTitle;
+
+  /// No description provided for @communitySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See what people nearby need, comment, and team up for bulk prices.'**
+  String get communitySubtitle;
+
+  /// No description provided for @feedFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get feedFilterAll;
+
+  /// No description provided for @feedFilterGroupBuys.
+  ///
+  /// In en, this message translates to:
+  /// **'Group buys'**
+  String get feedFilterGroupBuys;
+
+  /// No description provided for @feedFilterOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get feedFilterOpen;
+
+  /// No description provided for @feedFilterMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get feedFilterMine;
+
+  /// No description provided for @feedEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet. Post what you need and share it on the feed.'**
+  String get feedEmpty;
+
+  /// No description provided for @feedPostTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Post'**
+  String get feedPostTitle;
+
+  /// No description provided for @feedPostGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This post is no longer on the feed.'**
+  String get feedPostGone;
+
+  /// No description provided for @feedLike.
+  ///
+  /// In en, this message translates to:
+  /// **'Like'**
+  String get feedLike;
+
+  /// No description provided for @feedComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get feedComment;
+
+  /// No description provided for @feedLikes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No likes} =1{1 like} other{{count} likes}}'**
+  String feedLikes(int count);
+
+  /// No description provided for @feedCommentsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No comments} =1{1 comment} other{{count} comments}}'**
+  String feedCommentsCount(int count);
+
+  /// No description provided for @feedQuotesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No quotes yet} =1{1 quote} other{{count} quotes}}'**
+  String feedQuotesCount(int count);
+
+  /// No description provided for @feedYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get feedYou;
+
+  /// No description provided for @feedOnFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'On community feed'**
+  String get feedOnFeed;
+
+  /// No description provided for @feedPublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Share on community feed'**
+  String get feedPublish;
+
+  /// No description provided for @feedUnpublish.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from community feed'**
+  String get feedUnpublish;
+
+  /// No description provided for @feedOpenPost.
+  ///
+  /// In en, this message translates to:
+  /// **'View community post'**
+  String get feedOpenPost;
+
+  /// No description provided for @feedPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared on the community feed'**
+  String get feedPublished;
+
+  /// No description provided for @feedUnpublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from the community feed'**
+  String get feedUnpublished;
+
+  /// No description provided for @commentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get commentsTitle;
+
+  /// No description provided for @commentsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet. Start the conversation.'**
+  String get commentsEmpty;
+
+  /// No description provided for @commentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a comment…'**
+  String get commentHint;
+
+  /// No description provided for @commentReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get commentReply;
+
+  /// No description provided for @commentReplyingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Replying to {name}'**
+  String commentReplyingTo(String name);
+
+  /// No description provided for @commentAsBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Post as my business'**
+  String get commentAsBusiness;
+
+  /// No description provided for @commentSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get commentSend;
+
+  /// No description provided for @commentAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'Author'**
+  String get commentAuthor;
+
+  /// No description provided for @commentDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this comment?'**
+  String get commentDeleteConfirm;
+
+  /// No description provided for @commentBlockedContent.
+  ///
+  /// In en, this message translates to:
+  /// **'That mentions something that is not allowed here.'**
+  String get commentBlockedContent;
+
+  /// No description provided for @commentTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'That comment is too long.'**
+  String get commentTooLong;
+
+  /// No description provided for @communityRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'You are doing that too often. Try again in a few minutes.'**
+  String get communityRateLimited;
+
+  /// No description provided for @groupBuyBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Group buy'**
+  String get groupBuyBadge;
+
+  /// No description provided for @groupBuyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Group buy'**
+  String get groupBuyTitle;
+
+  /// No description provided for @groupBuyExplainer.
+  ///
+  /// In en, this message translates to:
+  /// **'More people joining means a bigger order, so sellers offer a lower price per unit.'**
+  String get groupBuyExplainer;
+
+  /// No description provided for @groupJoinedSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{members, plural, =1{1 person} other{{members} people}} · {qty} {unit}'**
+  String groupJoinedSummary(int members, String qty, String unit);
+
+  /// No description provided for @groupPriceEach.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} each'**
+  String groupPriceEach(String price);
+
+  /// No description provided for @groupBestNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Best price now'**
+  String get groupBestNow;
+
+  /// No description provided for @groupNextTier.
+  ///
+  /// In en, this message translates to:
+  /// **'{qty} more {unit} unlocks {price} each'**
+  String groupNextTier(String qty, String unit, String price);
+
+  /// No description provided for @groupNoOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for sellers\' bulk offers'**
+  String get groupNoOffers;
+
+  /// No description provided for @groupLadderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Price as the group grows'**
+  String get groupLadderTitle;
+
+  /// No description provided for @groupTierFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'{qty}+ {unit}'**
+  String groupTierFrom(String qty, String unit);
+
+  /// No description provided for @groupCurrentTier.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get groupCurrentTier;
+
+  /// No description provided for @groupJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join group buy'**
+  String get groupJoin;
+
+  /// No description provided for @groupChangeQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Change quantity'**
+  String get groupChangeQty;
+
+  /// No description provided for @groupLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get groupLeave;
+
+  /// No description provided for @groupJoinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How many {unit} do you need?'**
+  String groupJoinTitle(String unit);
+
+  /// No description provided for @groupQtyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get groupQtyLabel;
+
+  /// No description provided for @groupNoteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Note for the group (optional)'**
+  String get groupNoteLabel;
+
+  /// No description provided for @groupJoinPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'If the organiser accepts an offer, that seller gets your name and phone number to arrange your order.'**
+  String get groupJoinPrivacy;
+
+  /// No description provided for @groupYouJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re in for {qty} {unit}'**
+  String groupYouJoined(String qty, String unit);
+
+  /// No description provided for @groupJoinedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'You joined the group buy'**
+  String get groupJoinedToast;
+
+  /// No description provided for @groupLeftToast.
+  ///
+  /// In en, this message translates to:
+  /// **'You left the group buy'**
+  String get groupLeftToast;
+
+  /// No description provided for @groupClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'This group buy is closed'**
+  String get groupClosed;
+
+  /// No description provided for @groupWinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted offer: {seller}'**
+  String groupWinner(String seller);
+
+  /// No description provided for @groupWinnerContact.
+  ///
+  /// In en, this message translates to:
+  /// **'The seller will contact you to arrange your order.'**
+  String get groupWinnerContact;
+
+  /// No description provided for @groupMembersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get groupMembersTitle;
+
+  /// No description provided for @groupOrganiser.
+  ///
+  /// In en, this message translates to:
+  /// **'Organiser'**
+  String get groupOrganiser;
+
+  /// No description provided for @groupHasMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'People have joined this group buy, so it has to stay on the feed.'**
+  String get groupHasMembers;
+
+  /// No description provided for @groupInvalidQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a quantity between 1 and 1000'**
+  String get groupInvalidQty;
+
+  /// No description provided for @postToFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Share on the community feed'**
+  String get postToFeed;
+
+  /// No description provided for @postToFeedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Anyone can see it and comment. Your phone number and address stay private.'**
+  String get postToFeedHint;
+
+  /// No description provided for @postGroupBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Make it a group buy'**
+  String get postGroupBuy;
+
+  /// No description provided for @postGroupBuyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Others can join with their quantity, and sellers offer lower prices for bigger orders.'**
+  String get postGroupBuyHint;
+
+  /// No description provided for @postGroupUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get postGroupUnit;
+
+  /// No description provided for @postGroupUnitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'fans, kg, boxes…'**
+  String get postGroupUnitHint;
+
+  /// No description provided for @postGroupMyQty.
+  ///
+  /// In en, this message translates to:
+  /// **'How many do you need?'**
+  String get postGroupMyQty;
+
+  /// No description provided for @quoteTiersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Group price tiers'**
+  String get quoteTiersTitle;
+
+  /// No description provided for @quoteTiersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a group buy. Offer a lower price per unit as the group grows (before tax).'**
+  String get quoteTiersHint;
+
+  /// No description provided for @quoteTiersGroupNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Group so far: {qty} {unit}'**
+  String quoteTiersGroupNow(String qty, String unit);
+
+  /// No description provided for @quoteTierMinQty.
+  ///
+  /// In en, this message translates to:
+  /// **'From qty'**
+  String get quoteTierMinQty;
+
+  /// No description provided for @quoteTierUnitPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price each'**
+  String get quoteTierUnitPrice;
+
+  /// No description provided for @quoteTierAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tier'**
+  String get quoteTierAdd;
+
+  /// No description provided for @quoteTiersInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Each tier needs a bigger quantity and a lower price than the one before.'**
+  String get quoteTiersInvalid;
+
+  /// No description provided for @notifFeedComment.
+  ///
+  /// In en, this message translates to:
+  /// **'New comment on \"{title}\"'**
+  String notifFeedComment(String title);
+
+  /// No description provided for @notifFeedReply.
+  ///
+  /// In en, this message translates to:
+  /// **'New reply on \"{title}\"'**
+  String notifFeedReply(String title);
+
+  /// No description provided for @notifGroupJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone joined your group buy \"{title}\"'**
+  String notifGroupJoined(String title);
+
+  /// No description provided for @notifGroupGrew.
+  ///
+  /// In en, this message translates to:
+  /// **'The group buy \"{title}\" grew'**
+  String notifGroupGrew(String title);
+
+  /// No description provided for @notifGroupPriceDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Price dropped on \"{title}\"'**
+  String notifGroupPriceDrop(String title);
+
+  /// No description provided for @notifGroupAwarded.
+  ///
+  /// In en, this message translates to:
+  /// **'The organiser picked a seller for \"{title}\"'**
+  String notifGroupAwarded(String title);
+
+  /// No description provided for @notifQuoteTiers.
+  ///
+  /// In en, this message translates to:
+  /// **'A seller added group prices'**
+  String get notifQuoteTiers;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
