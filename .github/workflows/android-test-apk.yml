@@ -1,0 +1,74 @@
+# Installable APK against the real India backend, for testing Google and email
+# login on a phone before the Play listing exists. Signed with the upload key from
+# the store-india environment (Google Sign-In only accepts that key's SHA-1), and
+# published to the "test-apk-india" pre-release for sideloading.
+name: Android test APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/iwant-build-ij91c3, main]
+    paths: [lib/**, android/**, assets/**, config/india.prod.json, pubspec.yaml, pubspec.lock, .github/workflows/android-test-apk.yml]
+
+concurrency:
+  group: android-test-apk
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.47.6
+
+jobs:
+  build:
+    name: Test APK (india)
+    runs-on: ubuntu-latest
+    environment: store-india
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Write the upload keystore (never committed)
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE" ]; then
+            echo "::error::ANDROID_UPLOAD_KEYSTORE_BASE64 is not set in the store-india environment."
+            exit 1
+          fi
+          echo "$KEYSTORE" | base64 -d > "$RUNNER_TEMP/upload-india.jks"
+      - run: flutter pub get
+      - name: Build release APK (real backend)
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/upload-india.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: >
+          flutter build apk --release
+          --flavor indiaProd -t lib/main_india.dart
+          --dart-define-from-file=config/india.prod.json
+      - name: Check the signing key
+        run: |
+          cp build/app/outputs/flutter-apk/app-indiaprod-release.apk iwant-india-test.apk
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | tail -1)
+          "$APKSIGNER" verify --print-certs iwant-india-test.apk | tee certs.txt
+          grep -qi "SHA-1 digest: 04806200457799ac7bc82f1cacda3f3bd0405447" certs.txt ||{ echo "::error::APK is not signed with the India upload key"; exit 1; }
+      - name: Replace the test-apk-india release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release delete test-apk-india --yes --cleanup-tag || true
+          gh release create test-apk-india iwant-india-test.apk \
+            --prerelease --target "${{ github.sha }}" --title "I Want India test APK (real backend)" \
+            --notes "Real India backend. Sign in with Google or an email code. Built from ${{ github.sha }}."
+      - if: always()
+        run: rm -f "$RUNNER_TEMP/upload-india.jks"
