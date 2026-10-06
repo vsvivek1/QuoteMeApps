@@ -16,6 +16,17 @@ class LanguageScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(countryConfigProvider);
     final current = ref.watch(localeControllerProvider) ?? Localizations.localeOf(context);
+    Future<void> choose(String code) async {
+      final locale = config.supportedLocales.firstWhere((l) => l.languageCode == code);
+      await ref.read(localeControllerProvider.notifier).set(locale);
+      if (!context.mounted) return;
+      if (fromSettings) {
+        context.pop();
+      } else {
+        context.go('/welcome');
+      }
+    }
+
     return Scaffold(
       appBar: fromSettings ? AppBar(title: Text(context.l10n.settingsLanguage)) : null,
       body: SafeArea(
@@ -33,16 +44,7 @@ class LanguageScreen extends ConsumerWidget {
             ],
             RadioGroup<String>(
               groupValue: current.languageCode,
-              onChanged: (code) async {
-                final locale = config.supportedLocales.firstWhere((l) => l.languageCode == code);
-                await ref.read(localeControllerProvider.notifier).set(locale);
-                if (!context.mounted) return;
-                if (fromSettings) {
-                  context.pop();
-                } else {
-                  context.go('/welcome');
-                }
-              },
+              onChanged: (code) => choose(code!),
               child: Column(
                 children: [
                   for (final l in config.supportedLocales)
@@ -55,6 +57,12 @@ class LanguageScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            // Tapping the already-selected language fires no change, so first launch
+            // needs an explicit way to keep it.
+            if (!fromSettings) ...[
+              const SizedBox(height: 24),
+              FilledButton(onPressed: () => choose(current.languageCode), child: Text(context.l10n.continueLabel)),
+            ],
           ],
         ),
       ),
