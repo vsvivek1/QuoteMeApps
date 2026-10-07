@@ -1,7 +1,8 @@
 # Installable APK against the real India backend, for testing Google and email
 # login on a phone before the Play listing exists. Signed with the upload key from
 # the store-india environment (Google Sign-In only accepts that key's SHA-1), and
-# published to the "test-apk-india" pre-release for sideloading.
+# published to the "test-apk-india" pre-release for sideloading, with the .aab
+# for manual upload to Google Play testing tracks.
 name: Android test APK
 
 on:
@@ -51,10 +52,17 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: >
-          flutter build apk --release
-          --flavor indiaProd -t lib/main_india.dart
-          --dart-define-from-file=config/india.prod.json
+        run: |
+          # Play needs a higher versionCode on every upload: minutes since epoch, as in release.yml.
+          BUILD_NUMBER=$(( $(date +%s) / 60 ))
+          for target in apk appbundle; do
+            flutter build $target --release --build-number=$BUILD_NUMBER \
+              --flavor indiaProd -t lib/main_india.dart \
+              --dart-define-from-file=config/india.prod.json
+          done
+          cp build/app/outputs/bundle/indiaProdRelease/app-indiaProd-release.aab iwant-india.aab
+          keytool -printcert -jarfile iwant-india.aab | grep -q "04:80:62:00:45:77:99:AC:7B:C8:2F:1C:AC:DA:3F:3B:D0:40:54:47" \
+            || { echo "::error::AAB is not signed with the India upload key"; exit 1; }
       - name: Check the signing key
         run: |
           cp build/app/outputs/flutter-apk/app-indiaprod-release.apk iwant-india-test.apk
@@ -67,8 +75,8 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           gh release delete test-apk-india --yes --cleanup-tag || true
-          gh release create test-apk-india iwant-india-test.apk \
+          gh release create test-apk-india iwant-india-test.apk iwant-india.aab \
             --prerelease --target "${{ github.sha }}" --title "I Want India test APK (real backend)" \
-            --notes "Real India backend. Sign in with Google or an email code. Built from ${{ github.sha }}."
+            --notes "Real India backend. Sign in with Google or an email code. The .apk is for sideloading; upload the .aab to Google Play. Built from ${{ github.sha }}."
       - if: always()
         run: rm -f "$RUNNER_TEMP/upload-india.jks"
