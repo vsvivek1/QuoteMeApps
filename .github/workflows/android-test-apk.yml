@@ -60,7 +60,7 @@ jobs:
               --flavor indiaProd -t lib/main_india.dart \
               --dart-define-from-file=config/india.prod.json
           done
-          cp build/app/outputs/bundle/indiaProdRelease/app-indiaProd-release.aab iwant-india.aab
+          cp build/app/outputs/bundle/indiaProdRelease/app-india-prod-release.aab iwant-india.aab
           keytool -printcert -jarfile iwant-india.aab | grep -q "04:80:62:00:45:77:99:AC:7B:C8:2F:1C:AC:DA:3F:3B:D0:40:54:47" \
             || { echo "::error::AAB is not signed with the India upload key"; exit 1; }
       - name: Check the signing key
