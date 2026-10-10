@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/config/country_config.dart';
@@ -20,20 +21,26 @@ abstract final class ProductIds {
   static const annual = 'seller_pro_annual';
   static const credits10 = 'credits_10';
   static const credits50 = 'credits_50';
+
+  /// One-time seller onboarding fee, a non-consumable in-app product.
+  static const onboarding = 'seller_onboarding';
   static const subscriptions = {monthly, annual};
   static const all = {monthly, annual, credits10, credits50};
 }
 
 /// Play Billing / StoreKit 2 via in_app_purchase. Purchases are sent to the
-/// `verify-purchase` Edge Function, which validates with the Play Developer
-/// API / App Store Server API before granting an entitlement.
+/// `play-rtdn` / `appstore-notifications` Edge Functions, which validate with
+/// the Play Developer API / App Store Server API before granting an
+/// entitlement. Each purchase carries the user's id (obfuscatedAccountId on
+/// Play, appAccountToken on iOS) so the server can tie it to the seller.
 class StoreBillingService implements BillingService {
-  StoreBillingService(this._functions, this._config) {
+  StoreBillingService(this._functions, this._config, this._userId) {
     _sub = _iap.purchaseStream.listen(_onPurchases);
   }
 
   final EdgeFunctions _functions;
   final CountryConfig _config;
+  final String? Function() _userId;
   final _iap = InAppPurchase.instance;
   late final StreamSubscription<List<PurchaseDetails>> _sub;
   final _pending = <String, Completer<PurchaseResult>>{};
@@ -74,13 +81,31 @@ class StoreBillingService implements BillingService {
   }
 
   @override
+  Future<PlanProduct?> onboardingProduct() async {
+    if (!await _iap.isAvailable()) return null;
+    final resp = await _iap.queryProductDetails({ProductIds.onboarding});
+    if (resp.productDetails.isEmpty) return null;
+    final p = resp.productDetails.first;
+    _details[p.id] = p;
+    return PlanProduct(
+      id: p.id,
+      kind: PlanKind.onboarding,
+      title: p.title,
+      price: _config.money((p.rawPrice * 100).round()),
+      priceText: p.price,
+    );
+  }
+
+  @override
   Future<PurchaseResult> buy(PlanProduct product) {
     final details = _details[product.id];
     if (details == null) return Future.value(const PurchaseResult(success: false, error: 'unknown_product'));
+    final userId = _userId();
+    if (userId == null) return Future.value(const PurchaseResult(success: false, error: 'not_signed_in'));
     final c = Completer<PurchaseResult>();
     _pending[product.id] = c;
-    final param = PurchaseParam(productDetails: details);
-    if (ProductIds.subscriptions.contains(product.id)) {
+    final param = PurchaseParam(productDetails: details, applicationUserName: userId);
+    if (ProductIds.subscriptions.contains(product.id) || product.id == ProductIds.onboarding) {
       _iap.buyNonConsumable(purchaseParam: param);
     } else {
       _iap.buyConsumable(purchaseParam: param, autoConsume: true);
@@ -100,12 +125,19 @@ class StoreBillingService implements BillingService {
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
           try {
-            await _functions.invoke('verify-purchase', {
-              'store': store,
-              'product_id': p.productID,
-              'purchase_token': p.verificationData.serverVerificationData,
-              'transaction_id': p.purchaseID,
-            });
+            if (store == 'apple') {
+              await _functions.invoke('appstore-notifications', {
+                'action': 'verify',
+                'signed_transaction': p.verificationData.serverVerificationData,
+              });
+            } else {
+              await _functions.invoke('play-rtdn', {
+                'action': 'verify',
+                'product_id': p.productID,
+                'purchase_token': p.verificationData.serverVerificationData,
+                'kind': ProductIds.subscriptions.contains(p.productID) ? 'subs' : 'inapp',
+              });
+            }
             c?.complete(const PurchaseResult(success: true));
           } catch (e) {
             c?.complete(PurchaseResult(success: false, error: '$e'));
@@ -156,6 +188,10 @@ class WebCheckoutBillingService implements BillingService {
         ),
     ];
   }
+
+  /// Paid through `create-checkout` directly by the plan screen.
+  @override
+  Future<PlanProduct?> onboardingProduct() async => null;
 
   @override
   Future<PurchaseResult> buy(PlanProduct product) async {
@@ -212,6 +248,9 @@ class DemoBillingService implements BillingService {
   }
 
   @override
+  Future<PlanProduct?> onboardingProduct() async => null;
+
+  @override
   Future<PurchaseResult> buy(PlanProduct product) async => const PurchaseResult(success: true);
   @override
   Future<void> restore() async {}
@@ -226,7 +265,13 @@ BillingService billingService(Ref ref) {
   if (backend.isDemo) return DemoBillingService(config);
   final functions = ref.watch(edgeFunctionsProvider);
   if (kIsWeb) return WebCheckoutBillingService(functions, config);
-  final s = StoreBillingService(functions, config);
+  final s = StoreBillingService(functions, config, () {
+    try {
+      return Supabase.instance.client.auth.currentUser?.id;
+    } catch (_) {
+      return null; // Supabase not initialised
+    }
+  });
   ref.onDispose(s.dispose);
   return s;
 }

@@ -11,6 +11,7 @@ update public.app_settings set value = '"INR"' where key = 'currency';
 update public.app_settings set value = '"Asia/Kolkata"' where key = 'default_timezone';
 update public.app_settings set value = '10' where key = 'free_quotes_per_month';
 update public.app_settings set value = '["en","hi"]' where key = 'languages';
+update public.app_settings set value = '249900' where key = 'onboarding_fee_minor';
 
 -- Shared option sets ---------------------------------------------------------------
 create or replace function seed_tools.in_energy() returns jsonb language sql stable as $$

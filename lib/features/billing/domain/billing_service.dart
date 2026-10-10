@@ -1,6 +1,6 @@
 import '../../../core/money/money.dart';
 
-enum PlanKind { monthly, annual, credits }
+enum PlanKind { monthly, annual, credits, onboarding }
 
 class PlanProduct {
   const PlanProduct({
@@ -39,6 +39,10 @@ abstract interface class BillingService {
   String get store;
   bool get supportsRestore;
   Future<List<PlanProduct>> products();
+
+  /// The one-time seller onboarding fee as a store product (Play Billing in the
+  /// Android apps). Null where the fee is paid by web checkout instead.
+  Future<PlanProduct?> onboardingProduct();
   Future<PurchaseResult> buy(PlanProduct product);
   Future<void> restore();
 
