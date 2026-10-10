@@ -69,7 +69,7 @@ class PlanScreen extends ConsumerWidget {
   }
 
   /// One-time seller fee: Google Play Billing in the Android apps (Play
-  /// policy), Stripe Checkout in the browser on the USA web dashboard.
+  /// policy), Stripe (USA) or Razorpay (India) checkout on the web dashboard.
   List<Widget> _onboardingFee(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final fee = ref.watch(_onboardingFeeProvider).value;
@@ -99,7 +99,7 @@ class PlanScreen extends ConsumerWidget {
                 if (!r.success && !r.pending && r.error != 'cancelled' && context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.planNotAvailable)));
                 }
-              } else if (billing.store == 'stripe') {
+              } else if (billing.store == 'stripe' || billing.store == 'razorpay') {
                 final res = await ref.read(edgeFunctionsProvider).invoke('create-checkout', {
                   'product_id': ProductIds.onboarding,
                 });

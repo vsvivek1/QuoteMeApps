@@ -3,7 +3,8 @@
 // RAZORPAY_WEBHOOK_SECRET); idempotent on X-Razorpay-Event-Id.
 // notes.seller_id + notes.product_id are set by create-checkout.
 // Handled: subscription.* (activated, charged, pending, halted, paused, resumed,
-//          cancelled, completed), payment_link.paid (credit packs), refund.processed.
+//          cancelled, completed), payment_link.paid (credit packs, onboarding fee),
+//          refund.processed.
 import { applyEntitlement, beginBillingEvent, finishBillingEvent } from "../_shared/billing.ts";
 import { sha256Hex } from "../_shared/crypto.ts";
 import { requireEnv } from "../_shared/env.ts";
@@ -70,6 +71,19 @@ async function handle(type: string, sellerId: string, productId: string | undefi
       p_credits_delta: product.credits,
       p_external_customer_id: link?.customer?.contact ?? null,
       p_raw: { payment_link: link?.id, payment: payment?.id },
+    });
+    return true;
+  }
+  if (product.tier === "onboarding" && (type === "payment_link.paid" || (type === "refund.processed" && payment?.id))) {
+    await applyEntitlement({
+      p_seller_id: sellerId,
+      p_store: "web",
+      p_provider: "razorpay",
+      p_product_id: product.productId,
+      p_tier: "onboarding",
+      p_status: type === "payment_link.paid" ? "active" : "refunded",
+      p_original_transaction_id: `razorpay:${payment?.id ?? link?.id}`,
+      p_raw: { payment_link: link?.id ?? null, payment: payment?.id ?? null },
     });
     return true;
   }
