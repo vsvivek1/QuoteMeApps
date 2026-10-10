@@ -7,6 +7,7 @@
 //   auth: Pub/Sub OIDC token (Authorization: Bearer, aud = PLAY_RTDN_AUDIENCE,
 //   email = PLAY_RTDN_PUSH_SERVICE_ACCOUNT) or ?secret=EDGE_WEBHOOK_SECRET.
 // Client verify: POST (user JWT) { action: "verify", product_id, purchase_token, kind: "subs" | "inapp" }
+//   inapp = credit packs and the seller_onboarding fee.
 //   The app must set obfuscatedAccountId = the user's uuid when launching the purchase.
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { applyEntitlement, beginBillingEvent, finishBillingEvent } from "../_shared/billing.ts";
@@ -76,34 +77,56 @@ async function syncSubscription(pkg: string, purchaseToken: string, expectedUser
   return sellerId;
 }
 
-/** Credit packs: grant once per purchase token, then consume so it can be bought again. */
+/**
+ * One-time products. Credit packs: grant once per purchase token, then consume
+ * so the pack can be bought again. Onboarding fee: grant once, then acknowledge
+ * (never consume, it is bought only once).
+ */
 async function syncOneTime(pkg: string, productId: string, purchaseToken: string, expectedUser?: string) {
   const p = await playFetch(`${pkg}/purchases/products/${productId}/tokens/${encodeURIComponent(purchaseToken)}`);
   const sellerId: string | undefined = p.obfuscatedExternalAccountId;
   if (!sellerId) throw new HttpError(422, "missing_obfuscated_account_id");
   if (expectedUser && sellerId !== expectedUser) throw new HttpError(403, "purchase_belongs_to_another_user");
   const product = productInfo(productId);
-  if (!product || product.tier !== "credits") throw new HttpError(422, "unknown_product");
+  if (!product || product.tier === "pro") throw new HttpError(422, "unknown_product");
   if (p.purchaseState !== 0) return { sellerId, granted: false, state: p.purchaseState };
   const once = await beginBillingEvent("google_play", `otp:${purchaseToken}`, "one_time_purchase", sellerId, {
     ...p,
     productId,
   });
   if (once !== "duplicate") {
-    await applyEntitlement({
-      p_seller_id: sellerId,
-      p_store: "play",
-      p_provider: "google_play",
-      p_product_id: product.productId,
-      p_tier: "credits",
-      p_status: "active",
-      p_original_transaction_id: `play-credits:${sellerId}`, // one running credit balance per seller
-      p_credits_delta: product.credits,
-      p_raw: { order: p.orderId },
-    });
+    if (product.tier === "onboarding") {
+      await applyEntitlement({
+        p_seller_id: sellerId,
+        p_store: "play",
+        p_provider: "google_play",
+        p_product_id: product.productId,
+        p_tier: "onboarding",
+        p_status: "active",
+        p_original_transaction_id: `play:${purchaseToken}`,
+        p_raw: { order: p.orderId },
+      });
+    } else {
+      await applyEntitlement({
+        p_seller_id: sellerId,
+        p_store: "play",
+        p_provider: "google_play",
+        p_product_id: product.productId,
+        p_tier: "credits",
+        p_status: "active",
+        p_original_transaction_id: `play-credits:${sellerId}`, // one running credit balance per seller
+        p_credits_delta: product.credits,
+        p_raw: { order: p.orderId },
+      });
+    }
     await finishBillingEvent("google_play", `otp:${purchaseToken}`);
   }
-  if (p.consumptionState === 0) {
+  // Unacknowledged purchases are refunded by Play after 3 days.
+  if (product.tier === "onboarding") {
+    if (p.acknowledgementState === 0) {
+      await playFetch(`${pkg}/purchases/products/${productId}/tokens/${encodeURIComponent(purchaseToken)}:acknowledge`, "POST");
+    }
+  } else if (p.consumptionState === 0) {
     await playFetch(`${pkg}/purchases/products/${productId}/tokens/${encodeURIComponent(purchaseToken)}:consume`, "POST");
   }
   return { sellerId, granted: once !== "duplicate" };
@@ -162,12 +185,26 @@ async function handleVoided(pkg: string, v: { purchaseToken: string; orderId: st
       return null;
     }
   }
-  // One-time (credit pack) refunded: remove the credits (never below zero).
+  // One-time product refunded: the onboarding fee is due again; credit packs
+  // lose their credits (never below zero).
   const { data } = await adminClient().from("billing_events").select("seller_id,payload")
     .eq("provider", "google_play").eq("event_id", `otp:${v.purchaseToken}`).maybeSingle();
   if (!data?.seller_id) return null;
   const productId = (data.payload as any)?.productId ?? "";
   const product = productInfo(productId);
+  if (product?.tier === "onboarding") {
+    await applyEntitlement({
+      p_seller_id: data.seller_id,
+      p_store: "play",
+      p_provider: "google_play",
+      p_product_id: product.productId,
+      p_tier: "onboarding",
+      p_status: "refunded",
+      p_original_transaction_id: `play:${v.purchaseToken}`,
+      p_raw: { voided_order: v.orderId },
+    });
+    return data.seller_id;
+  }
   if (!product || product.tier !== "credits") return null;
   await applyEntitlement({
     p_seller_id: data.seller_id,

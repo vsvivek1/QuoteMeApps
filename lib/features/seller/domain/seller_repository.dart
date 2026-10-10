@@ -12,7 +12,7 @@ abstract interface class SellerRepository {
   /// rating and response time are published; never contact details.
   Future<void> setDirectoryOptIn(bool optIn);
 
-  /// One-time onboarding fee (`get_my_onboarding_fee`, I Want USA only).
+  /// One-time onboarding fee (`get_my_onboarding_fee`).
   /// Null when the caller is not a seller or the backend has no fee.
   Future<OnboardingFee?> onboardingFee();
 
@@ -29,7 +29,7 @@ abstract interface class SellerRepository {
 class OnboardingFee {
   const OnboardingFee({required this.due, required this.paid, required this.amountMinor});
 
-  /// True while the fee blocks quoting (switch on, US, not paid, not an early partner).
+  /// True while the fee blocks quoting (switch on, not paid, not an early partner).
   final bool due;
   final bool paid;
   final int amountMinor;

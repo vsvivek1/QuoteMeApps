@@ -1,7 +1,7 @@
 // create-checkout: web purchase links for seller plans and credit packs.
 //   USA   -> Stripe Checkout (subscription or one-time payment) / Customer Portal
 //            seller_onboarding: one-time fee, amount from app_settings.onboarding_fee_minor
-//   India -> Razorpay Subscription (short_url) or Payment Link (credit packs)
+//   India -> Razorpay Subscription (short_url) or Payment Link (credit packs, seller_onboarding)
 // The store webhooks (stripe-webhook / razorpay-webhook) grant the entitlement;
 // this function never does.
 //
@@ -59,13 +59,29 @@ serve(async (req) => {
   const meta = { seller_id: user.id, product_id: productId };
 
   if (product.tier === "onboarding") {
-    if (country !== "US") throw new HttpError(400, "product_not_available");
     const fee = unwrap(await db.rpc("onboarding_fee_status", { p_seller_id: user.id })) as {
       due: boolean;
       amount_minor: number;
       currency: string;
     };
     if (!fee?.due) throw new HttpError(409, "onboarding_fee_not_due");
+    if (country !== "US") {
+      // India web: Razorpay Payment Link for the fee amount in paise.
+      const link = await razorpayRequest("POST", "payment_links", {
+        amount: fee.amount_minor,
+        currency: "INR",
+        description: `${seller.business_name}: I Want seller onboarding (one-time)`,
+        reference_id: `${user.id.slice(0, 8)}-${productId}-${Date.now()}`.slice(0, 40),
+        customer: { name: seller.business_name, email: user.email || undefined, contact: user.phone || undefined },
+        notify: { sms: false, email: false },
+        reminder_enable: false,
+        notes: meta,
+        callback_url: safeReturnUrl(body.success_url, "?status=success"),
+        callback_method: "get",
+        expire_by: Math.floor(Date.now() / 1000) + 24 * 3600,
+      });
+      return json({ url: link.short_url, provider: "razorpay", product_id: productId, payment_link_id: link.id });
+    }
     const session = await stripeRequest("POST", "checkout/sessions", {
       mode: "payment",
       line_items: [{

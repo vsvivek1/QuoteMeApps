@@ -2,8 +2,9 @@
 // so every store feeds the same `entitlements` rows (Sections 7 and 12).
 //   seller_pro_monthly / seller_pro_annual  -> tier "pro" (subscription)
 //   credits_10 / credits_50                 -> tier "credits" (consumable pack)
-//   seller_onboarding                       -> tier "onboarding" (one-time fee, USA web checkout only;
-//                                              amount from app_settings.onboarding_fee_minor)
+//   seller_onboarding                       -> tier "onboarding" (one-time fee: Play Billing non-consumable
+//                                              in the Android apps, Stripe Checkout on the USA web,
+//                                              web amount from app_settings.onboarding_fee_minor)
 // Store-specific price ids come from env (see .env.example):
 //   STRIPE_PRICE_<PRODUCT_ID_UPPER>, RAZORPAY_PLAN_<PRODUCT_ID_UPPER>, RAZORPAY_AMOUNT_<PRODUCT_ID_UPPER>
 import { env } from "./env.ts";

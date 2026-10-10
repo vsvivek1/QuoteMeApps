@@ -13,6 +13,7 @@ update public.app_settings set value = '"USD"' where key = 'currency';
 update public.app_settings set value = '"America/New_York"' where key = 'default_timezone';
 update public.app_settings set value = '5' where key = 'free_quotes_per_month';
 update public.app_settings set value = '["en","es"]' where key = 'languages';
+update public.app_settings set value = '2900' where key = 'onboarding_fee_minor';
 
 create or replace function seed_tools.us_energy_star() returns jsonb language sql stable as $$
   select seed_tools.field('energy_star', 'boolean', seed_tools.l('ENERGY STAR certified', 'Certificado ENERGY STAR'), false, 'both') $$;

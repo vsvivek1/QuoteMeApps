@@ -22,6 +22,10 @@ final _onboardingFeeProvider = FutureProvider.autoDispose<OnboardingFee?>(
   (ref) => ref.watch(sellerRepositoryProvider).onboardingFee(),
 );
 
+final _onboardingProductProvider = FutureProvider.autoDispose<PlanProduct?>(
+  (ref) => ref.watch(billingServiceProvider).onboardingProduct(),
+);
+
 /// Plan and billing. While `monetization_enabled` is off everything is free
 /// and no paywall is shown. The paywall states price, period, auto-renewal,
 /// how to cancel, Terms/Privacy, and offers Restore Purchases.
@@ -64,7 +68,8 @@ class PlanScreen extends ConsumerWidget {
     );
   }
 
-  /// I Want USA one-time fee, paid by Stripe Checkout in the browser.
+  /// One-time seller fee: Google Play Billing in the Android apps (Play
+  /// policy), Stripe (USA) or Razorpay (India) checkout on the web dashboard.
   List<Widget> _onboardingFee(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final fee = ref.watch(_onboardingFeeProvider).value;
@@ -77,7 +82,9 @@ class PlanScreen extends ConsumerWidget {
         const SizedBox(height: 12),
       ];
     }
-    final amount = ref.watch(countryConfigProvider).money(fee.amountMinor).display;
+    final billing = ref.watch(billingServiceProvider);
+    final storeProduct = ref.watch(_onboardingProductProvider).value;
+    final amount = storeProduct?.priceText ?? ref.watch(countryConfigProvider).money(fee.amountMinor).display;
     return [
       Card(
         color: context.colors.secondaryContainer,
@@ -87,11 +94,21 @@ class PlanScreen extends ConsumerWidget {
           subtitle: Text(l10n.onboardingFeeBody),
           trailing: FilledButton(
             onPressed: () async {
-              final res = await ref.read(edgeFunctionsProvider).invoke('create-checkout', {
-                'product_id': 'seller_onboarding',
-              });
-              final url = res['url'];
-              if (url is String) await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              if (storeProduct != null) {
+                final r = await billing.buy(storeProduct);
+                if (!r.success && !r.pending && r.error != 'cancelled' && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.planNotAvailable)));
+                }
+              } else if (billing.store == 'stripe' || billing.store == 'razorpay') {
+                final res = await ref.read(edgeFunctionsProvider).invoke('create-checkout', {
+                  'product_id': ProductIds.onboarding,
+                });
+                final url = res['url'];
+                if (url is String) await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              } else if (context.mounted) {
+                // Store product not set up (or Play unavailable on this device).
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.planNotAvailable)));
+              }
               ref.invalidate(_onboardingFeeProvider);
             },
             child: Text(l10n.onboardingFeePay(amount)),
@@ -123,6 +140,7 @@ class PlanScreen extends ConsumerWidget {
                     PlanKind.monthly => l10n.planMonthly,
                     PlanKind.annual => l10n.planAnnual,
                     PlanKind.credits => l10n.planCredits,
+                    PlanKind.onboarding => l10n.onboardingFeeTitle,
                   }),
                   subtitle: Text(
                     [
